@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('permission', function (Blueprint $table) {
             $table->id('permission_id');
             $table->string('user_id');
-            $table->enum('user_role',['team_member','team_manager','operation_manager','admin']);
+            $table->enum('user_type',['customer_success_manager','team_manager','operation_manager','admin',"bookkeeper"]);
             $table->string('service_permission')->default(0);
             $table->string('leads_permission')->default(0);
             $table->string('invoice_permission')->default(0);
