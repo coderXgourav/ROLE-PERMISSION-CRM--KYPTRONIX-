@@ -151,8 +151,7 @@
                             
                         </ul>
                     </li> --}}
-                 
-                    
+            @if($admin_data->team_manager_permission>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -169,7 +168,8 @@
                           
                         </ul>
                     </li>
-
+                @endif
+            @if($admin_data->customer_success_manager_permission>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -186,7 +186,8 @@
 
                         </ul>
                     </li>
-                    
+                    @endif
+
             @if($admin_data->leads_permission>0)
                     <li>
                        <a href="javascript:;" class="has-arrow">
