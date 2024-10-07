@@ -120,6 +120,10 @@ public function dashboardPage(){
   $email_send_cound = EmailModel::count();
   $sms_count = MessageModel::count();
 
+  // echo "<pre>";
+  // print_r($user_details);
+  // die();
+
    return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'team_member'=>$team_member_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type]);
     
 }

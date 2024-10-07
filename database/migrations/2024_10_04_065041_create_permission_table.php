@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('lead_assign_permission')->default(0);
             $table->string('email_template_permission')->default(0);
             $table->string('login_history_permission')->default(0);
+            $table->string('team_manager_permission')->default(0);
+            $table->string('customer_success_manager_permission')->default(0);
             $table->timestamps();
         });
     }

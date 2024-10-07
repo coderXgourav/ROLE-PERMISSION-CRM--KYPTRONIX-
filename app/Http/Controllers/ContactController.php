@@ -80,6 +80,8 @@ class ContactController extends Controller
       $password_hint = $request->password_hint;
       $after_login_setting_change = $request->after_login_setting_change;
       $disable_account = $request->disable_account;
+      $team_manager_permission = $request->manager_manage;
+      $customer_success_manager_permission = $request->member_manage;
 
      if(MainUserModel::where('phone_number',$phone)->first()){
          return self::toastr(false,"Number Already Registered","error","Error");
@@ -106,6 +108,10 @@ class ContactController extends Controller
       $permissions->user_id = $user_id ;
       $permissions->user_type = $user_type ;
       $permissions->service_permission = $service_manage ;
+      
+      $permissions->team_manager_permission = $service_manage ;
+      $permissions->customer_success_manager_permission = $service_manage ;
+      
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
       $permissions->payment_permission = $payment_manage ;

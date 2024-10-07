@@ -76,7 +76,7 @@
                         <div class="menu-title">Dashboard</div>
                     </a>
                 </li>
-
+                @if($admin_data->service_permission>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -93,7 +93,8 @@
                       
                     </ul>
                 </li>
-
+                @endif
+            @if($admin_data->user_type=="admin")
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -110,6 +111,7 @@
                       
                     </ul>
                 </li>
+                @endif
 
 
 <!--                 <li>
@@ -131,7 +133,10 @@
                     </ul>
                 </li>
  -->                      
-                    <li>
+ 
+        
+
+                    {{-- <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
                             </div>
@@ -145,7 +150,9 @@
                            
                             
                         </ul>
-                    </li>
+                    </li> --}}
+                 
+                    
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -162,6 +169,8 @@
 
                         </ul>
                     </li>
+                    
+            @if($admin_data->leads_permission>0)
                     <li>
                        <a href="javascript:;" class="has-arrow">
                           <div class="parent-icon"><i class='bx bx-cart'></i>
@@ -179,6 +188,8 @@
                                                 
                        </ul>
                    </li>
+                   @endif
+    @if($admin_data->customer_permission>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -191,6 +202,9 @@
                             </li>
                         </ul>
                     </li>
+                    @endif
+    @if($admin_data->lead_assign_permission>0)
+
                     <li>
                         <a href="javascript:;" class="has-arrow">
                          <div class="parent-icon"><i class='bx bx-menu'></i>
@@ -206,6 +220,9 @@
                       
                     </ul>
                   </li>
+                  @endif
+    @if($admin_data->email_template_permission>0)
+                  
                   <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-square"></i>
@@ -222,6 +239,8 @@
 
                     </ul>
                 </li>
+                @endif
+                @if($admin_data->invoice_permission>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-square"></i>
@@ -235,6 +254,7 @@
 
                     </ul>
                 </li>
+                @endif
 
                     <!--<li>
                         <a href="javascript:;" class="has-arrow">
@@ -249,7 +269,10 @@
                            </li>
                             
                         </ul>
-                    </li>-->                  
+                    </li>-->   
+                    
+                @if($admin_data->email_sms_permission>0)
+                    
                       <li>
                         <a href="javascript:" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-repeat"></i>
@@ -270,6 +293,9 @@
                             
                         </ul>
                     </li>
+                    @endif
+                @if($admin_data->customer_permission>0)
+
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-folder"></i>
@@ -288,6 +314,7 @@
                             
                         </ul>
                     </li>
+                    @endif
                     
 
 

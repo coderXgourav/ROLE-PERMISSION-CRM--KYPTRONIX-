@@ -336,6 +336,27 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
+
+										<div class="col-sm-3">
+												<div class="d-flex align-items-center gap-3">
+												<div class="form-check form-switch">
+													<input type="hidden" name="member_manage" value="0">
+													<input class="form-check-input" name="member_manage" value="1" type="checkbox" role="switch" id="565" >
+													<label class="form-check-label" for="565">Manage Customer Success Manager</label>
+												</div>
+						                    </div>
+										</div>
+
+											<div class="col-sm-3">
+												<div class="d-flex align-items-center gap-3">
+												<div class="form-check form-switch">
+													<input type="hidden" name="manager_manage" value="0">
+													<input class="form-check-input" name="manager_manage" value="1" type="checkbox" role="switch" id="211" >
+													<label class="form-check-label" for="211">Team Manager Manage</label>
+												</div>
+						                    </div>
+										</div>
+										
 									
 								</div>
 					        </div>
