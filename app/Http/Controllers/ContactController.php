@@ -43,6 +43,37 @@ class ContactController extends Controller
         ]);
     }
 //   THIS IS A  SWAL FUNCTION 
+    public function userDetails($id){
+          $user_details = DB::table('main_user')
+            ->join('permission','permission.user_id','main_user.id')
+            ->where('main_user.id',$id)
+            ->first();
+          
+            return $user_details;
+    }
+    public function userType($type){
+      switch ($type) {
+                  case 'customer_success_manager':
+               return $user_type = "Customer Manager";
+                    break;
+                    case "team_manager":
+               return $user_type = "Team Manager";
+
+                      break;
+                      case "operation_manager":
+               return $user_type = "Operation Manager";
+
+                        break;
+                        case "admin":
+               return $user_type = "Admin";
+                          break;
+                          case "bookkeeper":
+               return $user_type = "Bookkeeper";
+                            break;
+                  default:
+                    break;
+                }
+    }   
    
     // THIS IS contactAdd FUNCTION 
     public function contactAdd(Request $request){
@@ -139,14 +170,16 @@ class ContactController extends Controller
     // THIS IS contactPage FUNCTION 
     public function contactPage(){
       $id = session('admin');
-      $admin_data = AdminModel::find($id);
+      //$admin_data = AdminModel::find($id);
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
       $contact_data = DB::table('user')
       ->join('services', 'services.service_id', '=', 'user.service_id')
       ->select('user.*', 'services.name as service_name')
       ->orderBy('user.user_id', 'DESC')
       ->get();
       //$contact_data = UserModel::orderBy('user_id','DESC')->get();
-      return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data]);
+      return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
     }
     // THIS IS contactPage FUNCTION 
 
@@ -265,14 +298,16 @@ return self::swal(true,'Assign Successfull','success');
 // THIS IS emailPage FUNCTION 
 public function emailPage(){
    $id = session('admin');
-   $admin_data = AdminModel::find($id);
+   //$admin_data = AdminModel::find($id);
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
 
    $emails = DB::table('user')
    ->join('email_send','email_send.email_admin','=','user.user_id')
    ->join('customer','customer.customer_id','=','email_send.email_customer')
    ->orderBy('email_send.email_id','DESC')
    ->paginate(10);
-  return view('admin.dashboard.all_email',['admin_data'=>$admin_data,'data'=>$emails]);
+  return view('admin.dashboard.all_email',['admin_data'=>$admin_data,'data'=>$emails,'user_type'=>$user_type]);
 }
 // THIS IS emailPage FUNCTION 
 
@@ -340,14 +375,16 @@ public function importPage(){
 // THIS IS smsPage FUNCTION 
 public function smsPage(){
    $id = session('admin');
-   $admin_data = AdminModel::find($id);
+   //$admin_data = AdminModel::find($id);
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
 
    $sms = DB::table('user')
    ->join('messages','messages.team_member_id','=','user.user_id')
    ->join('customer','customer.customer_id','=','messages.customer_msg_id')
    ->orderBy('messages.messages_id','DESC')
    ->paginate(10);
-  return view('admin.dashboard.all_sms',['admin_data'=>$admin_data,'data'=>$sms]);
+  return view('admin.dashboard.all_sms',['admin_data'=>$admin_data,'data'=>$sms,'user_type'=>$user_type]);
 }
 
 
