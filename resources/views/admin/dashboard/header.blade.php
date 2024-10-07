@@ -146,6 +146,96 @@
                             
                         </ul>
                     </li>
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
+                            </div>
+                            <div class="menu-title">Team Member</div>
+                        </a>
+                        <ul>
+                            <li> <a href="{{ route('team.team-member-add') }}"><i
+                                class='bx bx-radio-circle'></i>Add Team Member</a>
+                            </li>
+                            <li> <a href="{{ route('team.team-member-lists')}}"><i
+                                class='bx bx-radio-circle'></i>Team Members</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                       <a href="javascript:;" class="has-arrow">
+                          <div class="parent-icon"><i class='bx bx-cart'></i>
+                           </div>
+                           <div class="menu-title">Leads  </div>
+                       </a>
+                       <ul>
+                            <li> <a href="{{route('team.add-customer')}}"><i
+                                class='bx bx-radio-circle'></i>Add Leads</a>
+                           </li>
+                    
+                            <li> <a href="{{route('team.customer')}}"><i
+                                        class='bx bx-radio-circle'></i>View Leads</a>
+                            </li>
+                                                
+                       </ul>
+                   </li>
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
+                            </div>
+                            <div class="menu-title">Clients </div>
+                        </a>
+                        <ul>                    
+                            <li> <a href="{{route('team.view_clients')}}"><i
+                                        class='bx bx-radio-circle'></i>View Clients</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                         <div class="parent-icon"><i class='bx bx-menu'></i>
+                         </div>
+                         <div class="menu-title">Assign Manage </div>
+                       </a>
+                     <ul>
+                        <li> <a href="{{ route('team.assign_clients') }}"><i
+                            class='bx bx-radio-circle'></i>Assigned Leads</a>
+                       </li>
+                       <li> <a href="{{ route('team.none_assign') }}"><i class='bx bx-radio-circle'></i>None Assigned Leads</a>
+                      </li>
+                      
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="javascript:;" class="has-arrow">
+                        <div class="parent-icon"><i class="bx bx-square"></i>
+                        </div>
+                        <div class="menu-title">Template </div>
+                    </a>
+                    <ul>
+                       <li> <a href="{{route('team.email-template')}}"><i
+                            class='bx bx-radio-circle'></i>Email Template</a>
+                       </li>   
+                       <li> <a href="{{route('team.view-mail-template')}}"><i
+                            class='bx bx-radio-circle'></i>View Template</a>
+                       </li>  
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" class="has-arrow">
+                        <div class="parent-icon"><i class="bx bx-square"></i>
+                        </div>
+                        <div class="menu-title">Invoice </div>
+                    </a>
+                    <ul>
+                       <li> <a href="{{route('team.view-invoice')}}"><i
+                            class='bx bx-radio-circle'></i>View Invoice</a>
+                       </li>  
+
+                    </ul>
+                </li>
+
                     <!--<li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-grid-alt"></i>
