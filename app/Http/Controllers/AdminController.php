@@ -132,8 +132,10 @@ public function dashboardPage(){
 // THIS IS A chnagePasswordPage FUNCITON 
 public function chnagePasswordPage(){
    $id = session('admin');
-   $admin_data = AdminModel::find($id);
-  return view('admin.dashboard.change_password',['admin_data'=>$admin_data]);
+  // $admin_data = AdminModel::find($id);
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+  return view('admin.dashboard.change_password',['admin_data'=>$admin_data,'user_type'=>$user_type]);
   
 }
 // THIS IS A chnagePasswordPage FUNCITON 
@@ -143,7 +145,7 @@ public function chnagePasswordPage(){
 // THIS IS A logout FUNCTION 
 public function logout(){
   session()->forget('admin');
-  return redirect('/admin');
+  return redirect('/login');
 }
 // THIS IS A logout FUNCTION 
 
@@ -245,8 +247,10 @@ public function addContactPage(){
 // THIS IS  changeUsername FUNCTION 
 public function changeUsernamePage(){
     $id = session('admin');
-   $admin_data = AdminModel::find($id);
-    return view('admin.dashboard.change_username',['admin_data'=>$admin_data]);
+   //$admin_data = AdminModel::find($id);
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    return view('admin.dashboard.change_username',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 // THIS IS  changeUsername FUNCTION 
 // THIS IS changeUsername FUNCTION \
@@ -279,8 +283,11 @@ public function changeUsername(Request $request){
 // THIS IS addServicePage FUNCTION  
 public function addServicePage(){
   $id = session('admin');
- $admin_data = AdminModel::find($id);
-  return view('admin.dashboard.add_service',['admin_data'=>$admin_data]);
+  //$admin_data = AdminModel::find($id);
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+
+  return view('admin.dashboard.add_service',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 // THIS IS addServicePage FUNCTION  
 // THIS IS addTeamMember FUNCTION  

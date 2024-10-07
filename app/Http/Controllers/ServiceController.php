@@ -33,6 +33,38 @@ class ServiceController extends Controller
         ]);
     }
   //   THIS IS A  SWAL FUNCTION 
+    public function userDetails($id){
+          $user_details = DB::table('main_user')
+            ->join('permission','permission.user_id','main_user.id')
+            ->where('main_user.id',$id)
+            ->first();
+          
+            return $user_details;
+    }
+    public function userType($type){
+      switch ($type) {
+                  case 'customer_success_manager':
+               return $user_type = "Customer Manager";
+                    break;
+                    case "team_manager":
+               return $user_type = "Team Manager";
+
+                      break;
+                      case "operation_manager":
+               return $user_type = "Operation Manager";
+
+                        break;
+                        case "admin":
+               return $user_type = "Admin";
+                          break;
+                          case "bookkeeper":
+               return $user_type = "Bookkeeper";
+                            break;
+                  default:
+                    break;
+                }
+    }
+
    
     // THIS IS serviceAdd FUNCTION 
     public function serviceAdd(Request $request){
@@ -55,9 +87,11 @@ class ServiceController extends Controller
     //AllService Start
     public function allServices(){
 	  $id = session('admin');
-	   $admin_data = AdminModel::find($id);
-	   $services = Service::orderBy('service_id','DESC')->get();
-	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services]);
+	  // $admin_data = AdminModel::find($id);
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+	  $services = Service::orderBy('service_id','DESC')->get();
+	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
   }
   //AllService End
   //ServiceDelete Start

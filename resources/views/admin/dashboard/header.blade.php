@@ -159,9 +159,9 @@
                             <div class="menu-title">Team Manager</div>
                         </a>
                         <ul>
-                            <li> <a href="{{ route('admin.add-contact') }}"><i
+                           <!-- <li> <a href="{{ route('admin.add-contact') }}"><i
                                         class='bx bx-radio-circle'></i>Add New Manager</a>
-                            </li>
+                            </li>-->
                             <li> <a href="{{ route('admin.contact') }}"><i
                                         class='bx bx-radio-circle'></i>View Managers</a>
                             </li>
@@ -177,10 +177,10 @@
                             <div class="menu-title">Team Member</div>
                         </a>
                         <ul>
-                            <li> <a href="{{ route('team.team-member-add') }}"><i
+                           <!-- <li> <a href="{{ route('team.team-member-add') }}"><i
                                 class='bx bx-radio-circle'></i>Add Team Member</a>
-                            </li>
-                            <li> <a href="{{ route('team.team-member-lists')}}"><i
+                            </li>-->
+                            <li> <a href="#"><i
                                 class='bx bx-radio-circle'></i>Team Members</a>
                             </li>
 
@@ -196,11 +196,11 @@
                            <div class="menu-title">Leads  </div>
                        </a>
                        <ul>
-                            <li> <a href="{{route('team.add-customer')}}"><i
+                            <li> <a href="#"><i
                                 class='bx bx-radio-circle'></i>Add Leads</a>
                            </li>
                     
-                            <li> <a href="{{route('team.customer')}}"><i
+                            <li> <a href="#"><i
                                         class='bx bx-radio-circle'></i>View Leads</a>
                             </li>
                                                 
@@ -215,7 +215,7 @@
                             <div class="menu-title">Clients </div>
                         </a>
                         <ul>                    
-                            <li> <a href="{{route('team.view_clients')}}"><i
+                            <li> <a href="#"><i
                                         class='bx bx-radio-circle'></i>View Clients</a>
                             </li>
                         </ul>
@@ -230,10 +230,10 @@
                          <div class="menu-title">Assign Manage </div>
                        </a>
                      <ul>
-                        <li> <a href="{{ route('team.assign_clients') }}"><i
+                        <li> <a href="#"><i
                             class='bx bx-radio-circle'></i>Assigned Leads</a>
                        </li>
-                       <li> <a href="{{ route('team.none_assign') }}"><i class='bx bx-radio-circle'></i>None Assigned Leads</a>
+                       <li> <a href="#"><i class='bx bx-radio-circle'></i>None Assigned Leads</a>
                       </li>
                       
                     </ul>
@@ -248,10 +248,10 @@
                         <div class="menu-title">Template </div>
                     </a>
                     <ul>
-                       <li> <a href="{{route('team.email-template')}}"><i
+                       <li> <a href="#"><i
                             class='bx bx-radio-circle'></i>Email Template</a>
                        </li>   
-                       <li> <a href="{{route('team.view-mail-template')}}"><i
+                       <li> <a href="#"><i
                             class='bx bx-radio-circle'></i>View Template</a>
                        </li>  
 
@@ -266,7 +266,7 @@
                         <div class="menu-title">Invoice </div>
                     </a>
                     <ul>
-                       <li> <a href="{{route('team.view-invoice')}}"><i
+                       <li> <a href="#"><i
                             class='bx bx-radio-circle'></i>View Invoice</a>
                        </li>  
 
