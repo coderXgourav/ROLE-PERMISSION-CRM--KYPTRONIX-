@@ -42,7 +42,7 @@ width: 100% !important;
 									</div> 
 									<div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Password Hint</label>
-										<div class="col-sm-9">
+										<div class="col-sm-9"> 
 											<div class="position-relative input-icon">
 												<input type="text" class="form-control" placeholder="Type Password Hint" name="password_hint" required>
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-lock'></i></span>
