@@ -109,10 +109,12 @@ class ServiceController extends Controller
   //editService Start
   public function editService($service_id){
     $id = session('admin');
-    $admin_data = AdminModel::find($id);
+    //$admin_data = AdminModel::find($id);
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
-   return view('admin.dashboard.edit_service',['admin_data'=>$admin_data,'data'=>$data]);
+   return view('admin.dashboard.edit_service',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
    
   }
   //editService End
@@ -133,13 +135,15 @@ class ServiceController extends Controller
   //viewService Start
   public function viewService($service_id){
     $id = session('admin');
-    $admin_data = AdminModel::find($id);
+   // $admin_data = AdminModel::find($id);
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
     $team_member=TeamMember::where('team_service',$s_id)->get();
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
-   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice]);
+   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type]);
    
   }
   //viewService End
