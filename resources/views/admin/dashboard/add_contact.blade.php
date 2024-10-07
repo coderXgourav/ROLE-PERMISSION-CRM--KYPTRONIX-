@@ -46,7 +46,7 @@ width: 100% !important;
 											<div class="position-relative input-icon">
 												<input type="text" class="form-control" placeholder="Type Password Hint" name="password_hint" required>
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-lock'></i></span>
-											</div>
+											</div> 
 										</div>
 									</div> 
 									<div class="row mb-3">
