@@ -104,7 +104,7 @@ class ContactController extends Controller
       $user_id = $contact_details->id;
       $permissions = new PermissionModel;
       $permissions->user_id = $user_id ;
-      $permissions->user_role = $user_type ;
+      $permissions->user_type = $user_type ;
       $permissions->service_permission = $service_manage ;
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
