@@ -146,6 +146,23 @@
                             
                         </ul>
                     </li>
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
+                            </div>
+                            <div class="menu-title">Team Member</div>
+                        </a>
+                        <ul>
+                            <li> <a href="{{ route('team.team-member-add') }}"><i
+                                class='bx bx-radio-circle'></i>Add Team Member</a>
+                            </li>
+                            <li> <a href="{{ route('team.team-member-lists')}}"><i
+                                class='bx bx-radio-circle'></i>Team Members</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
                     <!--<li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-grid-alt"></i>
