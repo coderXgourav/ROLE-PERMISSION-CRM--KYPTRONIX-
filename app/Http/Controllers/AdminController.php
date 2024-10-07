@@ -10,19 +10,33 @@ use App\Models\EmailModel;
 use App\Models\MessageModel; 
 use App\Models\Service; 
 use App\Models\TeamMember; 
+use App\Models\MainUserModel; 
 use Mail;
+use DB;
+
 
 class AdminController extends Controller
 {
     //  THIS IS A login FUNCITON 
+ 
+    
     public function login(Request $request){
-       $username = $request->username;
+
+       $username = $request->email_username;
        $password = $request->password;
-       $check_username = AdminModel::where('email',$username)->orWhere('username',$username)->first();
+       
+       $check_username = MainUserModel::where('account_name',$username)->orWhere('email_address',$username)->first();
+       
        if($check_username){
-         if($check_username->password==$password){
-            session()->put('admin',$check_username->id);
-       return self::swal(true,'Login Successfull','success');
+         if($check_username->password  == $password){
+          $user_details = self::userDetails($check_username->id);
+      
+            if($user_details->disable_account>0){
+              return self::swal(false,'Account Disabled','warning');
+            }
+
+        session()->put('admin',$check_username->id);
+        return self::swal(true,'Login Successfull','success');
          }else{
        return self::swal(false,'Invalid Password','error');
          }
@@ -30,6 +44,14 @@ class AdminController extends Controller
        return self::swal(false,'Invalid Username or Email','error');
        }
 
+    }
+       public function userDetails($id){
+          $user_details = DB::table('main_user')
+            ->join('permission','permission.user_id','main_user.id')
+            ->where('main_user.id',$id)
+            ->first();
+          
+            return $user_details;
     }
     //  THIS IS A login FUNCITON 
 
@@ -54,11 +76,42 @@ class AdminController extends Controller
         ]);
     }
 //   THIS IS A  SWAL FUNCTION 
+public function userType($type){
+  switch ($type) {
+              case 'customer_success_manager':
+           return $user_type = "Customer Manager";
+                break;
+                case "team_manager":
+           return $user_type = "Team Manager";
+
+                  break;
+                  case "operation_manager":
+           return $user_type = "Operation Manager";
+
+                    break;
+                    case "admin":
+           return $user_type = "Admin";
+                      break;
+                      case "bookkeeper":
+           return $user_type = "Bookkeeper";
+                        break;
+              default:
+                break;
+            }
+}
 
 //  THIS IS dashboardPage FUNCTIOIN 
 public function dashboardPage(){
   $id = session('admin');
-   $admin_data = AdminModel::find($id);
+  
+      $user_details = DB::table('main_user')
+            ->join('permission','permission.user_id','main_user.id')
+            ->where('main_user.id',$id)
+            ->first();
+
+           $user_type = self::userType($user_details->user_type);
+          
+            
 
   $customer_count = CustomerModel::count();
   $assign_clients_count = CustomerModel::where('team_member','!=',null)->count();
@@ -67,7 +120,7 @@ public function dashboardPage(){
   $email_send_cound = EmailModel::count();
   $sms_count = MessageModel::count();
 
-   return view('admin.dashboard.index',['admin_data'=>$admin_data,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'team_member'=>$team_member_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count]);
+   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'team_member'=>$team_member_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type]);
     
 }
 //  THIS IS dashboardPage FUNCTIOIN 
@@ -177,8 +230,11 @@ public function newPassword(Request $request){
 // THIS IS addContactPage FUNCTION  
 public function addContactPage(){
     $id = session('admin');
-    $admin_data = AdminModel::find($id);
-    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data]);
+    
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    
+    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 // THIS IS addContactPage FUNCTION  
 

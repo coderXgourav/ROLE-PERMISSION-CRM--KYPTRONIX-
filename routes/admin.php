@@ -16,8 +16,8 @@ use App\Http\Controllers\ServiceController;
 |
 */
 
-Route::get('/admin', function () {
-    return view('admin.login');
+Route::get('/login', function () {
+    return view('admin.index');
 });
 Route::get('/admin/forgot-password',function(){
     return view('admin.forgot');
@@ -32,7 +32,7 @@ Route::post('/admin-login',[AdminController::class,'login']);
 
 
 Route::group(['middleware' => ['admin']], function () {
-   Route::get('/admin/dashboard',[AdminController::class,'dashboardPage'])->name('admin-dashboard');
+   Route::get('/login/dashboard',[AdminController::class,'dashboardPage'])->name('admin-dashboard');
   Route::get('admin/password-change',[AdminController::class,'chnagePasswordPage'])->name('change-password');
 Route::get('admin/logout',[AdminController::class,'logout'])->name('admin-logout');
 Route::post('/admin/change_password',[AdminController::class,'changePassword']);
