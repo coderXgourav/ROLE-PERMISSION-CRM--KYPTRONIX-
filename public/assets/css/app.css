@@ -89,7 +89,8 @@ a {
 }
 
 .logo-text {
-    font-size: 22px;
+    font-size: 15px;
+    font-weight: bold;
 
     margin-left: 10px;
 
@@ -97,7 +98,7 @@ a {
 
     letter-spacing: 1px;
 
-    color: #008cff;
+    color: #2a7c71;
 }
 
 .toggle-icon {

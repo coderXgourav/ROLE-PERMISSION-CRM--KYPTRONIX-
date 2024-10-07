@@ -60,7 +60,7 @@
                     <img src="{{ url('assets/images/logo-icon.png') }}" class="logo-icon" alt="logo icon" />
                 </div>
                 <div>
-                    <h4 class="logo-text">Admin</h4>
+                    <h4 class="logo-text"> {{"Dashboard"}}</h4>
                 </div>
                 <div class="toggle-icon ms-auto">
                     <i class="bx bx-arrow-back"></i>
@@ -537,9 +537,9 @@
                             href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ url('assets/images/user.png') }}" class="user-img" alt="user avatar" />
                             <div class="user-info">
-                                <p class="user-name mb-0">{{ $admin_data->name }}</p>
+                                <p class="user-name mb-0">{{ $admin_data->first_name }}</p>
                                 <p class="designattion mb-0">
-                                    Admin
+                                    {{$user_type}}
                                 </p>
                             </div>
                         </a>

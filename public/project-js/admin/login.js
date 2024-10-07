@@ -35,7 +35,7 @@ $("#admin_login_form").validate({
                 });
                 if (data.status) {
                     setTimeout(() => {
-                        window.location = "/admin/dashboard";
+                        window.location = "/login/dashboard";
                     }, 2000);
                 }
             },
