@@ -157,6 +157,23 @@
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
                             </div>
+                            <div class="menu-title">Team Manager</div>
+                        </a>
+                        <ul>
+                            <li> <a href="{{ route('admin.add-contact') }}"><i
+                                        class='bx bx-radio-circle'></i>Add New Manager</a>
+                            </li>
+                            <li> <a href="{{ route('admin.contact') }}"><i
+                                        class='bx bx-radio-circle'></i>View Managers</a>
+                            </li>
+                          
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
+                            </div>
                             <div class="menu-title">Team Member</div>
                         </a>
                         <ul>
