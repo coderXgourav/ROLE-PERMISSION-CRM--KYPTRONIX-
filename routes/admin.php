@@ -85,5 +85,7 @@ Route::get('admin/view-customers',[ContactController::class,'viewCustomers'])->n
 Route::get('/admin/view-managers',[ContactController::class,'viewManagers'])->name('admin.view-managers');
 Route::get('/admin/view_manager_details/{id}',[ContactController::class,'viewManagerDetails'])->name('admin.view_manager_details');
 Route::get('/admin/view-members',[ContactController::class,'viewMembers'])->name('admin.view-members');
+Route::get('/admin/view-operation-managers',[ContactController::class,'viewOperationsManagers'])->name('admin.view-operation-managers');
+Route::get('/admin/add-lead',[ContactController::class,'addLead'])->name('admin.add-lead');
 
 });

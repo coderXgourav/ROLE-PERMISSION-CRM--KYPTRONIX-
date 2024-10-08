@@ -677,5 +677,22 @@ public function viewMembers(){
        ->get();
       return view('admin.dashboard.view_team_member_lists',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
 }
+public function viewOperationsManagers(){
+      $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+      $contact_data = DB::table('main_user')
+       ->select('main_user.*')
+       ->where('main_user.user_type','operation_manager')
+       ->orderBy('main_user.id', 'DESC')
+       ->get();
+      return view('admin.dashboard.view_operations_managers',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+}
+public function addLead(){
+      $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+    return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
 // THIS IS END OF THE CLASS 
 }
