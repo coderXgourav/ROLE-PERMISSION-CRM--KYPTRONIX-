@@ -82,5 +82,8 @@ Route::get('/admin/service_invoices/{id}',[ServiceController::class,'serviceInvo
 Route::get('/admin/manager_convert_to_clients/{id}',[ContactController::class,'manager_convert_to_clients_list'])->name('admin.manager_convert_to_clients');
 Route::get('/admin/member_convert_to_client/{id}',[ContactController::class,'member_convert_to_clients_list'])->name('admin.member_convert_to_client');
 Route::get('admin/view-customers',[ContactController::class,'viewCustomers'])->name('admin.view-customers');
+Route::get('/admin/view-managers',[ContactController::class,'viewManagers'])->name('admin.view-managers');
+Route::get('/admin/view_manager_details/{id}',[ContactController::class,'viewManagerDetails'])->name('admin.view_manager_details');
+Route::get('/admin/view-members',[ContactController::class,'viewMembers'])->name('admin.view-members');
 
 });
