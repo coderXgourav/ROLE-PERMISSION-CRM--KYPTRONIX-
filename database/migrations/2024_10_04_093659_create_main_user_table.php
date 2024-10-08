@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('user_type',['customer_success_manager','team_manager','operation_manager','admin',"bookkeeper"]);
             $table->integer('change_password_upon_login')->default(0);
             $table->integer('disable_account')->default(0);
+            // $table->integer('delete_account')->default(0);
             $table->timestamps();
         });
     }

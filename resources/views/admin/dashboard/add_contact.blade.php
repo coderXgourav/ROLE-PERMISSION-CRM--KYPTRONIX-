@@ -356,6 +356,16 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
+
+										<div class="col-sm-3">
+												<div class="d-flex align-items-center gap-3">
+												<div class="form-check form-switch">
+													<input type="hidden" name="user_registration" value="0">
+													<input class="form-check-input" name="user_registration" value="1" type="checkbox" role="switch" id="1000" >
+													<label class="form-check-label" for="1000">Create New User or Registration User</label>
+												</div>
+						                    </div>
+										</div>
 										
 									
 								</div>
