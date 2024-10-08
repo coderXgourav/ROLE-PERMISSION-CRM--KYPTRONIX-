@@ -218,7 +218,7 @@
                            <div class="menu-title">Leads  </div>
                        </a>
                        <ul>
-                            <li> <a href="#"><i
+                            <li> <a href="{{ route('admin.add-lead')}}"><i
                                 class='bx bx-radio-circle'></i>Add Leads</a>
                            </li>
                     
