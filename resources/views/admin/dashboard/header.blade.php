@@ -180,7 +180,7 @@
                            <!-- <li> <a href="{{ route('admin.add-contact') }}"><i
                                         class='bx bx-radio-circle'></i>Add New Manager</a>
                             </li>-->
-                            <li> <a href="{{ route('admin.view-managers') }}"><i
+                            <li> <a href="{{ route('admin.contact') }}"><i
                                         class='bx bx-radio-circle'></i>View Managers</a>
                             </li>
                           
@@ -202,8 +202,8 @@
                            <!-- <li> <a href="{{ route('team.team-member-add') }}"><i
                                 class='bx bx-radio-circle'></i>Add Team Member</a>
                             </li>-->
-                            <li> <a href="#"><i
-                                class='bx bx-radio-circle'></i>Team Members</a>
+                            <li> <a href="{{ route('admin.view-members')}}"><i
+                                class='bx bx-radio-circle'></i>View Members</a>
                             </li>
 
                         </ul>
