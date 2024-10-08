@@ -52,7 +52,7 @@
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="5" style="text-align: center; color:red;"><b>Team Records Not Found..!</b></td>
+										<td colspan="6" style="text-align: center; color:red;"><b>Team Records Not Found..!</b></td>
 										
 									</tr>
                                     @endif

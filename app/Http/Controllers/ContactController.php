@@ -117,11 +117,15 @@ class ContactController extends Controller
       
 
      if(MainUserModel::where('phone_number',$phone)->first()){
-         return self::toastr(false,"Number Already Registered","error","Error");
+         return self::toastr(false,"Number Already Registered","warning","Warning");
      }
      if(MainUserModel::where('email_address',$email)->first()){
-         return self::toastr(false,"Email Already Registered","error","Error");
+         return self::toastr(false,"Email Already Registered","warning","Warning");
      }
+     if(MainUserModel::where('account_name',$account_name)->first()){
+         return self::toastr(false,"Username Already Registered","warning","Warning");
+     }
+
 
       $contact_details = new MainUserModel;
       $contact_details->account_name = $account_name;

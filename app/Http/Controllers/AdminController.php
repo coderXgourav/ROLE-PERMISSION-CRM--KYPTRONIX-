@@ -239,8 +239,9 @@ public function addContactPage(){
     
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
+    $services =  Service::orderBy('service_id','DESC')->get();
+    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services]);
     
-    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 // THIS IS addContactPage FUNCTION  
 
