@@ -22,10 +22,10 @@ width: 100% !important;
 								    
 									
 									<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">Account Name</label>
+										<label for="input42" class="col-sm-3 col-form-label">Username</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Account Name" name="account_name" required>
+												<input type="text" class="form-control" placeholder="Type Account Name" name="account_name" required >
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
 											</div>
 										</div>
@@ -114,7 +114,7 @@ width: 100% !important;
 										<label for="input42" class="col-sm-3 col-form-label">User Type</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<select name="user_type" id="" class="form-control" required>
+												<select name="user_type" id="" class="form-control" required onchange="checkManager(this.value)">
 													<option value="">Select User Type</option>
 													<option value="operation_manager">Operation Manager</option>
 													<option value="team_manager">Team Manager</option>
@@ -125,6 +125,24 @@ width: 100% !important;
 											</div>
 										</div>
 									</div>
+
+ 									<div class="row"  style="display:none;" id="service_field">
+										<div class="row mb-3" >
+										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
+										<div class="col-sm-9">
+											<div class="position-relative input-icon">
+												<select name="services"  class="form-control" required >
+													<option value="">Select Services </option>
+													@foreach ($services as $item)
+															<option value="{{$item->service_id}}">{{$item->name}}</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
+									</div>
+
+
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">User Privilage</label>
 						<div class="col-sm-9">
@@ -394,6 +412,15 @@ width: 100% !important;
 								 
 					</div>
 				</div><!--end row-->
-				
+				<script>
+					function checkManager(val){
+						if(val=="team_manager"){
+							document.getElementById("service_field").style.display="block";
+						}else{
+							document.getElementById("service_field").style.display="none";
+						}
+					}
+					
+				</script>
 				
 @include('admin.dashboard.footer')
