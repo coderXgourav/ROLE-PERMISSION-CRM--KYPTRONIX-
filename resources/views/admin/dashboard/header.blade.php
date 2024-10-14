@@ -222,8 +222,7 @@
                                 class='bx bx-radio-circle'></i>Add Leads</a>
                            </li>
                     
-                            <li> <a href="#"><i
-                                        class='bx bx-radio-circle'></i>View Leads</a>
+                            <li> <a href="{{ route('admin.view-lead')}}"><i class='bx bx-radio-circle'></i>View Leads</a>
                             </li>
                                                 
                        </ul>

@@ -10,11 +10,18 @@
 	      			<div class="card-body p-4">
 								<h5 class="mb-4">Update Name , Email Or Username </h5> <br>
                                 <div class="row mb-3">
-										<label for="input35" class="col-sm-3 col-form-label">Enter Name</label>
+										<label for="input35" class="col-sm-3 col-form-label">Enter First Name</label>
 										<div class="col-sm-9">
-											<input type="text" name="new_name" class="form-control" placeholder="Type Your Name">
+											<input type="text" name="new_first_name" class="form-control" placeholder="Type First Name">
 										</div>
 									</div>
+									 <div class="row mb-3">
+										<label for="input35" class="col-sm-3 col-form-label">Enter Last Name</label>
+										<div class="col-sm-9">
+											<input type="text" name="new_last_name" class="form-control" placeholder="Type Last Name">
+										</div>
+									</div>
+								
 									<div class="row mb-3">
 										<label for="input35" class="col-sm-3 col-form-label">Enter New Email</label>
 										<div class="col-sm-9">
@@ -25,7 +32,7 @@
 									<div class="row mb-3">
 										<label for="input36" class="col-sm-3 col-form-label">Enter New Username</label>
 										<div class="col-sm-9">
-											<input type="text" name="new_username" class="form-control" id="password" placeholder="Type Your New Username" >
+											<input type="text" name="new_account_name" class="form-control" id="password" placeholder="Type Your New Username" >
 										</div>
 									</div>
 									

@@ -660,7 +660,7 @@ public function viewManagerDetails($team_manager_id){
    // $clients=CustomerModel::where('team_member','=',$data['user_id'])->where('status','=',1)->count();
    // $invoice_data=Invoice::where('service_id','=',$data['service_id'])->where('team_manager_id','=',$data['user_id'])->count();
    // $convert_to_clients=PaidCustomer::where('team_manager_id',$team_manager_id)->where('role','team_manager')->count();
-    return view('admin.dashboard.view_manager_details',['data'=>$data,'admin_data'=>$admin_data,'user_type'=>$user_type]);
+   return view('admin.dashboard.view_manager_details',['data'=>$data,'admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 public function viewMembers(){
       $id = session('admin');
@@ -690,5 +690,42 @@ public function addLead(){
       $user_type = self::userType($admin_data->user_type);
     return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
+ public function leadAdd(Request $request){
+     $phone= $request->phone;
+     $country_code = $request->country_code;
+     $customer_number = $country_code.$phone;
+     $team_member = $request->team_member;
+      $name = $request->name;
+      $email = $request->email;
+      $msg = $request->msg;
+     // $service_id =$request->customer_service_id;
+     
+
+      $contact_details = new CustomerModel;
+      $contact_details->customer_name = $name;
+      $contact_details->customer_number = $customer_number ;
+      $contact_details->customer_email = $email ;
+      $contact_details->msg = $msg ;
+      $contact_details->task = 1 ;
+      $contact_details->team_member = $team_member;
+     // $contact_details->customer_service_id = $service_id;
+      $save = $contact_details->save();
+      if($save){
+         return self::toastr(true,"Lead Add Successfull","success","Success");
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+    }
+  public function viewLeads(){
+      $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+      $leads_data = DB::table('customer')
+      ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
+      ->where('customer.team_member',$admin_data->id)
+      ->get();  
+      return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
+ }
 // THIS IS END OF THE CLASS 
 }

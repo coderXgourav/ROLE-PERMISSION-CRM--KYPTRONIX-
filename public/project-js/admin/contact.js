@@ -377,3 +377,44 @@ $("#update_team_members").validate({
         });
     },
 });
+
+$("#add_customer_form").validate({
+    rules: {
+        name: "required",
+        phone: "required",
+        email: {
+            required: true,
+            email: true,
+        },
+        msg: {
+            required: true,
+            minlength: 4,
+            maxlength: 200,
+        },
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/create_lead",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#add_customer_form").trigger("reset");
+                }
+            },
+        });
+    },
+});
+

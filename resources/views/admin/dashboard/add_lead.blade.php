@@ -16,6 +16,7 @@ width: 100% !important;
 
 						<div class="card">
 							<form id="add_customer_form">
+                               <input type="hidden" name="team_member" value="{{$admin_data->id}}">
 
 							<div class="card-body p-4">
 								<h5 class="mb-4">Add New Lead  </h5>
@@ -64,7 +65,7 @@ width: 100% !important;
 										<label class="col-sm-3 col-form-label"></label>
 										<div class="col-sm-9">
 											<div class="d-md-flex d-grid align-items-center gap-3">
-												<button type="submit" class="btn btn-primary px-4" style="height:46px;" id="btn" onclick="Test()">Submit</button>
+												<button type="submit" class="btn btn-primary px-4" style="height:46px;" id="btn" onclick="">Submit</button>
 												<button style="height:46px;" type="reset" class="btn btn-light px-4">Reset</button>
 											</div>
 										</div>

@@ -154,7 +154,7 @@ public function changePassword(Request $request){
   $old = $request->old;
   $new = $request->new;
   $confirm = $request->confirm;
-  $check_old_password = AdminModel::find(session('admin'));
+  $check_old_password = MainUserModel::find(session('admin'));
   if($check_old_password->password==$old){
     $check_old_password->password = $confirm;
     $save = $check_old_password->save();
@@ -257,19 +257,24 @@ public function changeUsernamePage(){
 
 public function changeUsername(Request $request){
   $email = $request->new_email; 
-  $username = $request->new_username;
-  $name = $request->new_name;
-  $update_data = AdminModel::find(session('admin'));
+  $first_name = $request->new_first_name;
+  $last_name = $request->new_last_name;
+  $account_name = $request->new_account_name;
+  $update_data = MainUserModel::find(session('admin'));
   if($email!=""){
-   $update_data->email= $email;
+   $update_data->email_address= $email;
   }
-  if($username!=""){
-   $update_data->username= $username;
+  if($first_name!=""){
+   $update_data->first_name= $first_name;
   }
-  if($name!=""){
-   $update_data->name= $name;
+  if($last_name!=""){
+   $update_data->last_name= $last_name;
   }
- if($name==""&&$email==""&&$username==""){
+  if($account_name!=""){
+   $update_data->account_name= $account_name;
+  }
+
+ if($first_name==""&& $last_name==""&&$email==""&&$account_name==""){
    return self::toastr(false,"Sorry..Noting For Update","error","Error");
  }else{
   $update_data->save();
