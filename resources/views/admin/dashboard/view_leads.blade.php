@@ -39,22 +39,22 @@
 										  $id = encrypt($value->customer_id);
 									  @endphp
 								     <input type="hidden" id="phone-number" type="text" value="{{$value->customer_number}}"  />
-								  <!--   <button onclick="" type="button" class="btn btn-info"><i class="fa fa-exchange"></i></button>
+								     <button onclick="" type="button" class="btn btn-info"><i class="fa fa-exchange"></i></button>
                                      &nbsp;
 								   
-								     <a href="#" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+								     <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     
                                  	 &nbsp;
 
-									 <a href="#"  class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>
+									 <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>
 									&nbsp;
-                                   -->
+                                   
                                     <div id="volume-indicators">
 									
-										<!-- <a href="#"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+									   <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
 										
-										<a href="#" class="btn btn-secondary"><i class="fa fa-commenting" aria-hidden="true"></i></a>
-                                         -->{{-- </center> --}}
+									   <a href="#" class="btn btn-secondary"><i class="fa fa-commenting" aria-hidden="true"></i></a>
+                                       {{-- </center> --}}
 									</td>
 									
 									</tr>

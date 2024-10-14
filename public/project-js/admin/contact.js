@@ -418,3 +418,69 @@ $("#add_customer_form").validate({
     },
 });
 
+// Remark Start
+$("#remark_form").validate({
+    rules: {
+        remark: {
+            required: true,
+        },
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/remarks",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+               
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#remark_form").trigger("reset");
+                }
+
+            },
+        });
+    },
+});
+// Remark End
+
+$("#email_send").validate({
+    rules: {
+        editor2: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/send-email",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Send Email");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $(".cke_wysiwyg_frame ").css("display", "none");
+                }
+            },
+        });
+    },
+});
+

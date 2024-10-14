@@ -16,9 +16,10 @@ use App\Models\Invoice;
 use App\Models\PaidCustomer;
 use App\Models\MainUserModel;
 use App\Models\PermissionModel;
-
+use App\Models\RemarkModel;
 use DB;
 use Crypt;
+use Mail;
 
 class ContactController extends Controller
 {
@@ -731,5 +732,93 @@ public function addLead(){
       ->get();  
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
+ //chatShow FUNCTION START
+  public function chatShow($customer_id){
+     $id = session('admin');
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $customer_id =   Crypt::decrypt($customer_id);
+     $customers = DB::table('customer')
+     ->join('remark','remark.customer_id','=','customer.customer_id')
+     ->where('customer.customer_id','=',$customer_id)
+     ->get();
+     $clients = CustomerModel::find($customer_id);
+     return view('admin.dashboard.chat',['admin_data'=>$admin_data,'data'=>$customers,'customer'=>$clients,'user_type'=>$user_type]);
+  }
+//chatShow FUNCTION END 
+//Remark FUNCTION START
+public function remarks(Request $request){
+  $customer_id = $request->customer_id;
+  $user_id = $request->user_id;
+  $remark =$request->remark;
+  $role=$request->role;
+  $remark_details = new RemarkModel;
+  $remark_details->customer_id =$customer_id;
+  $remark_details->user_id=$user_id;
+  $remark_details->remark=$remark;
+  $remark_details->role=$role;
+
+  $save = $remark_details->save();
+      if($save){
+          return self::toastr(true,"Remark Added","success","Success");
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+
+}
+//Remark FUNCTION END
+//callPage FUNCTION START
+public function callPage($customer_id){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $customer_id = decrypt($customer_id);
+   $user_data = CustomerModel::find($customer_id);
+   $number = $user_data->customer_number;
+   $name = $user_data->customer_name;
+  return view('admin.dashboard.call',['admin_data'=>$admin_data,'id'=>$customer_id,'call_number'=>$number,'name'=>$name,'user_type'=>$user_type]);
+}
+//callPage FUNCTION END
+//  THIS IS emailText FUNCTION 
+public function emailText($customer_id){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $customer_id = decrypt($customer_id);
+  return view('admin.dashboard.email_text',['admin_data'=>$admin_data,'id'=>$customer_id,'user_type'=>$user_type]);
+}
+//  THIS IS emailText FUNCTION 
+// THIS IS emailSendToClient FUNCTION 
+public function emailSendToClient(Request $request){
+   $id = $request->customer_id;
+   $msg = $request->editor2;
+    $email_data = CustomerModel::find($id);
+    $email =$email_data->customer_email;
+    // echo $email;
+    // die();
+    if($msg==""){
+   return self::toastr(false,' Text Field is blank , Please Text email','error','Error');
+    }
+   $data = ['msg'=>$msg];
+    $user['to'] = $email;
+  $send =   Mail::send('admin.dashboard.mail',$data,function($messages)use($user)
+    {$messages->to($user['to']);
+      $messages->subject('Business Email');
+    });
+  if($send){
+    $save = new EmailModel;
+    $save->email_admin = session('admin');
+    $save->email_customer = $id;
+    $save->email_text = $msg;
+    $save->save();
+   return self::toastr(true,'Email Send Successfull','success','Success');
+  }else{
+   return self::toastr(false,'Please Try again Later','error','Error');
+  }
+  
+  
+}
+// THIS IS emailSendToClient FUNCTION 
+
 // THIS IS END OF THE CLASS 
 }
