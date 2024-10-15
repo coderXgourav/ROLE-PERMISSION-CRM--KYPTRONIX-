@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('paid_customer', function (Blueprint $table) {
             $table->id('paid_customer_id');
             $table->integer('customer_id')->nullable();
-            $table->integer('team_member_id')->nullable();
-            $table->integer('team_manager_id')->nullable();            
+            $table->integer('user_id')->nullable();            
             $table->string('role')->nullable();
             $table->integer('status')->default(0);
             $table->timestamps();

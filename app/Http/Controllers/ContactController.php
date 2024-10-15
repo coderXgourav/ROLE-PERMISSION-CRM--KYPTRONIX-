@@ -729,6 +729,7 @@ public function addLead(){
       $leads_data = DB::table('customer')
       ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
       ->where('customer.team_member',$admin_data->id)
+      ->where('customer.status',1)
       ->get();  
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
@@ -819,6 +820,117 @@ public function emailSendToClient(Request $request){
   
 }
 // THIS IS emailSendToClient FUNCTION 
+//  THIS IS messageText FUNCTION 
+public function messageText($customer_id){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $customer_id = decrypt($customer_id);
+  return view('admin.dashboard.text_msg',['admin_data'=>$admin_data,'id'=>$customer_id,'user_type'=>$user_type]);
+}
+//  THIS IS messageText FUNCTION 
+// THIS IS A SEND_SMS FUNCTION 
+public function sendSms(Request $request){
+        $accountSid = "AC12e09a4b307d4b4dedd6a48a8b150809";
+        $authToken = "190b69babc7531bf9960a498eba8d3f4";
+        $twilioNumber = "+12567435707";
+        
+  // THIS IS API GET VARIABLE        
+        $message = $request->input('message');
+        $customer_id = $request->customer_id;
+
+        $customer_details  = CustomerModel::find($customer_id);
+        $number = $customer_details->customer_number;
+
+        $twilio = new Client($accountSid, $authToken);
+
+        $status = $twilio->messages->create(
+            $number,
+            [
+                'from' => $twilioNumber,
+                'body' => $message,
+            ]
+        );
+        if($status){
+          $save = new MessageModel;
+          $save -> team_member_id = session('admin');
+          $save -> customer_msg_id = $customer_id;
+          $save -> message = $message;
+          $save->save();
+          return self::toastr(true,'Message Send Successfull','success','Success');
+
+        }else{
+          return self::toastr(false,'Message Not Sending','error','Error');
+
+        }
+
+      }
+// THIS IS A SEND_SMS FUNCTION  
+public function createInvoice($customer_id){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  $data = CustomerModel::find($customer_id);
+ return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+}
+
+public function invoiceAdd(Request $request){
+      $date = $request->date;
+      $price = $request->price;
+      $description=$request->description;
+      $customer_id=$request->customer_id;
+      $user_id=$request->user_id;
+      $role=$request->role;
+      $service_id=$request->service_id;
+
+      $invoice_details = new Invoice;
+      $invoice_details->price = $price;
+      $invoice_details->date = $date;
+      $invoice_details->customer_id = $customer_id;
+      $invoice_details->description = $description;
+      $invoice_details->user_id = $user_id;
+      $invoice_details->role = $role;
+      $invoice_details->service_id=$service_id;
+      $save = $invoice_details->save();
+      $invoice_id =$invoice_details->invoice_id;
+
+      if($save){
+         return self::toastr(true,$invoice_id,"success","Success");
+
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+}
+public function invoice2($customer_id,$invoice_id){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  $clients = CustomerModel::find($customer_id);
+  $invoice_details = Invoice::find($invoice_id);
+  return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
+
+}
+public function convertToClient(Request $request){
+      $customer_id = $request->customer_id;
+      $user_id = $request->user_id;
+      $role = $request->role;
+      $paid_customer_details = new PaidCustomer;
+      $paid_customer_details->customer_id = $customer_id;
+      $paid_customer_details->user_id = $user_id;
+      $paid_customer_details->role = $role;
+      $save = $paid_customer_details->save();
+      $customer_details = CustomerModel::find($customer_id);
+      $customer_details->status = 0;
+      $save_status=$customer_details->save();
+      if($save){
+         return self::toastr(true,"Converted To Client ","success","Success");
+
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+  }
 
 // THIS IS END OF THE CLASS 
 }

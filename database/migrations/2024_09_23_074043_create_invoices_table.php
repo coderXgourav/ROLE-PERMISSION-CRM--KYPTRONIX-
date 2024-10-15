@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('date')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('customer_id')->nullable();
-            $table->integer('team_member_id')->nullable();
-            $table->integer('team_manager_id')->nullable();
+            $table->integer('user_id')->nullable();
             $table->integer('service_id')->nullable();
             $table->string('role')->nullable();
             $table->integer('amount')->nullable();

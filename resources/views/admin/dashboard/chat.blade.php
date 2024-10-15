@@ -20,8 +20,7 @@
                 </div> 
                 <div class="chat-top-header-menu ms-auto"> 
                     invoice
-                    <a href="{{route('team.create-invoice',['id'=>$customer->customer_id])}}"><i class='bx bx-chevron-right-square
-                        '></i></a>
+                    <a href="{{route('admin.create-invoice',['id'=>$customer->customer_id])}}"><i class='bx bx-chevron-right-square'></i></a>
                </div> 
            </div>
            <div class="chat-content" style="margin-left: 0px; height: auto;"> 
