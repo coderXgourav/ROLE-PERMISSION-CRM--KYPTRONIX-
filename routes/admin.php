@@ -100,5 +100,11 @@ Route::get('/admin/create-invoice/{id}',[ContactController::class,'createInvoice
 Route::post('/admin/save_invoice',[ContactController::class,'invoiceAdd']);
 Route::get('/admin/invoice2/{id}/{invoice_id}',[ContactController::class,'invoice2'])->name('admin.invoice2');
 Route::get('/admin/convert_to_client',[ContactController::class,'convertToClient']);
+Route::get('/admin/view_clients',[ContactController::class,'viewClients'])->name('admin.view_clients');
+Route::get('/admin/view-invoice',[ContactController::class,'viewInvoiceList'])->name('admin.view-invoice');
+Route::get('/admin/show_invoice/{id}/{invoice_id}',[ContactController::class,'showInvoice'])->name('admin.show_invoice');
+Route::get('/admin/email-template',[ContactController::class,'emailTemplate'])->name('admin.email-template');
+Route::post('/admin/send-email-template',[ContactController::class,'sendEmailTemplate']);
+Route::get('/admin/view-mail-template',[ContactController::class,'allEmailTemplate'])->name('admin.view-mail-template');
 
 });

@@ -236,8 +236,7 @@
                             <div class="menu-title">Clients </div>
                         </a>
                         <ul>                    
-                            <li> <a href="#"><i
-                                        class='bx bx-radio-circle'></i>View Clients</a>
+                            <li> <a href="{{route('admin.view_clients')}}"><i class='bx bx-radio-circle'></i>View Clients</a>
                             </li>
                         </ul>
                     </li>
@@ -269,10 +268,10 @@
                         <div class="menu-title">Template </div>
                     </a>
                     <ul>
-                       <li> <a href="#"><i
+                       <li> <a href="{{route('admin.email-template')}}"><i
                             class='bx bx-radio-circle'></i>Email Template</a>
                        </li>   
-                       <li> <a href="#"><i
+                       <li> <a href="{{route('admin.view-mail-template')}}"><i
                             class='bx bx-radio-circle'></i>View Template</a>
                        </li>  
 
@@ -287,7 +286,7 @@
                         <div class="menu-title">Invoice </div>
                     </a>
                     <ul>
-                       <li> <a href="#"><i
+                       <li> <a href="{{route('admin.view-invoice')}}"><i
                             class='bx bx-radio-circle'></i>View Invoice</a>
                        </li>  
 

@@ -41,8 +41,6 @@
 								     <input type="hidden" id="phone-number" type="text" value="{{$value->customer_number}}"  />
 								      <input type="hidden" name="role" value="{{$admin_data->user_type}}">
 								     <input type="hidden" name="user_id" value="{{$admin_data->id}}">
-								     <button onclick="ConvertToClient({{$value->customer_id}},{{$admin_data->id}},'{{$admin_data->user_type}}')" type="button" class="btn btn-info"><i class="fa fa-exchange"></i></button>
-                                     &nbsp;
 								   
 								     <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     
