@@ -261,16 +261,16 @@ public function Clientspage(){
 
 //  THIS IS assginClientspage FUNCTION 
 public function assginClientspage(){
-  $id = session('admin');
-   $admin_data = AdminModel::find($id);
-  $team = UserModel::all();
-
-   $customers = DB::table('user')
-   ->join('customer','customer.team_member','=','user.user_id')
-   ->where('customer.team_member','!=',null)
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $team = MainUserModel::where('user_type','customer_success_manager')->get();
+   $customers = DB::table('main_user')
+   ->join('customer','customer.team_member','=','main_user.id')
+   ->where('customer.team_member','=',$admin_data->id)
    ->orderBy('customer.customer_id','DESC')
    ->get();
-  return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team]);
+  return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
 }
 //  THIS IS assginClientspage FUNCTION 
 
@@ -289,18 +289,12 @@ public function noneAssginClientspage(){
 public function assign(Request $request){
   $customers[] = $request->customer;
   $team_member = $request->team_member;
-
-// echo "<pre>";
-// print_r($customers);
-
-foreach ($customers[0] as $key => $value) {
-$update = CustomerModel::find($value);
-$update->team_member=$team_member;
-$update->save();
-}
-return self::swal(true,'Assign Successfull','success');
-  
-
+  foreach ($customers[0] as $key => $value) {
+  $update = CustomerModel::find($value);
+  $update->team_member=$team_member;
+  $update->save();
+  }
+  return self::swal(true,'Assign Successfull','success');
 }
 // THIS IS  assign FUNCTION 
 // THIS IS emailPage FUNCTION 
