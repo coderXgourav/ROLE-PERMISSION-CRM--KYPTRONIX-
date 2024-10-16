@@ -688,7 +688,8 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-    return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+      $all_services = Service::all();
+    return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type,'all_services'=>$all_services]);
 }
  public function leadAdd(Request $request){
      $phone= $request->phone;
@@ -698,7 +699,7 @@ public function addLead(){
       $name = $request->name;
       $email = $request->email;
       $msg = $request->msg;
-     // $service_id =$request->customer_service_id;
+      $service_id =$request->customer_service_id;
      
 
       $contact_details = new CustomerModel;
@@ -708,7 +709,7 @@ public function addLead(){
       $contact_details->msg = $msg ;
       $contact_details->task = 1 ;
       $contact_details->team_member = $team_member;
-     // $contact_details->customer_service_id = $service_id;
+      $contact_details->customer_service_id = $service_id;
       $save = $contact_details->save();
       if($save){
          return self::toastr(true,"Lead Add Successfull","success","Success");
@@ -721,11 +722,12 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      $leads_data = DB::table('customer')
-      ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
-      ->where('customer.team_member',$admin_data->id)
-      ->where('customer.status',1)
-      ->get();  
+      if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
+        $leads_data = DB::table('customer')
+        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
+        ->where('customer.status',1)
+        ->get();  
+      }
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
  //chatShow FUNCTION START

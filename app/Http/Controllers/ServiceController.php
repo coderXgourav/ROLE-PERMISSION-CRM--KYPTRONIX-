@@ -69,12 +69,14 @@ class ServiceController extends Controller
     // THIS IS serviceAdd FUNCTION 
     public function serviceAdd(Request $request){
       $name = $request->name;
+      $user_type = $request->user_type;
      if(Service::where('name',$name)->first()){
          return self::toastr(false,"Service Name Already Registered","error","Error");
      }
      
       $service_details = new Service;
       $service_details->name = $name;
+      $service_details->user_type = $user_type;
       $save = $service_details->save();
       if($save){
          return self::toastr(true,"Service Add Successfull","success","Success");
@@ -90,7 +92,8 @@ class ServiceController extends Controller
 	  // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-	  $services = Service::orderBy('service_id','DESC')->get();
+    $services = Service::orderBy('service_id','DESC')->get();
+    
 	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
   }
   //AllService End
