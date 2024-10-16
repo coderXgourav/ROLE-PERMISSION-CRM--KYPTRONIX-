@@ -70,7 +70,7 @@ Route::get('admin/edit-team-member/{id}',[ContactController::class,'editTeamMemb
 Route::post('/admin/update_members',[ContactController::class,'updateMembers']);
 Route::get('/admin/invoice_list/{id}',[ContactController::class,'invoiceList'])->name('admin.invoice_list');
 Route::get('/admin/view_invoice/{id}/{invoice_id}',[ContactController::class,'viewInvoice'])->name('admin.view_invoice');
-Route::get('/admin/view_team_member/{id}',[ContactController::class,'viewTeamMember'])->name('admin.view_team_member');
+Route::get('/admin/contact/{id}',[ContactController::class,'viewTeamMember'])->name('admin.view_team_member');
 Route::get('/admin/show-team-member-list/{id}',[ContactController::class,'teamMemberList'])->name('admin.show-team-member-list');
 Route::get('/admin/show-clients-list/{id}',[ContactController::class,'showClientsList'])->name('admin.show-clients-list');
 Route::get('admin/view_member/{id}',[ContactController::class,'viewMember'])->name('admin.view_member');

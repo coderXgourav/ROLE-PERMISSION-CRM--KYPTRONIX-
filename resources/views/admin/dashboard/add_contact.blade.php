@@ -131,7 +131,7 @@ width: 100% !important;
 										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon"> 
-												<select name="services"  class="form-control" required >
+												<select multiple name="services[]"  class="form-control" required >
 													<option value="">Select Services </option>
 													@foreach ($services as $item)
 															<option value="{{$item->service_id}}">{{$item->name}}</option>
