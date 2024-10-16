@@ -751,11 +751,37 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
+      if($admin_data->user_type == 'admin'){
         $leads_data = DB::table('customer')
         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
         ->where('customer.status',1)
         ->get();  
+      }else if($admin_data->user_type == 'team_manager'){
+
+        $leads_data = DB::table('team_manager_services')
+        ->join('main_user','main_user.id','=','team_manager_services.team_manager_id')
+        ->where('main_user.id',session('admin'))->first();
+
+        if($leads_data){
+          $services_id = $leads_data->managers_services_id;
+          $services =  json_decode($services_id);
+          $leads_data = DB::table('customer')
+         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.customer_service_id','customer.msg')
+         ->join('main_user','main_user.id','=','customer.team_member')
+         ->whereIn('customer.customer_service_id',$services)
+         ->where('customer.status',1)
+          ->get();  
+        }else{
+          return redirect('/login/dashboard');
+        }
+
+      }else{
+        $leads_data = DB::table('customer')
+        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
+        ->where('customer.team_member',$admin_data->id)
+        ->where('customer.status',1)
+        ->get();  
+
       }
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
