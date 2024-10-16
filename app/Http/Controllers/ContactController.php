@@ -18,9 +18,11 @@ use App\Models\MainUserModel;
 use App\Models\PermissionModel;
 use App\Models\RemarkModel;
 use App\Models\EmailTemplate;
+use App\Models\TeamManagersServicesModel;
 use DB;
 use Crypt;
 use Mail;
+
 
 class ContactController extends Controller
 {
@@ -86,6 +88,14 @@ class ContactController extends Controller
       $last_name = $request->last_name;
       $email = $request->email;
       $user_type = $request->user_type;
+
+      $services_status = 0;
+      
+      if($user_type=="team_manager"){
+        $services = $request->services;
+        $services_status = 1;
+      }
+      
 
       $service_manage = $request->service_manage;
       $leads_manage = $request->leads_manage;
@@ -170,6 +180,15 @@ class ContactController extends Controller
      
       $permissions->save();
 
+    if($services_status>0){
+      $data = new TeamManagersServicesModel;
+      $data->team_manager_id = $user_id;
+      $data->managers_services_id = json_encode($services);
+      $data->save();
+    }
+
+
+
       return self::toastr(true,"Registration Successfull","success","Success");
       
     }
@@ -182,10 +201,12 @@ class ContactController extends Controller
       //$admin_data = AdminModel::find($id);
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      $contact_data = DB::table('user')
-       ->join('services', 'services.service_id', '=', 'user.service_id')
-       ->select('user.*', 'services.name as service_name')
-       ->orderBy('user.user_id', 'DESC')
+      
+    
+      $contact_data = DB::table('main_user')
+      //  ->join('services', 'services.service_id', '=', 'user.service_id')
+      //  ->select('user.*', 'services.name as service_name')
+       ->orderBy('id', 'DESC')
        ->get();
       return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
     }
@@ -238,6 +259,7 @@ public function updateContact(Request $request){
 // THIS IS A deleteTeam FUNCTION 
 public function deleteTeam(Request $request){
     $id = $request->id;
+   
     $delete = MainUserModel::find($id)->delete();
     if($delete){
   return self::swal(true,'Deleted','success');
@@ -542,16 +564,21 @@ public function smsShow($id){
 //viewTeamMember FUNCTION START
 public function viewTeamMember($team_manager_id){
     $team_id = session('admin');
-    $admin_data = AdminModel::find($team_id);
 
+    $data = self::userDetails($team_id);
     $team_manager_id =   Crypt::decrypt($team_manager_id);
-    $data = UserModel::find($team_manager_id);
-    $services = Service::find($data['service_id']);
-    $total_team_member = TeamMember::where('team_service',$data['service_id'])->count();
-    $clients=CustomerModel::where('team_member','=',$data['user_id'])->where('status','=',1)->count();
-    $invoice_data=Invoice::where('service_id','=',$data['service_id'])->where('team_manager_id','=',$data['user_id'])->count();
-    $convert_to_clients=PaidCustomer::where('team_manager_id',$team_manager_id)->where('role','team_manager')->count();
-    return view('admin.dashboard.view_team_member',['admin_data'=>$data,'data'=>$data,'services_data'=>$services,'total_team_member'=>$total_team_member,'clients'=>$clients,'invoice_data'=>$invoice_data,'convert_to_clients'=>$convert_to_clients]);
+    $data = MainUserModel::find($team_manager_id);
+    $user_type = $data['user_type'];
+
+    // $services = Service::find($data['service_id']);
+    // $total_team_member = TeamMember::where('team_service',$data['service_id'])->count();
+    // $clients=CustomerModel::where('team_member','=',$data['user_id'])->where('status','=',1)->count();
+    // $invoice_data=Invoice::where('service_id','=',$data['service_id'])->where('team_manager_id','=',$data['user_id'])->count();
+    // $convert_to_clients=PaidCustomer::where('team_manager_id',$team_manager_id)->where('role','team_manager')->count();
+
+    // return view('admin.dashboard.view_team_member',['admin_data'=>$data,'data'=>$data,'services_data'=>$services,'total_team_member'=>$total_team_member,'clients'=>$clients,'invoice_data'=>$invoice_data,'convert_to_clients'=>$convert_to_clients]);
+
+      return view('admin.dashboard.view_team_member',['admin_data'=>$data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>11,'clients'=>02,'invoice_data'=>21,'convert_to_clients'=>20]);
 }
 //viewTeamMember FUNCTION END
 public function teamMemberList($manager_id){
@@ -654,12 +681,14 @@ public function viewManagerDetails($team_manager_id){
     $team_manager_id =   Crypt::decrypt($team_manager_id);
     $data = MainUserModel::find($team_manager_id);
     $user_type = self::userType($data->user_type);
+    
     //$data = UserModel::find($team_manager_id);
     //$services = Service::find($data['service_id']);
    // $total_team_member = TeamMember::where('team_service',$data['service_id'])->count();
    // $clients=CustomerModel::where('team_member','=',$data['user_id'])->where('status','=',1)->count();
    // $invoice_data=Invoice::where('service_id','=',$data['service_id'])->where('team_manager_id','=',$data['user_id'])->count();
    // $convert_to_clients=PaidCustomer::where('team_manager_id',$team_manager_id)->where('role','team_manager')->count();
+   
    return view('admin.dashboard.view_manager_details',['data'=>$data,'admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 public function viewMembers(){

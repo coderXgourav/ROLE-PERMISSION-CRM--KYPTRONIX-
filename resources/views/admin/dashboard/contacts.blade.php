@@ -14,7 +14,7 @@
 									<tr>
 										<th>No.</th>
 										<th>Name</th>
-										<th>Service</th>
+										<th>User Type</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Show Details</th>
@@ -27,15 +27,15 @@
                                         $i=1;
                                     @endphp
                                     @foreach($data as $key => $value)
-                                    <tr id="{{$value->user_id}}">
+                                    <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
-										<td>{{$value->name}}</td>
-										<td>{{$value->service_name}}</td>
+										<td>{{$value->first_name}} {{$value->last_name}}</td>
+										<td>{{$value->user_type}}</td>
 										<td>{{$value->phone_number}}</td>
-										<td>{{$value->email}}</td>
+										<td>{{$value->email_address}}</td>
 										
 										  @php
-										   $user_id = Crypt::encrypt($value->user_id);
+										   $user_id = Crypt::encrypt($value->id);
 										  @endphp
 									
 
@@ -44,9 +44,9 @@
 										<td>
 										
 											 <div class="d-flex order-actions">
-											<a href="{{route('admin.edit',['id'=>$user_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
+											<a href="{{route('admin.edit',['id'=>$value->id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
 
-												<a href="javascript:;"  onclick="DeleteTeam({{$value->user_id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
+												<a href="javascript:;"  onclick="DeleteTeam({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
 											 </div>
 										</td>
 									
