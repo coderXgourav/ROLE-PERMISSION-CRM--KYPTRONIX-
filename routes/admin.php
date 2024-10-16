@@ -38,7 +38,7 @@ Route::get('admin/logout',[AdminController::class,'logout'])->name('admin-logout
 Route::post('/admin/change_password',[AdminController::class,'changePassword']);
 Route::get('/admin/add-contact',[AdminController::class,'addContactPage'])->name('admin.add-contact');
 Route::post('/admin/create_contact',[ContactController::class,'contactAdd']);
-Route::get('/admin/contacts',[ContactController::class,'contactPage'])->name('admin.contact');
+// Route::get('/admin/contacts',[ContactController::class,'contactPage'])->name('admin.contact');
 Route::get('/admin/change_password',[AdminController::class,'changeUsernamePage'])->name('admin.change_username');
 Route::post('/admin/change_username',[AdminController::class,'changeUsername']);
 Route::get('admin/edit/{id}',[ContactController::class,'editUserPage'])->name('admin.edit');
@@ -106,5 +106,5 @@ Route::get('/admin/show_invoice/{id}/{invoice_id}',[ContactController::class,'sh
 Route::get('/admin/email-template',[ContactController::class,'emailTemplate'])->name('admin.email-template');
 Route::post('/admin/send-email-template',[ContactController::class,'sendEmailTemplate']);
 Route::get('/admin/view-mail-template',[ContactController::class,'allEmailTemplate'])->name('admin.view-mail-template');
-
+Route::get('/admin/contacts',[ContactController::class,'filterUsers'])->name('admin.contact');
 });
