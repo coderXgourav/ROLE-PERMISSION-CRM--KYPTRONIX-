@@ -152,7 +152,7 @@
                         </ul>
                     </li> --}}
                         @if($admin_data->user_type=="admin")
-                    <li>
+                    {{-- <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
                             </div>
@@ -167,10 +167,10 @@
                             </li>
 
                         </ul>
-                    </li>
+                    </li> --}}
                     @endif
             @if($admin_data->team_manager_permission>0)
-                    <li>
+                    {{-- <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
                             </div>
@@ -185,14 +185,14 @@
                             </li>
                           
                         </ul>
-                    </li>
+                    </li> --}}
                 @endif  
 
                         
 
 
             @if($admin_data->customer_success_manager_permission>0)
-                    <li>
+                    {{-- <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
                             </div>
@@ -207,7 +207,7 @@
                             </li>
 
                         </ul>
-                    </li>
+                    </li> --}}
                     @endif
 
             @if($admin_data->leads_permission>0)

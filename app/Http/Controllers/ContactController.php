@@ -194,23 +194,7 @@ class ContactController extends Controller
     }
     // THIS IS contactAdd FUNCTION 
 
-    
-    // THIS IS contactPage FUNCTION 
-    public function contactPage(){
-      $id = session('admin');
-      //$admin_data = AdminModel::find($id);
-      $admin_data = self::userDetails($id);
-      $user_type = self::userType($admin_data->user_type);
-      
-    
-      $contact_data = DB::table('main_user')
-      //  ->join('services', 'services.service_id', '=', 'user.service_id')
-      //  ->select('user.*', 'services.name as service_name')
-       ->orderBy('id', 'DESC')
-       ->get();
-      return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-    }
-    // THIS IS contactPage FUNCTION 
+
 
 // THIS IS editUserPage FUNCTION   
   public function editUserPage($contact_id){
@@ -364,6 +348,49 @@ public function export()
     {
         return Excel::download(new CustomerExport(), 'clients.xlsx');
     }
+
+    // filterUsers
+    public function filterUsers(Request $request){
+      $filter = $request->filter;
+      if($filter != ""){
+        switch($filter){
+          case "Operation Managers":
+              $contact_data = DB::table('main_user')->where('user_type',"operation_manager")->orderBy('id','DESC')->get();
+            $id = session('admin');
+          $admin_data = self::userDetails($id);
+          $user_type = self::userType($admin_data->user_type);
+         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+            break;
+            case "Team Managers":
+              
+                $contact_data = DB::table('main_user')->where('user_type',"team_manager")->orderBy('id','DESC')->get();
+            $id = session('admin');
+          $admin_data = self::userDetails($id);
+          $user_type = self::userType($admin_data->user_type);
+         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+            
+            break;
+                 case "Customer Success Manager":
+                    $contact_data = DB::table('main_user')->where('user_type',"customer_success_manager")->orderBy('id','DESC')->get();
+            $id = session('admin');
+          $admin_data = self::userDetails($id);
+          $user_type = self::userType($admin_data->user_type);
+         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+            
+            break;
+            default:
+            break;
+        }
+      }else{
+              $contact_data = DB::table('main_user')->orderBy('id','DESC')->get();
+            $id = session('admin');
+          $admin_data = self::userDetails($id);
+          $user_type = self::userType($admin_data->user_type);
+         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+      }
+
+    }
+
 
 // THIS IS EXPORT FUNCTION 
 
