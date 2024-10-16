@@ -42,8 +42,8 @@
 											<img src="{{url('assets/images/team.png')}}" alt="Team Member" class="rounded-circle p-1 bg-primary" width="120">
 
 											<div class="mt-3">
-												<h4>{{$data['name']}}</h4>
-												<p class="text-secondary mb-1">{{$data['email']}}</p>
+												<h4>{{$data['first_name']}} {{$data['last_name']}}</h4>
+												<p class="text-secondary mb-1">{{$data['email_address']}}</p>
 												<p class="text-muted font-size-sm">{{$data['phone_number']}}</p>
 												<!--<button class="btn btn-primary">Follow</button>
 												<button class="btn btn-outline-primary">Message</button>-->
@@ -134,48 +134,7 @@
 									</div>
 								</div>	
 							
-								<div class="card">
-									<div class="card-body">
-										<div class="row mb-3">
-											<div class="col-sm-3">
-												<h6 class="mb-0">Full Name</h6>
-											</div>
-											<div class="col-sm-9 text-secondary">
-												<input type="text" class="form-control" value="{{$data['name']}}" disabled/>
-											</div>
-										</div>
-										<div class="row mb-3">
-											<div class="col-sm-3">
-												<h6 class="mb-0">Email</h6>
-											</div>
-											<div class="col-sm-9 text-secondary">
-												<input type="text" class="form-control" value="{{$data['email']}}" disabled/>
-											</div>
-										</div>
-										<div class="row mb-3">
-											<div class="col-sm-3">
-												<h6 class="mb-0">Phone</h6>
-											</div>
-											<div class="col-sm-9 text-secondary">
-												<input type="text" class="form-control" value="{{$data['phone_number']}}" disabled/>
-											</div>
-										</div>
-										{{-- <div class="row mb-3">
-											<div class="col-sm-3">
-												<h6 class="mb-0">Service</h6>
-											</div>
-											<div class="col-sm-9 text-secondary">
-												<input type="text" class="form-control" value="{{$services_data['name']}}" disabled />
-											</div>
-										</div> --}}
-										<!--<div class="row">
-											<div class="col-sm-3"></div>
-											<div class="col-sm-9 text-secondary">
-												<input type="button" class="btn btn-primary px-4" value="Save Changes" />
-											</div>
-										</div>-->
-									</div>
-								</div>
+								
 								<!-- <div class="row">
 									<div class="col-sm-12">
 										<div class="card">

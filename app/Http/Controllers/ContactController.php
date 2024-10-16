@@ -564,9 +564,11 @@ public function smsShow($id){
 //viewTeamMember FUNCTION START
 public function viewTeamMember($team_manager_id){
     $team_id = session('admin');
+    $admin_data = self::userDetails($team_id);
 
-    $data = self::userDetails($team_id);
-    $team_manager_id =   Crypt::decrypt($team_manager_id);
+
+    $team_manager_id = Crypt::decrypt($team_manager_id);
+
     $data = MainUserModel::find($team_manager_id);
     $user_type = $data['user_type'];
 
@@ -578,7 +580,7 @@ public function viewTeamMember($team_manager_id){
 
     // return view('admin.dashboard.view_team_member',['admin_data'=>$data,'data'=>$data,'services_data'=>$services,'total_team_member'=>$total_team_member,'clients'=>$clients,'invoice_data'=>$invoice_data,'convert_to_clients'=>$convert_to_clients]);
 
-      return view('admin.dashboard.view_team_member',['admin_data'=>$data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>11,'clients'=>02,'invoice_data'=>21,'convert_to_clients'=>20]);
+      return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>11,'clients'=>02,'invoice_data'=>21,'convert_to_clients'=>20]);
 }
 //viewTeamMember FUNCTION END
 public function teamMemberList($manager_id){
