@@ -20,6 +20,17 @@ width: 100% !important;
 
 							<div class="card-body p-4">
 								<h5 class="mb-4">Add New Lead  </h5>
+								   <div class="row mb-3">
+								   	<label for="input42" class="col-sm-3 col-form-label">Service</label>
+								    	<div class="col-sm-9">
+								    	   <select name="customer_service_id" id="customer_service_id" class="form-control">
+											   <option value="">Select services</option>
+											      @foreach ($all_services as $services)
+										  	       <option value="{{$services->service_id}}">{{$services->name}}</option>
+											       @endforeach
+										    </select>
+										</div>
+								   </div>
 									<div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Full Name</label>
 										<div class="col-sm-9">

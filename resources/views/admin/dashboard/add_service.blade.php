@@ -17,6 +17,7 @@
 							<form id="add_service_form">
 								{{@csrf_field()}}
 								<input type="hidden" id="reset">
+								<input type="hidden" name="user_type" value="{{$admin_data->user_type}}">
 							<div class="card-body p-4">
 								<h5 class="mb-4">Add Service </h5>
 									<div class="row mb-3">
