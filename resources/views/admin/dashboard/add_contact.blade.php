@@ -130,7 +130,7 @@ width: 100% !important;
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
 										<div class="col-sm-9">
-											<div class="position-relative input-icon">
+											<div class="position-relative input-icon"> 
 												<select name="services"  class="form-control" required >
 													<option value="">Select Services </option>
 													@foreach ($services as $item)
