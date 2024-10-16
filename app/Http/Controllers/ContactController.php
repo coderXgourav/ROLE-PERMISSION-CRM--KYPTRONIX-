@@ -755,9 +755,11 @@ public function addLead(){
       $user_type = self::userType($admin_data->user_type);
       if($admin_data->user_type == 'admin'){
         $leads_data = DB::table('customer')
-        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
+        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','services.name','customer.status','main_user.first_name','main_user.last_name')
+        ->join('services','services.service_id','=','customer.customer_service_id')
+        ->leftjoin('main_user','main_user.id','=','customer.team_member')
         ->where('customer.status',1)
-        ->get();  
+        ->get(); 
       }else if($admin_data->user_type == 'team_manager'){
 
         $leads_data = DB::table('team_manager_services')
@@ -768,8 +770,9 @@ public function addLead(){
           $services_id = $leads_data->managers_services_id;
           $services =  json_decode($services_id);
           $leads_data = DB::table('customer')
-         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.customer_service_id','customer.msg')
-         ->join('main_user','main_user.id','=','customer.team_member')
+         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.customer_service_id','customer.msg','services.name','customer.status','main_user.first_name','main_user.last_name')
+         ->leftjoin('main_user','main_user.id','=','customer.team_member')
+         ->join('services','services.service_id','=','customer.customer_service_id')
          ->whereIn('customer.customer_service_id',$services)
          ->where('customer.status',1)
           ->get();  
@@ -779,7 +782,9 @@ public function addLead(){
 
       }else{
         $leads_data = DB::table('customer')
-        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
+        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','customer.status','services.name','main_user.first_name','main_user.last_name')
+        ->join('services','services.service_id','=','customer.customer_service_id')
+        ->leftjoin('main_user','main_user.id','=','customer.team_member')
         ->where('customer.team_member',$admin_data->id)
         ->where('customer.status',1)
         ->get();  
