@@ -377,3 +377,251 @@ $("#update_team_members").validate({
         });
     },
 });
+
+$("#add_customer_form").validate({
+    rules: {
+        name: "required",
+        phone: "required",
+        email: {
+            required: true,
+            email: true,
+        },
+        msg: {
+            required: true,
+            minlength: 4,
+            maxlength: 200,
+        },
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/create_lead",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#add_customer_form").trigger("reset");
+                }
+            },
+        });
+    },
+});
+
+// Remark Start
+$("#remark_form").validate({
+    rules: {
+        remark: {
+            required: true,
+        },
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/remarks",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+               
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#remark_form").trigger("reset");
+                }
+
+            },
+        });
+    },
+});
+// Remark End
+
+$("#email_send").validate({
+    rules: {
+        editor2: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/send-email",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Send Email");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $(".cke_wysiwyg_frame ").css("display", "none");
+                }
+            },
+        });
+    },
+});
+
+// THIS IS message_send FUNCTION
+$("#message_send").validate({
+    rules: {
+        editor2: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/send-message",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Send Message");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#message_send ").trigger("reset");
+                }
+            },
+            error: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Send Message");
+                Command: toastr["error"](
+                    "Server Down",
+                    "Please Try Again later..!"
+                );
+            },
+        });
+    },
+});
+$("#create_invoice_form").validate({
+    rules: {
+        price:"required",
+        qty: "required",
+        amount: "required",
+        description: "required",
+       
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        var customer_id=$("#customer_id").val();
+
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/save_invoice",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr[data.icon](data.title,data.msg);
+                var invoice_id =data.title;
+                 if (data.status) {
+                   window.location = "/admin/invoice2/"+customer_id+"/"+invoice_id;
+
+                }
+            },
+        });
+    },
+});
+
+function ConvertToClient(customer_id='',user_id='',role='') {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to change this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, convert it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "convert_to_client",
+                data: { 
+                    customer_id: customer_id,
+                    user_id:user_id,
+                    role:role
+                },
+                dataType: "JSON",
+                success: function (data) {
+                    swal.fire({
+                        icon: data.icon,
+                        title: data.title,
+                    });
+                    if (data.status) {
+                        $("#" + customer_id).hide();
+                    }
+                },
+            });
+        }
+    });
+}
+
+//Email template Start
+$("#email_template_send").validate({
+    rules: {
+        editor2: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/send-email-template",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Send Email");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $(".cke_wysiwyg_frame ").css("display", "none");
+                }
+            },
+        });
+    },
+});
+
+//Email template End

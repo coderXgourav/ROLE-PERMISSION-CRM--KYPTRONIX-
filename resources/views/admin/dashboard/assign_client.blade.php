@@ -38,7 +38,7 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->name}}</td>
+										<td>{{$value->first_name}} {{$value->last_name}}</td>
 									</tr>
                                     @endforeach
                                     @else 
@@ -67,7 +67,7 @@
        <select name="team_member" id="" class="form-control">
 		   <option value="">Select Team Member</option>
 		@foreach ($team as $members)
-		<option value="{{$members->user_id}}">{{$members->name}}</option>
+		<option value="{{$members->id}}">{{$members->first_name}} {{$members->last_name}}</option>
 		@endforeach
 	   </select> <br>
       </div>

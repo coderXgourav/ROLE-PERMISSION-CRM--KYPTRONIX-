@@ -87,5 +87,24 @@ Route::get('/admin/view_manager_details/{id}',[ContactController::class,'viewMan
 Route::get('/admin/view-members',[ContactController::class,'viewMembers'])->name('admin.view-members');
 Route::get('/admin/view-operation-managers',[ContactController::class,'viewOperationsManagers'])->name('admin.view-operation-managers');
 Route::get('/admin/add-lead',[ContactController::class,'addLead'])->name('admin.add-lead');
+Route::post('/admin/create_lead',[ContactController::class,'leadAdd']);
+Route::get('/admin/view-lead',[ContactController::class,'viewLeads'])->name('admin.view-lead');
+Route::get('/admin/chat/{id}',[ContactController::class,'chatShow'])->name('admin.chat');
+Route::post('/admin/remarks',[ContactController::class,'remarks']);
+Route::get('/admin/call/{id}',[ContactController::class,'callPage'])->name('admin.call');
+Route::get('/admin/send-email/{id}',[ContactController::class,'emailText'])->name('admin.send-email');
+Route::post('/admin/send-email',[ContactController::class,'emailSendToClient']);
+Route::get('/admin/send-message/{id}',[ContactController::class,'messageText'])->name('admin.send-message');
+Route::post('/admin/send-message',[ContactController::class,'sendSms']);
+Route::get('/admin/create-invoice/{id}',[ContactController::class,'createInvoice'])->name('admin.create-invoice');
+Route::post('/admin/save_invoice',[ContactController::class,'invoiceAdd']);
+Route::get('/admin/invoice2/{id}/{invoice_id}',[ContactController::class,'invoice2'])->name('admin.invoice2');
+Route::get('/admin/convert_to_client',[ContactController::class,'convertToClient']);
+Route::get('/admin/view_clients',[ContactController::class,'viewClients'])->name('admin.view_clients');
+Route::get('/admin/view-invoice',[ContactController::class,'viewInvoiceList'])->name('admin.view-invoice');
+Route::get('/admin/show_invoice/{id}/{invoice_id}',[ContactController::class,'showInvoice'])->name('admin.show_invoice');
+Route::get('/admin/email-template',[ContactController::class,'emailTemplate'])->name('admin.email-template');
+Route::post('/admin/send-email-template',[ContactController::class,'sendEmailTemplate']);
+Route::get('/admin/view-mail-template',[ContactController::class,'allEmailTemplate'])->name('admin.view-mail-template');
 
 });

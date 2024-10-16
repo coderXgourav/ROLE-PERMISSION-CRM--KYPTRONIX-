@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id('service_id');
             $table->string('name')->nullable();
+            $table->enum('user_type',['customer_success_manager','team_manager','operation_manager','admin',"bookkeeper"]);
             $table->timestamps();
         });
     }

@@ -16,9 +16,11 @@ use App\Models\Invoice;
 use App\Models\PaidCustomer;
 use App\Models\MainUserModel;
 use App\Models\PermissionModel;
-
+use App\Models\RemarkModel;
+use App\Models\EmailTemplate;
 use DB;
 use Crypt;
+use Mail;
 
 class ContactController extends Controller
 {
@@ -259,16 +261,16 @@ public function Clientspage(){
 
 //  THIS IS assginClientspage FUNCTION 
 public function assginClientspage(){
-  $id = session('admin');
-   $admin_data = AdminModel::find($id);
-  $team = UserModel::all();
-
-   $customers = DB::table('user')
-   ->join('customer','customer.team_member','=','user.user_id')
-   ->where('customer.team_member','!=',null)
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $team = MainUserModel::where('user_type','customer_success_manager')->get();
+   $customers = DB::table('main_user')
+   ->join('customer','customer.team_member','=','main_user.id')
+   ->where('customer.team_member','=',$admin_data->id)
    ->orderBy('customer.customer_id','DESC')
    ->get();
-  return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team]);
+  return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
 }
 //  THIS IS assginClientspage FUNCTION 
 
@@ -287,18 +289,12 @@ public function noneAssginClientspage(){
 public function assign(Request $request){
   $customers[] = $request->customer;
   $team_member = $request->team_member;
-
-// echo "<pre>";
-// print_r($customers);
-
-foreach ($customers[0] as $key => $value) {
-$update = CustomerModel::find($value);
-$update->team_member=$team_member;
-$update->save();
-}
-return self::swal(true,'Assign Successfull','success');
-  
-
+  foreach ($customers[0] as $key => $value) {
+  $update = CustomerModel::find($value);
+  $update->team_member=$team_member;
+  $update->save();
+  }
+  return self::swal(true,'Assign Successfull','success');
 }
 // THIS IS  assign FUNCTION 
 // THIS IS emailPage FUNCTION 
@@ -664,7 +660,7 @@ public function viewManagerDetails($team_manager_id){
    // $clients=CustomerModel::where('team_member','=',$data['user_id'])->where('status','=',1)->count();
    // $invoice_data=Invoice::where('service_id','=',$data['service_id'])->where('team_manager_id','=',$data['user_id'])->count();
    // $convert_to_clients=PaidCustomer::where('team_manager_id',$team_manager_id)->where('role','team_manager')->count();
-    return view('admin.dashboard.view_manager_details',['data'=>$data,'admin_data'=>$admin_data,'user_type'=>$user_type]);
+   return view('admin.dashboard.view_manager_details',['data'=>$data,'admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 public function viewMembers(){
       $id = session('admin');
@@ -694,5 +690,329 @@ public function addLead(){
       $user_type = self::userType($admin_data->user_type);
     return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
+ public function leadAdd(Request $request){
+     $phone= $request->phone;
+     $country_code = $request->country_code;
+     $customer_number = $country_code.$phone;
+     $team_member = $request->team_member;
+      $name = $request->name;
+      $email = $request->email;
+      $msg = $request->msg;
+     // $service_id =$request->customer_service_id;
+     
+
+      $contact_details = new CustomerModel;
+      $contact_details->customer_name = $name;
+      $contact_details->customer_number = $customer_number ;
+      $contact_details->customer_email = $email ;
+      $contact_details->msg = $msg ;
+      $contact_details->task = 1 ;
+      $contact_details->team_member = $team_member;
+     // $contact_details->customer_service_id = $service_id;
+      $save = $contact_details->save();
+      if($save){
+         return self::toastr(true,"Lead Add Successfull","success","Success");
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+    }
+  public function viewLeads(){
+      $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+      $leads_data = DB::table('customer')
+      ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg')
+      ->where('customer.team_member',$admin_data->id)
+      ->where('customer.status',1)
+      ->get();  
+      return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
+ }
+ //chatShow FUNCTION START
+  public function chatShow($customer_id){
+     $id = session('admin');
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $customer_id =   Crypt::decrypt($customer_id);
+     $customers = DB::table('customer')
+     ->join('remark','remark.customer_id','=','customer.customer_id')
+     ->where('customer.customer_id','=',$customer_id)
+     ->get();
+     $clients = CustomerModel::find($customer_id);
+     return view('admin.dashboard.chat',['admin_data'=>$admin_data,'data'=>$customers,'customer'=>$clients,'user_type'=>$user_type]);
+  }
+//chatShow FUNCTION END 
+//Remark FUNCTION START
+public function remarks(Request $request){
+  $customer_id = $request->customer_id;
+  $user_id = $request->user_id;
+  $remark =$request->remark;
+  $role=$request->role;
+  $remark_details = new RemarkModel;
+  $remark_details->customer_id =$customer_id;
+  $remark_details->user_id=$user_id;
+  $remark_details->remark=$remark;
+  $remark_details->role=$role;
+
+  $save = $remark_details->save();
+      if($save){
+          return self::toastr(true,"Remark Added","success","Success");
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+
+}
+//Remark FUNCTION END
+//callPage FUNCTION START
+public function callPage($customer_id){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $customer_id = decrypt($customer_id);
+   $user_data = CustomerModel::find($customer_id);
+   $number = $user_data->customer_number;
+   $name = $user_data->customer_name;
+  return view('admin.dashboard.call',['admin_data'=>$admin_data,'id'=>$customer_id,'call_number'=>$number,'name'=>$name,'user_type'=>$user_type]);
+}
+//callPage FUNCTION END
+//  THIS IS emailText FUNCTION 
+public function emailText($customer_id){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $customer_id = decrypt($customer_id);
+  return view('admin.dashboard.email_text',['admin_data'=>$admin_data,'id'=>$customer_id,'user_type'=>$user_type]);
+}
+//  THIS IS emailText FUNCTION 
+// THIS IS emailSendToClient FUNCTION 
+public function emailSendToClient(Request $request){
+   $id = $request->customer_id;
+   $msg = $request->editor2;
+    $email_data = CustomerModel::find($id);
+    $email =$email_data->customer_email;
+    // echo $email;
+    // die();
+    if($msg==""){
+   return self::toastr(false,' Text Field is blank , Please Text email','error','Error');
+    }
+   $data = ['msg'=>$msg];
+    $user['to'] = $email;
+  $send =   Mail::send('admin.dashboard.mail',$data,function($messages)use($user)
+    {$messages->to($user['to']);
+      $messages->subject('Business Email');
+    });
+  if($send){
+    $save = new EmailModel;
+    $save->email_admin = session('admin');
+    $save->email_customer = $id;
+    $save->email_text = $msg;
+    $save->save();
+   return self::toastr(true,'Email Send Successfull','success','Success');
+  }else{
+   return self::toastr(false,'Please Try again Later','error','Error');
+  }
+  
+  
+}
+// THIS IS emailSendToClient FUNCTION 
+//  THIS IS messageText FUNCTION 
+public function messageText($customer_id){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $customer_id = decrypt($customer_id);
+  return view('admin.dashboard.text_msg',['admin_data'=>$admin_data,'id'=>$customer_id,'user_type'=>$user_type]);
+}
+//  THIS IS messageText FUNCTION 
+// THIS IS A SEND_SMS FUNCTION 
+public function sendSms(Request $request){
+        $accountSid = "AC12e09a4b307d4b4dedd6a48a8b150809";
+        $authToken = "190b69babc7531bf9960a498eba8d3f4";
+        $twilioNumber = "+12567435707";
+        
+  // THIS IS API GET VARIABLE        
+        $message = $request->input('message');
+        $customer_id = $request->customer_id;
+
+        $customer_details  = CustomerModel::find($customer_id);
+        $number = $customer_details->customer_number;
+
+        $twilio = new Client($accountSid, $authToken);
+
+        $status = $twilio->messages->create(
+            $number,
+            [
+                'from' => $twilioNumber,
+                'body' => $message,
+            ]
+        );
+        if($status){
+          $save = new MessageModel;
+          $save -> team_member_id = session('admin');
+          $save -> customer_msg_id = $customer_id;
+          $save -> message = $message;
+          $save->save();
+          return self::toastr(true,'Message Send Successfull','success','Success');
+
+        }else{
+          return self::toastr(false,'Message Not Sending','error','Error');
+
+        }
+
+      }
+// THIS IS A SEND_SMS FUNCTION  
+//createInvoice Function Start
+public function createInvoice($customer_id){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  $data = CustomerModel::find($customer_id);
+ return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+}
+//createInvoice Function End
+//invoiceAdd Function Start
+public function invoiceAdd(Request $request){
+      $date = $request->date;
+      $price = $request->price;
+      $description=$request->description;
+      $customer_id=$request->customer_id;
+      $user_id=$request->user_id;
+      $role=$request->role;
+      $service_id=$request->service_id;
+
+      $invoice_details = new Invoice;
+      $invoice_details->price = $price;
+      $invoice_details->date = $date;
+      $invoice_details->customer_id = $customer_id;
+      $invoice_details->description = $description;
+      $invoice_details->user_id = $user_id;
+      $invoice_details->role = $role;
+      $invoice_details->service_id=$service_id;
+      $save = $invoice_details->save();
+      $invoice_id =$invoice_details->invoice_id;
+
+      if($save){
+         return self::toastr(true,$invoice_id,"success","Success");
+
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+}
+//invoiceAdd Function End
+//invoice2 Function Start
+public function invoice2($customer_id,$invoice_id){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  $clients = CustomerModel::find($customer_id);
+  $invoice_details = Invoice::find($invoice_id);
+  return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
+
+}
+//invoice2 Function End
+//convertToClient Function Start
+public function convertToClient(Request $request){
+      $customer_id = $request->customer_id;
+      $user_id = $request->user_id;
+      $role = $request->role;
+      $paid_customer_details = new PaidCustomer;
+      $paid_customer_details->customer_id = $customer_id;
+      $paid_customer_details->user_id = $user_id;
+      $paid_customer_details->role = $role;
+      $save = $paid_customer_details->save();
+      $customer_details = CustomerModel::find($customer_id);
+      $customer_details->status = 0;
+      $save_status=$customer_details->save();
+      if($save){
+         return self::toastr(true,"Converted To Client ","success","Success");
+
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+}
+//convertToClient Function End
+//viewClients Function Start
+public function viewClients(){
+      $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+      $client_data = DB::table('main_user')
+      ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','main_user.id','customer.msg','paid_customer.paid_customer_id')
+      ->join('customer','customer.team_member','=','main_user.id')
+      ->join('paid_customer','paid_customer.customer_id','=','customer.customer_id')
+      ->where('main_user.id',$admin_data->id)
+      ->where('paid_customer.user_id',$admin_data->id)
+      ->where('customer.status',0)
+      ->get();
+      return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
+ }
+ //viewClients Function End
+ //viewInvoiceList Function Start
+  public function viewInvoiceList(){
+     $id = session('admin');
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $invoice_data = DB::table('main_user')
+    ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
+    ->join('invoices','invoices.user_id','=','main_user.id')
+    ->join('customer','customer.customer_id','=','invoices.customer_id')
+    ->where('main_user.id',$admin_data->id)
+    ->get();
+    return view('admin.dashboard.view_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
+ } 
+ //viewInvoiceList Function End
+ //showInvoice Function Start
+ public function showInvoice($customer_id,$invoice_id){
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    $clients = CustomerModel::find($customer_id);
+    $invoice_details = Invoice::find($invoice_id);
+    return view('admin.dashboard.show_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
+}
+ //showInvoice Function End
+//emailTemplate FUNCTION START
+public function emailTemplate(){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   return view('admin.dashboard.add_email_template',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
+//emailTemplate FUNCTION END
+//sendEmailTemplate FUNCTION START
+public function sendEmailTemplate(Request $request){
+   $main_user_id = $request->main_user_id;
+   $service_id = $request->service_id;
+   $mail_txt = $request->editor2;
+   $email_title = $request->email_title;
+   if($mail_txt==""){
+      return self::toastr(false,' Text Field is blank , Please Text email','error','Error');
+   }
+   $email_template_details = new  EmailTemplate;
+   $email_template_details->email_text = $mail_txt;
+   $email_template_details->team_manager_id = $main_user_id;
+   $email_template_details->service_id = $service_id;
+   $email_template_details->email_title = $email_title;
+   $save=$email_template_details->save();
+      if($save){
+          return self::toastr(true,"Email Template Added","success","Success");
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+
+}
+//sendEmailTemplate FUNCTION ENDS
+//allEmailTemplate FUNCTION START
+public function allEmailTemplate(){
+   $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   $template_data =EmailTemplate::where('team_manager_id',$admin_data->id)->get();
+   return view('admin.dashboard.all_email_template',['admin_data'=>$admin_data,'data'=>$template_data,'user_type'=>$user_type]);
+}
+//allEmailTemplate FUNCTION END
+
 // THIS IS END OF THE CLASS 
 }
