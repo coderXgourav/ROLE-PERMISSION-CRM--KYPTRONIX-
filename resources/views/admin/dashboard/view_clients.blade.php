@@ -18,6 +18,13 @@
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Message</th>
+										<th>Service</th>
+										<th>Package</th>
+										<th>Assigned to Manager</th>
+										<th>Assigned to Team member</th>
+										<th>Invoice Status</th>
+										<th>Document</th>
+										<th>Status</th>
 										<th style="text-align: center">Action</th>
 									</tr>
 								</thead>
@@ -33,6 +40,15 @@
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->msg}}</td>
+										<td>{{$value->services_name}}</td>
+										<td></td>
+										<td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td>
+										<td>{{$value->first_name}} {{$value->last_name}}</td>
+										<td></td>
+										<td></td>
+										<td><?php if($value->status == '1'){
+											   echo 'Active';}else{ echo 'Disable';}?>
+									    </td>
 										<td colspan="3" style="display: flex; justify-content:center;">
 											{{-- <center> --}}
 									  @php

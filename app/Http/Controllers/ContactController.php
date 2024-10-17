@@ -766,7 +766,6 @@ public function addLead(){
       $contact_details->customer_email = $email ;
       $contact_details->msg = $msg ;
       $contact_details->task = 1 ;
-      $contact_details->team_member = $team_member;
       $contact_details->customer_service_id = $service_id;
       $save = $contact_details->save();
       if($save){
@@ -1029,12 +1028,11 @@ public function viewClients(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      $client_data = DB::table('main_user')
-      ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','main_user.id','customer.msg','paid_customer.paid_customer_id')
-      ->join('customer','customer.team_member','=','main_user.id')
+      $client_data = DB::table('customer')
+      ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','paid_customer.paid_customer_id','customer.status','services.name as services_name','main_user.first_name','main_user.last_name')
       ->join('paid_customer','paid_customer.customer_id','=','customer.customer_id')
-      ->where('main_user.id',$admin_data->id)
-      ->where('paid_customer.user_id',$admin_data->id)
+      ->leftjoin('main_user','main_user.id','=','customer.team_member')
+      ->join('services','services.service_id','=','customer.customer_service_id')
       ->where('customer.status',0)
       ->get();
       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);

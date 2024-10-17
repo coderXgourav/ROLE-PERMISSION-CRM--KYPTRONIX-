@@ -19,7 +19,7 @@
 								<input type="hidden" id="customer_id"  name="customer_id" value="{{$data->customer_id}}">
 								<input type="hidden" id="user_id"  name="user_id" value="{{$admin_data->id}}">
 								<input type="hidden" id="role"  name="role" value="{{$admin_data->user_type}}">
-								
+								<input type="hidden" id="service_id" name="service_id" value="{{$data->customer_service_id}}">
 
 							<div class="card-body p-4">
 								<h5 class="mb-4"> </h5>
