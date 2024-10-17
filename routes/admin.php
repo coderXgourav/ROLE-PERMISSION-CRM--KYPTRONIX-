@@ -109,4 +109,12 @@ Route::get('/admin/view-mail-template',[ContactController::class,'allEmailTempla
 Route::get('/admin/contacts',[ContactController::class,'filterUsers'])->name('admin.contact');
 Route::get('/admin/check-assign',[ContactController::class,'checkBeforeAssign']);
 Route::get('/admin/get_service_based_member',[ContactController::class,'getServiceBasedMembers']);
+Route::get('/admin/add-package',[AdminController::class,'addPackagePage'])->name('admin.add-package');
+Route::post('/admin/save_package',[ContactController::class,'savePackage']);
+Route::get('/admin/all-package',[AdminController::class,'allPackages'])->name('admin.all-package');
+
+Route::get('admin/edit-package/{id}',[AdminController::class,'editPackage'])->name('admin.edit-package');
+Route::post('/admin/update_package',[ContactController::class,'updatePackage']);
+Route::post('/admin/package_delete',[ContactController::class,'deletePackage']);
+
 });

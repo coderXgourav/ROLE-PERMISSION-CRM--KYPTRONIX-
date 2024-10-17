@@ -11,8 +11,10 @@ use App\Models\MessageModel;
 use App\Models\Service; 
 use App\Models\TeamMember; 
 use App\Models\MainUserModel; 
+use App\Models\Package;
 use Mail;
 use DB;
+use Crypt;
 
 
 class AdminController extends Controller
@@ -304,7 +306,30 @@ public function addTeamMember(){
     return view('admin.dashboard.add_team_member',['admin_data'=>$admin_data,'services_data'=>$services]);
 }
 // THIS IS addTeamMember FUNCTION  
-    
+// THIS IS addPackagePage FUNCTION  
+public function addPackagePage(){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  return view('admin.dashboard.add_package',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
+// THIS IS addPackagePage FUNCTION  
+public function allPackages(){
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    $all_packages = Package::orderBy('package_id','DESC')->get();
+    return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages,'user_type'=>$user_type]);
+}
+public function editPackage($package_id){
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    $s_id =   Crypt::decrypt($package_id);
+    $data = Package::find($s_id);
+   return view('admin.dashboard.edit_package',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+   
+  }
 
 // THIS IS END OF CLASS 
  

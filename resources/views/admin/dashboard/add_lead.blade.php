@@ -16,7 +16,6 @@ width: 100% !important;
 
 						<div class="card">
 							<form id="add_customer_form">
-                               <input type="hidden" name="team_member" value="{{$admin_data->id}}">
 
 							<div class="card-body p-4">
 								<h5 class="mb-4">Add New Lead  </h5>
