@@ -19,6 +19,7 @@ use App\Models\PermissionModel;
 use App\Models\RemarkModel;
 use App\Models\EmailTemplate;
 use App\Models\TeamManagersServicesModel;
+use App\Models\Package;
 use DB;
 use Crypt;
 use Mail;
@@ -1043,12 +1044,21 @@ public function viewClients(){
      $id = session('admin');
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
-     $invoice_data = DB::table('main_user')
-    ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
-    ->join('invoices','invoices.user_id','=','main_user.id')
-    ->join('customer','customer.customer_id','=','invoices.customer_id')
-    ->where('main_user.id',$admin_data->id)
-    ->get();
+     if($admin_data->user_type == 'admin'){
+        $invoice_data = DB::table('main_user')
+      ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
+      ->join('invoices','invoices.user_id','=','main_user.id')
+      ->join('customer','customer.customer_id','=','invoices.customer_id')
+      ->get();
+     }else{
+        $invoice_data = DB::table('main_user')
+        ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
+        ->join('invoices','invoices.user_id','=','main_user.id')
+        ->join('customer','customer.customer_id','=','invoices.customer_id')
+        ->where('main_user.id',$admin_data->id)
+        ->get();
+
+     }
     return view('admin.dashboard.view_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
  } 
  //viewInvoiceList Function End
@@ -1102,6 +1112,51 @@ public function allEmailTemplate(){
    return view('admin.dashboard.all_email_template',['admin_data'=>$admin_data,'data'=>$template_data,'user_type'=>$user_type]);
 }
 //allEmailTemplate FUNCTION END
-
+public function savePackage(Request $request){
+      $title = $request->title;
+      $price = $request->price;
+      $desc  = $request->desc;
+     if(Package::where('title',$title)->first()){
+         return self::toastr(false,"Package Title Already Exit","error","Error");
+     }
+      $package_details = new Package;
+      $package_details->title = $title;
+      $package_details->price = $price;
+      $package_details->desc  = $desc;
+      $save = $package_details->save();
+        if($save){
+          return self::toastr(true,"Package Added","success","Success");
+        }else{
+          return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+        }
+  }
+   public function updatePackage(Request $request){
+      $title = $request->title;
+      $price = $request->price;
+      $desc  = $request->desc;
+      $package_id = $request->package_id;
+      $package_details = Package::find($package_id);
+      $package_details->title = $title;
+      $package_details->price = $price;
+      $package_details->desc  = $desc;
+      $save = $package_details->save();
+    
+      if($save){
+         return self::toastr(true,"Package Details Updated Successfull","success","Success");
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+  } 
+  public function deletePackage(Request $request){
+    $id = $request->id;
+    $delete = Package::find($id)->delete();
+    if($delete){
+       return self::toastr(true,'Deleted Successfull','success','Success');
+    }else{
+      return self::toastr(false,'Technical Issue','error','Error');
+        
+    }
+  }
+  
 // THIS IS END OF THE CLASS 
 }

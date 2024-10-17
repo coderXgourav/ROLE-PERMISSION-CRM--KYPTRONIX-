@@ -67,6 +67,7 @@
         <script src="{{url('project-js/admin/contact.js')}}"></script>
         <script src="{{url('build/js/intlTelInput.js')}}"></script>
         <script src="{{url('project-js/admin/service.js')}}"></script>
+        <script src="{{url('project-js/admin/package.js')}}"></script>
 
     <script>
       var input = document.querySelector("#phone");
