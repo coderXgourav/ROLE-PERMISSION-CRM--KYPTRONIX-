@@ -12,15 +12,38 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 					<div class="card-body">
 						<div class="table-responsive">
+								<div >
+									<form action={{route('admin.noneassign')}} method="GET">
+										<div class="row">
+										<div class="col-md-4">
+								<select name="service"  class="form-control" id="" >
+									<option value="">Filter Services</option>
+									@foreach ($services as $item)
+										<option {{ request('service') == $item->service_id ? 'selected' : '' }} value="{{$item->service_id}}">{{$item->name}}</option>
+									@endforeach
+									
+								</select>
+										</div>
+										<div class="col-md-2"><button type="submit" class="btn btn-success">Search</button></div>
+									</div>
+								
+								</form> <br>
+								</div>
+								<div class="bg-info" style="padding: 2px;">
+									<p class="text-light text-center ">Please select only one type of lead. Selecting multiple service leads will disable the assignment feature</p>
+								</div>
+								<br>
 							<form id="assign_client_form">
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
+							
 								<thead>
 									<tr>
-										<th style="display: flex; justify-content: center;align-items: center">Select All &nbsp;<input type="checkbox" id="select-all" onclick="selectAllCheckboxes()" style="width:22px;"> </th>
+										<th style="display: flex; justify-content: center;align-items: center">Select All &nbsp;<input type="checkbox" id="selectAll" onclick="toggleAll(this)" style="width:22px;"> </th>
 										<th>No.</th>
 										<th>Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
+										<th>Service</th>
 										<th>Message</th>
 									</tr>
 								</thead>
@@ -32,12 +55,13 @@
                                     @foreach($data as $key => $value)
 
                                     <tr>
-										<td style="display:flex; justify-content:center;"><input type="checkbox" value="{{$value->customer_id}}" name="customer[]" required style="width:22px;"> </td>
+										<td style="display:flex; justify-content:center;"><input type="checkbox" service_id={{$value->service_id}}  value="{{$value->customer_id}}" name="customer[]" required style="width:22px;" onclick="getLeads(this.value,{{$value->service_id}})"> </td>
 										{{@csrf_field()}}
 										<td>{{$i++}}</td>
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
+										<td>{{$value->name}}</td>
 										<td>{{$value->msg}}</td>
 									</tr>
                                     @endforeach
@@ -67,7 +91,7 @@
        <select name="team_member" id="" class="form-control">
 		   <option value="">Select Team Member</option>
 		@foreach ($team as $members)
-		<option value="{{$members->user_id}}">{{$members->name}}</option>
+		<option value="{{$members->user_id}}">{{$members->first_name}}</option>
 		@endforeach
 	   </select> <br>
       </div>
@@ -78,13 +102,10 @@
     </div>
   </div>
 </div>
-								
-								
-								
 							</table>
 							  @if(count($data)>0)
 							<div style="display: flex; justify-content:center; margin-bottom: 20px; margin-top:20px;">
-								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" style="background-color: #38833c; border:1px solid #38833c; width:300px;">Assign Clients</button>
+								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" id="assign" style="background-color: #38833c; border:1px solid #38833c; width:500px;">Assign Leads to Customer success Manager</button>
 								</div>
 								@endif
 							</form>
@@ -97,12 +118,65 @@
 	 });
 </script>
 <script>
-	function selectAllCheckboxes(){
-		 var selectAll = document.getElementById("select-all");
-         var checkboxes = document.querySelectorAll("input[type='checkbox']");
+	let leads = [];
+	let service = [];
 
-		for (var i = 0; i < checkboxes.length; i++) {
-			checkboxes[i].checked = selectAll.checked;
+	function getLeads(id,service_id){
+		console.log(id, service_id);
+		
+		if(leads.includes(id)  && service.includes(service_id)){
+			leads.splice(leads.indexOf(id), 1);
+			service.splice(service.indexOf(service_id), 1);
+				console.log(allValuesSame(service));
+		}else{
+			leads.push(id);
+			service.push(service_id);
+			console.log(allValuesSame(service));
 		}
+
+
 	}
+
+	function allValuesSame(array) {
+    let status = array.every(value => value === array[0]);
+	if(!status){
+		  swal.fire({
+                    title: "Please choose only one service's lead",
+                    icon: "warning",
+                });
+				document.getElementById("assign").style.display="none";
+	}else{
+		 $.ajax({
+            url: "/admin/get_service_based_member",
+            method: "GET",
+            dataType: "JSON",
+            data: {id:array[0]},
+            success: function (data) {
+              
+            },error:function(){
+                swal.fire({
+                    title: "Technical Issue",
+                    icon: "error",
+                });
+			}
+        });
+				document.getElementById("assign").style.display="block";
+	}
+	return status;
+}
+
+function toggleAll(selectAllCheckbox) {
+    const checkboxes = document.querySelectorAll('input[name="customer[]"]');
+	let service = [];
+	let leads = [];
+
+    checkboxes.forEach(checkbox => {
+		let serviceId = checkbox.getAttribute("service_id");
+		service.push(serviceId);
+		leads.push(checkbox.value);
+        checkbox.checked = selectAllCheckbox.checked;
+	  getLeads(checkbox.value,serviceId); 
+      
+    });
+}
 </script>

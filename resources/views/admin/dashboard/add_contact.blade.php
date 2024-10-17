@@ -142,6 +142,22 @@ width: 100% !important;
 									</div>
 									</div>
 
+								 <div class="row"  style="display:none;" id="member_service">
+										<div class="row mb-3" >
+										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
+										<div class="col-sm-9">
+											<div class="position-relative input-icon"> 
+												<select  name="service"  class="form-control" required >
+													<option value="">Select Services </option>
+													@foreach ($services as $item)
+															<option value="{{$item->service_id}}">{{$item->name}}</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
+									</div>
+
 
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">User Privilage</label>
@@ -419,8 +435,12 @@ width: 100% !important;
 						}else{
 							document.getElementById("service_field").style.display="none";
 						}
+						if(val=="customer_success_manager"){
+							document.getElementById("member_service").style.display="block";
+						}else{
+							document.getElementById("member_service").style.display="none";
+						}
 					}
-					
 				</script>
 				
 @include('admin.dashboard.footer')

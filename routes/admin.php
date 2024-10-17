@@ -107,4 +107,6 @@ Route::get('/admin/email-template',[ContactController::class,'emailTemplate'])->
 Route::post('/admin/send-email-template',[ContactController::class,'sendEmailTemplate']);
 Route::get('/admin/view-mail-template',[ContactController::class,'allEmailTemplate'])->name('admin.view-mail-template');
 Route::get('/admin/contacts',[ContactController::class,'filterUsers'])->name('admin.contact');
+Route::get('/admin/check-assign',[ContactController::class,'checkBeforeAssign']);
+Route::get('/admin/get_service_based_member',[ContactController::class,'getServiceBasedMembers']);
 });

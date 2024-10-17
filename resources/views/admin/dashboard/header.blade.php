@@ -253,7 +253,7 @@
                         <li> <a href="{{ route('admin.assign') }}"><i
                             class='bx bx-radio-circle'></i>Assigned Leads</a>
                        </li>
-                       <li> <a href="#"><i class='bx bx-radio-circle'></i>None Assigned Leads</a>
+                       <li> <a href="{{route('admin.noneassign')}}"><i class='bx bx-radio-circle'></i>None Assigned Leads</a>
                       </li>
                       
                     </ul>
