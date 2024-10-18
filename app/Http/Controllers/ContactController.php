@@ -217,8 +217,7 @@ class ContactController extends Controller
      $data = MainUserModel::find($contact_id);
      $services = Service::orderBy('service_id','DESC')->get();
      $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
-     $team_manager_id='';
-     $s_data='';
+     $team_services_id=''; $s_data='';$customer_service='';
      if($data['user_type'] == 'team_manager'){
             $services_data  = DB::table('team_manager_services')
             ->join('main_user','main_user.id','=','team_manager_services.team_manager_id')
@@ -226,9 +225,12 @@ class ContactController extends Controller
             $services_id = $services_data->managers_services_id;
            $s_id =  json_decode($services_id);
            $s_data = Service::whereIn('service_id',$s_id)->get();
-           $team_manager_id = $services_data->team_manager_id;
+           $team_services_id = $services_data->id;
+     }elseif($data['user_type'] == 'customer_success_manager'){
+          $customer_service =MemberServiceModel::where('member_id',$data['id'])->first();
+
      }
- return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'permissions_data'=>$permissions_data,'s_data'=>$s_data,'$team_manager_services'=>$team_manager_id]);
+ return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'permissions_data'=>$permissions_data,'s_data'=>$s_data,'$team_manager_services'=>$team_services_id,'customer_service'=>$customer_service]);
    
   }
  
@@ -315,13 +317,19 @@ public function updateContact(Request $request){
       if($user_type=="team_manager"){
         $services = $request->services;
       
-       $team_manager_id =$request->team_manager_id;
-       $data = TeamManagersServicesModel::find($team_manager_id);
-      if(!empty($services)){
-        $data->managers_services_id = json_encode($services);
-        $data->save();
+        $team_manager_id =$request->team_manager_id;
+        $data = TeamManagersServicesModel::find($team_manager_id);
+        if(!empty($services)){
+          $data->managers_services_id = json_encode($services);
+          $data->save();
+        }
+      }elseif($user_type=="customer_success_manager"){
+        $customer_service_id=$request->customer_service;
+        $m_service=$request->m_service;
+        $services_data=MemberServiceModel::find($customer_service_id);
+        $services_data->member_service_id =$m_service;
+        $services_data->save();
       }
-    }
     return self::toastr(true,"Updated Successfully","success","Success");
      
 }
@@ -360,9 +368,6 @@ public function assginClientspage(Request $request){
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
    $team = MainUserModel::where('user_type','customer_success_manager')->get();
-
-
-
   //   $customers = DB::table('customer')
   //  ->join('services','services.service_id','=','customer.customer_service_id')
   //  ->join('main_user','main_user.id','=','customer.team_member')
@@ -370,30 +375,19 @@ public function assginClientspage(Request $request){
   //  ->orderBy('customer.customer_id','DESC')
   //  ->get();
 
-       $service = $request->service;
-       
-$teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get IDs as an array
-// echo "<pre>";
-// print_r($teamMembersId);
-// die();
+  $service = $request->service;
+  $teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get IDs as an array
+  $customer_id = CustomerModel::all()->pluck('team_member')->toArray(); // Directly get IDs as an array
 
     if($service !=""){
       $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('main_user','main_user.id','=','customer.team_member')->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
     }else{
-        //  $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')
-        // ->whereIn('customer.team_member', $teamMembersId) 
-        //  ->orderBy('customer_id','DESC')->get();
-
-         $customers = DB::table('customer')
-    ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-    ->whereIn('customer.team_member', ["7","8"])
-    ->orderBy('customer.customer_id', 'DESC')
-    ->select('customer.*', 'services.name') // Adjust fields as needed
-    ->get();
-
-    echo "<pre>";
-    print_r($customers);
-    die();
+          $customers = DB::table('customer')
+        ->select('customer.*', 'services.name') // Adjust fields as needed
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->whereIn('customer.team_member',$customer_id)
+        ->orderBy('customer.customer_id', 'DESC')
+        ->get();
     }
    
   return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
