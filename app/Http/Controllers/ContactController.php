@@ -17,6 +17,7 @@ use App\Models\PaidCustomer;
 use App\Models\MainUserModel;
 use App\Models\PermissionModel;
 use App\Models\RemarkModel;
+use App\Models\MemberServiceModel;
 use App\Models\EmailTemplate;
 use App\Models\TeamManagersServicesModel;
 use App\Models\Package;
@@ -95,6 +96,10 @@ class ContactController extends Controller
       if($user_type=="team_manager"){
         $services = $request->services;
         $services_status = 1;
+      }
+         if($user_type=="customer_success_manager"){
+        $service = $request->service;
+        $services_status = 2;
       }
       
 
@@ -181,12 +186,19 @@ class ContactController extends Controller
      
       $permissions->save();
 
-    if($services_status>0){
+    if($services_status==1){
       $data = new TeamManagersServicesModel;
       $data->team_manager_id = $user_id;
       $data->managers_services_id = json_encode($services);
       $data->save();
     }
+      if($services_status==2){
+      $data = new MemberServiceModel;
+      $data->member_id = $user_id;
+      $data->member_service_id = $service;
+      $data->save();
+    }
+
 
 
 
@@ -348,23 +360,69 @@ public function assginClientspage(){
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
    $team = MainUserModel::where('user_type','customer_success_manager')->get();
-   $customers = DB::table('main_user')
-   ->join('customer','customer.team_member','=','main_user.id')
-   ->where('customer.team_member','=',$admin_data->id)
+
+  //  $customers = DB::table('main_user')
+  //  ->join('customer','customer.team_member','=','main_user.id')
+  //  ->where('customer.team_member','=',$admin_data->id)
+  //  ->orderBy('customer.customer_id','DESC')
+  //  ->get();
+
+    $customers = DB::table('customer')
+   ->join('services','services.service_id','=','customer.customer_service_id')
+   ->join('main_user','main_user.id','=','customer.team_member')
+   ->where('customer.team_member','!=',null)
    ->orderBy('customer.customer_id','DESC')
    ->get();
+   
   return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
 }
+
 //  THIS IS assginClientspage FUNCTION 
+
+public function getServiceBasedMembers(Request $request){
+  $id = $request->id;
+  $members = DB::table('main_user')->join('member_service','member_service.user_type','=','main_user.user_type')->where('member_service.member_service_id',$id)->get();
+  echo "<pre>";
+
+  print_r($members);
+}
+
+// checkBeforeAssign
+
+// public function checkBeforeAssign(Request $request){
+//   $id = $request->leads;
+  
+//   $service_id = []; 
+//   for($i=0; $i<count($id); $i++){
+//    $customer = CustomerModel::find($id[$i]);
+//    $service_id = $customer->customer_service_id;
+
+//   }
+ 
+  
+// }
 
 
 //  THIS IS noneAssginClientspage FUNCTION 
-public function noneAssginClientspage(){
+public function noneAssginClientspage(Request $request){
+    $service = $request->service;
+    if($service !=""){
+      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('team_member',null)
+      ->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
+    }else{
+         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('team_member',null)->orderBy('customer_id','DESC')->get();
+    }
+
   $id = session('admin');
-  $team = UserModel::all();
-   $admin_data = AdminModel::find($id);
-   $customers = CustomerModel::where('team_member',null)->orderBy('customer_id','DESC')->get();
-  return view('admin.dashboard.none_assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team]);
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
+   
+   $team = MainUserModel::where('user_type','customer_success_manager')->get();
+   $services = Service::orderBy('service_id','DESC')->get();
+
+
+
+  return view('admin.dashboard.none_assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'services'=>$services]);
 }
 //  THIS IS noneAssginClientspage FUNCTION 
 

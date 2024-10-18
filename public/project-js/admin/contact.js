@@ -446,12 +446,11 @@ $("#remark_form").validate({
             success: function (data) {
                 $("#btn").attr("disabled", false);
                 $("#btn").html("Submit");
-               
+
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
                     $("#remark_form").trigger("reset");
                 }
-
             },
         });
     },
@@ -528,16 +527,15 @@ $("#message_send").validate({
 });
 $("#create_invoice_form").validate({
     rules: {
-        price:"required",
+        price: "required",
         qty: "required",
         amount: "required",
         description: "required",
-       
     },
     messages: {},
     submitHandler: function (form, event) {
         event.preventDefault();
-        var customer_id=$("#customer_id").val();
+        var customer_id = $("#customer_id").val();
 
         $("#btn").html(
             "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
@@ -553,18 +551,18 @@ $("#create_invoice_form").validate({
             success: function (data) {
                 $("#btn").attr("disabled", false);
                 $("#btn").html("Submit");
-                Command: toastr[data.icon](data.title,data.msg);
-                var invoice_id =data.title;
-                 if (data.status) {
-                   window.location = "/admin/invoice2/"+customer_id+"/"+invoice_id;
-
+                Command: toastr[data.icon](data.title, data.msg);
+                var invoice_id = data.title;
+                if (data.status) {
+                    window.location =
+                        "/admin/invoice2/" + customer_id + "/" + invoice_id;
                 }
             },
         });
     },
 });
 
-function ConvertToClient(customer_id='',user_id='',role='') {
+function ConvertToClient(customer_id = "", user_id = "", role = "") {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to change this!",
@@ -577,10 +575,10 @@ function ConvertToClient(customer_id='',user_id='',role='') {
         if (result.isConfirmed) {
             $.ajax({
                 url: "convert_to_client",
-                data: { 
+                data: {
                     customer_id: customer_id,
-                    user_id:user_id,
-                    role:role
+                    user_id: user_id,
+                    role: role,
                 },
                 dataType: "JSON",
                 success: function (data) {
