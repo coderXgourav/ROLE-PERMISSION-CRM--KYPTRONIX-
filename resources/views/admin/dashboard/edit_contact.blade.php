@@ -245,7 +245,7 @@ width: 100% !important;
                                                 <div class="d-flex align-items-center gap-3">
                                                 <div class="form-check form-switch">             
                                                     <input type="hidden" name="email_sms_manage" value="0">
-                                                    <input class="form-check-input" name="email_sms_manage" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault7" <?php if($permissions_data['email_sms_permission'] =='on'){echo 'checked';}?>>
+                                                    <input class="form-check-input" name="email_sms_manage" value="on" type="checkbox" role="switch" id="flexSwitchCheckDefault7" <?php if($permissions_data['email_sms_permission'] =='on'){echo 'checked';}?>>
                                                     <label class="form-check-label" for="flexSwitchCheckDefault7">Email & SMS View </label>
                                                 </div>
                                             </div>
