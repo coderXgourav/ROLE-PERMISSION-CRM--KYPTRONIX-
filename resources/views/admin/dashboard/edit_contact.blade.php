@@ -23,8 +23,10 @@ width: 100% !important;
                                    <input type="hidden" name="user_id" value="{{$data['id']}}">
                                    <input type="hidden" name="permissions_id" value="{{$permissions_data['permission_id']}}">
                                    <?php if(!empty($team_manager_services)){?>
-                                   <input type="hidden" name="team_manager_id" value="{{$team_manager_services['team_manager_id']}}">
+                                   <input type="hidden" name="team_manager_id" value="{{$team_manager_services['id']}}">
 
+                                   <?php }elseif(!empty($customer_service)){?>
+                                    <input type="hidden" name="customer_service" value="{{$customer_service->id}}">
                                    <?php } ?>
                                     <div class="row mb-3" >
                                         <label for="input42" class="col-sm-3 col-form-label">Account Name</label>
@@ -143,6 +145,21 @@ width: 100% !important;
                                                             <option value="{{$item->service_id}}">{{$item->name}}</option>
                                                     @endforeach
                                                     @endif
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="row"  style="display:none;" id="member_service">
+                                        <div class="row mb-3" >
+                                        <label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
+                                        <div class="col-sm-9">
+                                            <div class="position-relative input-icon"> 
+                                                <select  name="m_service"  class="form-control" required >
+                                                    <option value="">Select Services </option>
+                                                    @foreach ($services as $item)
+                                                            <option value="{{$item->service_id}}"<?php if($item->service_id == $customer_service->member_service_id){echo 'selected';}?>>{{$item->name}}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -434,6 +451,12 @@ width: 100% !important;
         document.getElementById("service_field").style.display="block";
     }else{
         document.getElementById("service_field").style.display="none";
+    }
+
+    if(user_type == 'customer_success_manager'){
+        document.getElementById("member_service").style.display="block";
+    }else{
+        document.getElementById("member_service").style.display="none";
     }
 </script>
                 

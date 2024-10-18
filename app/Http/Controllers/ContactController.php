@@ -217,7 +217,7 @@ class ContactController extends Controller
      $data = MainUserModel::find($contact_id);
      $services = Service::orderBy('service_id','DESC')->get();
      $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
-     $team_manager_id='';
+     $team_services_id='';
      $s_data='';
      if($data['user_type'] == 'team_manager'){
             $services_data  = DB::table('team_manager_services')
@@ -226,9 +226,12 @@ class ContactController extends Controller
             $services_id = $services_data->managers_services_id;
            $s_id =  json_decode($services_id);
            $s_data = Service::whereIn('service_id',$s_id)->get();
-           $team_manager_id = $services_data->team_manager_id;
+           $team_services_id = $services_data->id;
+     }elseif($data['user_type'] == 'customer_success_manager'){
+          $customer_service =MemberServiceModel::where('member_id',$data['id'])->first();
+
      }
- return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'permissions_data'=>$permissions_data,'s_data'=>$s_data,'$team_manager_services'=>$team_manager_id]);
+ return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'permissions_data'=>$permissions_data,'s_data'=>$s_data,'$team_manager_services'=>$team_services_id,'customer_service'=>$customer_service]);
    
   }
  
@@ -315,13 +318,19 @@ public function updateContact(Request $request){
       if($user_type=="team_manager"){
         $services = $request->services;
       
-       $team_manager_id =$request->team_manager_id;
-       $data = TeamManagersServicesModel::find($team_manager_id);
-      if(!empty($services)){
-        $data->managers_services_id = json_encode($services);
-        $data->save();
+        $team_manager_id =$request->team_manager_id;
+        $data = TeamManagersServicesModel::find($team_manager_id);
+        if(!empty($services)){
+          $data->managers_services_id = json_encode($services);
+          $data->save();
+        }
+      }elseif($user_type=="customer_success_manager"){
+        $customer_service_id=$request->customer_service;
+        $m_service=$request->m_service;
+        $services_data=MemberServiceModel::find($customer_service_id);
+        $services_data->member_service_id =$m_service;
+        $services_data->save();
       }
-    }
     return self::toastr(true,"Updated Successfully","success","Success");
      
 }
