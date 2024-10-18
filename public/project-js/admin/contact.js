@@ -53,11 +53,11 @@ $("#add_contact_form").validate({
 
 // THIS IS update_contact_form FUNCTION \
 
-function updateTeamMember() {
-    var countryCodeTitle = $(".iti__selected-flag").attr("title");
-    var countryCode = countryCodeTitle.match(/\+\d+/)[0];
-    $("#country_code").val(countryCode);
-}
+// function updateTeamMember() {
+//     var countryCodeTitle = $(".iti__selected-flag").attr("title");
+//     var countryCode = countryCodeTitle.match(/\+\d+/)[0];
+//     $("#country_code").val(countryCode);
+// }
 $("#update_contact_form").validate({
     rules: {
         name: "required",
@@ -90,16 +90,20 @@ $("#update_contact_form").validate({
             processData: false,
             success: function (data) {
                 $("#btn").attr("disabled", false);
-                $("#btn").html("Update");
+                $("#btn").html("update");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
                     $("#update_contact_form").trigger("reset");
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("update");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
-
 // THIS IS update_contact_form FUNCTION
 
 // THIS IS DeleteTeam FUNCTION

@@ -199,13 +199,24 @@ class ContactController extends Controller
 
 // THIS IS editUserPage FUNCTION   
   public function editUserPage($contact_id){
-    $id = session('admin');
-   $admin_data = self::userDetails($id);
-   $user_type = self::userType($admin_data->user_type);
-   $user_id =   Crypt::decrypt($contact_id);
-   $data = MainUserModel::find($user_id);
-   $services = Service::orderBy('service_id','DESC')->get();
- return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services_data'=>$services,'user_type'=>$user_type]);
+     $id = session('admin');
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $data = MainUserModel::find($contact_id);
+     $services = Service::orderBy('service_id','DESC')->get();
+     $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
+     $team_manager_id='';
+     $s_data='';
+     if($data['user_type'] == 'team_manager'){
+            $services_data  = DB::table('team_manager_services')
+            ->join('main_user','main_user.id','=','team_manager_services.team_manager_id')
+            ->where('main_user.id',$contact_id)->first();
+            $services_id = $services_data->managers_services_id;
+           $s_id =  json_decode($services_id);
+           $s_data = Service::whereIn('service_id',$s_id)->get();
+           $team_manager_id = $services_data->team_manager_id;
+     }
+ return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'permissions_data'=>$permissions_data,'s_data'=>$s_data,'$team_manager_services'=>$team_manager_id]);
    
   }
  
@@ -214,28 +225,93 @@ class ContactController extends Controller
 // THIS IS updateContact FUNCTION 
 public function updateContact(Request $request){
   
-     $phone= $request->phone;
-     $country_code=$request->country_code;
-
-      $name = $request->name;
+      $phone = $request->phone;
+      $first_name = $request->first_name;
+      $last_name = $request->last_name;
       $email = $request->email;
-      // $dob = $request->dob;
+      $user_type = $request->user_type;
+      $user_id = $request->user_id;
+      $permissions_id = $request->permissions_id;
+
+      $service_manage = $request->service_manage;
+      $leads_manage = $request->leads_manage;
+      $invoice_manage = $request->invoice_permission;
+      $payment_manage = $request->payment_permission;
+      $customer_manage = $request->customer_manage;
+      $email_sms_manage = $request->email_sms_manage;
+
+      $communication = $request->communication;
+      $report = $request->report;
+      $document_view = $request->document_view;
+      $client_financial = $request->client_financial;
+
+      $client_contact_info = $request->client_contact_info;
+      $delete_client = $request->delete_client;
+      $delete_all_record = $request->delete_all_record;
+
+      $document_download = $request->document_download;
+      $lead_assign = $request->lead_assign;
+      $email_template = $request->email_template;
+      
+      $history_manage = $request->history_manage;
+      $account_name = $request->account_name;
       $password = $request->password;
-      $service =$request->service_id;
-        $user_id = $request->user_id;
-     $contact_details = UserModel::find($user_id);
-      $contact_details->name = $name;
-      $contact_details->service_id = $service;
+      $password_hint = $request->password_hint;
+      $change_password_upon_login = $request->change_password_upon_login;
+      $disable_account = $request->disable_account;
+      $team_manager_permission = $request->manager_manage;
+      $customer_success_manager_permission = $request->member_manage;
+      $user_registration_permission = $request->user_registration;
+      
+      $contact_details = MainUserModel::find($user_id);
+      $contact_details->account_name = $account_name;
+      $contact_details->password=$password;
+      $contact_details->password_hint = $password_hint;
+      $contact_details->first_name = $first_name;
+      $contact_details->last_name  = $last_name ;
       $contact_details->phone_number = $phone ;
-      $contact_details->email = $email ;
-      $contact_details->country_code = $country_code ;
-      $contact_details->password = $password ;
-      $save = $contact_details->save();
-      if($save){
-         return self::toastr(true,"Team Member Details Updated Successfull","success","Success");
-      }else{
-         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      $contact_details->email_address = $email ;
+      $contact_details->change_password_upon_login = $change_password_upon_login ;
+      $contact_details->disable_account = $disable_account ;
+      $contact_details->save();
+      
+      $permissions = PermissionModel::find($permissions_id);
+      $permissions->service_permission = $service_manage ;
+      
+      $permissions->team_manager_permission = $service_manage ;
+      $permissions->customer_success_manager_permission = $service_manage ;
+      
+      $permissions->leads_permission = $leads_manage ;
+      $permissions->invoice_permission = $invoice_manage ;
+      $permissions->payment_permission = $payment_manage ;
+      $permissions->customer_permission = $customer_manage ;
+      $permissions->email_sms_permission = $email_sms_manage ;
+      $permissions->communication_permission = $communication ;
+      $permissions->report_permission = $report ;
+      $permissions->document_view_permission = $document_view ;
+      $permissions->client_financial_data_permission = $client_financial ;
+      $permissions->client_contact_permission = $client_contact_info ;
+      $permissions->delete_all_record_permission = $delete_all_record ;
+      $permissions->document_download_permission = $document_download ;
+      $permissions->lead_assign_permission = $lead_assign ;
+      $permissions->email_template_permission = $email_template ;
+      $permissions->login_history_permission = $history_manage ;
+      $permissions->user_registration_permission = $user_registration_permission ;
+      $permissions->save();
+      $services_status = 0;
+      
+      if($user_type=="team_manager"){
+        $services = $request->services;
+      
+       $team_manager_id =$request->team_manager_id;
+       $data = TeamManagersServicesModel::find($team_manager_id);
+      if(!empty($services)){
+        $data->managers_services_id = json_encode($services);
+        $data->save();
       }
+    }
+    return self::toastr(true,"Updated Successfully","success","Success");
+     
 }
 
 
@@ -1157,6 +1233,6 @@ public function savePackage(Request $request){
         
     }
   }
-  
+
 // THIS IS END OF THE CLASS 
 }
