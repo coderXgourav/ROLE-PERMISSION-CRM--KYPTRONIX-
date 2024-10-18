@@ -54,7 +54,7 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->first_name}} {{$value->last_name}}</td>
+										{{-- <td>{{$value->first_name}} {{$value->last_name}}</td> --}}
 									</tr>
                                     @endforeach
                                     @else 

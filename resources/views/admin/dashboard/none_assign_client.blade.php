@@ -67,7 +67,7 @@
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="6" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
+										<td colspan="7" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
 										
 									</tr>
                                     @endif
@@ -82,18 +82,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Choose Team Member </h5>
+        <h5 class="modal-title" id="exampleModalLabel">Choose Customer Success Manager </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body"> <br>
-       <select name="team_member" id="" class="form-control">
-		   <option value="">Select Team Member</option>
-		@foreach ($team as $members)
-		<option value="{{$members->user_id}}">{{$members->first_name}}</option>
-		@endforeach
-	   </select> <br>
+     <select name="team_member[]" id="team_member" class="form-control" multiple>
+    <option value="">Select Team Member</option>
+</select>
+<br>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -146,21 +144,31 @@
                 });
 				document.getElementById("assign").style.display="none";
 	}else{
-		 $.ajax({
-            url: "/admin/get_service_based_member",
-            method: "GET",
-            dataType: "JSON",
-            data: {id:array[0]},
-            success: function (data) {
-              
-            },error:function(){
-                swal.fire({
-                    title: "Technical Issue",
-                    icon: "error",
-                });
-			}
+		$.ajax({
+    url: "/admin/get_service_based_member",
+    method: "GET",
+    dataType: "JSON",
+    data: { id: array[0] },
+    success: function (data) {
+        // Clear existing options (if needed)
+        $('#team_member').empty().append('<option value="">Select Team Member</option>');
+        // Loop through the data and append options
+        $.each(data, function(index, member) {
+            $('#team_member').append($('<option>', {
+                value: member.id, // Adjust this according to your member's ID field
+                text: member.first_name+" "+member.last_name, // Adjust this according to your member's name field
+            }));
         });
-				document.getElementById("assign").style.display="block";
+    },
+    error: function() {
+        swal.fire({
+            title: "Technical Issue",
+            icon: "error",
+        });
+    }
+});
+
+		document.getElementById("assign").style.display="block";
 	}
 	return status;
 }
