@@ -89,7 +89,7 @@ Route::get('/admin/view-operation-managers',[ContactController::class,'viewOpera
 Route::get('/admin/add-lead',[ContactController::class,'addLead'])->name('admin.add-lead');
 Route::post('/admin/create_lead',[ContactController::class,'leadAdd']);
 Route::get('/admin/view-lead',[ContactController::class,'viewLeads'])->name('admin.view-lead');
-Route::get('/admin/chat/{id}',[ContactController::class,'chatShow'])->name('admin.chat');
+Route::get('/admin/chat/{id}',[ContactController::class,'chatShow'])->name('admin.chat'); 
 Route::post('/admin/remarks',[ContactController::class,'remarks']);
 Route::get('/admin/call/{id}',[ContactController::class,'callPage'])->name('admin.call');
 Route::get('/admin/send-email/{id}',[ContactController::class,'emailText'])->name('admin.send-email');
