@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('team_manager_services', function (Blueprint $table) {
             $table->id();
             $table->string('team_manager_id');
-            $table->json('managers_services_id');
+            $table->json('managers_services_id')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
         });
