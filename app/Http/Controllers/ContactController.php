@@ -403,7 +403,9 @@ $teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get I
 
 public function getServiceBasedMembers(Request $request){
   $id = $request->id;
-  $members = DB::table('main_user')->join('member_service','member_service.user_type','=','main_user.user_type')->where('member_service.member_service_id',$id)->select('main_user.id','main_user.first_name','main_user.last_name')->get();
+  $members = DB::table('main_user')->
+  join('member_service','member_service.member_id','=','main_user.id')
+  ->where('member_service.member_service_id',$id)->select('main_user.id','main_user.first_name','main_user.last_name')->get();
   return response()->json($members);
 }
 
