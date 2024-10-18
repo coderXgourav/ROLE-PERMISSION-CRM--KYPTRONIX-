@@ -104,6 +104,7 @@ class ContactController extends Controller
       
 
       $service_manage = $request->service_manage;
+      $package = $request->package;
       $leads_manage = $request->leads_manage;
       $invoice_manage = $request->invoice_manage;
       $payment_manage = $request->payment_manage;
@@ -182,6 +183,7 @@ class ContactController extends Controller
       $permissions->lead_assign_permission = $lead_assign ;
       $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
+      $permissions->package_permission = $package;
       $permissions->user_registration_permission = $user_registration_permission ;
      
       $permissions->save();
@@ -510,7 +512,7 @@ public function export()
       if($filter != ""){
         switch($filter){
           case "Operation Managers":
-              $contact_data = DB::table('main_user')->where('user_type',"operation_manager")->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('user_type',"operation_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -518,7 +520,7 @@ public function export()
             break;
             case "Team Managers":
               
-                $contact_data = DB::table('main_user')->where('user_type',"team_manager")->orderBy('id','DESC')->get();
+                $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('user_type',"team_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -526,7 +528,7 @@ public function export()
             
             break;
                  case "Customer Success Manager":
-                    $contact_data = DB::table('main_user')->where('user_type',"customer_success_manager")->orderBy('id','DESC')->get();
+                    $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('user_type',"customer_success_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -537,7 +539,7 @@ public function export()
             break;
         }
       }else{
-              $contact_data = DB::table('main_user')->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);

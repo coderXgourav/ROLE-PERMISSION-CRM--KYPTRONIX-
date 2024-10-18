@@ -400,6 +400,15 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
+										<div class="col-sm-3">
+												<div class="d-flex align-items-center gap-3">
+												<div class="form-check form-switch">
+													<input type="hidden" name="package" value="0">
+													<input class="form-check-input" name="package" value="1" type="checkbox" role="switch" id="3002" >
+													<label class="form-check-label" for="3002">Package Manage</label>
+												</div>
+						                    </div>
+										</div>
 										
 									
 								</div>
