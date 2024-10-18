@@ -364,24 +364,46 @@ public function Clientspage(){
 
 
 //  THIS IS assginClientspage FUNCTION 
-public function assginClientspage(){
+public function assginClientspage(Request $request){
    $id = session('admin');
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
    $team = MainUserModel::where('user_type','customer_success_manager')->get();
 
-  //  $customers = DB::table('main_user')
-  //  ->join('customer','customer.team_member','=','main_user.id')
-  //  ->where('customer.team_member','=',$admin_data->id)
+
+
+  //   $customers = DB::table('customer')
+  //  ->join('services','services.service_id','=','customer.customer_service_id')
+  //  ->join('main_user','main_user.id','=','customer.team_member')
+  //  ->where('customer.team_member','!=',null)
   //  ->orderBy('customer.customer_id','DESC')
   //  ->get();
 
-    $customers = DB::table('customer')
-   ->join('services','services.service_id','=','customer.customer_service_id')
-   ->join('main_user','main_user.id','=','customer.team_member')
-   ->where('customer.team_member','!=',null)
-   ->orderBy('customer.customer_id','DESC')
-   ->get();
+       $service = $request->service;
+       
+$teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get IDs as an array
+// echo "<pre>";
+// print_r($teamMembersId);
+// die();
+
+    if($service !=""){
+      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('main_user','main_user.id','=','customer.team_member')->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
+    }else{
+        //  $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')
+        // ->whereIn('customer.team_member', $teamMembersId) 
+        //  ->orderBy('customer_id','DESC')->get();
+
+         $customers = DB::table('customer')
+    ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+    ->whereIn('customer.team_member', ["7","8"])
+    ->orderBy('customer.customer_id', 'DESC')
+    ->select('customer.*', 'services.name') // Adjust fields as needed
+    ->get();
+
+    echo "<pre>";
+    print_r($customers);
+    die();
+    }
    
   return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
 }
@@ -390,10 +412,10 @@ public function assginClientspage(){
 
 public function getServiceBasedMembers(Request $request){
   $id = $request->id;
-  $members = DB::table('main_user')->join('member_service','member_service.user_type','=','main_user.user_type')->where('member_service.member_service_id',$id)->get();
-  echo "<pre>";
-
-  print_r($members);
+  $members = DB::table('main_user')->
+  join('member_service','member_service.member_id','=','main_user.id')
+  ->where('member_service.member_service_id',$id)->select('main_user.id','main_user.first_name','main_user.last_name')->get();
+  return response()->json($members);
 }
 
 // checkBeforeAssign
@@ -416,10 +438,10 @@ public function getServiceBasedMembers(Request $request){
 public function noneAssginClientspage(Request $request){
     $service = $request->service;
     if($service !=""){
-      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('team_member',null)
+      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)
       ->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
     }else{
-         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('team_member',null)->orderBy('customer_id','DESC')->get();
+         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')->get();
     }
 
   $id = session('admin');
@@ -431,6 +453,7 @@ public function noneAssginClientspage(Request $request){
 
 
 
+
   return view('admin.dashboard.none_assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'services'=>$services]);
 }
 //  THIS IS noneAssginClientspage FUNCTION 
@@ -439,6 +462,7 @@ public function noneAssginClientspage(Request $request){
 public function assign(Request $request){
   $customers[] = $request->customer;
   $team_member = $request->team_member;
+  
   foreach ($customers[0] as $key => $value) {
   $update = CustomerModel::find($value);
   $update->team_member=$team_member;
