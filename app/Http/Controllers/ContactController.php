@@ -165,8 +165,8 @@ class ContactController extends Controller
       $permissions->user_type = $user_type ;
       $permissions->service_permission = $service_manage ;
       
-      $permissions->team_manager_permission = $service_manage ;
-      $permissions->customer_success_manager_permission = $service_manage ;
+      $permissions->team_manager_permission = $team_manager_permission ;
+      $permissions->customer_success_manager_permission = $customer_success_manager_permission ;
       
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
