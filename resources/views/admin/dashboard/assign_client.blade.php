@@ -4,6 +4,8 @@
 @push('title')
     <title> Customers/Clients Table</title>
 @endpush
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
@@ -37,7 +39,7 @@
 										<th>Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
-										<th>Team Member</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -54,7 +56,8 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										{{-- <td>{{$value->first_name}} {{$value->last_name}}</td> --}}
+										<td><a href="" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                    </td>
 									</tr>
                                     @endforeach
                                     @else 

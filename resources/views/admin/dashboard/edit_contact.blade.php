@@ -156,10 +156,13 @@ width: 100% !important;
                                         <div class="col-sm-9">
                                             <div class="position-relative input-icon"> 
                                                 <select  name="m_service"  class="form-control" required >
-                                                    <option value="">Select Services </option>
+                                                    <option value="">Select Services </option>                                    
+                                                    @if($data['user_type']=='customer_success_manager')
+
                                                     @foreach ($services as $item)
                                                             <option value="{{$item->service_id}}"<?php if($item->service_id == $customer_service->member_service_id){echo 'selected';}?>>{{$item->name}}</option>
                                                     @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div>
