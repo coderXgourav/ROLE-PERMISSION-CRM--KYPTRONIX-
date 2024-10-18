@@ -305,6 +305,8 @@ public function updateContact(Request $request){
       $permissions->document_view_permission = $document_view ;
       $permissions->client_financial_data_permission = $client_financial ;
       $permissions->client_contact_permission = $client_contact_info ;
+      $permissions->customer_success_manager_permission = $customer_success_manager_permission;
+      $permissions->delete_client_record_permission =$delete_client;
       $permissions->delete_all_record_permission = $delete_all_record ;
       $permissions->document_download_permission = $document_download ;
       $permissions->lead_assign_permission = $lead_assign ;
