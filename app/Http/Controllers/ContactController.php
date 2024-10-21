@@ -278,6 +278,7 @@ public function updateContact(Request $request){
       $team_manager_permission = $request->manager_manage;
       $customer_success_manager_permission = $request->member_manage;
       $user_registration_permission = $request->user_registration;
+      $package = $request->package;
       
       $contact_details = MainUserModel::find($user_id);
       $contact_details->account_name = $account_name;
@@ -293,10 +294,8 @@ public function updateContact(Request $request){
       
       $permissions = PermissionModel::find($permissions_id);
       $permissions->service_permission = $service_manage ;
-      
-      $permissions->team_manager_permission = $service_manage ;
-      $permissions->customer_success_manager_permission = $service_manage ;
-      
+      $permissions->team_manager_permission = $team_manager_permission ;
+      $permissions->customer_success_manager_permission = $customer_success_manager_permission ;
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
       $permissions->payment_permission = $payment_manage ;
@@ -307,7 +306,7 @@ public function updateContact(Request $request){
       $permissions->document_view_permission = $document_view ;
       $permissions->client_financial_data_permission = $client_financial ;
       $permissions->client_contact_permission = $client_contact_info ;
-      $permissions->customer_success_manager_permission = $customer_success_manager_permission;
+      // $permissions->customer_success_manager_permission = $customer_success_manager_permission;
       $permissions->delete_client_record_permission =$delete_client;
       $permissions->delete_all_record_permission = $delete_all_record ;
       $permissions->document_download_permission = $document_download ;
@@ -315,6 +314,7 @@ public function updateContact(Request $request){
       $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
       $permissions->user_registration_permission = $user_registration_permission ;
+      $permissions->package_permission = $package;
       $permissions->save();
       $services_status = 0;
       
