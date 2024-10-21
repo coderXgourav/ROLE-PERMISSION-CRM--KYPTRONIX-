@@ -18,10 +18,10 @@
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Service</th>
-										<th>Assigned To Team member</th>
-										<th>Assigned To Manager</th>
-										<th>Invoice Status</th>
-										<th>Status</th>
+										{{-- <th>Assigned To Team member</th> --}}
+										{{-- <th>Assigned To Manager</th> --}}
+										{{-- <th>Invoice Status</th> --}}
+										{{-- <th>Status</th> --}}
 										<th style="text-align: center">Action</th>
 									</tr>
 								</thead>
@@ -37,13 +37,15 @@
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->name}}</td>
-										<td>{{$value->first_name}} {{$value->last_name}}</td>
-										<td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td>
-										<td></td>
-										<td><?php if($value->status == '1'){
-											   echo 'Active';}else{ echo 'Disable';}?></td>
+										{{-- <td>{{$value->first_name}} {{$value->last_name}}</td> --}}
+										{{-- <td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td> --}}
+										{{-- <td></td> --}}
+										{{-- <td><?php if($value->status == '1'){
+											   echo 'Active';}else{ echo 'Disable';}?></td> --}}
+
+
 										<td colspan="3" style="display: flex; justify-content:center;">
-											{{-- <center> --}}
+											
 									  @php
 										  $id = encrypt($value->customer_id);
 									  @endphp
@@ -52,7 +54,6 @@
 								     <input type="hidden" name="user_id" value="{{$admin_data->id}}">
 								     <button onclick="ConvertToClient({{$value->customer_id}},{{$admin_data->id}},'{{$admin_data->user_type}}')" type="button" class="btn btn-info"><i class="fa fa-exchange"></i></button>
                                      &nbsp;
-								   
 								     <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     
                                  	 &nbsp;

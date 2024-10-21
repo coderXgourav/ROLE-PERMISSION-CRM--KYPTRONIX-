@@ -104,6 +104,7 @@ class ContactController extends Controller
       
 
       $service_manage = $request->service_manage;
+      $package = $request->package;
       $leads_manage = $request->leads_manage;
       $invoice_manage = $request->invoice_manage;
       $payment_manage = $request->payment_manage;
@@ -164,8 +165,8 @@ class ContactController extends Controller
       $permissions->user_type = $user_type ;
       $permissions->service_permission = $service_manage ;
       
-      $permissions->team_manager_permission = $service_manage ;
-      $permissions->customer_success_manager_permission = $service_manage ;
+      $permissions->team_manager_permission = $team_manager_permission ;
+      $permissions->customer_success_manager_permission = $customer_success_manager_permission ;
       
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
@@ -182,6 +183,7 @@ class ContactController extends Controller
       $permissions->lead_assign_permission = $lead_assign ;
       $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
+      $permissions->package_permission = $package;
       $permissions->user_registration_permission = $user_registration_permission ;
      
       $permissions->save();
@@ -276,6 +278,7 @@ public function updateContact(Request $request){
       $team_manager_permission = $request->manager_manage;
       $customer_success_manager_permission = $request->member_manage;
       $user_registration_permission = $request->user_registration;
+      $package = $request->package;
       
       $contact_details = MainUserModel::find($user_id);
       $contact_details->account_name = $account_name;
@@ -291,10 +294,8 @@ public function updateContact(Request $request){
       
       $permissions = PermissionModel::find($permissions_id);
       $permissions->service_permission = $service_manage ;
-      
-      $permissions->team_manager_permission = $service_manage ;
-      $permissions->customer_success_manager_permission = $service_manage ;
-      
+      $permissions->team_manager_permission = $team_manager_permission ;
+      $permissions->customer_success_manager_permission = $customer_success_manager_permission ;
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
       $permissions->payment_permission = $payment_manage ;
@@ -305,7 +306,7 @@ public function updateContact(Request $request){
       $permissions->document_view_permission = $document_view ;
       $permissions->client_financial_data_permission = $client_financial ;
       $permissions->client_contact_permission = $client_contact_info ;
-      $permissions->customer_success_manager_permission = $customer_success_manager_permission;
+      // $permissions->customer_success_manager_permission = $customer_success_manager_permission;
       $permissions->delete_client_record_permission =$delete_client;
       $permissions->delete_all_record_permission = $delete_all_record ;
       $permissions->document_download_permission = $document_download ;
@@ -313,6 +314,7 @@ public function updateContact(Request $request){
       $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
       $permissions->user_registration_permission = $user_registration_permission ;
+      $permissions->package_permission = $package;
       $permissions->save();
       $services_status = 0;
       
@@ -366,32 +368,55 @@ public function Clientspage(){
 
 //  THIS IS assginClientspage FUNCTION 
 public function assginClientspage(Request $request){
-   $id = session('admin');
-   $admin_data = self::userDetails($id);
-   $user_type = self::userType($admin_data->user_type);
-   $team = MainUserModel::where('user_type','customer_success_manager')->get();
-  //   $customers = DB::table('customer')
-  //  ->join('services','services.service_id','=','customer.customer_service_id')
-  //  ->join('main_user','main_user.id','=','customer.team_member')
-  //  ->where('customer.team_member','!=',null)
-  //  ->orderBy('customer.customer_id','DESC')
-  //  ->get();
 
   $service = $request->service;
-  $teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get IDs as an array
-  $customer_id = CustomerModel::all()->pluck('team_member')->toArray(); // Directly get IDs as an array
     if($service !=""){
-      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('main_user','main_user.id','=','customer.team_member')->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
+      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)
+      ->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
     }else{
-          $customers = DB::table('customer')
-        ->select('customer.*', 'services.name') // Adjust fields as needed
-        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-        ->whereIn('customer.team_member',$customer_id)
-        ->orderBy('customer.customer_id', 'DESC')
-        ->get();
+         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)->orderBy('customer_id','DESC')->get();
     }
+
+    // echo "<pre>";
+    // print_r($customers);
+    // die();
+
+  $id = session('admin');
+   $admin_data = self::userDetails($id);
+   $user_type = self::userType($admin_data->user_type);
    
-  return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
+   $team = MainUserModel::where('user_type','customer_success_manager')->get();
+   $services = Service::orderBy('service_id','DESC')->get();
+
+
+
+
+  return view('admin.dashboard.assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'services'=>$services]);
+
+
+
+  //  $id = session('admin');
+  //  $admin_data = self::userDetails($id);
+  //  $user_type = self::userType($admin_data->user_type);
+  //  $team = MainUserModel::where('user_type','customer_success_manager')->get();
+
+  // $service = $request->service;
+  // $teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get IDs as an array
+  // $customer_id = CustomerModel::all()->pluck('team_member')->toArray(); // Directly get IDs as an array
+  //   if($service !=""){
+  //     $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('main_user','main_user.id','=','customer.team_member')->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
+  //   }else{
+  //         $customers = DB::table('customer')
+  //       ->select('customer.*', 'services.name') // Adjust fields as needed
+  //       ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+  //       ->whereIn('customer.team_member',$customer_id)
+  //       ->orderBy('customer.customer_id', 'DESC')
+  //       ->get();
+  //   }
+   
+  // return view('admin.dashboard.assign_client',['admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'user_type'=>$user_type]);
+
+
 }
 
 //  THIS IS assginClientspage FUNCTION 
@@ -441,6 +466,7 @@ public function noneAssginClientspage(Request $request){
 
 
   return view('admin.dashboard.none_assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'services'=>$services]);
+
 }
 //  THIS IS noneAssginClientspage FUNCTION 
 
@@ -509,7 +535,7 @@ public function export()
       if($filter != ""){
         switch($filter){
           case "Operation Managers":
-              $contact_data = DB::table('main_user')->where('user_type',"operation_manager")->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"operation_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -517,7 +543,7 @@ public function export()
             break;
             case "Team Managers":
               
-                $contact_data = DB::table('main_user')->where('user_type',"team_manager")->orderBy('id','DESC')->get();
+                $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"team_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -525,7 +551,7 @@ public function export()
             
             break;
                  case "Customer Success Manager":
-                    $contact_data = DB::table('main_user')->where('user_type',"customer_success_manager")->orderBy('id','DESC')->get();
+                    $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"customer_success_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -536,7 +562,7 @@ public function export()
             break;
         }
       }else{
-              $contact_data = DB::table('main_user')->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -935,13 +961,12 @@ public function addLead(){
       $user_type = self::userType($admin_data->user_type);
       if($admin_data->user_type == 'admin'){
         $leads_data = DB::table('customer')
-        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','services.name','customer.status','main_user.first_name','main_user.last_name')
+        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','services.name','customer.status')
         ->join('services','services.service_id','=','customer.customer_service_id')
-        ->leftjoin('main_user','main_user.id','=','customer.team_member')
-        ->where('customer.status',1)
+        // ->leftjoin('main_user','main_user.id','=','customer.team_member')
+        // ->where('customer.status',1)
         ->get(); 
       }else if($admin_data->user_type == 'team_manager'){
-
         $leads_data = DB::table('team_manager_services')
         ->join('main_user','main_user.id','=','team_manager_services.team_manager_id')
         ->where('main_user.id',session('admin'))->first();

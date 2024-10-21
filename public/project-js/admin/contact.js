@@ -93,7 +93,7 @@ $("#update_contact_form").validate({
                 $("#btn").html("update");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
-                    $("#update_contact_form").trigger("reset");
+                    // $("#update_contact_form").trigger("reset");
                 }
             },
             error: function () {

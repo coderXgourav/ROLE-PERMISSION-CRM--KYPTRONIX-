@@ -94,6 +94,8 @@
                     </ul>
                 </li>
                 @endif
+    @if($admin_data->package_permission>0)
+
                  <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -110,6 +112,8 @@
                       
                     </ul>
                 </li>
+                @endif
+                
                
             @if($admin_data->user_registration_permission>0)
                 <li>

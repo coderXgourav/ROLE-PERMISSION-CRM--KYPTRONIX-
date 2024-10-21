@@ -391,7 +391,7 @@ width: 100% !important;
                                                 <div class="form-check form-switch">           
                                                     <input type="hidden" name="member_manage" value="0">
 
-                                                    <input class="form-check-input" name="member_manage" value="1" type="checkbox" role="switch" id="565" <?php if($permissions_data['customer_success_manager_permission'] =='1'){echo 'checked';}?>>
+                                                    <input class="form-check-input" name="member_manage" value="1" type="checkbox" role="switch" id="565" <?php if($permissions_data['customer_success_manager_permission']>0){echo 'checked';}?>>
                                                     <label class="form-check-label" for="565">Manage Customer Success Manager</label>
                                                 </div>
                                             </div>
@@ -416,6 +416,15 @@ width: 100% !important;
                                                 </div>
                                             </div>
                                         </div>
+                                        	<div class="col-sm-3">
+												<div class="d-flex align-items-center gap-3">
+												<div class="form-check form-switch">
+													<input type="hidden" name="package" value="0">
+													<input class="form-check-input" name="package" value="1" type="checkbox" role="switch" id="3002" <?php if($permissions_data['package_permission'] =='1'){echo 'checked';}?> >
+													<label class="form-check-label" for="3002">Package Manage</label>
+												</div>
+						                    </div>
+										</div>
                                         
                                     
                                 </div>
