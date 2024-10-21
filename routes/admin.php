@@ -116,5 +116,5 @@ Route::get('/admin/all-package',[AdminController::class,'allPackages'])->name('a
 Route::get('admin/edit-package/{id}',[AdminController::class,'editPackage'])->name('admin.edit-package');
 Route::post('/admin/update_package',[ContactController::class,'updatePackage']);
 Route::post('/admin/package_delete',[ContactController::class,'deletePackage']);
-
+Route::get('/admin/view_assign_client/{id}',[ContactController::class,'viewAssignClient'])->name('admin.view_assign_client');
 });

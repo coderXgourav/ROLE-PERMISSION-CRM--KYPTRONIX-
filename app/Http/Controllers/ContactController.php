@@ -380,7 +380,6 @@ public function assginClientspage(Request $request){
   $service = $request->service;
   $teamMembersId = MainUserModel::all()->pluck('id')->toArray(); // Directly get IDs as an array
   $customer_id = CustomerModel::all()->pluck('team_member')->toArray(); // Directly get IDs as an array
-
     if($service !=""){
       $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('main_user','main_user.id','=','customer.team_member')->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
     }else{
@@ -1310,6 +1309,28 @@ public function savePackage(Request $request){
       return self::toastr(false,'Technical Issue','error','Error');
         
     }
+  }
+  public function viewAssignClient($customer_id){
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    $customer_details = CustomerModel::find($customer_id);
+    $customer_service_id = $customer_details->customer_service_id;
+    $main_user_id = json_decode($customer_details->team_member);
+    
+    $data = DB::table('main_user')
+    ->select('main_user.first_name', 'main_user.last_name')
+    ->whereIn('main_user.id',$main_user_id)
+    ->get();
+    $services_data =Service::find($customer_details->customer_service_id);
+
+    /*$team_manager_services =DB::table('team_manager_services')
+    ->select('team_manager_services.team_manager_id')
+    ->whereIn($customer_service_id,'team_manager_services.managers_services_id')
+    ->get();
+    echo '<pre>';
+    print_r($team_manager_services);die;*/
+    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data]);
   }
 
 // THIS IS END OF THE CLASS 
