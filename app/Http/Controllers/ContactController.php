@@ -512,7 +512,7 @@ public function export()
       if($filter != ""){
         switch($filter){
           case "Operation Managers":
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('user_type',"operation_manager")->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"operation_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -520,7 +520,7 @@ public function export()
             break;
             case "Team Managers":
               
-                $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('user_type',"team_manager")->orderBy('id','DESC')->get();
+                $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"team_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -528,7 +528,7 @@ public function export()
             
             break;
                  case "Customer Success Manager":
-                    $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('user_type',"customer_success_manager")->orderBy('id','DESC')->get();
+                    $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"customer_success_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
