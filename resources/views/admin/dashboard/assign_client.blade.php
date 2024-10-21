@@ -65,7 +65,8 @@
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->name}}</td>
 										<td>{{$value->msg}}</td>
-										<td>  <a href="" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+										<td><a href="{{route('admin.view_assign_client',['id'=>$value->customer_id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                    </td>
 									</tr>
                                     @endforeach
                                     @else  
