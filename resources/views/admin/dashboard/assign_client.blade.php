@@ -68,7 +68,7 @@
 										<td>  <a href="" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
 									</tr>
                                     @endforeach
-                                    @else 
+                                    @else  
                                     <tr>
 										<td colspan="8" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
 										
