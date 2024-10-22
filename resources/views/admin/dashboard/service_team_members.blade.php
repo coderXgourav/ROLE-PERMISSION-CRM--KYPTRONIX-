@@ -25,12 +25,12 @@
                                         $i=1;
                                     @endphp
                                     @foreach($team_member as $key => $value)
-                                    <tr id="{{$value->team_member_id }}">
+                                    <tr id="{{$value->id }}">
 										<td>{{$i++}}</td>
-										<td>{{$value->name}}</td>
+										<td>{{$value->first_name}} {{$value->last_name}}</td>
 										<td>{{$value->service_name}}</td>
 										<td>{{$value->phone_number}}</td>
-										<td>{{$value->email}}</td>
+										<td>{{$value->email_address}}</td>
 										
 									
 									</tr>

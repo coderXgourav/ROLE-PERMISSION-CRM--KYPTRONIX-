@@ -1353,13 +1353,12 @@ public function savePackage(Request $request){
     ->get();
     $services_data =Service::find($customer_details->customer_service_id);
     $customer_service_id = $customer_details->customer_service_id;
-
     // $team_managers =DB::table('team_manager_services')
     // ->whereIn($customer_service_id,'team_manager_services.managers_services_id')
     // ->get();
-    
     // echo '<pre>';
-    // print_r($team_managers);die;
+
+     //print_r($team_managers);die;
  
 
     return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data]);
