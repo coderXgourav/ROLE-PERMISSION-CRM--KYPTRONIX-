@@ -799,27 +799,33 @@ public function viewTeamMember($team_manager_id){
     // $invoice_data=Invoice::where('service_id','=',$data['service_id'])->where('team_manager_id','=',$data['user_id'])->count();
     // $convert_to_clients=PaidCustomer::where('team_manager_id',$team_manager_id)->where('role','team_manager')->count();
 
-    // return view('admin.dashboard.view_team_member',['admin_data'=>$data,'data'=>$data,'services_data'=>$services,'total_team_member'=>$total_team_member,'clients'=>$clients,'invoice_data'=>$invoice_data,'convert_to_clients'=>$convert_to_clients]);
-    $total_team_member=TeamManagersServicesModel::where('team_manager_id',$data['id'])->count();
-    //int_r($total_team_member);die;
+    $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$data->id)->first();
+    $total_team_member=0;
+    if(!empty($team_manager_services)){
+            $service_id=json_decode($team_manager_services->managers_services_id);
+            $total_team_member=DB::table('customer')
+              ->whereIn('customer.customer_service_id',$service_id)
+              ->count();
 
-      return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>0, 'convert_to_clients'=>20,'invoice_data'=>2]);
+    }
+
+    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>0, 'convert_to_clients'=>20,'invoice_data'=>2]);
 }
 //viewTeamMember FUNCTION END
 public function teamMemberList($manager_id){
     $id = session('admin');
-    // $admin_data = AdminModel::find($team_id);
-    // $data = UserModel::find($manager_id);
-    // $services = Service::find($data['service_id']);
-     $admin_data = self::userDetails($id);
+    $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
+    $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->first();
+    $team_member=[];
+    if(!empty($team_manager_services)){
+            $service_id=json_decode($team_manager_services->managers_services_id);
+            $team_member=DB::table('customer')
+              ->join('services','services.service_id','=','customer.customer_service_id')
+              ->whereIn('customer.customer_service_id',$service_id)
+              ->get();
+     }
    
-   $team_member = DB::table('team_member')
-    ->join('services', 'services.service_id', '=', 'team_member.team_service')
-    ->select('team_member.*', 'services.name as service_name')
-   //>where('team_member.team_service',$data['service_id'])
-    ->get();
-
     return view('admin.dashboard.members_list',['admin_data'=>$admin_data,'team_member'=>$team_member,'user_type'=>$user_type]);
 }
 public function showClientsList($manager_id){
