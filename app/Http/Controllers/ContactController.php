@@ -482,6 +482,18 @@ public function assign(Request $request){
   }
   return self::swal(true,'Assign Successfull','success');
 }
+
+public function updateAssign(Request $request){
+  $customers[] = $request->customer;
+  $team_member = $request->team_member;
+  
+  foreach ($customers[0] as $key => $value) {
+  $update = CustomerModel::find($value);
+  $update->team_member=$team_member;
+  $update->save();
+  }
+  return self::swal(true,'Update Successfull','success');
+}
 // THIS IS  assign FUNCTION 
 // THIS IS emailPage FUNCTION 
 public function emailPage(){
@@ -966,7 +978,7 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      if($admin_data->user_type == 'admin'){
+      if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
         $leads_data = DB::table('customer')
         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','services.name','customer.status')
         ->join('services','services.service_id','=','customer.customer_service_id')
@@ -1361,17 +1373,15 @@ public function savePackage(Request $request){
     ->get();
     $services_data =Service::find($customer_details->customer_service_id);
     $customer_service_id = $customer_details->customer_service_id;
-    $service_id=[];
-    $service_id =explode(',',$customer_service_id);
-   //team_managers =DB::table('team_manager_services')
-     // ->whereIn($customer_service_id,'team_manager_services.managers_services_id')
-    //>get();
+    // $team_managers =DB::table('team_manager_services')
+    // ->whereIn($customer_service_id,'team_manager_services.managers_services_id')
+    // ->get();
     // echo '<pre>';
 
-    //rint_r($service_id);die;
+     //print_r($team_managers);die;
  
 
-    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data]);
+    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$main_users]);
   }
 
 // THIS IS END OF THE CLASS 

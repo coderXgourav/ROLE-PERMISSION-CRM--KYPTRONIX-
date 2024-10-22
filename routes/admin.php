@@ -48,6 +48,7 @@ Route::get('/admin/clients',[ContactController::class,'Clientspage'])->name('adm
 Route::get('/admin/assign-clients',[ContactController::class,'assginClientspage'])->name('admin.assign');
 Route::get('/admin/none-assign-clients',[ContactController::class,'noneAssginClientspage'])->name('admin.noneassign');
 Route::post('/admin/assign',[ContactController::class,'assign']);
+Route::post('/admin/update-assign',[ContactController::class,'UpdateAssign']);
 Route::get('/admin/email',[ContactController::class,'emailPage'])->name('admin.email');
 Route::get('/admin/email-show/{id}',[ContactController::class,'emailShow'])->name('admin.emailshow');
 Route::get('/export',[ContactController::class,'export'])->name('admin.export');

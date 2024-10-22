@@ -34,7 +34,7 @@
 									<p class="text-light text-center ">Please select only one type of lead. Selecting multiple service leads will disable the assignment feature</p>
 								</div>
 								<br>
-							<form id="assign_client_form">
+							<form id="update_assign_client_form">
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
 							
 								<thead>
@@ -107,7 +107,7 @@
 							</table>
 							  @if(count($data)>0)
 							<div style="display: flex; justify-content:center; margin-bottom: 20px; margin-top:20px;">
-								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" id="assign" style="background-color: #38833c; border:1px solid #38833c; width:500px;">Assign Leads to Customer success Manager</button>
+								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" id="assign" style="background-color: #38833c; border:1px solid #38833c; width:500px;">Update Customer success Manager</button>
 								</div>
 								@endif
 							</form>
