@@ -386,7 +386,7 @@ width: 100% !important;
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-3">
+                                        {{-- <div class="col-sm-3">
                                                 <div class="d-flex align-items-center gap-3">
                                                 <div class="form-check form-switch">           
                                                     <input type="hidden" name="member_manage" value="0">
@@ -405,14 +405,14 @@ width: 100% !important;
                                                     <label class="form-check-label" for="211">Team Manager Manage</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-sm-3">
                                                 <div class="d-flex align-items-center gap-3">
                                                 <div class="form-check form-switch">              
                                                     <input type="hidden" name="user_registration" value="0">
 
                                                     <input class="form-check-input" name="user_registration" value="1" type="checkbox" role="switch" id="1000"<?php if($permissions_data['user_registration_permission'] =='1'){echo 'checked';}?> >
-                                                    <label class="form-check-label" for="1000">Create New User or Registration User</label>
+                                                    <label class="form-check-label" for="1000">User Role/Manage</label>
                                                 </div>
                                             </div>
                                         </div>
