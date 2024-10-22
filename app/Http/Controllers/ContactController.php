@@ -482,6 +482,18 @@ public function assign(Request $request){
   }
   return self::swal(true,'Assign Successfull','success');
 }
+
+public function updateAssign(Request $request){
+  $customers[] = $request->customer;
+  $team_member = $request->team_member;
+  
+  foreach ($customers[0] as $key => $value) {
+  $update = CustomerModel::find($value);
+  $update->team_member=$team_member;
+  $update->save();
+  }
+  return self::swal(true,'Update Successfull','success');
+}
 // THIS IS  assign FUNCTION 
 // THIS IS emailPage FUNCTION 
 public function emailPage(){

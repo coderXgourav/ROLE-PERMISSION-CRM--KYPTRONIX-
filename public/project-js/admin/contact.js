@@ -179,6 +179,43 @@ $("#assign_client_form").validate({
 
 // THIS IS update_contact_form FUNCTION
 
+$("#update_assign_client_form").validate({
+    rules: {
+        team_member: {
+            required: true,
+        },
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/update-assign",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                swal.fire({
+                    title: data.title,
+                    icon: data.icon,
+                });
+                if (data.status) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            },
+        });
+    },
+});
+
 // THIS IS upload_clients FUNCTION
 $("#upload_clients").validate({
     rules: {
