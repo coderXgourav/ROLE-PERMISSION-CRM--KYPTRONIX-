@@ -1366,44 +1366,30 @@ public function savePackage(Request $request){
     $customer_service_id = $customer_details->customer_service_id;
     $main_user_id = json_decode($customer_details->team_member);
 
-    
+     
     $data = DB::table('main_user')
     ->select('main_user.first_name', 'main_user.last_name')
     ->whereIn('main_user.id',$main_user_id)
     ->get();
+
+    
     $services_data =Service::find($customer_details->customer_service_id);
     $customer_service_id = $customer_details->customer_service_id;
     
     
 // Step 1: Fetch the first record that matches the JSON condition
-$team_manager_service = DB::table('team_manager_services')
+$team_manager_service = DB::table('team_manager_services')  
     ->whereJsonContains('managers_services_id', $customer_service_id) // Assumes it's a JSON array
-    ->first();
+    ->get();
 
-if ($team_manager_service) {
-    // Step 2: Extract managers_services_id
-  $managers = $team_manager_service->managers_services_id;
+$main_users = collect(); // Create an empty collection to store all users
 
-// Check if $managers is a string and decode it if so
-if (is_string($managers)) {
-    $managers = json_decode($managers, true);
-}
-
-// Ensure $managers is an array
-if (!is_array($managers)) {
-    $managers = []; // Fallback to an empty array if not valid
-}
-
-$main_users = MainUserModel::whereIn('id', $managers)->get();
-
-
-} else {
-    echo 'No team manager services found for the given customer service ID.';
-    die;
+foreach ($team_manager_service as $value) {
+    $users = MainUserModel::where('id', $value->team_manager_id)->get(['first_name','last_name','id','user_type']);
+    $main_users = $main_users->merge($users);
 }
 
 
- 
 
     return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$main_users]);
   }
