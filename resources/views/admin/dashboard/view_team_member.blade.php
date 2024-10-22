@@ -51,6 +51,7 @@
 										</div>
 										<hr class="my-4" />
 										<ul class="list-group list-group-flush">
+											<?php if(isset($data) && ($data->user_type !='customer_success_manager')){?>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
 										 	<a href="{{route('admin.show-team-member-list',['id'=>$data->id ])}}">
 
@@ -59,6 +60,7 @@
 												Team Member</h6></a>
 												<span class="text-secondary">{{$total_team_member}}</span>
 											</li>
+										   <?php } ?>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
 										    	<a href="{{route('admin.show-clients-list',['id'=>$data->id ])}}">
 
