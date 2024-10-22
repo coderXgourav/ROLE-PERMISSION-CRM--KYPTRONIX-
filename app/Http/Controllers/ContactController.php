@@ -1345,7 +1345,7 @@ public function savePackage(Request $request){
          return self::toastr(false,"Sorry , Technical Issue..","error","Error");
       }
   } 
-  public function deletePackage(Request $request){
+  public function deletePackage(Request $request){  
     $id = $request->id;
     $delete = Package::find($id)->delete();
     if($delete){
@@ -1374,12 +1374,36 @@ public function savePackage(Request $request){
     ->get();
     $services_data =Service::find($customer_details->customer_service_id);
     $customer_service_id = $customer_details->customer_service_id;
-    // $team_managers =DB::table('team_manager_services')
-    // ->whereIn($customer_service_id,'team_manager_services.managers_services_id')
-    // ->get();
-    // echo '<pre>';
+    
+    
+// Step 1: Fetch the first record that matches the JSON condition
+$team_manager_service = DB::table('team_manager_services')
+    ->whereJsonContains('managers_services_id', $customer_service_id) // Assumes it's a JSON array
+    ->first();
 
-     //print_r($team_managers);die;
+if ($team_manager_service) {
+    // Step 2: Extract managers_services_id
+  $managers = $team_manager_service->managers_services_id;
+
+// Check if $managers is a string and decode it if so
+if (is_string($managers)) {
+    $managers = json_decode($managers, true);
+}
+
+// Ensure $managers is an array
+if (!is_array($managers)) {
+    $managers = []; // Fallback to an empty array if not valid
+}
+
+$main_users = MainUserModel::whereIn('id', $managers)->get();
+
+
+} else {
+    echo 'No team manager services found for the given customer service ID.';
+    die;
+}
+
+
  
 
     return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$main_users]);
