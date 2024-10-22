@@ -781,6 +781,7 @@ public function smsShow($id){
   $clients = CustomerModel::find($customer_id);
   $invoice_details = Invoice::find($invoice_id);
   return view('admin.dashboard.view_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
+  
 }
 //viewTeamMember FUNCTION START
 public function viewTeamMember($team_manager_id){
