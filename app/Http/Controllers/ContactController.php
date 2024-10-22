@@ -775,10 +775,12 @@ public function smsShow($id){
   //invoiceList FUNCTION END
   public function viewInvoice($customer_id,$invoice_id){
   $team_id = session('admin');
-  $admin_data = AdminModel::find($team_id);
+ // $admin_data = AdminModel::find($team_id);
+  $admin_data = self::userDetails($team_id);
+  $user_type = self::userType($admin_data->user_type);
   $clients = CustomerModel::find($customer_id);
   $invoice_details = Invoice::find($invoice_id);
-  return view('admin.dashboard.view_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details]);
+  return view('admin.dashboard.view_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
 }
 //viewTeamMember FUNCTION START
 public function viewTeamMember($team_manager_id){
@@ -1365,13 +1367,12 @@ public function savePackage(Request $request){
     ->get();
     $services_data =Service::find($customer_details->customer_service_id);
     $customer_service_id = $customer_details->customer_service_id;
-
     // $team_managers =DB::table('team_manager_services')
     // ->whereIn($customer_service_id,'team_manager_services.managers_services_id')
     // ->get();
-    
     // echo '<pre>';
-    // print_r($team_managers);die;
+
+     //print_r($team_managers);die;
  
 
     return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data]);

@@ -85,8 +85,8 @@
     <div class="invoice-details"> 
         <div class="col">
             <h3>From</h3>
-            <p>{{$admin_data->name}}<br>
-            {{$admin_data->email}}<br>
+            <p>{{$admin_data->first_name}} {{$admin_data->last_name}}<br>
+            {{$admin_data->email_address}}<br>
             Your address<br>
             P: {{$admin_data->phone_number}}</p>
         </div>

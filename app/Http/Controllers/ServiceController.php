@@ -8,6 +8,7 @@ use App\Models\AdminModel;
 use App\Models\TeamMember; 
 use App\Models\Invoice;
 use App\Models\CustomerModel;
+use App\Models\MemberServiceModel;
 use DB;
 use Crypt;
 
@@ -143,7 +144,7 @@ class ServiceController extends Controller
     $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
-    $team_member=TeamMember::where('team_service',$s_id)->get();
+    $team_member=MemberServiceModel::where('member_service_id',$s_id)->get();
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
    return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type]);
@@ -153,41 +154,41 @@ class ServiceController extends Controller
   //teamMember Start
  public function teamMember($service_id){
      $id = session('admin');
-     $admin_data = AdminModel::find($id);
-     $team_member = DB::table('team_member')
-    ->join('services', 'services.service_id', '=', 'team_member.team_service')
-    ->select('team_member.*', 'services.name as service_name')
-    ->where('team_member.team_service',$service_id)
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $team_member = DB::table('main_user')
+    ->select('main_user.*', 'services.name as service_name')
+    ->join('member_service','member_service.member_id','=','main_user.id')
+    ->join('services', 'services.service_id', '=', 'member_service.member_service_id')
+    ->where('member_service.member_service_id',$service_id)
     ->get();
-    return view('admin.dashboard.service_team_members',['admin_data'=>$admin_data,'team_member'=>$team_member]);
+    return view('admin.dashboard.service_team_members',['admin_data'=>$admin_data,'team_member'=>$team_member,'user_type'=>$user_type]);
 }
 //teamMember End
 //showLeadsList Start
 public function showLeadsList($service_id){
     $id = session('admin');
-    $admin_data = AdminModel::find($id);
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
     $clients = DB::table('customer')
     ->join('services','services.service_id','=','customer.customer_service_id')
     ->select('customer.*','services.name as service_name')
     ->where('customer.customer_service_id',$service_id)
     ->get();
-   return view('admin.dashboard.show_leads_lists',['admin_data'=>$admin_data,'clients'=>$clients]);
+   return view('admin.dashboard.show_leads_lists',['admin_data'=>$admin_data,'clients'=>$clients,'user_type'=>$user_type]);
 }
 //showLeadsList End
 //serviceInvoices Start
 public function serviceInvoices($service_id){
     $id = session('admin');
-    $admin_data = AdminModel::find($id);
-     $invoice = DB::table('invoices')
-     ->select('team_member.name as team_member_name','user.name as team_manager_name','invoices.role','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.service_id')
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    $invoice = DB::table('invoices')
+     ->select('customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.service_id','invoices.price')
      ->join('customer','customer.customer_id','=','invoices.customer_id')
-     ->leftjoin('team_member','team_member.team_member_id','=','invoices.team_member_id')
-     ->leftjoin('user','user.user_id','=','invoices.team_manager_id')
      ->where('invoices.service_id',$service_id)
      ->get();
-    //echo "<pre>";
-   // print_r($invoice);die;
-   return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice]);
+   return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice,'user_type'=>$user_type]);
 }
 //serviceInvoices End
 
