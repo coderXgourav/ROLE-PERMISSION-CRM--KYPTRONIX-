@@ -1339,7 +1339,7 @@ public function savePackage(Request $request){
          return self::toastr(false,"Sorry , Technical Issue..","error","Error");
       }
   } 
-  public function deletePackage(Request $request){
+  public function deletePackage(Request $request){  
     $id = $request->id;
     $delete = Package::find($id)->delete();
     if($delete){
@@ -1395,9 +1395,6 @@ $main_users = MainUserModel::whereIn('id', $managers)->get();
     echo 'No team manager services found for the given customer service ID.';
     die;
 }
-
-
- 
 
     return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$main_users]);
   }
