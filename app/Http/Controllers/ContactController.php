@@ -973,7 +973,7 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      if($admin_data->user_type == 'admin'){
+      if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
         $leads_data = DB::table('customer')
         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','services.name','customer.status')
         ->join('services','services.service_id','=','customer.customer_service_id')
