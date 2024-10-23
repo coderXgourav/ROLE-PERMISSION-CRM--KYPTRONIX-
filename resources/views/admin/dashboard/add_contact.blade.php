@@ -119,7 +119,7 @@ width: 100% !important;
 													<option value="operation_manager">Operation Manager</option>
 													<option value="team_manager">Team Manager</option>
 													<option value="customer_success_manager">Customer Success Manager</option>
-													<option value="bookkeeper">Bookkeeper</option>
+													{{-- <option value="bookkeeper">Bookkeeper</option> --}}
 												</select>
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
 											</div>
@@ -174,14 +174,14 @@ width: 100% !important;
 										</div> --}}
 											<div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
+												<div class="form-check form-switch" class="om">
 													<input type="hidden" name="service_manage" value="0">
 													<input class="form-check-input" value="1" name="service_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault1" >
 													<label class="form-check-label" for="flexSwitchCheckDefault1">Service Manage</label>
 												</div>
 						                    </div>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-3" class="tm">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="leads_manage" value="0">
@@ -191,7 +191,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-											<div class="col-sm-3">
+											<div class="col-sm-3" class="tm">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="invoice_manage" value="0">
@@ -200,7 +200,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-											<div class="col-sm-3">
+											<div class="col-sm-3" class="admin">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="payment_manage" value="0">
@@ -220,7 +220,7 @@ width: 100% !important;
 								
 									<div class="row">
 										
-										<div class="col-sm-3">
+										<div class="col-sm-3" class="tm"> 
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="customer_manage" value="0">
@@ -229,7 +229,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-											<div class="col-sm-3">
+											<div class="col-sm-3" class="tm">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="email_sms_manage" value="0">
@@ -238,7 +238,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-3" class="tm">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="communication" value="0">
@@ -247,7 +247,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-3" class="admin">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="report" value="0">
@@ -268,7 +268,7 @@ width: 100% !important;
 								
 									<div class="row">
 											
-											<div class="col-sm-3">
+											<div class="col-sm-3" class="csm">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="document_view" value="0">
@@ -277,7 +277,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-3" class="tm">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="client_financial" value="0">
@@ -389,7 +389,7 @@ width: 100% !important;
 													<label class="form-check-label" for="211">Team Manager Manage</label>
 												</div>
 						                    </div>
-										</div> --}}
+										</div> --}} 
 
 										<div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
