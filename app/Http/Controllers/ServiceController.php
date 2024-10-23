@@ -204,17 +204,35 @@ public function serviceInvoices($service_id){
    return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice,'user_type'=>$user_type]);
 }
 //serviceInvoices End
+
 public function teamManagerList($service_id){
+  
      $id = session('admin');
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
-     $team_manager = DB::table('main_user')
-    ->select('main_user.*', 'services.name as service_name')
-    ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
-    ->join('services', 'services.service_id', '=', 'team_manager_services.managers_services_id')
-    ->whereJsonContains('team_manager_services.managers_services_id',$service_id)
+
+     $team_manager = DB::table('team_manager_services')  
+    ->whereJsonContains('managers_services_id', $service_id) // Assumes it's a JSON array
     ->get();
-    print_r($team_manager);die;
-    return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$team_manager,'user_type'=>$user_type]);
+
+
+    $team_manager_data = collect(); // Create an empty collection to store all users
+
+    for ($i=0; $i < count($team_manager); $i++) { 
+        $users = MainUserModel::where('id',  $team_manager[$i]->team_manager_id)->get(['first_name','last_name','id','user_type','email_address','phone_number']);
+    $team_manager_data = $team_manager_data->merge($users);
+    }
+
+
+// echo "<pre>";
+// print_r($team_manager_data);
+// die;
+
+
+
+  
+
+return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$team_manager_data,'user_type'=>$user_type]);
 }
+
 }
