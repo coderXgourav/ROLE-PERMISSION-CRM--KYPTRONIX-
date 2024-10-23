@@ -5,8 +5,10 @@
   @push('title')
       <title>Dashboard</title>
   @endpush
+
          
                     <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
                       <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
@@ -37,6 +39,8 @@
                             </div>
                             
                         </div>
+						@endif
+						
                         <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
@@ -67,6 +71,9 @@
                             </div>
                             
                         </div>
+
+						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager")
+
                           
                            <div class="col">
                             <div class="card radius-10">
@@ -98,6 +105,10 @@
                             </div>
                             
                         </div>
+						@endif
+
+						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager")
+						
                            <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
@@ -128,6 +139,10 @@
                             </div>
                             
                         </div>
+						@endif
+
+						@if($admin_data->user_type=="customer_success_manager")
+
                            <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
@@ -157,6 +172,9 @@
                             </div>
                             
                         </div>
+						@endif
+						@if($admin_data->user_type=="customer_success_manager")
+
                            <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
@@ -185,9 +203,12 @@
                                 </div>
                             </div>
                         </div>
+						@endif
                      
                      
                     </div>
+						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
+
                     <div class="row row-cols-1 row-cols-lg-3">
 						<div class="col d-flex">
 							<div class="card radius-10 w-100">
@@ -287,212 +308,7 @@
 							</div>
 						</div>
 					</div>
-                    <div class="row row-cols-1 row-cols-xl-2">
-						<div class="col d-flex">
-							<div class="card radius-10 w-100">
-								<div class="card-body">
-									<div class="d-flex align-items-center">
-										<div>
-											<h5 class="mb-1">Store Metrics</h5>
-											<p class="mb-0 font-13 text-secondary"><i
-													class='bx bxs-calendar'></i>in last 30 days revenue</p>
-										</div>
-									
-									</div>
-									<div class="row row-cols-1 row-cols-sm-3 mt-4">
-										<div class="col">
-											<div>
-												<p class="mb-0 text-secondary">Invoice</p>
-												<h4 class="my-1">$4890</h4>
-												<p class="mb-0 font-13 text-success"><i
-														class='bx bxs-up-arrow align-middle'></i>$148 Since last
-													month</p>
-											</div>
-										</div>
-										<div class="col">
-											<div>
-												<p class="mb-0 text-secondary">Total Customers</p>
-												<h4 class="my-1">12K</h4>
-												<p class="mb-0 font-13 text-success"><i
-														class='bx bxs-up-arrow align-middle'></i>12.3% Since last
-													month</p>
-											</div>
-										</div>
-										<div class="col">
-											<div>
-												<p class="mb-0 text-secondary">Total Clients</p>
-												<h4 class="my-1">129K</h4>
-												<p class="mb-0 font-13 text-danger"><i
-														class='bx bxs-down-arrow align-middle'></i>2.4% Since last
-													month</p>
-											</div>
-										</div>
-									</div>
-									<div id="chart4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="col d-flex">
-							<div class="card radius-10 w-100">
-								<div class="card-header border-bottom-0">
-									<div class="d-flex align-items-center">
-										<div>
-											<h5 class="mb-1">Team Manager</h5>
-											<p class="mb-0 font-13 text-secondary"><i
-													class='bx bxs-calendar'></i>in last 30 days revenue</p>
-										</div>
-										
-									</div>
-								</div>
-								<div class="product-list p-3 mb-3">
-									<div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">John Doe</h6>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$140.00</h6>
-											<p class="mb-0">08-Aug-2024</p>
-
-										</div>
-										
-									</div>
-                                    <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">Nexaa Doe</h6>
-													{{-- <p class="mb-0">$240.00</p> --}}
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$2140.00</h6>
-											<p class="mb-0">345 Sales</p>
-										</div>
-										<div class="col-sm">
-											<div id="chart5"></div>
-										</div>
-									</div>
-                                    <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">Hexi Doe</h6>
-													{{-- <p class="mb-0">$240.00</p> --}}
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$2140.00</h6>
-											<p class="mb-0">345 Sales</p>
-										</div>
-										<div class="col-sm">
-											<div id="chart5"></div>
-										</div>
-									</div>
-                                    <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">Nova Doe</h6>
-													{{-- <p class="mb-0">$240.00</p> --}}
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$2140.00</h6>
-											<p class="mb-0">345 Sales</p>
-										</div>
-										<div class="col-sm">
-											<div id="chart5"></div>
-										</div>
-									</div>
-                                    <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">Pitter Doe</h6>
-													{{-- <p class="mb-0">$240.00</p> --}}
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$2140.00</h6>
-											<p class="mb-0">345 Sales</p>
-										</div>
-										<div class="col-sm">
-											<div id="chart5"></div>
-										</div>
-									</div>
-                                    <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">Harry Doe</h6>
-													{{-- <p class="mb-0">$240.00</p> --}}
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$2140.00</h6>
-											<p class="mb-0">345 Sales</p>
-										</div>
-										<div class="col-sm">
-											<div id="chart5"></div>
-										</div>
-									</div>
-                                    <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer">
-										<div class="col-sm-6">
-											<div class="d-flex align-items-center">
-												<div class="product-img">
-													<img src="{{url('/assets/images/team.png')}}" alt />
-												</div>
-												<div class="ms-2">
-													<h6 class="mb-1">Alex ..</h6>
-													{{-- <p class="mb-0">$240.00</p> --}}
-												</div>
-											</div>
-										</div>
-										<div class="col-sm">
-											<h6 class="mb-1">$2140.00</h6>
-											<p class="mb-0">345 Sales</p>
-										</div>
-										<div class="col-sm">
-											<div id="chart5"></div>
-										</div>
-									</div>
-
-								
-								</div>
-							</div>
-						</div>
-					</div>
-
-                   
-               
-              
+					@endif
             <!--end page wrapper -->
             <!--start overlay-->
             <div class="overlay toggle-icon"></div>
