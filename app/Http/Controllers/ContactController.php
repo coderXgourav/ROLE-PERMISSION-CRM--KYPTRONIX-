@@ -1058,6 +1058,7 @@ public function addLead(){
         }
 
       }else{
+
         $leads_data = DB::table('customer')
         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','customer.status','services.name','main_user.first_name','main_user.last_name')
         ->join('services','services.service_id','=','customer.customer_service_id')
@@ -1065,7 +1066,6 @@ public function addLead(){
         ->where('customer.team_member',$admin_data->id)
         ->where('customer.status',1)
         ->get();  
-
       }
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
