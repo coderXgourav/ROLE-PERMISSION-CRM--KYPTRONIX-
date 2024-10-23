@@ -825,7 +825,7 @@ public function viewTeamMember($team_manager_id){
         
         if(!empty($customer_success_manager_services)){
             $total_invoices_data=Invoice::where('service_id',$customer_success_manager_services->member_service_id)->count();
-            $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->count();
+            $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->whereJsonContains('team_member',$data->id)->count();
             $service_data=Service::where('service_id',$customer_success_manager_services->member_service_id)->get();
             
        
@@ -873,6 +873,7 @@ public function showClientsList($manager_id){
       ->select('customer.*','services.name as service_name')
       ->join('services','services.service_id','=','customer.customer_service_id')
       ->where('customer.customer_service_id','=',$customer_service->member_service_id)
+      ->whereJsonContains('customer.team_member',$manager_id)
       ->get();
     }else if(isset($main_user_data) && $main_user_data->user_type=='team_manager'){
        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->first();
