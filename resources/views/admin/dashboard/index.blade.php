@@ -8,23 +8,23 @@
 
          
                     <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
-						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
+						@if($admin_data->user_type=="admin")
                       <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div>
                                             <p class="mb-0 text-secondary">
-                                                Total Team Member
+                                                Total Operation Managers
                                             </p>
-                                            <h4 class="my-1">{{$team_member}}</h4>
+                                            <h4 class="my-1">{{0}}</h4>
                                             <p
                                                 class="mb-0 font-13 text-success"
                                             >
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Team Members</a>
+                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Operation Managers</a>
                                             </p>
                                         </div>
                                         
@@ -35,6 +35,73 @@
                                         </div>
                                     </div>
                                     <div id="chart2"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+						@endif
+
+						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" )
+
+						<div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">
+                                                Total Team Manager
+                                            </p>
+                                            <h4 class="my-1">{{0}}</h4>
+                                            <p
+                                                class="mb-0 font-13 text-success"
+                                            >
+                                                <i
+                                                    class="bx bxs-up-arrow align-middle"
+                                                ></i
+                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Team Managers</a>
+                                            </p>
+                                        </div>
+                                        
+                                         <div
+                                            class="widgets-icons bg-light-success text-success ms-auto"
+                                        >
+                                             <i class="bx bxs-group"></i>
+                                        </div>
+                                    </div>
+                                    <div id="chart6"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+						@endif
+
+						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager"  )
+						<div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">
+                                                Total Customer Success Manager
+                                            </p>
+                                            <h4 class="my-1">{{$team_member}}</h4>
+                                            <p
+                                                class="mb-0 font-13 text-success"
+                                            >
+                                                <i
+                                                    class="bx bxs-up-arrow align-middle"
+                                                ></i
+                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Success Manager</a>
+                                            </p>
+                                        </div>
+                                        
+                                         <div
+                                            class="widgets-icons bg-light-success text-success ms-auto"
+                                        >
+                                             <i class="bx bxs-group"></i>
+                                        </div>
+                                    </div>
+                                    <div id="chart7"></div>
                                 </div>
                             </div>
                             
