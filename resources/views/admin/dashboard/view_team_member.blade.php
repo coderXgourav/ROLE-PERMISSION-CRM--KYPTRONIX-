@@ -32,6 +32,16 @@
 
 											<div class="mt-3">
 												<h4>{{$data['first_name']}} {{$data['last_name']}}</h4>
+												<p class="text-muted font-size-sm">Service -
+													<?php if(!empty($service_data)){
+													foreach($service_data as $val){
+												?>
+												{{$val->name}} ,							
+											     <?php } } ?>
+
+
+												 </p>
+													
 												<p class="text-secondary mb-1">{{$data['email_address']}}</p>
 												<p class="text-muted font-size-sm">{{$data['phone_number']}}</p>
 												<!--<button class="btn btn-primary">Follow</button>

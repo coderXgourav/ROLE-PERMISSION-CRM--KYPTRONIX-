@@ -808,6 +808,7 @@ public function viewTeamMember($team_manager_id){
     $total_invoices_data=0;
     $convert_to_clients=0;
     $total_clients=0;
+    $service_data='';
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
         $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$data->id)->first();
         if(!empty($team_manager_services)){
@@ -817,12 +818,14 @@ public function viewTeamMember($team_manager_id){
               ->count();
             $total_invoices_data=Invoice::whereIn('service_id',$service_id)->count();
             $total_clients=CustomerModel::whereIn('customer_service_id',$service_id)->count();
+            $service_data=Service::whereIn('service_id',$service_id)->get();
         }         
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
           $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->first();
         if(!empty($customer_success_manager_services)){
             $total_invoices_data=Invoice::where('service_id',$customer_success_manager_services->member_service_id)->count();
             $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->count();
+            $service_data=Service::whereIn('service_id',$customer_success_manager_services->member_service_id)->get();
 
         }
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
@@ -830,7 +833,7 @@ public function viewTeamMember($team_manager_id){
       $total_invoices_data=Invoice::all()->count();
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
     }
-    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data]);
+    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data]);
 }
 //viewTeamMember FUNCTION END
 public function teamMemberList($manager_id){
