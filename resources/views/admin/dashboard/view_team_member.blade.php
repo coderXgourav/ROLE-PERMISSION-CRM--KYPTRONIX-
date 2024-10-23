@@ -40,7 +40,7 @@
 										</div>
 										<hr class="my-4" />
 										<ul class="list-group list-group-flush">
-											<?php if(isset($data) && ($data->user_type !='customer_success_manager')){?>
+											<?php if(isset($data) && ($data->user_type =='team_manager')){?>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
 										 	<a href="{{route('admin.show-team-member-list',['id'=>$data->id ])}}">
 
