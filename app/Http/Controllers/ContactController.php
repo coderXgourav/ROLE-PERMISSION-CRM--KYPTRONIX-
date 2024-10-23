@@ -1073,7 +1073,8 @@ public function addLead(){
      ->where('customer.customer_id','=',$customer_id)
      ->get();
      $clients = CustomerModel::find($customer_id);
-     return view('admin.dashboard.chat',['admin_data'=>$admin_data,'data'=>$customers,'customer'=>$clients,'user_type'=>$user_type]);
+     $service_data = Service::find($clients->customer_service_id);
+     return view('admin.dashboard.chat',['admin_data'=>$admin_data,'data'=>$customers,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
   }
 //chatShow FUNCTION END 
 //Remark FUNCTION START
@@ -1439,6 +1440,14 @@ foreach ($team_manager_service as $value) {
 
     return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$main_users]);
   }
-
+  public function leadsView($customer_id){
+     $id = session('admin');
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $customer_id =   Crypt::decrypt($customer_id);
+     $clients = CustomerModel::find($customer_id);
+     $service_data = Service::find($clients->customer_service_id);
+     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
+  }
 // THIS IS END OF THE CLASS 
 }
