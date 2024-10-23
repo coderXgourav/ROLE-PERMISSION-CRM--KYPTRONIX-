@@ -9,6 +9,8 @@ use App\Models\TeamMember;
 use App\Models\Invoice;
 use App\Models\CustomerModel;
 use App\Models\MemberServiceModel;
+use App\Models\TeamManagersServicesModel;
+use App\Models\MainUserModel;
 use DB;
 use Crypt;
 
@@ -147,7 +149,18 @@ class ServiceController extends Controller
     $team_member=MemberServiceModel::where('member_service_id',$s_id)->get();
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
-   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type]);
+
+    $team_manager_service = DB::table('team_manager_services')  
+    ->whereJsonContains('managers_services_id',"$s_id")
+    ->get();
+    $main_users = collect(); 
+
+    foreach ($team_manager_service as $value) {
+      $users = MainUserModel::where('id', $value->team_manager_id)->get(['first_name','last_name','id','user_type']);
+      $main_users = $main_users->merge($users);
+    }
+
+   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$main_users]);
    
   }
   //viewService End
@@ -191,5 +204,17 @@ public function serviceInvoices($service_id){
    return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice,'user_type'=>$user_type]);
 }
 //serviceInvoices End
-
+public function teamManagerList($service_id){
+     $id = session('admin');
+     $admin_data = self::userDetails($id);
+     $user_type = self::userType($admin_data->user_type);
+     $team_manager = DB::table('main_user')
+    ->select('main_user.*', 'services.name as service_name')
+    ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
+    ->join('services', 'services.service_id', '=', 'team_manager_services.managers_services_id')
+    ->whereJsonContains('team_manager_services.managers_services_id',$service_id)
+    ->get();
+    print_r($team_manager);die;
+    return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$team_manager,'user_type'=>$user_type]);
+}
 }
