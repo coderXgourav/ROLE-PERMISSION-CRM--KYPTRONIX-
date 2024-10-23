@@ -94,25 +94,7 @@
                     </ul>
                 </li>
                 @endif
-    @if($admin_data->package_permission>0)
-
-                 <li>
-                    <a href="javascript:;" class="has-arrow">
-                        <div class="parent-icon"><i class="bx bx-category"></i>
-                        </div>
-                        <div class="menu-title">Package </div>
-                    </a>
-                    <ul>
-                        <li> <a href="{{ route('admin.add-package')}}"><i
-                                    class='bx bx-radio-circle'></i>Add New Package</a>
-                        </li>
-                        <li> <a href="{{ route('admin.all-package')}}"><i
-                                    class='bx bx-radio-circle'></i>Packages</a>
-                        </li>
-                      
-                    </ul>
-                </li>
-                @endif
+    
                 
                
             @if($admin_data->user_registration_permission>0)
@@ -128,6 +110,25 @@
                         </li>
                         <li> <a href="{{ route('admin.contact') }}"><i
                                     class='bx bx-radio-circle'></i>View Users</a>
+                        </li>
+                      
+                    </ul>
+                </li>
+                @endif
+                @if($admin_data->package_permission>0)
+
+                 <li>
+                    <a href="javascript:;" class="has-arrow">
+                        <div class="parent-icon"><i class="bx bx-category"></i>
+                        </div>
+                        <div class="menu-title">Package </div>
+                    </a>
+                    <ul>
+                        <li> <a href="{{ route('admin.add-package')}}"><i
+                                    class='bx bx-radio-circle'></i>Add New Package</a>
+                        </li>
+                        <li> <a href="{{ route('admin.all-package')}}"><i
+                                    class='bx bx-radio-circle'></i>Packages</a>
                         </li>
                       
                     </ul>

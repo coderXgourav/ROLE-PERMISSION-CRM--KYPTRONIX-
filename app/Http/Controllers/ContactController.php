@@ -574,7 +574,7 @@ public function export()
             break;
         }
       }else{
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->where('main_user.id',"!=",6)->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
