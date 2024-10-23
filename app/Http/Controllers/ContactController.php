@@ -877,6 +877,8 @@ public function showClientsList($manager_id){
             ->whereIn('customer.customer_service_id',$service_id)
             ->get();
    
+
+   
         }
     }else{
          $clients=DB::table('customer')
