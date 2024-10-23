@@ -47,7 +47,6 @@
                                             <th>Name <i class='bx bx-up-arrow-alt ms-2'></i>
                                             </th>
                                             <th>Number</th>
-                                            <th>Member</th>
                                             <th>Price</th>
                                             <th>Last Modified</th>
                                             <th>Show Invoice</th>
@@ -68,7 +67,6 @@
                                                </div>
                                            </td>
                                            <td>{{$item->customer_number}}</td>
-                                           <td>{{$item->team_manager_name}}</td>
                                          
                                           
                                            <td class="text-danger"><b> {{$item->invoices_price}}$</b></td>
