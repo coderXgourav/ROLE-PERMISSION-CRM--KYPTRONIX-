@@ -119,6 +119,7 @@ Route::post('/admin/update_package',[ContactController::class,'updatePackage']);
 Route::post('/admin/package_delete',[ContactController::class,'deletePackage']);
 Route::get('/admin/view_assign_client/{id}',[ContactController::class,'viewAssignClient'])->name('admin.view_assign_client');
 Route::get('/admin/team-manager-list/{id}',[ServiceController::class,'teamManagerList'])->name('admin.team-manager-list');
+Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->name('admin.leads-view');
 
 });
 
