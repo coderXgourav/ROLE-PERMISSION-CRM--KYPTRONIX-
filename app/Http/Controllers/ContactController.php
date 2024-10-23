@@ -812,8 +812,8 @@ public function viewTeamMember($team_manager_id){
         $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$data->id)->first();
         if(!empty($team_manager_services)){
             $service_id=json_decode($team_manager_services->managers_services_id);
-            $total_team_member=DB::table('customer')
-              ->whereIn('customer.customer_service_id',$service_id)
+            $total_team_member=DB::table('member_service')
+              ->whereIn('member_service.member_service_id',$service_id)
               ->count();
             $total_invoices_data=Invoice::whereIn('service_id',$service_id)->count();
             $total_clients=CustomerModel::whereIn('customer_service_id',$service_id)->count();
@@ -841,16 +841,18 @@ public function teamMemberList($manager_id){
     $team_member=[];
     if(!empty($team_manager_services)){
             $service_id=json_decode($team_manager_services->managers_services_id);
-            $team_member=DB::table('customer')
-              ->join('services','services.service_id','=','customer.customer_service_id')
-              ->whereIn('customer.customer_service_id',$service_id)
-              ->get();
+            $team_member=DB::table('main_user')
+            ->join('member_service','member_service.member_id','=','main_user.id')
+            ->join('services','services.service_id','=','member_service.id')
+            ->whereIn('member_service.member_service_id',$service_id)
+            ->get();
      }else{
-            $team_member=DB::table('customer')
-              ->join('services','services.service_id','=','customer.customer_service_id')
-              ->where('customer.team_member','!=','null')
-              ->get();
-
+           $team_member=DB::table('main_user')
+            ->join('member_service','member_service.member_id','=','main_user.id')
+            ->join('services','services.service_id','=','member_service.id')
+            ->where('main_user','main_user.user_type','=','customer_success_manager')
+            ->get();
+   
      }
    
     return view('admin.dashboard.members_list',['admin_data'=>$admin_data,'team_member'=>$team_member,'user_type'=>$user_type]);
@@ -878,7 +880,7 @@ public function showClientsList($manager_id){
             ->get();
    
 
-   
+
         }
     }else{
          $clients=DB::table('customer')
