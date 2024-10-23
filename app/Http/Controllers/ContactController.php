@@ -574,7 +574,7 @@ public function export()
             break;
         }
       }else{
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->get();
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->where('main_user.id',"!=",6)->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
@@ -822,11 +822,13 @@ public function viewTeamMember($team_manager_id){
         }         
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
           $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->first();
+        
         if(!empty($customer_success_manager_services)){
             $total_invoices_data=Invoice::where('service_id',$customer_success_manager_services->member_service_id)->count();
             $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->count();
-            $service_data=Service::whereIn('service_id',$customer_success_manager_services->member_service_id)->get();
-
+            $service_data=Service::where('service_id',$customer_success_manager_services->member_service_id)->get();
+            
+       
         }
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
       $total_clients=CustomerModel::all()->count();
