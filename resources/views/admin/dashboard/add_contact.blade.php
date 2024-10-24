@@ -125,7 +125,7 @@ width: 100% !important;
     align-items: center;
     gap: 10px;
 }">
-												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager Manager"  style="width: 25px"> </div>
+												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager"  style="width: 25px"> </div>
 												<div><p>Operation Manager</p></div>
 
 

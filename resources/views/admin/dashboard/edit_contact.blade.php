@@ -354,8 +354,8 @@ width: 100% !important;
 										<div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
-													<input type="hidden"  @if($user_details->lead_assign_permission>0) {{"checked"}} @endif name="lead_assign" value="0">
-													<input class="form-check-input" name="lead_assign" value="1" type="checkbox" role="switch" id="hello" >
+													<input type="hidden"   name="lead_assign" value="0">
+													<input @if($user_details->lead_assign_permission>0) {{"checked"}} @endif class="form-check-input" name="lead_assign" value="1" type="checkbox" role="switch" id="hello" >
 													<label class="form-check-label" for="hello">Lead Assign</label>
 												</div>
 						                    </div>

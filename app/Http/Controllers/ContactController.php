@@ -266,8 +266,8 @@ public function updateContact(Request $request){
 
       $service_manage = $request->service_manage;
       $leads_manage = $request->leads_manage;
-      $invoice_manage = $request->invoice_permission;
-      $payment_manage = $request->payment_permission;
+      $invoice_manage = $request->invoice_manage;
+      $payment_manage = $request->payment_manage;
       $customer_manage = $request->customer_manage;
       $email_sms_manage = $request->email_sms_manage;
       
@@ -326,7 +326,7 @@ public function updateContact(Request $request){
       // $permissions->delete_client_record_permission =$delete_client;
       // $permissions->delete_all_record_permission = $delete_all_record ;
       $permissions->document_download_permission = $document_download ;
-      $permissions->lead_assign_permission = $lead_assign ;
+      $permissions->lead_assign_permission = $lead_assign;
       // $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
       $permissions->user_registration_permission = $user_registration_permission ;
@@ -337,17 +337,18 @@ public function updateContact(Request $request){
       $services_status = 0;
       
       if($user_type=="team_manager"){
-        $team_manager_id =$request->main_user_id;
-
-        if(!empty($services)){
-          foreach ($services as $key => $value) {
-         $data = TeamManagersServicesModel::find($team_manager_id);
-          $data->managers_services_id =$value;
-          $data->save();
-
-          }
-          
+        
+        $manager_services = TeamManagersServicesModel::where('team_manager_id',$user_id)->get();
+        foreach($manager_services as $service){
+            $delete = TeamManagersServicesModel::find($service->id)->delete();
         }
+           foreach($services as $service){
+            $add = new TeamManagersServicesModel();
+            $add->team_manager_id = $user_id ;
+            $add->managers_services_id = $service;
+            $add->save();
+        }
+
       }else if($user_type=="customer_success_manager"){
 
         $user_id =$request->main_user_id;
@@ -557,6 +558,7 @@ public function emailShow($email_id){
   return view('admin.dashboard.email_show',['admin_data'=>$admin_data,'data'=>$email_details[0]]);
   
 }
+
 // THIS IS emailShow FUNCTION 
 
 

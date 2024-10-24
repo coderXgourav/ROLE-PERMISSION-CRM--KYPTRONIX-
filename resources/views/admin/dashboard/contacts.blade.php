@@ -60,10 +60,14 @@
 										<td>
 										
 											 <div class="d-flex order-actions">
+									
 											<a href="{{route('admin.edit',['id'=>$value->id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
-
+												
+		                                    @if ($admin_data->user_type=="admin")
 												<a href="javascript:;"  onclick="DeleteTeam({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
-											 </div>
+											@endif
+											
+											</div>
 										</td>
 									
 									</tr>
