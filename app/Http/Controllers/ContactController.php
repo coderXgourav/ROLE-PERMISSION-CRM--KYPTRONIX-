@@ -844,18 +844,29 @@ public function smsShow($id){
 }
 //viewTeamMember FUNCTION START
 public function viewTeamMember($team_manager_id){
+
     $team_id = session('admin');
     $admin_data = self::userDetails($team_id);
     $team_manager_id = Crypt::decrypt($team_manager_id);
     $data = MainUserModel::find($team_manager_id);
+
+    
     $user_type = $data['user_type'];
     $total_team_member=0;
     $total_invoices_data=0;
     $convert_to_clients=0;
     $total_clients=0;
     $service_data='';
+
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
-        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$data->id)->first();
+        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->get();
+        foreach($team_manager_services as $service){
+        }
+
+
+        echo "<pre>";
+        print_r($team_manager_services);
+        die;
         if(!empty($team_manager_services)){
             $service_id=json_decode($team_manager_services->managers_services_id);
             $total_team_member=DB::table('member_service')
