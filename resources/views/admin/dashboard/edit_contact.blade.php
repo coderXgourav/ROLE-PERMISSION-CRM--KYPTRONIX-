@@ -349,7 +349,7 @@ width: 100% !important;
 													<input class="form-check-input"  @if($user_details->document_download_permission>0) {{"checked"}} @endif name="document_download" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault20" >
 													<label class="form-check-label" for="flexSwitchCheckDefault20">Document Download </label>
 												</div>
-						                    </div>
+						                    </div> 
 										</div>
 										<div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
