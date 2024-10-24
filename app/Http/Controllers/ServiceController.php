@@ -146,7 +146,10 @@ class ServiceController extends Controller
     $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
-    $team_member=MemberServiceModel::where('member_service_id',$s_id)->count();
+    $team_member=DB::table('main_user')
+    ->join('member_service','member_service.member_id','=','main_user.id')
+    ->where('member_service.member_service_id','=',$s_id)
+    ->count();
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
 
@@ -159,6 +162,11 @@ class ServiceController extends Controller
       $users = MainUserModel::where('id', $value->team_manager_id)->get(['first_name','last_name','id','user_type']);
       $main_users = $main_users->merge($users);
     }*/
+    $team_manager_service=DB::table('main_user')
+    ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
+    ->where('team_manager_services.managers_services_id','=',$s_id)
+    ->count();
+   
     $team_manager_service=TeamManagersServicesModel::where('managers_services_id',$s_id)->count();
    return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$team_manager_service]);
    
