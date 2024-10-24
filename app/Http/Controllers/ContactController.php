@@ -860,22 +860,19 @@ public function viewTeamMember($team_manager_id){
 
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
         $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->get();
+        $service_id = [];
         foreach($team_manager_services as $service){
+          $service_id[] = $service->managers_services_id;
         }
+        
+        $total_team_member = DB::table("member_service")
+        ->join("main_user",'main_user.id','=','member_service.member_id')
+        ->where('member_service.member_service_id',$service_id)->count();
+        
+     $total_leads = CustomerModel::where('customer_service_id',$service_id)->count();
+     $total_invoice = Invoice::where('service_id',$service_id)->count();
 
-
-        echo "<pre>";
-        print_r($team_manager_services);
-        die;
-        if(!empty($team_manager_services)){
-            $service_id=json_decode($team_manager_services->managers_services_id);
-            $total_team_member=DB::table('member_service')
-              ->whereIn('member_service.member_service_id',$service_id)
-              ->count();
-            $total_invoices_data=Invoice::whereIn('service_id',$service_id)->count();
-            $total_clients=CustomerModel::whereIn('customer_service_id',$service_id)->count();
-            $service_data=Service::whereIn('service_id',$service_id)->get();
-        }         
+                
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
           $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->first();
         
@@ -893,6 +890,8 @@ public function viewTeamMember($team_manager_id){
     }
     return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data]);
 }
+
+
 //viewTeamMember FUNCTION END
 public function teamMemberList($manager_id){
     $id = session('admin');
