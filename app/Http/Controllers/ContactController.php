@@ -851,7 +851,7 @@ public function viewTeamMember($team_manager_id){
         
         if(!empty($customer_success_manager_services)){
             $total_invoices_data=Invoice::where('service_id',$customer_success_manager_services->member_service_id)->count();
-            $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->count();
+            $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->whereJsonContains('team_member',"$data->id")->count();
             $service_data=Service::where('service_id',$customer_success_manager_services->member_service_id)->get();
             
        
@@ -899,6 +899,7 @@ public function showClientsList($manager_id){
       ->select('customer.*','services.name as service_name')
       ->join('services','services.service_id','=','customer.customer_service_id')
       ->where('customer.customer_service_id','=',$customer_service->member_service_id)
+      ->whereJsonContains('customer.team_member',$manager_id)
       ->get();
     }else if(isset($main_user_data) && $main_user_data->user_type=='team_manager'){
        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->first();
@@ -910,8 +911,6 @@ public function showClientsList($manager_id){
             ->whereIn('customer.customer_service_id',$service_id)
             ->get();
    
-
-
         }
     }else{
          $clients=DB::table('customer')
@@ -1085,7 +1084,18 @@ public function addLead(){
           return redirect('/login/dashboard');
         }
 
+      }else if($admin_data->user_type == 'customer_success_manager'){
+
+          $customer_service=MemberServiceModel::where('member_id',$admin_data->id)->first();
+          $leads_data=DB::table('customer')
+          ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','customer.status','services.name')
+          ->join('services','services.service_id','=','customer.customer_service_id')
+          ->where('customer.customer_service_id','=',$customer_service->member_service_id)
+          ->whereJsonContains('customer.team_member',"$admin_data->id")
+          ->where('customer.status',1)
+          ->get();
       }else{
+
         $leads_data = DB::table('customer')
         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','customer.status','services.name','main_user.first_name','main_user.last_name')
         ->join('services','services.service_id','=','customer.customer_service_id')
@@ -1093,7 +1103,6 @@ public function addLead(){
         ->where('customer.team_member',$admin_data->id)
         ->where('customer.status',1)
         ->get();  
-
       }
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
@@ -1237,7 +1246,8 @@ public function createInvoice($customer_id){
   $admin_data = self::userDetails($id);
   $user_type = self::userType($admin_data->user_type);
   $data = CustomerModel::find($customer_id);
- return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+  $package_data =Package::all();
+ return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'package_data'=>$package_data]);
 }
 //createInvoice Function End
 //invoiceAdd Function Start
@@ -1249,6 +1259,7 @@ public function invoiceAdd(Request $request){
       $user_id=$request->user_id;
       $role=$request->role;
       $service_id=$request->service_id;
+      $package_id=$request->package;
 
       $invoice_details = new Invoice;
       $invoice_details->price = $price;
@@ -1258,6 +1269,7 @@ public function invoiceAdd(Request $request){
       $invoice_details->user_id = $user_id;
       $invoice_details->role = $role;
       $invoice_details->service_id=$service_id;
+      $invoice_details->package_id=$package_id;
       $save = $invoice_details->save();
       $invoice_id =$invoice_details->invoice_id;
 
@@ -1484,5 +1496,11 @@ foreach ($team_manager_service as $value) {
      $service_data = Service::find($clients->customer_service_id);
      return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
   }
+  public function getPackage(Request $request){
+  $id = $request->package_id;
+  $package_details=Package::find($id);
+  return response()->json($package_details);
+}
+
 // THIS IS END OF THE CLASS 
 }
