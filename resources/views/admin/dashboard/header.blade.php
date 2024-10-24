@@ -191,8 +191,8 @@
                         </ul>
                     </li> --}}
                     @endif
-            @if($admin_data->team_manager_permission>0)
-                    {{-- <li>
+            {{-- @if($admin_data->team_manager_permission>0)
+                    <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
                             </div>
@@ -207,14 +207,14 @@
                             </li>
                           
                         </ul>
-                    </li> --}}
-                @endif  
+                    </li>
+                @endif   --}}
 
                         
 
 
-            @if($admin_data->customer_success_manager_permission>0)
-                    {{-- <li>
+            {{-- @if($admin_data->customer_success_manager_permission>0)
+                    <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
                             </div>
@@ -229,8 +229,8 @@
                             </li>
 
                         </ul>
-                    </li> --}}
-                    @endif
+                    </li>
+                    @endif --}}
 
             @if($admin_data->leads_permission>0)
                     <li>
@@ -281,7 +281,7 @@
                     </ul>
                   </li>
                   @endif
-    @if($admin_data->email_template_permission>0)
+    {{-- @if($admin_data->email_template_permission>0)
                   
                   <li>
                     <a href="javascript:;" class="has-arrow">
@@ -299,7 +299,7 @@
 
                     </ul>
                 </li>
-                @endif
+                @endif --}}
                 @if($admin_data->invoice_permission>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
