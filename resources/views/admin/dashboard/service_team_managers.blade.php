@@ -37,7 +37,7 @@
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="5" style="text-align: center; color:red;"><b>Team Member Not Found..!</b></td>
+										<td colspan="5" style="text-align: center; color:red;"><b>Team Managers Not Found..!</b></td>
 										
 									</tr>
                                     @endif

@@ -57,7 +57,7 @@
 												<h6 class="mb-0">
 													<!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>-->
 												Team Member</h6></a>
-												<span class="text-secondary">{{count($total_team_member);}}</span>
+												<span class="text-secondary">{{$total_team_member;}}</span>
 											</li>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
 										 	<a href="{{route('admin.team-manager-list',['id'=>$data->service_id])}}">
@@ -65,7 +65,7 @@
 												<h6 class="mb-0">
 													<!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>-->
 												Team Manager</h6></a>
-												<span class="text-secondary">{{count($team_manager);}}</span>
+												<span class="text-secondary">{{$team_manager;}}</span>
 											</li>
 											
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
