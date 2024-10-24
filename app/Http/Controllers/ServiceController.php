@@ -146,11 +146,11 @@ class ServiceController extends Controller
     $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
-    $team_member=MemberServiceModel::where('member_service_id',$s_id)->get();
+    $team_member=MemberServiceModel::where('member_service_id',$s_id)->count();
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
 
-    $team_manager_service = DB::table('team_manager_services')  
+   /* $team_manager_service = DB::table('team_manager_services')  
     ->whereJsonContains('managers_services_id',"$s_id")
     ->get();
     $main_users = collect(); 
@@ -158,9 +158,9 @@ class ServiceController extends Controller
     foreach ($team_manager_service as $value) {
       $users = MainUserModel::where('id', $value->team_manager_id)->get(['first_name','last_name','id','user_type']);
       $main_users = $main_users->merge($users);
-    }
-
-   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$main_users]);
+    }*/
+    $team_manager_service=TeamManagersServicesModel::where('managers_services_id',$s_id)->count();
+   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$team_manager_service]);
    
   }
   //viewService End
@@ -210,8 +210,12 @@ public function teamManagerList($service_id){
      $id = session('admin');
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
-
-     $team_manager = DB::table('team_manager_services')  
+     $team_manager_data =DB::table('main_user')
+     ->select('main_user.first_name','main_user.last_name','main_user.id','main_user.user_type','main_user.email_address','main_user.phone_number')
+     ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
+     ->where('team_manager_services.managers_services_id','=',$service_id)
+     ->get();
+    /* $team_manager = DB::table('team_manager_services')  
     ->whereJsonContains('managers_services_id', $service_id) // Assumes it's a JSON array
     ->get();
 
@@ -221,18 +225,8 @@ public function teamManagerList($service_id){
     for ($i=0; $i < count($team_manager); $i++) { 
         $users = MainUserModel::where('id',  $team_manager[$i]->team_manager_id)->get(['first_name','last_name','id','user_type','email_address','phone_number']);
     $team_manager_data = $team_manager_data->merge($users);
-    }
-
-
-// echo "<pre>";
-// print_r($team_manager_data);
-// die;
-
-
-
-  
-
-return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$team_manager_data,'user_type'=>$user_type]);
+    }*/
+    return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$team_manager_data,'user_type'=>$user_type]);
 }
 
 }
