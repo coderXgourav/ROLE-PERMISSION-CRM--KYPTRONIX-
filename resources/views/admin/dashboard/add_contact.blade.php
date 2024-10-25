@@ -486,6 +486,13 @@ width: 100% !important;
 					// }
 
 function resetCheckboxes(checkedBox) {
+	let user = checkedBox.value;
+	if(user==="operation_manager"){
+		document.getElementById("service_field").style.display="none";
+	}else{
+		document.getElementById("service_field").style.display="block";
+	}
+
     const checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_type"]');
     checkboxes.forEach(checkbox => {
         if (checkbox !== checkedBox) {
