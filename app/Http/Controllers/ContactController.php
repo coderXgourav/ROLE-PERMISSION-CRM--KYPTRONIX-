@@ -915,7 +915,6 @@ public function viewTeamMember($team_manager_id){
             ->join('member_service','member_service.member_service_id','=','services.service_id')
             ->where('member_service.member_id',$team_manager_id)
             ->get();
-
         }
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
       $total_clients=CustomerModel::all()->count();
