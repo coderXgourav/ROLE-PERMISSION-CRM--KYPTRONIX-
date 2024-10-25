@@ -153,7 +153,7 @@
     method: "GET",
     dataType: "JSON",
     data: { id: array[0] },
-    success: function (data) {
+    success: function (data) { 
         // Clear existing options (if needed)
         $('#team_member').empty().append('<option value="">Select Team Member</option>');
         // Loop through the data and append options
