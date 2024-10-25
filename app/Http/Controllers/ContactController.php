@@ -888,9 +888,11 @@ public function viewTeamMember($team_manager_id){
           $service_id[] = $service->managers_services_id;
         }
         $total_team_member = DB::table("member_service")
-        ->join("main_user",'main_user.id','=','member_service.member_id')
-        ->whereIn('member_service.member_service_id',$service_id)->count();
-
+        ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name')) 
+        ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+        ->whereIn('member_service.member_service_id', $service_id)
+        ->groupBy('member_service.member_id')
+        ->get();
        $total_clients = CustomerModel::whereIn('customer_service_id',$service_id)->count();
        $total_invoices_data = Invoice::whereIn('service_id',$service_id)->count();
     
@@ -940,12 +942,17 @@ public function teamMemberList($manager_id){
               $service_id[] = $service->managers_services_id;
             }
             $team_member = DB::table("member_service")
-           ->join("main_user",'main_user.id','=','member_service.member_id')
-           ->join('services','services.service_id','=','member_service.member_service_id')
-           ->whereIn('member_service.member_service_id',$service_id)->get();
-       
+            ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name')) 
+            ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+            ->join('services','services.service_id','=','member_service.member_service_id')
+            ->whereIn('member_service.member_service_id', $service_id)
+            ->groupBy('member_service.member_id')
+            ->get();
+            //echo '<pre>';
+            //print_r($team_member);die;
      }else{
            $team_member=DB::table('main_user')
+            ->select('main_user.id as member_id','main_user.first_name as first_name','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name')
             ->join('member_service','member_service.member_id','=','main_user.id')
             ->join('services','services.service_id','=','member_service.id')
             ->where('main_user','main_user.user_type','=','customer_success_manager')
