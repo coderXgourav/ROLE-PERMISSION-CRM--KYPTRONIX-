@@ -484,6 +484,7 @@ width: 100% !important;
 					// 		document.getElementById("member_service").style.display="none";
 					// 	}
 					// }
+					
 
 function resetCheckboxes(checkedBox) {
 	let user = checkedBox.value;
