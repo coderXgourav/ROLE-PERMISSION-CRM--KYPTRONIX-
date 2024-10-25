@@ -24,7 +24,7 @@
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Operation Managers</a>
+                                                ><a href="{{route('admin.contact')}}" class="text-success">View Users</a>
                                             </p>
                                         </div>
                                         
@@ -58,7 +58,7 @@
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Team Managers</a>
+                                                ><a href="{{route('admin.contact')}}" class="text-success">View Users</a>
                                             </p>
                                         </div>
                                         
@@ -91,7 +91,7 @@
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.team-member-lists')}}" class="text-success">View Success Manager</a>
+                                                ><a href="{{route('admin.contact')}}" class="text-success">View Users</a>
                                             </p>
                                         </div>
                                         
@@ -123,7 +123,7 @@
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.customer')}}" class="text-success">View Leads</a>
+                                                ><a href="{{route('admin.view-lead')}}" class="text-success">View Leads</a>
                                             </p>
                                         </div>
                                         
