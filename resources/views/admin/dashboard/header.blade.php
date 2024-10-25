@@ -223,10 +223,10 @@
                         </a>
                         <ul>
                             <li> <a href="#"><i
-                                class='bx bx-radio-circle'></i>Team Managers Report</a>
+                                class='bx bx-radio-circle'></i>Managers Report</a>
                             </li>
                             <li> <a href="#"><i
-                                class='bx bx-radio-circle'></i> Team Members Report</a>
+                                class='bx bx-radio-circle'></i>Members Report</a>
                             </li>
 
                         </ul>

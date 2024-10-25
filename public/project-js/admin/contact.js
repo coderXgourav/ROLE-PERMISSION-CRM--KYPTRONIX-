@@ -487,6 +487,7 @@ $("#remark_form").validate({
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
                     $("#remark_form").trigger("reset");
+                    location.reload();
                 }
             },
         });

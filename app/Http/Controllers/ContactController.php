@@ -1197,13 +1197,15 @@ public function addLead(){
 //chatShow FUNCTION END 
 //Remark FUNCTION START
 public function remarks(Request $request){
+  
   $customer_id = $request->customer_id;
   $user_id = $request->user_id;
   $remark =$request->remark;
   $role=$request->role;
+
   $remark_details = new RemarkModel;
   $remark_details->customer_id =$customer_id;
-  $remark_details->user_id=$user_id;
+  $remark_details->team_member_id=$user_id;
   $remark_details->remark=$remark;
   $remark_details->role=$role;
 
