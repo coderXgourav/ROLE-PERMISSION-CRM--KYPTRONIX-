@@ -32,7 +32,7 @@
                             $time = date('H:i', $timestamp);
 
 
-                ?>
+                ?>-->
                 <div class="chat-content-leftside"> 
                     <div class="d-flex">
                        <img src="assets/images/avatars/avatar-3.png" width="48"
@@ -43,7 +43,7 @@
                             </div> 
                         </div> 
                     </div>
-                    <?php } } ?> -->
+                    <?php } } ?> 
 
 
 

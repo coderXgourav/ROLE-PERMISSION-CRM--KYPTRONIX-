@@ -1188,8 +1188,11 @@ public function addLead(){
      $customer_id =   Crypt::decrypt($customer_id);
      $customers = DB::table('customer')
      ->join('remark','remark.customer_id','=','customer.customer_id')
+     ->join('main_user','main_user.id','=','remark.user_id')
      ->where('customer.customer_id','=',$customer_id)
      ->get();
+     // echo '<pre>';
+     // print_r($customers);die;
      $clients = CustomerModel::find($customer_id);
      $service_data = Service::find($clients->customer_service_id);
      return view('admin.dashboard.chat',['admin_data'=>$admin_data,'data'=>$customers,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
@@ -1205,7 +1208,7 @@ public function remarks(Request $request){
 
   $remark_details = new RemarkModel;
   $remark_details->customer_id =$customer_id;
-  $remark_details->team_member_id=$user_id;
+  $remark_details->user_id=$user_id;
   $remark_details->remark=$remark;
   $remark_details->role=$role;
 
