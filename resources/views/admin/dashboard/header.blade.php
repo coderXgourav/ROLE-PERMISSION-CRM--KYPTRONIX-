@@ -191,6 +191,7 @@
                         </ul>
                     </li> --}}
                     @endif
+
             {{-- @if($admin_data->team_manager_permission>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -213,24 +214,24 @@
                         
 
 
-            {{-- @if($admin_data->customer_success_manager_permission>0)
+            @if($admin_data->user_type=="admin")
                     <li>
                         <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
+                            <div class="parent-icon"><i class="bx bx-book"></i>
                             </div>
-                            <div class="menu-title">Success Member</div>
+                            <div class="menu-title">Reports</div>
                         </a>
                         <ul>
-                           <!-- <li> <a href="{{ route('team.team-member-add') }}"><i
-                                class='bx bx-radio-circle'></i>Add Team Member</a>
-                            </li>-->
-                            <li> <a href="{{ route('admin.view-members')}}"><i
-                                class='bx bx-radio-circle'></i>View Members</a>
+                            <li> <a href="#"><i
+                                class='bx bx-radio-circle'></i>Team Managers Report</a>
+                            </li>
+                            <li> <a href="#"><i
+                                class='bx bx-radio-circle'></i> Team Members Report</a>
                             </li>
 
                         </ul>
                     </li>
-                    @endif --}}
+                    @endif
 
             @if($admin_data->leads_permission>0)
                     <li>
