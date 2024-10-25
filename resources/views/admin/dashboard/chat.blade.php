@@ -35,7 +35,7 @@
                             height="48" class="rounded-circle" alt /> 
                             <div class="flex-grow-1 ms-2"> 
                                 {{-- <p class="mb-0 chat-time">{{$value->customer_name}}</p>  --}}  
-                                <p class="chat-left-msg">{{$value->customer_name}}</p> 
+                                <p class="chat-left-msg">{{$value->first_name}} {{$value->last_name}}</p> 
                                 <p class="mb-0 chat-time">{{$value->user_type}}</p> 
 
                             </div> 
@@ -74,7 +74,6 @@
                         <i class='bx bx-file'></i>
                      </a>  -->
                     <button type="submit"><i class='bx bxs-send'></i></button>
-                    <button type="submit">submit</button>
                     <!-- <a href="javascript:;"><i class='bx bx-microphone'></i></a> -->
                     <!-- <a href="javascript:;"><i class='bx bx-dots-horizontal-rounded'></i></a> -->
                  </div> 

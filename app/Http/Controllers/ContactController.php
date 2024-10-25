@@ -247,6 +247,16 @@ class ContactController extends Controller
       // echo "<pre>";
       // print_r($services_he_manage); die;
      }
+     else if($data['user_type'] == 'operation_manager'){
+
+      $user_details =  DB::table("main_user")
+     ->join("permission",'permission.user_id','=','main_user.id')
+      ->where('main_user.id',$contact_id)
+     ->first();
+     $services_he_manage = Service::orderBy("service_id","DESC")->get();
+     // echo "<pre>";
+     // print_r($services_he_manage); die;
+    }
 return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage]);
    
   }
@@ -299,6 +309,7 @@ public function updateContact(Request $request){
       $contact_details = MainUserModel::find($user_id);
       $contact_details->account_name = $account_name;
       $contact_details->password=$password;
+      $contact_details->user_type=$user_type;
       $contact_details->password_hint = $password_hint;
       $contact_details->first_name = $first_name;
       $contact_details->last_name  = $last_name ;
@@ -331,6 +342,7 @@ public function updateContact(Request $request){
       $permissions->login_history_permission = $history_manage ;
       $permissions->user_registration_permission = $user_registration_permission ;
       $permissions->package_permission = $package;
+      $permissions->user_type = $user_type;
       $permissions->save();
       
       $services = $request->services;
@@ -348,14 +360,17 @@ public function updateContact(Request $request){
             $add->managers_services_id = $service;
             $add->save();
         }
-
       }else if($user_type=="customer_success_manager"){
 
         $user_id =$request->main_user_id;
+        $member_services = MemberServiceModel::where('member_service_id',$user_id)->get();
+        foreach($member_services as $service){
+          $delete = MemberServiceModel::find($service->id)->delete();
+      }
         if(!empty($services)){
-
         foreach ($services as $key => $value) {
-         $services_data=MemberServiceModel::find($user_id);
+         $services_data=new MemberServiceModel();
+         $services_data->member_id = $user_id ;
         $services_data->member_service_id =$value;  
         $services_data->save();
         }
@@ -448,44 +463,27 @@ public function assginClientspage(Request $request){
 
 //  THIS IS assginClientspage FUNCTION 
 
-public function getServiceBasedMembers(Request $request){
-  $id = $request->id;
-  
-  // $members = DB::table('main_user')
-  // ->join('member_service','member_service.member_id','=','main_user.id')
-  // ->where('member_service.member_service_id',$id)
-  // ->select('main_user.id','main_user.first_name','main_user.last_name')
-  // ->get();
-  
- if (!empty($id)) {
-    $members = DB::table('main_user')
-        ->join('member_service', 'member_service.member_id', '=', 'main_user.id')
-        ->whereIn('member_service.member_service_id', $id) // Use whereIn to filter
-        ->groupBy('main_user.id', 'main_user.first_name', 'main_user.last_name')
-        ->havingRaw('COUNT(DISTINCT member_service.member_service_id) = ?', [count($id)]) // Check that the count matches
-        ->select('main_user.id', 'main_user.first_name', 'main_user.last_name')
-        ->get();
-} else {
-    // Handle the case where $id is empty
-    $members = collect(); // Return an empty collection
-}
-  return response()->json($members);
+public function getServiceBasedMembers(Request $request)
+{
+    $id = $request->id;
+    if (!empty($id)) {
+        // Remove duplicate service IDs by using array_unique
+        $uniqueIds = array_unique($id);
+        
+        $members = DB::table('main_user')
+            ->join('member_service', 'member_service.member_id', '=', 'main_user.id')
+            ->whereIn('member_service.member_service_id', $uniqueIds) // Use whereIn to filter
+            ->groupBy('main_user.id', 'main_user.first_name', 'main_user.last_name')
+            ->havingRaw('COUNT(DISTINCT member_service.member_service_id) = ?', [count($uniqueIds)]) // Check that the count matches
+            ->select('main_user.id', 'main_user.first_name', 'main_user.last_name')
+            ->get();
+    } else {
+        // Handle the case where $id is empty
+        $members = collect(); // Return an empty collection
+    }
+    return response()->json($members);
 }
 
-// checkBeforeAssign
-
-// public function checkBeforeAssign(Request $request){
-//   $id = $request->leads;
-  
-//   $service_id = []; 
-//   for($i=0; $i<count($id); $i++){
-//    $customer = CustomerModel::find($id[$i]);
-//    $service_id = $customer->customer_service_id;
-
-//   }
- 
-  
-// }
 
 
 //  THIS IS noneAssginClientspage FUNCTION 
@@ -881,12 +879,14 @@ public function viewTeamMember($team_manager_id){
     $service_data='';
 
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
-        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->get();
+        $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
 
         foreach($team_manager_services as $service){
           $service_id[] = $service->managers_services_id;
         }
+
+      
         $total_team_member = DB::table("member_service")
         ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name')) 
         ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
@@ -899,23 +899,37 @@ public function viewTeamMember($team_manager_id){
        $service_data=DB::table('services')
        ->join('team_manager_services','team_manager_services.managers_services_id','=','services.service_id')
        ->where('team_manager_services.team_manager_id',$team_manager_id)
-       ->get();
+       ->distinct()
+       ->get(['name']);
                   
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
-          $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
+          // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
+          $customer_success_manager_services = MemberServiceModel::where('member_id', $data->id)
+    ->distinct()
+    ->get(['member_service_id']); // Specify the columns you want to be distinct
+
+
           $service_id=[];
         if(!empty($customer_success_manager_services)){
              foreach($customer_success_manager_services as $service){
                  $service_id[] = $service->member_service_id;
               }
-            $total_invoices_data=Invoice::where('user_id',$team_manager_id)->count();
-            $total_clients=CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();
+
+            $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
+            $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();
             
             $service_data=DB::table('services')
             ->join('member_service','member_service.member_service_id','=','services.service_id')
             ->where('member_service.member_id',$team_manager_id)
-            ->get();
+            ->distinct()
+            ->get(['name']);
+
+            // echo "<pre>";
+            // print_r($service_data);
+            // die;
         }
+
+
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
       $total_clients=CustomerModel::all()->count();
       $total_invoices_data=Invoice::all()->count();
@@ -1191,7 +1205,7 @@ public function addLead(){
      ->join('remark','remark.customer_id','=','customer.customer_id')
      ->join('main_user','main_user.id','=','remark.user_id')
      ->where('customer.customer_id','=',$customer_id)
-     ->get(['remark.*','customer.customer_id','customer.customer_service_id','customer.customer_name','main_user.user_type']);
+     ->get(['remark.*','customer.customer_id','customer.customer_service_id','customer.customer_name','main_user.user_type','main_user.first_name','main_user.last_name']);
      
     //  echo '<pre>';
     //  print_r($customers);die;
@@ -1538,6 +1552,7 @@ public function savePackage(Request $request){
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
     $customer_details = CustomerModel::find($customer_id);
+    
 
 
     $customer_service_id = $customer_details->customer_service_id;
@@ -1551,20 +1566,22 @@ public function savePackage(Request $request){
     ->get();
     
     $services_data = Service::find($customer_details->customer_service_id);
-
+  $invoices = Invoice::where("customer_id",$customer_id)->count();
 
     $managers = DB::table("team_manager_services")->join("services",'services.service_id','=',"team_manager_services.managers_services_id")->where("team_manager_services.managers_services_id",$customer_service_id)->get();
 
    $manager_data = collect();
 
 foreach ($managers as $key => $value) {
-    $manager = MainUserModel::where("id", $value->team_manager_id)->get();
+    $manager = DB::table("main_user")->join("permission",'permission.user_id','=','main_user.id')->where("id", $value->team_manager_id)->get();
     $manager_data = $manager_data->merge($manager);
 }
 
 
-    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$manager_data]);
+    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$manager_data,'invoice'=>$invoices]);
   }
+
+
   public function leadsView($customer_id){
      $id = session('admin');
      $admin_data = self::userDetails($id);
@@ -1578,6 +1595,22 @@ foreach ($managers as $key => $value) {
   $id = $request->package_id;
   $package_details=Package::find($id);
   return response()->json($package_details);
+}
+
+public function invoicePerCustomer($id){
+  $user_id=session('admin');
+  $admin_data = self::userDetails($user_id);
+ $user_type = self::userType($admin_data->user_type);
+
+  $invoice_data = DB::table('invoices')
+  ->join('main_user','main_user.id','=','invoices.user_id')
+  ->join('permission','permission.user_id','=','main_user.id')
+  ->join('customer','customer.customer_id','=','invoices.customer_id')
+  ->where('invoices.customer_id',$id)
+  ->get();  
+  return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
+
+
 }
 
 // THIS IS END OF THE CLASS 

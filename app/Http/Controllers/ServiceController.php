@@ -146,23 +146,20 @@ class ServiceController extends Controller
     $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
+
     $team_member=DB::table('main_user')
+    ->join("permission",'permission.user_id','=','main_user.id')
     ->join('member_service','member_service.member_id','=','main_user.id')
     ->where('member_service.member_service_id','=',$s_id)
+    ->distinct()
+    ->get(['member_service.member_id'])
     ->count();
+
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
 
-   /* $team_manager_service = DB::table('team_manager_services')  
-    ->whereJsonContains('managers_services_id',"$s_id")
-    ->get();
-    $main_users = collect(); 
-
-    foreach ($team_manager_service as $value) {
-      $users = MainUserModel::where('id', $value->team_manager_id)->get(['first_name','last_name','id','user_type']);
-      $main_users = $main_users->merge($users);
-    }*/
-    $team_manager_service=DB::table('main_user')
+    $team_manager_service = DB::table('main_user')
+    ->join("permission",'permission.user_id','=','main_user.id')
     ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
     ->where('team_manager_services.managers_services_id','=',$s_id)
     ->count();
@@ -170,6 +167,8 @@ class ServiceController extends Controller
    return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$team_manager_service]);
    
   }
+
+
   //viewService End
   //teamMember Start
  public function teamMember($service_id){
@@ -181,6 +180,7 @@ class ServiceController extends Controller
     ->join('member_service','member_service.member_id','=','main_user.id')
     ->join('services', 'services.service_id', '=', 'member_service.member_service_id')
     ->where('member_service.member_service_id',$service_id)
+    ->distinct(['member_service.member_service_id'])
     ->get();
     return view('admin.dashboard.service_team_members',['admin_data'=>$admin_data,'team_member'=>$team_member,'user_type'=>$user_type]);
 }

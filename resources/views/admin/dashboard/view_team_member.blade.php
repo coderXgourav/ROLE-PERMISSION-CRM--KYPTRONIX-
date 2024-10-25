@@ -32,7 +32,31 @@
 
 											<div class="mt-3">
 												<h4>{{$data['first_name']}} {{$data['last_name']}}</h4>
+												<p class="alert alert-info alert-sm"> @switch($data->user_type)
+													@case("operation_manager")
+														{{"Operation Manager"}}
+														@break
+													@case("team_manager")
+														{{"Team Manager"}}
+														@break
+														@case("customer_success_manager")
+														{{"Team Member"}}
+														@break
+													@default
+													@break
+														
+												@endswitch</p>
+												@if($data->user_type=="operation_manager")
+												<div class="alert alert-success">
+													<p>Operation Manager can manage all the services</p>
+												</div>
+												@endif
+
+
+												@if($data->user_type!="operation_manager") 
+
 												<p class="text-muted font-size-sm">Service -
+													
 													<?php 
 													 if(!empty($service_data)){
 													foreach($service_data as $val){
@@ -42,6 +66,7 @@
 
 
 												 </p>
+												 @endif
 													
 												<p class="text-secondary mb-1">{{$data['email_address']}}</p>
 												<p class="text-muted font-size-sm">{{$data['phone_number']}}</p>
@@ -50,6 +75,8 @@
 											</div>
 										</div>
 										<hr class="my-4" />
+										@if($data->user_type!="operation_manager") 
+
 										<ul class="list-group list-group-flush">
 											<?php if(isset($data) && ($data->user_type =='team_manager')){?>
 											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -84,6 +111,7 @@
 												<span class="text-secondary">codervent</span>
 											</li>-->
 										</ul>
+										@endif
 									</div>
 								</div>
 							</div>
