@@ -840,7 +840,7 @@ public function smsShow($id){
        $invoice_data = DB::table('invoices')
        ->select('invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.role')
        ->join('customer','customer.customer_id','=','invoices.customer_id')
-       ->where('invoices.service_id','=',$customer_success_manager_services->member_service_id)
+       ->where('invoices.user_id','=',$id)
        ->get();   
  
   }else{
@@ -908,9 +908,7 @@ public function viewTeamMember($team_manager_id){
              foreach($customer_success_manager_services as $service){
                  $service_id[] = $service->member_service_id;
               }
-       
-            $total_invoices_data=Invoice::whereIn('service_id',$service_id)->count();
-
+            $total_invoices_data=Invoice::where('user_id',$team_manager_id)->count();
             $total_clients=CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();
             
             $service_data=DB::table('services')
