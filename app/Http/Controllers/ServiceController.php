@@ -167,7 +167,6 @@ class ServiceController extends Controller
     ->where('team_manager_services.managers_services_id','=',$s_id)
     ->count();
    
-    $team_manager_service=TeamManagersServicesModel::where('managers_services_id',$s_id)->count();
    return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$team_manager_service]);
    
   }

@@ -806,13 +806,19 @@ public function smsShow($id){
   $user_type = self::userType($admin_data->user_type);
   $main_user_data =MainUserModel::find($id);
   if(isset($main_user_data) && $main_user_data->user_type == 'team_manager'){
-       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$id)->first();
-       $service_id=json_decode($team_manager_services->managers_services_id);
-       $invoice_data = DB::table('invoices')
-       ->select('invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.role')
-       ->join('customer','customer.customer_id','=','invoices.customer_id')
-       ->whereIn('invoices.service_id',$service_id)
-       ->get();   
+       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$id)->get();
+       if(!empty($team_manager_services)){
+         $service_id=[];
+         foreach($team_manager_services as $services){
+          $service_id[]=$services->managers_services_id;
+         }
+       
+         $invoice_data = DB::table('invoices')
+         ->select('invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.role')
+         ->join('customer','customer.customer_id','=','invoices.customer_id')
+         ->whereIn('invoices.service_id',$service_id)
+         ->get();  
+        } 
   }else if(isset($main_user_data) && $main_user_data->user_type == 'customer_success_manager'){
        $customer_success_manager_services=MemberServiceModel::where('member_id',$id)->first();
        $invoice_data = DB::table('invoices')
@@ -861,27 +867,39 @@ public function viewTeamMember($team_manager_id){
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
         $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->get();
         $service_id = [];
+
         foreach($team_manager_services as $service){
           $service_id[] = $service->managers_services_id;
         }
-        
         $total_team_member = DB::table("member_service")
         ->join("main_user",'main_user.id','=','member_service.member_id')
-        ->where('member_service.member_service_id',$service_id)->count();
-        
-     $total_leads = CustomerModel::where('customer_service_id',$service_id)->count();
-     $total_invoice = Invoice::where('service_id',$service_id)->count();
+        ->whereIn('member_service.member_service_id',$service_id)->count();
 
-                
+       $total_clients = CustomerModel::whereIn('customer_service_id',$service_id)->count();
+       $total_invoices_data = Invoice::whereIn('service_id',$service_id)->count();
+    
+       $service_data=DB::table('services')
+       ->join('team_manager_services','team_manager_services.managers_services_id','=','services.service_id')
+       ->where('team_manager_services.team_manager_id',$team_manager_id)
+       ->get();
+                  
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
-          $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->first();
-        
+          $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
+          $service_id=[];
         if(!empty($customer_success_manager_services)){
-            $total_invoices_data=Invoice::where('service_id',$customer_success_manager_services->member_service_id)->count();
-            $total_clients=CustomerModel::where('customer_service_id',$customer_success_manager_services->member_service_id)->whereJsonContains('team_member',"$data->id")->count();
-            $service_data=Service::where('service_id',$customer_success_manager_services->member_service_id)->get();
-            
+             foreach($customer_success_manager_services as $service){
+                 $service_id[] = $service->member_service_id;
+              }
        
+            $total_invoices_data=Invoice::whereIn('service_id',$service_id)->count();
+
+            $total_clients=CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();
+            
+            $service_data=DB::table('services')
+            ->join('member_service','member_service.member_service_id','=','services.service_id')
+            ->where('member_service.member_id',$team_manager_id)
+            ->get();
+
         }
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
       $total_clients=CustomerModel::all()->count();
@@ -897,15 +915,19 @@ public function teamMemberList($manager_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->first();
+    $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->get();
     $team_member=[];
+
     if(!empty($team_manager_services)){
-            $service_id=json_decode($team_manager_services->managers_services_id);
-            $team_member=DB::table('main_user')
-            ->join('member_service','member_service.member_id','=','main_user.id')
-            ->join('services','services.service_id','=','member_service.id')
-            ->whereIn('member_service.member_service_id',$service_id)
-            ->get();
+            $service_id = [];
+            foreach($team_manager_services as $service){
+              $service_id[] = $service->managers_services_id;
+            }
+            $team_member = DB::table("member_service")
+           ->join("main_user",'main_user.id','=','member_service.member_id')
+           ->join('services','services.service_id','=','member_service.member_service_id')
+           ->whereIn('member_service.member_service_id',$service_id)->get();
+       
      }else{
            $team_member=DB::table('main_user')
             ->join('member_service','member_service.member_id','=','main_user.id')
@@ -931,9 +953,12 @@ public function showClientsList($manager_id){
       ->whereJsonContains('customer.team_member',$manager_id)
       ->get();
     }else if(isset($main_user_data) && $main_user_data->user_type=='team_manager'){
-       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->first();
+       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->get();
         if(!empty($team_manager_services)){
-            $service_id=json_decode($team_manager_services->managers_services_id);
+           $service_id = [];
+            foreach($team_manager_services as $service){
+              $service_id[] = $service->managers_services_id;
+            }
             $clients=DB::table('customer')
             ->select('customer.*','services.name as service_name')
             ->join('services','services.service_id','=','customer.customer_service_id')

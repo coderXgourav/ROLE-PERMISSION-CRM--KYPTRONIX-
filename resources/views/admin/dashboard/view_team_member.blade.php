@@ -33,10 +33,11 @@
 											<div class="mt-3">
 												<h4>{{$data['first_name']}} {{$data['last_name']}}</h4>
 												<p class="text-muted font-size-sm">Service -
-													<?php if(!empty($service_data)){
+													<?php 
+													 if(!empty($service_data)){
 													foreach($service_data as $val){
 												?>
-												{{$val->name}} ,							
+												{{$val->name}},							
 											     <?php } } ?>
 
 
