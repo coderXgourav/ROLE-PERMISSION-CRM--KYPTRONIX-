@@ -107,7 +107,7 @@
                               
                         </div>
 						@endif
-						
+						 
                         <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
