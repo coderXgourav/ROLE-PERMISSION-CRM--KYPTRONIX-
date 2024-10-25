@@ -30,9 +30,9 @@
 								
 								</form> <br>
 								</div>
-								<div class="bg-info" style="padding: 2px;">
+								{{-- <div class="bg-info" style="padding: 2px;">
 									<p class="text-light text-center ">Please select only one type of lead. Selecting multiple service leads will disable the assignment feature</p>
-								</div>
+								</div> --}}
 								<br>
 							<form id="update_assign_client_form">
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
@@ -92,9 +92,13 @@
         </button>
       </div>
       <div class="modal-body"> <br>
-     <select name="team_member[]" id="team_member" class="form-control" multiple>
+     {{-- <select name="team_member[]" id="team_member" class="form-control" multiple>
     <option value="">Select Team Member</option>
-</select>
+</select> --}}
+<div id="team_member_container">
+    <p>Select Team Members:</p>
+    <!-- Checkboxes will be appended here -->
+</div>
 <br>
       </div>
       <div class="modal-footer">
@@ -119,6 +123,7 @@
 	 $('#myTable').DataTable({
 	 });
 </script>
+
 <script>
 	let leads = [];
 	let service = [];
@@ -136,34 +141,36 @@
 			console.log(allValuesSame(service));
 		}
 
-
 	}
 
 	function allValuesSame(array) {
-    let status = array.every(value => value === array[0]);
-	if(!status){
-		  swal.fire({
-                    title: "Please choose only one service's lead",
-                    icon: "warning",
-                });
-				document.getElementById("assign").style.display="none";
-	}else{
+   
 		$.ajax({
     url: "/admin/get_service_based_member",
     method: "GET",
     dataType: "JSON",
-    data: { id: array[0] },
-    success: function (data) {
-        // Clear existing options (if needed)
-        $('#team_member').empty().append('<option value="">Select Team Member</option>');
-        // Loop through the data and append options
-        $.each(data, function(index, member) {
-            $('#team_member').append($('<option>', {
-                value: member.id, // Adjust this according to your member's ID field
-                text: member.first_name+" "+member.last_name, // Adjust this according to your member's name field
-            }));
-        });
-    },
+    data: { id: array },
+  success: function (data) {
+    // Clear existing checkboxes (if needed)
+    $('#team_member_container').empty();
+    
+    // Loop through the data and append checkboxes
+    $.each(data, function(index, member) {
+        $('#team_member_container').append(
+           $('<label>', {
+                style: 'display: flex; align-items: center; gap:10px;' // Correctly formatted style as a string
+            }).append(
+                $('<input>', {
+                    type: 'checkbox',
+                    name: 'team_member[]', // Name for the checkbox array
+                    style: 'width: 20px;', // Set width for the checkbox
+                    value: member.id // Adjust this according to your member's ID field
+                }),
+                member.first_name + " " + member.last_name // Member's name
+            )
+        );
+    });
+},
     error: function() {
         swal.fire({
             title: "Technical Issue",
@@ -173,8 +180,6 @@
 });
 
 		document.getElementById("assign").style.display="block";
-	}
-	return status;
 }
 
 function toggleAll(selectAllCheckbox) {

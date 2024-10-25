@@ -58,7 +58,7 @@
 
 												<h6 class="mb-0">
 													<!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>-->
-												Customer Success Manager - </h6></a>
+												Team Member - </h6></a>
 												<span class="text-secondary">
 													<?=$value->first_name.' '. $value->last_name;?></span>
 											</li>
@@ -73,7 +73,7 @@
 											@foreach ($managers as $item)
 													<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
 											   <a href="">
-												<h6 class="mb-0">Team Manager</h6></a>
+												<h6 class="mb-0">Team Manager -</h6></a>
 												<span class="text-secondary">{{$item->first_name}} {{$item->last_name}}</span>
 											</li>
 											@endforeach
