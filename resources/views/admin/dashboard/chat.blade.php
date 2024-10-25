@@ -1,7 +1,7 @@
  @include('admin.dashboard.header')
  {{-- @extends('admin.dashboard.header') --}}
 @push('title')
-    <title>My Clients</title>
+    <title>Customer Remarks</title>
 @endpush
       <div class="page-content"> 
         <div class="chat-wrapper" style="overflow-y: scroll;">
@@ -25,48 +25,33 @@
            </div>
            <div class="chat-content" style="margin-left: 0px; height: auto;"> 
 
-                <!-- <?php 
+                 <?php 
                     if(!empty($data)){
                         foreach ($data as $key => $value) {
-                            $timestamp = strtotime($value->created_at);
-                            $time = date('H:i', $timestamp);
-
-
-                ?>-->
+                   ?>
                 <div class="chat-content-leftside"> 
-                    <div class="d-flex">
-                       <img src="assets/images/avatars/avatar-3.png" width="48"
+                    <div class  ="d-flex">
+                       <img src="/assets/images/user.png" width="48"
                             height="48" class="rounded-circle" alt /> 
                             <div class="flex-grow-1 ms-2"> 
-                                <p class="mb-0 chat-time">{{$value->customer_name}}, {{$time}}</p> 
-                                <p class="chat-left-msg">{{$value->remark}}</p> 
+                                {{-- <p class="mb-0 chat-time">{{$value->customer_name}}</p>  --}}  
+                                <p class="chat-left-msg">{{$value->customer_name}}</p> 
+                                <p class="mb-0 chat-time">{{$value->user_type}}</p> 
+
                             </div> 
                         </div> 
                     </div>
-                    <?php } } ?> 
-
-
-
-                     <?php 
-                    if(!empty($data)){
-                        foreach ($data as $key => $value) {
-                            $timestamp = strtotime($value->created_at);
-                            $time = date('d-M-Y', $timestamp);
-
-
-                ?> 
-
-                    <!-- MAIN  -->
-                  <div class="chat-content-rightside"> 
+                       <div class="chat-content-rightside"> 
                         <div class="d-flex ms-auto">
                            <div class="flex-grow-1 me-2"> 
-                            <p class="mb-0 chat-time text-end"> {{$time}}</p>
+                            <p class="mb-0 chat-time text-end" id="time-ago">
+                                  {{$value->created_at}}
+                            </p>
                             <p class="chat-right-msg">{{$value->remark}}</p> 
                            </div>
                        </div> 
                    </div>  
-                    <?php } } ?>   
-
+                    <?php } } ?> 
               </div> 
           <form id="remark_form">
               <input type="hidden" name="team_member_id" value="{{$customer->team_member}}">
@@ -89,6 +74,7 @@
                         <i class='bx bx-file'></i>
                      </a>  -->
                     <button type="submit"><i class='bx bxs-send'></i></button>
+                    <button type="submit">submit</button>
                     <!-- <a href="javascript:;"><i class='bx bx-microphone'></i></a> -->
                     <!-- <a href="javascript:;"><i class='bx bx-dots-horizontal-rounded'></i></a> -->
                  </div> 

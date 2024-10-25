@@ -1187,14 +1187,19 @@ public function addLead(){
      $user_type = self::userType($admin_data->user_type);
      $customer_id =   Crypt::decrypt($customer_id);
      $customers = DB::table('customer')
+     
      ->join('remark','remark.customer_id','=','customer.customer_id')
      ->join('main_user','main_user.id','=','remark.user_id')
      ->where('customer.customer_id','=',$customer_id)
-     ->get();
-     // echo '<pre>';
-     // print_r($customers);die;
+     ->get(['remark.*','customer.customer_id','customer.customer_service_id','customer.customer_name','main_user.user_type']);
+     
+    //  echo '<pre>';
+    //  print_r($customers);die;
+     
      $clients = CustomerModel::find($customer_id);
      $service_data = Service::find($clients->customer_service_id);
+
+     
      return view('admin.dashboard.chat',['admin_data'=>$admin_data,'data'=>$customers,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
   }
 //chatShow FUNCTION END 
