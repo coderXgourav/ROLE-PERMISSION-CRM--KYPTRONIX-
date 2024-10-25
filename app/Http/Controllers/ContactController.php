@@ -450,9 +450,25 @@ public function assginClientspage(Request $request){
 
 public function getServiceBasedMembers(Request $request){
   $id = $request->id;
-  $members = DB::table('main_user')->
-  join('member_service','member_service.member_id','=','main_user.id')
-  ->where('member_service.member_service_id',$id)->select('main_user.id','main_user.first_name','main_user.last_name')->get();
+  
+  // $members = DB::table('main_user')
+  // ->join('member_service','member_service.member_id','=','main_user.id')
+  // ->where('member_service.member_service_id',$id)
+  // ->select('main_user.id','main_user.first_name','main_user.last_name')
+  // ->get();
+  
+ if (!empty($id)) {
+    $members = DB::table('main_user')
+        ->join('member_service', 'member_service.member_id', '=', 'main_user.id')
+        ->whereIn('member_service.member_service_id', $id) // Use whereIn to filter
+        ->groupBy('main_user.id', 'main_user.first_name', 'main_user.last_name')
+        ->havingRaw('COUNT(DISTINCT member_service.member_service_id) = ?', [count($id)]) // Check that the count matches
+        ->select('main_user.id', 'main_user.first_name', 'main_user.last_name')
+        ->get();
+} else {
+    // Handle the case where $id is empty
+    $members = collect(); // Return an empty collection
+}
   return response()->json($members);
 }
 
@@ -1504,14 +1520,14 @@ public function savePackage(Request $request){
   }
   public function viewAssignClient($customer_id){
 
-    
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
     $customer_details = CustomerModel::find($customer_id);
-    
+
 
     $customer_service_id = $customer_details->customer_service_id;
+    
     $main_user_id = json_decode($customer_details->team_member);
 
      
@@ -1519,27 +1535,21 @@ public function savePackage(Request $request){
     ->select('main_user.first_name', 'main_user.last_name')
     ->whereIn('main_user.id',$main_user_id)
     ->get();
-
     
-    $services_data =Service::find($customer_details->customer_service_id);
-    $customer_service_id = $customer_details->customer_service_id;
-    
-    
-// Step 1: Fetch the first record that matches the JSON condition
-$team_manager_service = DB::table('team_manager_services')  
-    ->whereJsonContains('managers_services_id', $customer_service_id) // Assumes it's a JSON array
-    ->get();
+    $services_data = Service::find($customer_details->customer_service_id);
 
-$main_users = collect(); // Create an empty collection to store all users
 
-foreach ($team_manager_service as $value) {
-    $users = MainUserModel::where('id', $value->team_manager_id)->get(['first_name','last_name','id','user_type']);
-    $main_users = $main_users->merge($users);
+    $managers = DB::table("team_manager_services")->join("services",'services.service_id','=',"team_manager_services.managers_services_id")->where("team_manager_services.managers_services_id",$customer_service_id)->get();
+
+   $manager_data = collect();
+
+foreach ($managers as $key => $value) {
+    $manager = MainUserModel::where("id", $value->team_manager_id)->get();
+    $manager_data = $manager_data->merge($manager);
 }
 
 
-
-    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$main_users]);
+    return view('admin.dashboard.view_assign_client',['admin_data'=>$admin_data,'user_type'=>$user_type,'customer_data'=>$customer_details,'team_member'=>$data,'services_data'=>$services_data,'managers'=>$manager_data]);
   }
   public function leadsView($customer_id){
      $id = session('admin');
