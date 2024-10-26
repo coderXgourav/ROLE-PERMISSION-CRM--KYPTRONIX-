@@ -17,7 +17,7 @@
                                             <p class="mb-0 text-secondary">
                                                 Total Operation Managers
                                             </p>
-                                            <h4 class="my-1">{{0}}</h4>
+                                            <h4 class="my-1">{{$operation_manager}}</h4>
                                             <p
                                                 class="mb-0 font-13 text-success"
                                             >
@@ -51,7 +51,7 @@
                                             <p class="mb-0 text-secondary">
                                                 Total Team Manager
                                             </p>
-                                            <h4 class="my-1">{{0}}</h4>
+                                            <h4 class="my-1">{{$team_manager}}</h4>
                                             <p
                                                 class="mb-0 font-13 text-success"
                                             >
@@ -274,7 +274,7 @@
                      
                      
                     </div>
-						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
+						@if($admin_data->user_type=="admin")
 
                     <div class="row row-cols-1 row-cols-lg-3">
 						<div class="col d-flex">

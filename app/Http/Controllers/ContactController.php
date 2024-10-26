@@ -411,29 +411,52 @@ public function Clientspage(){
 //  THIS IS assginClientspage FUNCTION 
 public function assginClientspage(Request $request){
 
-  $service = $request->service;
-    if($service !=""){
-      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)
-      ->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
-    }else{
-         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)->orderBy('customer_id','DESC')->get();
-    }
-
-    // echo "<pre>";
-    // print_r($customers);
-    // die();
-
+  $service_filter = $request->service;
   $id = session('admin');
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
-   
-   $team = MainUserModel::where('user_type','customer_success_manager')->get();
+
+  if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
    $services = Service::orderBy('service_id','DESC')->get();
+    if($service_filter !=""){
+      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)
+      ->where('customer.customer_service_id',$service_filter)->orderBy('customer_id','DESC')->get();
+    }else{
+         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)->orderBy('customer_id','DESC')->get();
+    }
+  }else if($admin_data->user_type=="team_manager"){
+  $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+        if(!empty($team_manager_services)){
+           $service_id = [];
+            foreach($team_manager_services as $service){
+              $service_id[] = $service->managers_services_id;
+            }
+            $services = Service::whereIn('service_id',$service_id)->get();
 
+     if($service_filter!=""){
+            $customers=DB::table('customer')
+                      ->select('customer.*','services.name as name','services.service_id as service_id')
+                      ->join('services','services.service_id','=','customer.customer_service_id')
+                      ->whereIn('customer.customer_service_id',$service_id)
+                      ->where('customer.customer_service_id',$service_filter)
+                      ->where('customer.team_member','!=',null)
+                      ->get();
+          }else{
+            $customers=DB::table('customer')
+            ->select('customer.*','services.name as name','services.service_id as service_id')
+            ->join('services','services.service_id','=','customer.customer_service_id')
+            ->whereIn('customer.customer_service_id',$service_id)
+            ->where('customer.team_member','!=',null)
+            ->get();
+          }
+          
+        }
 
+  }
 
+  //  $team = MainUserModel::where('user_type','customer_success_manager')->get();
 
-  return view('admin.dashboard.assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'services'=>$services]);
+  return view('admin.dashboard.assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'services'=>$services]);
 
 
 
@@ -488,25 +511,58 @@ public function getServiceBasedMembers(Request $request)
 
 //  THIS IS noneAssginClientspage FUNCTION 
 public function noneAssginClientspage(Request $request){
-    $service = $request->service;
-    if($service !=""){
+    $service_filter = $request->service;
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+
+    if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
+   $services = Service::orderBy('service_id','DESC')->get();
+    if($service_filter !=""){
       $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)
-      ->where('customer.customer_service_id',$service)->orderBy('customer_id','DESC')->get();
+      ->where('customer.customer_service_id',$service_filter)->orderBy('customer_id','DESC')->get();
     }else{
          $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')->get();
     }
+  }else if($admin_data->user_type=="team_manager"){
+    
+  $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+  if(!empty($team_manager_services)){
+     $service_id = [];
+      foreach($team_manager_services as $service){
+        $service_id[] = $service->managers_services_id;
+      }
+      $services = Service::whereIn('service_id',$service_id)->get();
+      if($service_filter!=""){
+      $customers=DB::table('customer')
+      ->select('customer.*','services.name as name','services.service_id as service_id')
+      ->join('services','services.service_id','=','customer.customer_service_id')
+      ->whereIn('customer.customer_service_id',$service_id)
+      ->where('customer.customer_service_id',$service_filter)
+      ->where('customer.team_member','=',null)
+      ->get();
 
-  $id = session('admin');
-   $admin_data = self::userDetails($id);
-   $user_type = self::userType($admin_data->user_type);
+       }else{
+        $customers=DB::table('customer')
+        ->select('customer.*','services.name as name','services.service_id as service_id')
+        ->join('services','services.service_id','=','customer.customer_service_id')
+        ->whereIn('customer.customer_service_id',$service_id)
+        // ->where('customer.customer_service_id',$service_id)
+        ->where('customer.team_member','=',null)
+        ->get();
+       }
+      }
+
+    }
+
+
    
-   $team = MainUserModel::where('user_type','customer_success_manager')->get();
-   $services = Service::orderBy('service_id','DESC')->get();
+  //  $team = MainUserModel::where('user_type','customer_success_manager')->get();
 
 
 
 
-  return view('admin.dashboard.none_assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'team'=>$team,'services'=>$services]);
+  return view('admin.dashboard.none_assign_client',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'services'=>$services]);
 
 }
 //  THIS IS noneAssginClientspage FUNCTION 
@@ -603,13 +659,11 @@ public function export()
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
             break;
             case "Team Managers":
-              
                 $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"team_manager")->orderBy('id','DESC')->get();
             $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = self::userType($admin_data->user_type);
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-            
             break;
                  case "Customer Success Manager":
                     $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"customer_success_manager")->orderBy('id','DESC')->get();
@@ -623,9 +677,46 @@ public function export()
             break;
         }
       }else{
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->where('main_user.user_type',"!=","admin")->get();
-            $id = session('admin');
+        $id = session('admin');
           $admin_data = self::userDetails($id);
+          $user_type = $admin_data->user_type;
+
+          if($user_type=="admin" || $user_type=="operation_manager"){
+
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->where('main_user.user_type',"!=",$user_type)->where('main_user.user_type',"!=","admin")->get();
+
+          }else if($user_type=="team_manager"){
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                    $service_id = [];
+                    foreach($team_manager_services as $service){
+                      $service_id[] = $service->managers_services_id;
+                    }
+                    
+                    $contact_data = DB::table("member_service")   
+                    ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name')) 
+                    ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+                    ->join('services','services.service_id','=','member_service.member_service_id')
+                    ->whereIn('member_service.member_service_id', $service_id)
+                    ->groupBy('member_service.member_id')
+                    ->get();
+                    // echo '<pre>';
+                    // print_r($contact_data);die;
+             }
+             
+            //  else{
+            //        $contact_data=DB::table('main_user')
+            //         ->select('main_user.id as member_id','main_user.first_name as first_name','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name')
+            //         ->join('member_service','member_service.member_id','=','main_user.id')
+            //         ->join('services','services.service_id','=','member_service.id')
+            //         ->where('main_user','main_user.user_type','=','customer_success_manager')
+            //         ->get();
+            //  }
+
+          }
+
+            
           $user_type = self::userType($admin_data->user_type);
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
       }
@@ -863,6 +954,9 @@ public function smsShow($id){
   
 }
 //viewTeamMember FUNCTION START
+
+
+
 public function viewTeamMember($team_manager_id){
 
     $team_id = session('admin');
@@ -901,6 +995,7 @@ public function viewTeamMember($team_manager_id){
        ->where('team_manager_services.team_manager_id',$team_manager_id)
        ->distinct()
        ->get(['name']);
+       
                   
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
           // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
@@ -935,6 +1030,7 @@ public function viewTeamMember($team_manager_id){
       $total_invoices_data=Invoice::all()->count();
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
     }
+
     return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data]);
 }
 
@@ -952,6 +1048,7 @@ public function teamMemberList($manager_id){
             foreach($team_manager_services as $service){
               $service_id[] = $service->managers_services_id;
             }
+
             $team_member = DB::table("member_service")
             ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name')) 
             ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
@@ -973,6 +1070,10 @@ public function teamMemberList($manager_id){
    
     return view('admin.dashboard.members_list',['admin_data'=>$admin_data,'team_member'=>$team_member,'user_type'=>$user_type]);
 }
+
+
+
+
 public function showClientsList($manager_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);
@@ -1154,22 +1255,19 @@ public function addLead(){
         // ->where('customer.status',1)
         ->get(); 
       }else if($admin_data->user_type == 'team_manager'){
-        $leads_data = DB::table('team_manager_services')
-        ->join('main_user','main_user.id','=','team_manager_services.team_manager_id')
-        ->where('main_user.id',session('admin'))->first();
 
-        if($leads_data){
-          $services_id = $leads_data->managers_services_id;
-          $services =  json_decode($services_id);
-          $leads_data = DB::table('customer')
-         ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.customer_service_id','customer.msg','services.name','customer.status','main_user.first_name','main_user.last_name')
-         ->leftjoin('main_user','main_user.id','=','customer.team_member')
-         ->join('services','services.service_id','=','customer.customer_service_id')
-         ->whereIn('customer.customer_service_id',$services)
-         ->where('customer.status',1)
-          ->get();  
-        }else{
-          return redirect('/login/dashboard');
+        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+        if(!empty($team_manager_services)){
+           $service_id = [];
+            foreach($team_manager_services as $service){
+              $service_id[] = $service->managers_services_id;
+            }
+            $leads_data=DB::table('customer')
+            ->select('customer.*','services.name as name')
+            ->join('services','services.service_id','=','customer.customer_service_id')
+            ->whereIn('customer.customer_service_id',$service_id)
+            ->get();
+          
         }
 
       }else if($admin_data->user_type == 'customer_success_manager'){
@@ -1182,16 +1280,8 @@ public function addLead(){
           ->whereJsonContains('customer.team_member',"$admin_data->id")
           ->where('customer.status',1)
           ->get();
-      }else{
-
-        $leads_data = DB::table('customer')
-        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','customer.status','services.name','main_user.first_name','main_user.last_name')
-        ->join('services','services.service_id','=','customer.customer_service_id')
-        ->leftjoin('main_user','main_user.id','=','customer.team_member')
-        ->where('customer.team_member',$admin_data->id)
-        ->where('customer.status',1)
-        ->get();  
       }
+
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
  //chatShow FUNCTION START
@@ -1433,7 +1523,8 @@ public function viewClients(){
      $id = session('admin');
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
-     if($admin_data->user_type == 'admin'){
+
+     if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager' ){
         $invoice_data = DB::table('main_user')
       ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
       ->join('invoices','invoices.user_id','=','main_user.id')
@@ -1446,7 +1537,6 @@ public function viewClients(){
         ->join('customer','customer.customer_id','=','invoices.customer_id')
         ->where('main_user.id',$admin_data->id)
         ->get();
-
      }
     return view('admin.dashboard.view_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
  } 

@@ -76,7 +76,7 @@
                         <div class="menu-title">Dashboard</div>
                     </a>
                 </li>
-                @if($admin_data->service_permission>0)
+                @if($admin_data->user_type=="operation_manager" && $admin_data->service_permission>0 || $admin_data->user_type=="admin")
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -97,7 +97,7 @@
     
                 
                
-            @if($admin_data->user_registration_permission>0)
+            @if($admin_data->user_type=="operation_manager" && $admin_data->user_registration_permission>0 || $admin_data->user_type=="admin")
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -115,7 +115,8 @@
                     </ul>
                 </li>
                 @endif
-                @if($admin_data->package_permission>0)
+            @if($admin_data->user_type=="operation_manager" && $admin_data->package_permission>0 || $admin_data->user_type=="admin")
+
 
                  <li>
                     <a href="javascript:;" class="has-arrow">
@@ -264,7 +265,7 @@
                         </ul>
                     </li>
                     @endif
-    @if($admin_data->lead_assign_permission>0)
+    @if($admin_data->user_type!="customer_success_manager" && $admin_data->lead_assign_permission>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -301,7 +302,7 @@
                     </ul>
                 </li>
                 @endif --}}
-                @if($admin_data->invoice_permission>0)
+                @if($admin_data->user_type!="customer_success_manager" && $admin_data->invoice_permission>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-square"></i>
@@ -333,7 +334,6 @@
                     </li>-->   
                     
                 @if($admin_data->email_sms_permission>0)
-                    
                       <li>
                         <a href="javascript:" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-repeat"></i>
@@ -355,7 +355,7 @@
                         </ul>
                     </li>
                     @endif
-                @if($admin_data->customer_permission>0)
+                @if($admin_data->payment_permission>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -402,17 +402,7 @@
                             
                         </ul>
                     </li>
-                    
-                    
              
-
-            
-
-               
-                
-              
-            
-               
                
                
                 {{-- <li>
@@ -428,8 +418,6 @@
                         <div class="menu-title">Sending SMS</div>
                     </a>
                 </li> --}}
-
-
               
 
             </ul>

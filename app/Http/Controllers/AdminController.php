@@ -11,6 +11,7 @@ use App\Models\MessageModel;
 use App\Models\Service; 
 use App\Models\TeamMember; 
 use App\Models\MainUserModel; 
+use App\Models\TeamManagersServicesModel; 
 use App\Models\Package;
 use Mail;
 use DB;
@@ -106,27 +107,67 @@ public function userType($type){
 public function dashboardPage(){
   $id = session('admin');
   
+  $total_team_member=0;
+  $total_invoices_data=0;
+  $convert_to_clients=0;
+  $total_clients=0;
+  $service_data='';
+  $email_send_cound = 0;
+  $sms_count = 0;$operation_manager =0;
+  $team_manager = 0;
+  $customer_count =0;
+  $assign_clients_count = 0;
+  $none_assign_clients_count = 0;
+  $team_member = 0;
+
+
       $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->where('main_user.id',$id)
             ->first();
 
-           $user_type = self::userType($user_details->user_type);
-          
+            if($user_details->user_type=="admin" || $user_details->user_type=="operation_manager"){
+              $customer_count = CustomerModel::count();
+              $assign_clients_count = CustomerModel::where('team_member','!=',null)->count();
+              $none_assign_clients_count = CustomerModel::where('team_member','=',null)->count();
+              $email_send_cound = EmailModel::count();
+              $sms_count = MessageModel::count();
+            
+              $operation_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"operation_manager")->count();
+              $team_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"team_manager")->count();
+              $team_member = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"customer_success_manager")->count();
+
+            }else if($user_details->user_type=="team_manager"){
+
+              $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->distinct()->get(['managers_services_id']);
+             
+              $service_id = [];
+      
+              foreach($team_manager_services as $service){
+                $service_id[] = $service->managers_services_id;
+              }
+
+              $team_member = DB::table("member_service")
+              // ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name')) 
+              ->join('services','services.service_id','=','member_service.member_service_id')
+              ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+              ->whereIn('member_service.member_service_id', $service_id)
+              // ->groupBy('member_service.member_service_id')
+              ->count();
+              // dd($team_member);
+
+             $customer_count = CustomerModel::whereIn('customer_service_id',$service_id)->count();
+
+             $none_assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'=',null)->count();
+             $assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'!=',null)->count();
+            } 
             
 
-  $customer_count = CustomerModel::count();
-  $assign_clients_count = CustomerModel::where('team_member','!=',null)->count();
-  $none_assign_clients_count = CustomerModel::where('team_member','=',null)->count();
-  $team_member_count = TeamMember::count();
-  $email_send_cound = EmailModel::count();
-  $sms_count = MessageModel::count();
+   $user_type = self::userType($user_details->user_type);
+          
 
-  // echo "<pre>";
-  // print_r($user_details);
-  // die();
-
-   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'team_member'=>$team_member_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type]);
+    
+   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member]);
     
 }
 //  THIS IS dashboardPage FUNCTIOIN 

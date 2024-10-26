@@ -11,20 +11,26 @@
 						<div class="table-responsive">
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
 								<div >
+									@if ($admin_data->user_type!="team_manager")
+
 									<form action="/admin/contacts/" method="GET">
 										<div class="row">
 										<div class="col-md-4">
+												
 								<select name="filter"  class="form-control" id="" >
 									<option value="">Filter Users</option>
 									<option value="Operation Managers"  {{ request('filter') == 'Operation Managers' ? 'selected' : '' }}>Operation Managers</option>
 									<option value="Team Managers"  {{ request('filter') == 'Team Managers' ? 'selected' : '' }}>Team Managers</option>
 									<option value="Customer Success Manager"  {{ request('filter') == 'Customer Success Manager' ? 'selected' : '' }}>Customer Success Manager</option>
 								</select>
+
 										</div>
 										<div class="col-md-2"><button type="submit" class="btn btn-success">Search</button></div>
 									</div>
 								
 								</form> <br>
+								@endif
+
 								</div>
 								<thead>
 									<tr>
