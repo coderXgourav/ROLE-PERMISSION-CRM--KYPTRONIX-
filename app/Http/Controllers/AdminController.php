@@ -12,6 +12,8 @@ use App\Models\Service;
 use App\Models\TeamMember; 
 use App\Models\MainUserModel; 
 use App\Models\TeamManagersServicesModel; 
+use App\Models\MemberServiceModel; 
+
 use App\Models\Package;
 use Mail;
 use DB;
@@ -160,7 +162,23 @@ public function dashboardPage(){
 
              $none_assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'=',null)->count();
              $assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'!=',null)->count();
-            } 
+            
+            } else if($user_details->user_type=="customer_success_manager" ){
+
+              $customer_success_manager_services = MemberServiceModel::where('member_id', $user_details->id)
+    ->distinct()
+    ->get(['member_service_id']); 
+
+          $service_id=[];
+        if(!empty($customer_success_manager_services)){
+             foreach($customer_success_manager_services as $service){
+                 $service_id[] = $service->member_service_id;
+              }
+
+            $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->id")->count();
+        }
+              
+            }
             
 
    $user_type = self::userType($user_details->user_type);
