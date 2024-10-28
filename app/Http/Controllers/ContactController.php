@@ -1700,13 +1700,20 @@ public function invoicePerCustomer($id){
   ->get();  
   return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
 }
- public function allReports(){
+public function allReports(){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
     $services = Service::orderBy('service_id','DESC')->get();
     return view('admin.dashboard.all_reports',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
-  }
+}
+public function payment(){
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    return view('admin.dashboard.payment',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
+
 
 // THIS IS END OF THE CLASS 
 }
