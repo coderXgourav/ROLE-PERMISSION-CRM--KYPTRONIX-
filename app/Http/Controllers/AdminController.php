@@ -174,19 +174,19 @@ public function dashboardPage(){
              foreach($customer_success_manager_services as $service){
                  $service_id[] = $service->member_service_id;
               }
-
             $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->id")->count();
         }
+          $email_send_cound = DB::table('main_user')
+     ->join('email_send','email_send.email_admin','=','main_user.id')
+     ->join('customer','customer.customer_id','=','email_send.email_customer')
+     ->where('email_send.email_admin',$user_details->id)
+     ->count();
               
             }
-            
 
    $user_type = self::userType($user_details->user_type);
           
-
-    
    return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member]);
-    
 }
 //  THIS IS dashboardPage FUNCTIOIN 
 
