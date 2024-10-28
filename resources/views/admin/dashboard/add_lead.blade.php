@@ -12,7 +12,10 @@ width: 100% !important;
 @endpush
 <div class="row">
                     <div class="col-lg-8 mx-auto">
-						
+							<div style="display: flex; justify-content:right; margin-bottom:10px;">
+							<a href="{{route('admin.import')}}" class="btn btn-sm btn-primary">Import Client</a> &nbsp; 
+							<a href="{{route('admin.export')}}" class="btn btn-sm btn-success">Export </a>
+						</div>
 
 						<div class="card">
 							<form id="add_customer_form">

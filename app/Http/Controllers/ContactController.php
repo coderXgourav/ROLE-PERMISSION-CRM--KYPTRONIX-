@@ -22,6 +22,7 @@ use App\Models\EmailTemplate;
 use App\Models\TeamManagersServicesModel;
 use App\Models\Package;
 use DB;
+use Twilio\Rest\Client;
 use Crypt;
 use Mail;
 
@@ -785,10 +786,13 @@ public function export()
 
 // THIS IS importPage FUNCTION  
 public function importPage(){
-   $id = session('admin');
-   $admin_data = AdminModel::find($id);
-     return view('admin.dashboard.import_customer',['admin_data'=>$admin_data]);
+ 
+       $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+    return view('admin.dashboard.import_customer',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
+
 // THIS IS importPage FUNCTION  
 
 
@@ -1432,9 +1436,13 @@ public function messageText($customer_id){
 //  THIS IS messageText FUNCTION 
 // THIS IS A SEND_SMS FUNCTION 
 public function sendSms(Request $request){
-        $accountSid = "AC12e09a4b307d4b4dedd6a48a8b150809";
-        $authToken = "190b69babc7531bf9960a498eba8d3f4";
-        $twilioNumber = "+12567435707";
+
+     
+        $twilioNumber = "+19367554277";
+    $sid    = "AC6b8cceac1de333558bf646b0a3900669";
+    $token  = "03113f0ead6134aa839d8be78b965cd8";
+    $twilio = new Client($sid, $token);
+
         
   // THIS IS API GET VARIABLE        
         $message = $request->input('message');
@@ -1443,7 +1451,6 @@ public function sendSms(Request $request){
         $customer_details  = CustomerModel::find($customer_id);
         $number = $customer_details->customer_number;
 
-        $twilio = new Client($accountSid, $authToken);
 
         $status = $twilio->messages->create(
             $number,
@@ -1451,7 +1458,10 @@ public function sendSms(Request $request){
                 'from' => $twilioNumber,
                 'body' => $message,
             ]
+            
         );
+
+
         if($status){
           $save = new MessageModel;
           $save -> team_member_id = session('admin');

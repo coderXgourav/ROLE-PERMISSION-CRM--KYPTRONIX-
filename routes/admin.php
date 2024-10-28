@@ -52,7 +52,7 @@ Route::post('/admin/update-assign',[ContactController::class,'UpdateAssign']);
 Route::get('/admin/email',[ContactController::class,'emailPage'])->name('admin.email');
 Route::get('/admin/email-show/{id}',[ContactController::class,'emailShow'])->name('admin.emailshow');
 Route::get('/export',[ContactController::class,'export'])->name('admin.export');
-Route::get('admin/import',[ContactController::class,'importPage'])->name('admin.import');
+Route::get('/admin/import',[ContactController::class,'importPage'])->name('admin.import');
 Route::post('/admin/upload_csv',[ContactController::class,'import']);
 Route::get('/admin/sms',[ContactController::class,'smsPage'])->name('admin.sms');
 Route::get('/admin/message-show/{id}',[ContactController::class,'smsShow'])->name('admin.smsShow');
