@@ -122,6 +122,7 @@ Route::get('/admin/view_assign_client/{id}',[ContactController::class,'viewAssig
 Route::get('/admin/team-manager-list/{id}',[ServiceController::class,'teamManagerList'])->name('admin.team-manager-list');
 Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->name('admin.leads-view');
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage']);
+Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
 
 });
 
