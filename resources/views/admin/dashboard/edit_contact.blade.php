@@ -127,7 +127,7 @@ width: 100% !important;
     align-items: center;
     gap: 10px;
 }">
-												<div><input type="checkbox" @if($user_details->user_type == "operation_manager") {{"checked"}} @endif  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager Manager"  style="width: 25px"> </div>
+												<div><input type="checkbox" @if($user_details->user_type == "operation_manager") {{"checked"}} @endif  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager"  style="width: 25px"> </div>
 												<div><p>Operation Manager</p></div>
 
 
@@ -152,7 +152,9 @@ width: 100% !important;
 										</div>
 									</div>
 
- 									<div class="row"  id="service_field">
+ 									<div class="row"  id="service_field" @if ($user_details->user_type=="operation_manager")
+										style="display:none"
+									@endif>
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
 										<div class="col-sm-9">
@@ -483,6 +485,12 @@ width: 100% !important;
 					// }
 
 function resetCheckboxes(checkedBox) {
+	let user_type = checkedBox.value;
+	if(user_type==="operation_manager"){
+		document.getElementById("service_field").style.display="none";
+	}else{
+		document.getElementById("service_field").style.display="block";
+	}
     const checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_type"]');
     checkboxes.forEach(checkbox => {
         if (checkbox !== checkedBox) {
@@ -490,6 +498,9 @@ function resetCheckboxes(checkedBox) {
         }
     });
 }
+
+
+
 				</script>
 				
 @include('admin.dashboard.footer')

@@ -35,8 +35,9 @@
 										
 										  <div class="d-flex order-actions">
 											<a href="{{route('admin.edit-package',['id'=>$package_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
-
+@if($admin_data->user_type=="admin")
 												<a href="javascript:;" onclick="DeletePackage({{$value->package_id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
+												@endif
 											 </div>
 										</td>
 									</tr>
