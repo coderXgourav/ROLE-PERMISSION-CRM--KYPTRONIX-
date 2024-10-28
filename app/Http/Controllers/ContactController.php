@@ -786,10 +786,13 @@ public function export()
 
 // THIS IS importPage FUNCTION  
 public function importPage(){
-   $id = session('admin');
-   $admin_data = AdminModel::find($id);
-     return view('admin.dashboard.import_customer',['admin_data'=>$admin_data]);
+ 
+       $id = session('admin');
+      $admin_data = self::userDetails($id);
+      $user_type = self::userType($admin_data->user_type);
+    return view('admin.dashboard.import_customer',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
+
 // THIS IS importPage FUNCTION  
 
 
