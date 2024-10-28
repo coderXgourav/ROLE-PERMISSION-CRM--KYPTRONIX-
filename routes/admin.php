@@ -135,7 +135,6 @@ Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPacka
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
 Route::get('/admin/payment',[ContactController::class,'payment'])->name('admin.payment');
 
-
 });
 
 
