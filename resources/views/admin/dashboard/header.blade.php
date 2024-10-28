@@ -223,12 +223,12 @@
                             <div class="menu-title">Reports</div>
                         </a>
                         <ul>
-                            <li> <a href="#"><i
-                                class='bx bx-radio-circle'></i>Managers Report</a>
+                            <li> <a href="{{route('admin.all-reports')}}"><i
+                                class='bx bx-radio-circle'></i>Report</a>
                             </li>
-                            <li> <a href="#"><i
+                           <!-- <li> <a href="#"><i
                                 class='bx bx-radio-circle'></i>Members Report</a>
-                            </li>
+                            </li>-->
 
                         </ul>
                     </li>
