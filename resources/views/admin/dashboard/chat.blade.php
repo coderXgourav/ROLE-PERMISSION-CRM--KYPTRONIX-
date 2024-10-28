@@ -41,7 +41,7 @@
                             </div> 
                         </div> 
                     </div>
-                       <div class="chat-content-rightside"> 
+                       <div class="chat-content-rightside">   
                         <div class="d-flex ms-auto">
                            <div class="flex-grow-1 me-2"> 
                             <p class="mb-0 chat-time text-end" id="time-ago">
