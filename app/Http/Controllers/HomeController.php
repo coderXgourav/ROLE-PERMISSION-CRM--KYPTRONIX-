@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use App\Models\Service;
+use Stripe\Stripe;
+use Stripe\Charge;
 
 class HomeController extends Controller
 {
@@ -50,6 +52,26 @@ public function formSubmit(Request $request){
      
 }
 //   THIS IS A formSubmit FUNCTION 
+public function store(Request $request){
+        //echo '<pre>';
+       // print_r($_POST);die;
+        $request->validate([
+            'stripeToken' => 'required'
+        ]);
 
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        try {
+            Charge::create([
+                'amount' => $request->amount * 100, 
+                'currency' => 'usd',
+                'description' => 'Payment Description',
+                'source' => $request->stripeToken,
+            ]);
+
+            return back()->with('success', 'Payment Successful!');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+}
 
 }

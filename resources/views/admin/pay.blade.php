@@ -1,8 +1,8 @@
 
 <div class="content">
     <div class="links">
-        <form action="/payment" method="POST">
-            <input type="hidden" name="_token" value="oCRl5zAh2taYC5WvR5Xe456GyyZ48L8UergQTCt9" autocomplete="off">
+        <form action="{{route('payment.store')}}" method="POST">
+            {{@csrf_field()}}
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                 data-key="pk_test_51OJwqlIQugzZQunOA8CjZJJEUPE8YLy7lTjkSIW85UZoplYMlhNKye2y8s4xdmd9QaqmEFuR87kI9JPpN7BLxWdg00UuuHPQyM"
                 data-amount="1000" data-name="Oradah" data-description="Payment Form"
