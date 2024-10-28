@@ -597,20 +597,58 @@ public function emailPage(){
    $id = session('admin');
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
+
    if($admin_data->user_type == 'customer_success_manager'){
       $emails = DB::table('main_user')
      ->join('email_send','email_send.email_admin','=','main_user.id')
      ->join('customer','customer.customer_id','=','email_send.email_customer')
      ->where('email_send.email_admin',$admin_data->id)
      ->orderBy('email_send.email_id','DESC')
+     ->select('email_send.*','customer.customer_name')
      ->paginate(10);
-   }else{
+   }else if($admin_data->user_type == 'team_manager'){
+
+     $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
+        $service_id = [];
+        foreach($team_manager_services as $service){
+          $service_id[] = $service->managers_services_id;
+        }
+
+        $all_members = DB::table("member_service")
+        ->select('member_service.member_id') 
+        ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+        ->whereIn('member_service.member_service_id', $service_id)
+        ->groupBy('member_service.member_id')
+        ->get();
+
+        $members = [];
+        foreach ($all_members as $key => $value) {
+           $members[] = $value->member_id;
+        }
+
+      $emails = DB::table('main_user')
+     ->join('email_send','email_send.email_admin','=','main_user.id')
+     ->join('customer','customer.customer_id','=','email_send.email_customer')
+     ->whereIn('email_send.email_admin',$members)
+     ->orderBy('email_send.email_id','DESC')
+     ->select('email_send.*','customer.customer_name')
+     ->paginate(10);
+     
+   }
+   else{
       $emails = DB::table('main_user')
      ->join('email_send','email_send.email_admin','=','main_user.id')
      ->join('customer','customer.customer_id','=','email_send.email_customer')
      ->orderBy('email_send.email_id','DESC')
+     ->select('email_send.*','customer.customer_name')
      ->paginate(10);
    }
+
+   
+  //  echo "<pre>";
+  //  print_r($emails);
+  //  die;
+   
   return view('admin.dashboard.all_email',['admin_data'=>$admin_data,'data'=>$emails,'user_type'=>$user_type]);
 }
 // THIS IS emailPage FUNCTION 
@@ -618,21 +656,20 @@ public function emailPage(){
 // THIS IS emailShow FUNCTION 
 
 public function emailShow($email_id){
+     $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = $admin_data->user_type;
+
   $email_id = decrypt($email_id);
-   $email_details = DB::table('user')
-   ->join('email_send','email_send.email_admin','=','user.user_id')
+   $email_details = DB::table('main_user')
+   ->join('email_send','email_send.email_admin','=','main_user.id')
    ->join('customer','customer.customer_id','=','email_send.email_customer')
    ->where('email_send.email_id',$email_id)
-   ->get();
-
-  //  echo "<pre>";
-  //  print_r($email_details);
-  //  die();
+   ->get(['email_send.*','main_user.first_name','main_user.last_name','main_user.user_type','customer.customer_name']);
 
 
-   $id = session('admin');
-   $admin_data = AdminModel::find($id);
-  return view('admin.dashboard.email_show',['admin_data'=>$admin_data,'data'=>$email_details[0]]);
+
+  return view('admin.dashboard.email_show',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$email_details[0]]);
   
 }
 
@@ -987,6 +1024,8 @@ public function viewTeamMember($team_manager_id){
         ->whereIn('member_service.member_service_id', $service_id)
         ->groupBy('member_service.member_id')
         ->get();
+
+
        $total_clients = CustomerModel::whereIn('customer_service_id',$service_id)->count();
        $total_invoices_data = Invoice::whereIn('service_id',$service_id)->count();
     

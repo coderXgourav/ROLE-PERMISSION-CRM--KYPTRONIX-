@@ -25,3 +25,6 @@ Route::post('/request',[HomeController::class,'formSubmit']);
 Route::get('/all',function(){
     session()->forget('team');
 });
+Route::get('/pay',function(){
+    return view('admin.pay');
+});
