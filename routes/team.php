@@ -82,9 +82,7 @@ Route::post('/team/save_invoice',[TeamController::class,'invoiceAdd']);
 Route::get('/team/invoice2/{id}/{invoice_id}',[TeamController::class,'invoice2'])->name('team.invoice2');
 Route::get('/team/convert_to_client',[TeamController::class,'convertToClient']);
 Route::get('/team/view_clients',[TeamController::class,'viewClients'])->name('team.view_clients');
-
 Route::get('/team/convert-to-client-list/{id}',[TeamController::class,'convert_to_client_list'])->name('team.convert-to-client-list');
-
 });
  
 

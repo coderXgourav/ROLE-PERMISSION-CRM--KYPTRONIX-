@@ -27,23 +27,25 @@ Route::post('/admin/reset_password',[AdminController::class,'forgotCheck']);
 Route::post('/admin/otp_check',[AdminController::class,'otpCheck']);
 Route::post('/admin/new_password',[AdminController::class,'newPassword']);
 Route::post('/admin-login',[AdminController::class,'login']);
-
 // THIS IS A PROTECTED ROUTES 
-
-
 Route::group(['middleware' => ['admin']], function () {
+
    Route::get('/login/dashboard',[AdminController::class,'dashboardPage'])->name('admin-dashboard');
   Route::get('admin/password-change',[AdminController::class,'chnagePasswordPage'])->name('change-password');
 Route::get('admin/logout',[AdminController::class,'logout'])->name('admin-logout');
 Route::post('/admin/change_password',[AdminController::class,'changePassword']);
+
 Route::get('/admin/add-contact',[AdminController::class,'addContactPage'])->name('admin.add-contact');
-Route::post('/admin/create_contact',[ContactController::class,'contactAdd']);
+Route::post('/admin/create_contact',[ContactController::class,'contactAdd'])->name('admin.addContact');
 // Route::get('/admin/contacts',[ContactController::class,'contactPage'])->name('admin.contact');
 Route::get('/admin/change_password',[AdminController::class,'changeUsernamePage'])->name('admin.change_username');
 Route::post('/admin/change_username',[AdminController::class,'changeUsername']);
 Route::get('admin/edit/{id}',[ContactController::class,'editUserPage'])->name('admin.edit');
-Route::post('/admin/update_contact',[ContactController::class,'updateContact']);
-Route::get('/admin/team_delete',[ContactController::class,'deleteTeam']);
+
+Route::post('/admin/update_contact',[ContactController::class,'updateContact'])->name('admin.updateContact');
+
+Route::get('/admin/team_delete',[ContactController::class,'deleteTeam'])->name('admin.deleteContact');
+
 Route::get('/admin/clients',[ContactController::class,'Clientspage'])->name('admin.customer');
 Route::get('/admin/assign-clients',[ContactController::class,'assginClientspage'])->name('admin.assign');
 Route::get('/admin/none-assign-clients',[ContactController::class,'noneAssginClientspage'])->name('admin.noneassign');
@@ -63,16 +65,24 @@ Route::get('/admin/all-service',[ServiceController::class,'allServices'])->name(
 Route::post('/admin/service_delete',[ServiceController::class,'service_delete']);
 Route::get('admin/edit-service/{id}',[ServiceController::class,'editService'])->name('admin.edit-service');
 Route::post('/admin/update_service',[ServiceController::class,'updateService']);
+
+
 Route::get('/admin/add-team-member',[AdminController::class,'addTeamMember'])->name('admin.add-team-member');
 Route::post('/admin/create_team_members',[ContactController::class,'create_team_members']);
 Route::get('/admin/team-member-lists',[ContactController::class,'teammembersLists'])->name('admin.team-member-lists');
 Route::get('/admin/team_member_delete',[ContactController::class,'team_member_delete']);
 Route::get('admin/edit-team-member/{id}',[ContactController::class,'editTeamMember'])->name('admin.edit-team-member');
 Route::post('/admin/update_members',[ContactController::class,'updateMembers']);
+
+
 Route::get('/admin/invoice_list/{id}',[ContactController::class,'invoiceList'])->name('admin.invoice_list');
 Route::get('/admin/invoice/{id}',[ContactController::class,'invoicePerCustomer'])->name('admin.view_invoice_per_customer');
 Route::get('/admin/view_invoice/{id}/{invoice_id}',[ContactController::class,'viewInvoice'])->name('admin.view_invoice');
+
+
 Route::get('/admin/contact/{id}',[ContactController::class,'viewTeamMember'])->name('admin.view_team_member');
+
+
 Route::get('/admin/show-team-member-list/{id}',[ContactController::class,'teamMemberList'])->name('admin.show-team-member-list');
 Route::get('/admin/show-clients-list/{id}',[ContactController::class,'showClientsList'])->name('admin.show-clients-list');
 Route::get('admin/view_member/{id}',[ContactController::class,'viewMember'])->name('admin.view_member');
@@ -124,6 +134,7 @@ Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->nam
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage']);
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
 Route::get('/admin/payment',[ContactController::class,'payment'])->name('admin.payment');
+
 
 });
 
