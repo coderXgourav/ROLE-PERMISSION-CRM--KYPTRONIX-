@@ -809,14 +809,12 @@ public function smsPage(){
          ->where('messages.team_member_id','=',$admin_data->id)
          ->orderBy('messages.messages_id','DESC')
          ->paginate(10);
-
    }else{
          $sms = DB::table('main_user')
          ->join('messages','messages.team_member_id','=','main_user.id')
          ->join('customer','customer.customer_id','=','messages.customer_msg_id')
          ->orderBy('messages.messages_id','DESC')
          ->paginate(10);
-
   }
   return view('admin.dashboard.all_sms',['admin_data'=>$admin_data,'data'=>$sms,'user_type'=>$user_type]);
 }
