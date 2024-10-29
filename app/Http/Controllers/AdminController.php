@@ -13,11 +13,15 @@ use App\Models\TeamMember;
 use App\Models\MainUserModel; 
 use App\Models\TeamManagersServicesModel; 
 use App\Models\MemberServiceModel; 
+use App\Models\LoginHistoryModel; 
+use GuzzleHttp\Client;
+
 
 use App\Models\Package;
 use Mail;
 use DB;
 use Crypt;
+use Illuminate\Support\Facades\Http;
 
 
 class AdminController extends Controller
@@ -35,7 +39,20 @@ class AdminController extends Controller
        if($check_username){
          if($check_username->password  == $password){
           $user_details = self::userDetails($check_username->id);
-      
+            $user_id = $user_details->id;
+            // $ip  = request()->ip();
+            // $client = new Client();
+            // $response = $client->get("http://ip-api.com/json/{$ip}");
+            // $locationData = json_decode($response->getBody(), true);
+            
+            //    LoginHistoryModel::create([
+            //     'user_id'=>$user_id,
+            //     'ip_address' => $ip,
+            //     'country' => $locationData['country'] ?? null,
+            //     'city' => $locationData['city'] ?? null,
+            //     'region' => $locationData['regionName'] ?? null,
+            //    ]);
+        
             if($user_details->disable_account>0){
               return self::swal(false,'Account Disabled','warning');
             }
