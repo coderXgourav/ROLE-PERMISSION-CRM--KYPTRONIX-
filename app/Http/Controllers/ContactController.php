@@ -1294,6 +1294,7 @@ public function addLead(){
       $individual_details->zip=$zip;
       $individual_details->ssn=$ssn;
       $save = $individual_details->save();
+ 
      
       }else if($type==2){
         $business_name=$request->business_name;
