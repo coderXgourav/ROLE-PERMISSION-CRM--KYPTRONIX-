@@ -1259,24 +1259,77 @@ public function addLead(){
     return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type,'all_services'=>$all_services]);
 }
  public function leadAdd(Request $request){
-     $phone= $request->phone;
-     $country_code = $request->country_code;
-     $customer_number = $country_code.$phone;
-     $team_member = $request->team_member;
-      $name = $request->name;
+      $service_id =$request->customer_service_id;
+      $type=$request->type;
+      if($type==1){
+       $phone= $request->phone;
+       $country_code = $request->country_code;
+       $customer_number = $country_code.$phone;
+       $first_name = $request->first_name;
+       $middle_name =$request->middle_name;
+       $last_name=$request->last_name;
       $email = $request->email;
       $msg = $request->msg;
-      $service_id =$request->customer_service_id;
+      $dob=$request->dob;
+      $address=$request->address;
+      $city=$request->city;
+      $state=$request->state;
+      $zip=$request->zip;
+      $ssn=$request->ssn;
+      $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
+      
+      $individual_details = new CustomerModel;
+      $individual_details->customer_name = $customer_name;
+      $individual_details->customer_number = $customer_number ;
+      $individual_details->customer_email = $email ;
+      $individual_details->customer_service_id = $service_id;
+      $individual_details->type=$type;
+      $individual_details->first_name=$first_name;
+      $individual_details->middle_name=$middle_name;
+      $individual_details->last_name=$last_name;
+      $individual_details->dob=$dob;
+      $individual_details->address=$address;
+      $individual_details->city=$city;
+      $individual_details->state=$state;
+      $individual_details->zip=$zip;
+      $individual_details->ssn=$ssn;
+      $save = $individual_details->save();
      
+      }else if($type==2){
+        $business_name=$request->business_name;
+        $customer_name=$business_name;
+        $industry=$request->industry;
+        $business_phone_no=$request->business_phone_no;
+        $customer_number = $business_phone_no;
+        $business_email=$request->business_email;
+        $customer_email = $business_email;
+        $ein=$request->ein;
+        $business_address=$request->business_address;
+        $business_city=$request->business_city;
+        $business_state=$request->business_state;
+        $business_zip=$request->business_zip;
+        $business_title=$request->business_title;
+        $point_of_contact=$request->point_of_contact;
 
-      $contact_details = new CustomerModel;
-      $contact_details->customer_name = $name;
-      $contact_details->customer_number = $customer_number ;
-      $contact_details->customer_email = $email ;
-      $contact_details->msg = $msg ;
-      $contact_details->task = 1 ;
-      $contact_details->customer_service_id = $service_id;
-      $save = $contact_details->save();
+        $business_details = new CustomerModel;
+        $business_details->customer_name=$customer_name;
+        $business_details->customer_number=$customer_number;
+        $business_details->customer_email=$customer_email;
+        $business_details->customer_service_id = $service_id;
+        $business_details->business_name=$business_name;
+        $business_details->industry=$industry;
+        $business_details->business_phone_no=$business_phone_no;
+        $business_details->business_email=$business_email;
+        $business_details->ein=$ein;
+        $business_details->business_address=$business_address;
+        $business_details->business_city=$business_city;
+        $business_details->business_state=$business_state;
+        $business_details->business_zip=$business_zip;
+        $business_details->business_title=$business_title;
+        $business_details->point_of_contact=$point_of_contact;
+        $save = $business_details->save();
+
+      }
       if($save){
          return self::toastr(true,"Lead Add Successfull","success","Success");
       }else{
