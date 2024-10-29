@@ -19,7 +19,6 @@ class AdminMiddleware
     {
       if (Session::has('admin')) {
             $id = Session::get('admin');
-
             // Retrieve admin data and permissions from the database
             $admin_data = DB::table('main_user')
                 ->join('permission', 'permission.user_id', 'main_user.id')
@@ -36,19 +35,23 @@ class AdminMiddleware
                     return $next($request); // Allow access if permissions are valid
                 }
             }
+        }else{
+            return  redirect('/login');
         }
 
         // Redirect if the user is not logged in or doesn't have permissions
-        return redirect('/')->with('error', 'Unauthorized access.');
+        return redirect('/not-access')->with('error', 'Unauthorized access.');
     }
 
      private function hasAccess($admin_data, $routeName)
     {
-        echo "<pre>";
-        print_r($admin_data);
+        // echo "<pre>";
+        // print_r($admin_data);
         // print_r($routeName);
-        die;
+        // die;
         // Define your permission logic based on route names
+
+
         $permissions = [
             'admin-dashboard' => 1, // Example permission key
             'change-password' => 1,
@@ -68,44 +71,87 @@ class AdminMiddleware
             'admin.add-service' => $admin_data->service_permission,
             'admin.all-service' => $admin_data->service_permission,
             'admin.edit-service' => $admin_data->service_permission,
+            'admin.edit' => $admin_data->user_registration_permission,
             'admin.invoice_list' => $admin_data->invoice_permission,
             'admin.view_invoice_per_customer' => $admin_data->invoice_permission,
             'admin.view_invoice' => $admin_data->invoice_permission,
-
-            
             'admin.view_team_member' => $admin_data->invoice_permission,
+            'admin.show-clients-list' => $admin_data->customer_permission,
+            'admin.view_member' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'admin.memberInvoiceList' => $admin_data->invoice_permission,
+            'admin.view-service' =>  ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager")?1:0,
+            'admin.team-member' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'admin.show-leads-list' => $admin_data->leads_permission,
+            'admin.service_invoices' => $admin_data->service_permission,
+            'admin.view-customers' => $admin_data->customer_permission,
+            'admin.manager_convert_to_clients' =>  ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'admin.member_convert_to_client' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'admin.view_manager_details' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager")?1:0,
+            'admin.view-members' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'admin.view-operation-managers' =>($admin_data->user_type=="admin")?1:0,
+            'admin.add-lead' => $admin_data->leads_permission,
+            'admin.view-lead' => $admin_data->leads_permission,
+            'admin.chat' => 1,
+            'admin.remarks' => 1,
+            'admin.call' => $admin_data->communication_permission,
+            'admin.send-email' => $admin_data->email_sms_permission,
+            'admin.send-message' => $admin_data->email_sms_permission,
+            'admin.create-invoice' => $admin_data->invoice_permission,
+            'admin.invoice2' => $admin_data->invoice_permission,
+            
+            'admin.view_clients' => $admin_data->customer_permission,
+            'admin.view-invoice' => $admin_data->invoice_permission,
+            'admin.show_invoice' => $admin_data->invoice_permission,
+            'admin.contact' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'admin.add-package' => $admin_data->package_permission,
+            'admin.all-package' => $admin_data->package_permission,
+            'admin.edit-package' => $admin_data->package_permission,
+            'admin.view_assign_client' => $admin_data->lead_assign_permission,
+            'admin.team-manager-list' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" )?1:0,
+            'admin.leads-view' => $admin_data->leads_permission,
+            'admin.all-reports' => $admin_data->report_permission,
+            'admin-logout' => 1,
+            'not-access'=>1,
+            'fallback'=>1,
+            // POST METHODS
+            'post1' => 1,
+            'post2' => 1,
+            'post3' => 1,
+            'post4' => 1,
+            'post5' => 1,
+            'post6' => 1,
+            'post7' => 1,
+            'post8' => 1,
+            'post9' => 1,
+            'post10' => 1,
+            'post11' => 1,
+            'post12' => 1,
+            'post13' => 1,
+            'post14' => 1,
+            'post15' => 1,
+            'post16' => 1,
+            'post17' => 1,
+            'post18' => 1,
+            'post19' => 1,
+            'post20' => 1,
+            'post21' => 1,
+            'post22' => 1,
 
             
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            'admin.view_invoice' => $admin_data->invoice_permission,
-            // Add more routes and their corresponding permission keys here
+
+            
         ];
 
         // Check if the route name exists in the permissions array
 
          if (array_key_exists($routeName, $permissions)) {
             if($permissions[$routeName]==1){
+                return true;
                 echo "its accessable";
             }else{
-                echo "its not accessable";
+                               return false;
+
             }
-      die;
         }
         // Default to denying access if no specific permissions are found
         return false;
