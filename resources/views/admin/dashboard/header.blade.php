@@ -376,6 +376,25 @@
                         </ul>
                     </li>
                     @endif
+
+                       @if($admin_data->user_type=="admin")
+
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bx bx-category"></i>
+                            </div>
+                            <div class="menu-title">Login History</div>
+                        </a>
+                        <ul>
+                            <li> <a href="#"><i
+                                class='bx bx-radio-circle'></i>
+                                View History</a>
+                           </li>
+                          
+                            
+                        </ul>
+                    </li>
+                    @endif
                     
 
 

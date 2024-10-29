@@ -1,6 +1,6 @@
-@if(session('member'))
+@if(session()->has('admin'))
 <script>
-    window.location="/member/dashboard";
+  window.location="/login/dashboard";
 </script>
 @endif
 <!doctype html>
