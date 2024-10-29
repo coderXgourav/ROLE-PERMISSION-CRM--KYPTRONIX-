@@ -421,17 +421,9 @@ $("#update_team_members").validate({
 
 $("#add_customer_form").validate({
     rules: {
-        name: "required",
-        phone: "required",
-        email: {
-            required: true,
-            email: true,
-        },
-        msg: {
-            required: true,
-            minlength: 4,
-            maxlength: 200,
-        },
+        customer_service_id: "required",
+        type: "required",
+        
     },
     messages: {},
     submitHandler: function (form, event) {
