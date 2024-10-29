@@ -253,7 +253,7 @@ width: 100% !important;
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
 													<input type="hidden" name="email_sms_manage" value="0">
-													<input class="form-check-input"  @if($user_details->email_sms_permission>0) {{"checked"}} @endif name="email_sms_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault7" >
+													<input class="form-check-input"  value="1"  @if($user_details->email_sms_permission>0) {{"checked"}} @endif name="email_sms_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault7" >
 													<label class="form-check-label" for="flexSwitchCheckDefault7">Email & SMS View </label>
 												</div>
 						                    </div>

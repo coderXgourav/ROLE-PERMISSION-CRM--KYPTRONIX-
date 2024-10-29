@@ -118,7 +118,7 @@ Route::post('/admin/send-email-template',[ContactController::class,'sendEmailTem
 Route::get('/admin/view-mail-template',[ContactController::class,'allEmailTemplate'])->name('admin.view-mail-template');
 Route::get('/admin/contacts',[ContactController::class,'filterUsers'])->name('admin.contact');
 Route::get('/admin/check-assign',[ContactController::class,'checkBeforeAssign']);
-Route::get('/admin/get_service_based_member',[ContactController::class,'getServiceBasedMembers']);
+Route::get('/admin/get_service_based_member',[ContactController::class,'getServiceBasedMembers'])->name('admin.get_service_based_member');
 Route::get('/admin/add-package',[AdminController::class,'addPackagePage'])->name('admin.add-package');
 Route::post('/admin/save_package',[ContactController::class,'savePackage'])->name('post20');
 Route::get('/admin/all-package',[AdminController::class,'allPackages'])->name('admin.all-package');

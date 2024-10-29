@@ -1,3 +1,10 @@
+@if(session()->has('admin'))
+<script>window.location="/login/dashboard"</script>
+
+@else 
+<script>window.location="/login"</script>
+
+@endif
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 <!-- Mirrored from lion-coders.com/demo/html/sarchholm-real-estate-template/home-v4.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 15 Jun 2023 11:31:03 GMT -->
