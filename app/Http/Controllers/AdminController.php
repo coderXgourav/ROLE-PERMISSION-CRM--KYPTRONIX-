@@ -394,7 +394,7 @@ public function allPackages(){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $all_packages = Package::orderBy('package_id','DESC')->get();
+    $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
     return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages,'user_type'=>$user_type]);
 }
 public function editPackage($package_id){

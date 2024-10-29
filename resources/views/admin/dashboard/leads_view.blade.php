@@ -37,10 +37,57 @@
 
                       <div class="mt-3">
                         <h4>{{$customer->customer_name}}</h4>
+                        <p class="text-secondary mb-1">Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
+                        <p class="text-muted font-size-sm">Service Name - {{$service_data->name}}</p>
                         <p class="text-secondary mb-1">Email -{{$customer->customer_email}}</p>
                         <p class="text-muted font-size-sm">Number -{{$customer->customer_number}}</p>
-                        <p class="text-muted font-size-sm">Service Name - {{$service_data->name}}</p>
-                      
+                        <?php if($customer->type==1){?>
+                          <?php if(!empty($customer->dob)){?>
+                           <p class="text-muted font-size-sm">Date Of Birth -{{$customer->dob}}</p>
+                          <?php } ?>
+                         
+                          <?php if(!empty($customer->address)){?>
+                           <p class="text-muted font-size-sm">Address -{{$customer->address}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->city)){?>
+                            <p class="text-muted font-size-sm">City -{{$customer->city}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->state)){?>
+                            <p class="text-muted font-size-sm">State -{{$customer->state}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->zip)){?>
+                            <p class="text-muted font-size-sm">Zip -{{$customer->zip}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->ssn)){?>
+                            <p class="text-muted font-size-sm">SSN -{{$customer->ssn}}</p>
+                          <?php } ?>
+                        <?php }else if($customer->type==2){ ?>
+                          <p class="text-muted font-size-sm">Business Name -{{$customer->business_name}}</p>
+                          <?php if(!empty($customer->business_title)){?>
+                             <p class="text-muted font-size-sm">Title -{{$customer->business_title}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->industry)){?>
+                             <p class="text-muted font-size-sm">Industry -{{$customer->industry}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->ein)){ ?>
+                             <p class="text-muted font-size-sm">EIN -{{$customer->ein}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->business_address)){?>
+                             <p class="text-muted font-size-sm">Address -{{$customer->business_address}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->business_city)){?>
+                             <p class="text-muted font-size-sm">City -{{$customer->business_city}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->business_state)){?>
+                            <p class="text-muted font-size-sm">State -{{$customer->business_state}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->business_zip)){?>
+                            <p class="text-muted font-size-sm">Zip -{{$customer->business_zip}}</p>
+                          <?php } ?>
+                          <?php if(!empty($customer->point_of_contact)){?>
+                            <p class="text-muted font-size-sm">Point of Contact -{{$customer->point_of_contact}}</p>
+                          <?php } ?>
+                        <?php } ?>
                         <!--<button class="btn btn-primary">Follow</button>
                         <button class="btn btn-outline-primary">Message</button>-->
                       </div>

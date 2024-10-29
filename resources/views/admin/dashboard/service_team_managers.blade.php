@@ -45,6 +45,7 @@
 								</tbody>
 							
 							</table>
+							<div>{{$team_manager->links()}}</div>
 						</div>
 					</div>
 				</div>

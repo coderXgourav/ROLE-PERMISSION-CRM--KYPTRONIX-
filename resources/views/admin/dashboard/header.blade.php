@@ -4,6 +4,18 @@
 
 <head>
     <!-- Required meta tags -->
+    <style>
+        .w-5{
+            display: none;
+        }
+        .h-5{
+            display: none;
+        }
+        .leading-5{
+            padding: 10px;
+        }
+        
+    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--favicon-->

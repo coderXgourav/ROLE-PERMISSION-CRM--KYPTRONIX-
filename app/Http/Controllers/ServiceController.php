@@ -95,8 +95,7 @@ class ServiceController extends Controller
 	  // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $services = Service::orderBy('service_id','DESC')->get();
-    
+    $services = Service::orderBy('service_id','DESC')->paginate(10);   
 	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
   }
   //AllService End
@@ -194,7 +193,7 @@ public function showLeadsList($service_id){
     ->join('services','services.service_id','=','customer.customer_service_id')
     ->select('customer.*','services.name as service_name')
     ->where('customer.customer_service_id',$service_id)
-    ->get();
+    ->paginate(10);
    return view('admin.dashboard.show_leads_lists',['admin_data'=>$admin_data,'clients'=>$clients,'user_type'=>$user_type]);
 }
 //showLeadsList End
@@ -207,7 +206,7 @@ public function serviceInvoices($service_id){
      ->select('customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.service_id','invoices.price')
      ->join('customer','customer.customer_id','=','invoices.customer_id')
      ->where('invoices.service_id',$service_id)
-     ->get();
+     ->paginate(10);
    return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice,'user_type'=>$user_type]);
 }
 //serviceInvoices End
@@ -221,7 +220,7 @@ public function teamManagerList($service_id){
      ->select('main_user.first_name','main_user.last_name','main_user.id','main_user.user_type','main_user.email_address','main_user.phone_number')
      ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
      ->where('team_manager_services.managers_services_id','=',$service_id)
-     ->get();
+     ->paginate(10);
     /* $team_manager = DB::table('team_manager_services')  
     ->whereJsonContains('managers_services_id', $service_id) // Assumes it's a JSON array
     ->get();
