@@ -11,7 +11,7 @@ width: 100% !important;
     <title>Add Contact</title>
 @endpush
 <div class="row">
-                    <div class="col-lg-8 mx-auto">
+                    <div class="col-lg-10 mx-auto">
 							<div style="display: flex; justify-content:right; margin-bottom:10px;">
 							<a href="{{route('admin.import')}}" class="btn btn-sm btn-primary">Import Client</a> &nbsp; 
 							<a href="{{route('admin.export')}}" class="btn btn-sm btn-success">Export </a>
@@ -24,27 +24,25 @@ width: 100% !important;
 								<h5 class="mb-4">Add New Lead  </h5>
 								   <div class="row mb-3">
 								   	<label for="input42" class="col-sm-3 col-form-label">Service <span class="text-danger">*</span></label>
-								    	<div class="col-sm-9">
-								    	  <!-- <select name="customer_service_id" id="customer_service_id" class="form-control">
-											   <option value="">Select services</option>
-											      @foreach ($all_services as $services)
-										  	       <option value="{{$services->service_id}}">{{$services->name}}</option>
-											       @endforeach
-										    </select>-->
+								    	<div class="col-sm-9" style="    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 22px;">
+								    	
 										    @foreach ($all_services as $services)
-										    <input type="checkbox" name="customer_service_id" value="{{$services->service_id}}"> 
+										    <input id="service" type="checkbox"  onclick="checkService(this)" name="customer_service_id" value="{{$services->service_id}}" style="width: 25px"> 
 										    {{$services->name}}											
 											@endforeach
 													
 										</div>
-								   </div>
+								   </div> <br>
 								  <div class="row mb-3">
 								   	<label for="input42" class="col-sm-3 col-form-label">Type <span class="text-danger">*</span></label>
-								    	<div class="col-sm-9">
-										    <input type="checkbox" name="type" value="1" id="type1" onchange="check_individual()"> Individual
-										    <input type="checkbox" name="type" value="2" id="type2"onchange="check_business()"> Business
+								    	<div class="col-sm-9" style="display: flex; align-items:center; gap:10px;">
+										    <input type="checkbox" name="type" id="user_type" checked  onclick="limitCheckboxes(this)" value="1"   style="width: 25px;"> Individual
+										    <input type="checkbox" name="type" value="2" id="user_type"   onclick="limitCheckboxes(this)" style="width: 25px;"> Business
 										</div>
-								   </div>
+								   </div> <br>
 								  <div class="individual">
 									<div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label"> First Name <span class="text-danger">*</span></label>
@@ -271,27 +269,38 @@ width: 100% !important;
 					</div>
 				</div><!--end row-->
                 <script type="text/javascript">
-                	$('.individual').hide();
-                	$('.business').hide();
-					function check_individual(){
-					  var checkedValue=$("#type1").is(":checked");
 
-                       if(checkedValue==true){
-                       	 $('.individual').show();
-                       }else{
-                       	 $('.individual').hide();
-
-                       }
+				 function limitCheckboxes(selectedCheckbox) {
+            const checkboxes = document.querySelectorAll('input[id="user_type"]');
+            checkboxes.forEach((checkbox) => {
+                if (checkbox !== selectedCheckbox) {
+                    checkbox.checked = false;
+                }else{
+					console.log(checkbox.value);
+					if(checkbox.value==1){
+  	                       $('.individual').show();
+  	                       $('.business').hide();
 					}
-					function check_business(){
-					  var checkedValue=$("#type2").is(":checked");
+					if(checkbox.value==2){
+	                     $('.business').show();
+	                     $('.individual').hide();
+					};
 
-                       if(checkedValue==true){
-                       	 $('.business').show();
-                       }else{
-                       	 $('.business').hide();
+				}
+            });
+        }
 
-                       }
-					}
+		function checkService(selectedCheckbox){
+			  const checkboxes = document.querySelectorAll('input[id="service"]');
+            checkboxes.forEach((checkbox) => {
+                if (checkbox !== selectedCheckbox) {
+                    checkbox.checked = false;
+                }
+            });
+
+		}
+                	
+
+     
                 </script>
 @include('admin.dashboard.footer')
