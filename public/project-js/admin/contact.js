@@ -657,3 +657,30 @@ $("#email_template_send").validate({
 });
 
 //Email template End
+
+$("#invoice_email_send").validate({
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/invoice-send-email",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Send Email");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $(".cke_wysiwyg_frame ").css("display", "none");
+                }
+            },
+        });
+    },
+});

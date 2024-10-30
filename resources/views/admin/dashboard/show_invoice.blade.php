@@ -81,6 +81,10 @@
             <div class="company-name">Kyptronix LLP</div>
         </div>
     </div>
+    <form id="invoice_email_send">
+     {{@csrf_field()}}
+    <input type="hidden" name="customer_id" value="{{$clients->customer_id}}">
+    <input type="hidden" name="invoice_id" value="{{$invoice_details->invoice_id}}">
 
     <div class="invoice-details"> 
         <div class="col">
@@ -135,7 +139,10 @@
         Total: $105.93</p>
         <h3>Balance Due: $105.93</h3>-->
     </div>
-
+     <div style="display: flex; justify-content:center; margin-top:15px;">
+        <button type="submit" id="btn" style="height:46px;" class="m-auto btn btn-primary">Send Invoice </button>
+     </div>
+    </form>
     <div class="notes">
         <p>Notes: any relevant info, terms, payment instructions, e.t.c</p>
     </div>

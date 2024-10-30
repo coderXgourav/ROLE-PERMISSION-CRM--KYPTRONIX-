@@ -141,6 +141,7 @@ Route::fallback(function () {
      return view('not_found');
 })->name('fallback');
 
+Route::post('/admin/invoice-send-email',[ContactController::class,'emailSend'])->name('admin.invoice-send-email');
 
 });
 
