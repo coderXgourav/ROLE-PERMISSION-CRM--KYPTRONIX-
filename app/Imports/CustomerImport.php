@@ -19,7 +19,6 @@ class CustomerImport implements ToModel,WithHeadingRow
         // print_r($row);
         // die;
 
-
         return new CustomerModel([
              'customer_name' => $row['leadbusiness_name'],
              'customer_number' => $row['leadbusiness_number'],
