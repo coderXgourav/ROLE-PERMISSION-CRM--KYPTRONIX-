@@ -95,7 +95,7 @@ class ServiceController extends Controller
 	  // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $services = Service::orderBy('service_id','DESC')->paginate(10);   
+    $services = Service::orderBy('service_id','DESC')->paginate(1);   
 	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
   }
   //AllService End

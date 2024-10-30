@@ -269,7 +269,7 @@ width: 100% !important;
 					</div>
 				</div><!--end row-->
                 <script type="text/javascript">
-
+  $('.business').hide();
 				 function limitCheckboxes(selectedCheckbox) {
             const checkboxes = document.querySelectorAll('input[id="user_type"]');
             checkboxes.forEach((checkbox) => {
