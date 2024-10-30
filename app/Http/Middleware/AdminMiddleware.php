@@ -112,6 +112,7 @@ class AdminMiddleware
             'admin.all-reports' =>($admin_data->user_type=="admin"  )?1:0 ,
             'admin-logout' => 1,
             'not-access'=>1,
+            'admin-dashboard'=>1,
             'fallback'=>1,
             'admin.get_service_based_member'=>1,
             'admin.show-team-member-list'=> ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
