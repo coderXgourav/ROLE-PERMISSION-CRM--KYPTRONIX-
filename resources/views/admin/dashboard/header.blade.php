@@ -14,10 +14,9 @@
         .leading-5{
             padding: 10px;
         }
-        
-        .rounded-md{
-            display: none;
-        }
+       .z-0{
+        display: none;
+       }
         
     </style>
     <meta charset="utf-8" />
