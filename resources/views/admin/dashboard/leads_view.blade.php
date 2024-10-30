@@ -41,7 +41,8 @@
                         <p class="text-muted font-size-sm">Service Name - {{$service_data->name}}</p>
                         <p class="text-secondary mb-1">Email -{{$customer->customer_email}}</p>
                         <p class="text-muted font-size-sm">Number -{{$customer->customer_number}}</p>
-                        <?php if($customer->type==1){?>
+
+                        <?php if($customer->business_name==null){?>
                           <?php if(!empty($customer->dob)){?>
                            <p class="text-muted font-size-sm">Date Of Birth -{{$customer->dob}}</p>
                           <?php } ?>
@@ -61,7 +62,7 @@
                           <?php if(!empty($customer->ssn)){?>
                             <p class="text-muted font-size-sm">SSN -{{$customer->ssn}}</p>
                           <?php } ?>
-                        <?php }else if($customer->type==2){ ?>
+                        <?php }else{ ?>
                           <p class="text-muted font-size-sm">Business Name -{{$customer->business_name}}</p>
                           <?php if(!empty($customer->business_title)){?>
                              <p class="text-muted font-size-sm">Title -{{$customer->business_title}}</p>
@@ -88,6 +89,7 @@
                             <p class="text-muted font-size-sm">Point of Contact -{{$customer->point_of_contact}}</p>
                           <?php } ?>
                         <?php } ?>
+
                         <!--<button class="btn btn-primary">Follow</button>
                         <button class="btn btn-outline-primary">Message</button>-->
                       </div>

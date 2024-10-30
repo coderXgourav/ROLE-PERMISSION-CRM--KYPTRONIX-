@@ -28,7 +28,7 @@
 <input type="file" name="csv" class="form-control" required>  
  <br>
  <label for="">Please Download Excel Sheet Format</label>
- <a href="{{url('/excel-sheet.xlsx')}}"> Click Here</a>
+ <a href="{{url('/leads_format_sheet.xlsx')}}"> Click Here</a>
 
   <div style="display: flex; justify-content:center; margin-top:15px;"> 
     <button type="submit" id="btn" style="height:46px;" class="m-auto btn btn-primary">Upload Clients</button>
