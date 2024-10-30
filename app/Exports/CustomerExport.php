@@ -12,6 +12,6 @@ class CustomerExport implements FromCollection
     */
     public function collection()
     {
-        return CustomerModel::select('customer_name','customer_number','customer_email')->get();
+        return CustomerModel::select('customer_name','business_name','industry','customer_number','customer_email','dob','address','city','state','zip','ssn','ein','business_title','point_of_contact','msg')->get();
     }
 }

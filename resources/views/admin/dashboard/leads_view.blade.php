@@ -72,17 +72,17 @@
                           <?php if(!empty($customer->ein)){ ?>
                              <p class="text-muted font-size-sm">EIN -{{$customer->ein}}</p>
                           <?php } ?>
-                          <?php if(!empty($customer->business_address)){?>
-                             <p class="text-muted font-size-sm">Address -{{$customer->business_address}}</p>
+                          <?php if(!empty($customer->address)){?>
+                             <p class="text-muted font-size-sm">Address -{{$customer->address}}</p>
                           <?php } ?>
-                          <?php if(!empty($customer->business_city)){?>
-                             <p class="text-muted font-size-sm">City -{{$customer->business_city}}</p>
+                          <?php if(!empty($customer->city)){?>
+                             <p class="text-muted font-size-sm">City -{{$customer->city}}</p>
                           <?php } ?>
-                          <?php if(!empty($customer->business_state)){?>
-                            <p class="text-muted font-size-sm">State -{{$customer->business_state}}</p>
+                          <?php if(!empty($customer->state)){?>
+                            <p class="text-muted font-size-sm">State -{{$customer->state}}</p>
                           <?php } ?>
-                          <?php if(!empty($customer->business_zip)){?>
-                            <p class="text-muted font-size-sm">Zip -{{$customer->business_zip}}</p>
+                          <?php if(!empty($customer->zip)){?>
+                            <p class="text-muted font-size-sm">Zip -{{$customer->zip}}</p>
                           <?php } ?>
                           <?php if(!empty($customer->point_of_contact)){?>
                             <p class="text-muted font-size-sm">Point of Contact -{{$customer->point_of_contact}}</p>
