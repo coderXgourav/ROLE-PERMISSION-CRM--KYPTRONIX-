@@ -9,12 +9,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="card">
 					<div class="card-body">
+						
+						<div class="" style="display: flex; justify-content:space-between">	
+							<div></div>
+							<a href="{{route('admin.export')}}" class="btn btn-sm btn-success">Export Leads</a></div> 
+							<div></div><br>
+
 						<div class="table-responsive">
+						
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
 								<thead>
 									<tr>
 										<th>No.</th>
-										<th>Name</th>
+										<th>Lead/Business Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Service</th>

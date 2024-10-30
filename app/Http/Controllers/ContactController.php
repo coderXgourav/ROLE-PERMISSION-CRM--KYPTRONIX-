@@ -1300,10 +1300,10 @@ public function addLead(){
 
       }else if($type==2){
         $business_name=$request->business_name;
-        $customer_name=$business_name;
         $industry=$request->industry;
         $business_phone_no=$request->business_phone_no;
         $customer_number = $business_phone_no;
+
         $business_email=$request->business_email;
         $customer_email = $business_email;
         $ein=$request->ein;
@@ -1316,20 +1316,18 @@ public function addLead(){
         $msg=$request->msg;
 
         $business_details = new CustomerModel;
-        $business_details->customer_name=$customer_name;
+        $business_details->business_name=$business_name;
+        $business_details->customer_name=$business_name;
+        $business_details->industry=$industry;
         $business_details->customer_number=$customer_number;
         $business_details->customer_email=$customer_email;
         $business_details->customer_service_id = $service_id;
-        $business_details->business_name=$business_name;
-        $business_details->industry=$industry;
         $business_details->type=$type;
-        $business_details->business_phone_no=$business_phone_no;
-        $business_details->business_email=$business_email;
         $business_details->ein=$ein;
-        $business_details->business_address=$business_address;
-        $business_details->business_city=$business_city;
-        $business_details->business_state=$business_state;
-        $business_details->business_zip=$business_zip;
+        $business_details->address=$business_address;
+        $business_details->city=$business_city;
+        $business_details->state=$business_state;
+        $business_details->zip=$business_zip;
         $business_details->business_title=$business_title;
         $business_details->point_of_contact=$point_of_contact;
         $business_details->msg=$msg;
@@ -1786,6 +1784,8 @@ foreach ($managers as $key => $value) {
      $service_data = Service::find($clients->customer_service_id);
      return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
   }
+
+  
   public function getPackage(Request $request){
   $id = $request->package_id;
   $package_details=Package::find($id);
