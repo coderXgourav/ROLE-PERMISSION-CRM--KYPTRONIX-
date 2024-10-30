@@ -767,7 +767,7 @@ public function export()
 // THIS IS IMPORT FUNCTION 
   public function import(Request $request) 
     {
-         $file_ex = $request->csv->getClientOriginalExtension();
+       $file_ex = $request->csv->getClientOriginalExtension();
     if($file_ex=="csv"|| $file_ex=="xls"|| $file_ex=="xlsx"){
         Excel::import(new CustomerImport,
         request()->file('csv'));
@@ -1817,6 +1817,35 @@ public function payment(){
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
     return view('admin.dashboard.payment',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
+public function emailSend(Request $request){
+   $id = $request->customer_id;
+   $invoice_id =$request->invoice_id;
+    $user_id = session('admin');
+    $admin_data = self::userDetails($user_id);
+    $user_type = self::userType($admin_data->user_type);
+  
+    $customer_data = CustomerModel::find($id);
+    $email =$customer_data->customer_email;
+    $msg=$customer_data->msg;
+    $user['to'] = $email;
+    $invoice_details = Invoice::find($invoice_id);
+    $data = ['invoice_details'=>$invoice_details,'admin_data'=>$admin_data,'user_type'=>$user_type,'clients'=>$customer_data];
+    $send =   Mail::send('admin.dashboard.invoice_mail',$data,function($messages)use($user)
+    {$messages->to($user['to']);
+      $messages->subject('Business Email');
+    });
+  if($send){
+    $save = new EmailModel;
+    $save->email_admin = session('admin');
+    $save->email_customer = $id;
+    $save->email_text = $msg;
+    $save->save();
+   return self::toastr(true,'Email Send Successfully','success','Success');
+  }else{
+   return self::toastr(false,'Please Try again Later','error','Error');
+  }
+  
 }
 
 
