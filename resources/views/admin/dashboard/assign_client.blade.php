@@ -109,6 +109,7 @@
   </div>
 </div>
 							</table>
+							<div>{{$data->links()}}</div>
 							  @if(count($data)>0)
 							<div style="display: flex; justify-content:center; margin-bottom: 20px; margin-top:20px;">
 								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" id="assign" style="background-color: #38833c; border:1px solid #38833c; width:500px;">Update Customer success Manager</button>
