@@ -251,6 +251,16 @@ width: 100% !important;
 									</div> 
 								    
 									</div>
+									<div class="row mb-3">
+										<label for="input42" class="col-sm-3 col-form-label">Message</label>
+										<div class="col-sm-9">
+											<div class="position-relative input-icon">
+												<input type="text" class="form-control" placeholder="Type Message" name="msg">
+												<span class="position-absolute top-50 translate-middle-y"></span>
+											</div>
+										</div>
+									</div> 
+								  
                                    <div class="row">
 										<label class="col-sm-3 col-form-label"></label>
 										<div class="col-sm-9">

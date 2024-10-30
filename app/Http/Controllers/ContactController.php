@@ -1276,6 +1276,7 @@ public function addLead(){
       $state=$request->state;
       $zip=$request->zip;
       $ssn=$request->ssn;
+      $msg=$request->msg;
       $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
       
       $individual_details = new CustomerModel;
@@ -1293,6 +1294,7 @@ public function addLead(){
       $individual_details->state=$state;
       $individual_details->zip=$zip;
       $individual_details->ssn=$ssn;
+      $individual_details->msg=$msg;
       $save = $individual_details->save();
  
 
@@ -1311,6 +1313,7 @@ public function addLead(){
         $business_zip=$request->business_zip;
         $business_title=$request->business_title;
         $point_of_contact=$request->point_of_contact;
+        $msg=$request->msg;
 
         $business_details = new CustomerModel;
         $business_details->customer_name=$customer_name;
@@ -1329,6 +1332,7 @@ public function addLead(){
         $business_details->business_zip=$business_zip;
         $business_details->business_title=$business_title;
         $business_details->point_of_contact=$point_of_contact;
+        $business_details->msg=$msg;
         $save = $business_details->save();
 
       }
