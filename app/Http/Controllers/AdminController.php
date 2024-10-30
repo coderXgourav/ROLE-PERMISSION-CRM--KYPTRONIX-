@@ -17,6 +17,7 @@ use App\Models\LoginHistoryModel;
 use GuzzleHttp\Client;
 
 
+
 use App\Models\Package;
 use Mail;
 use DB;
@@ -397,6 +398,18 @@ public function allPackages(){
     $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
     return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages,'user_type'=>$user_type]);
 }
+
+// loginHistory
+public function loginHistory(){
+     $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+    $data =   DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->orderBy('login_history.id','DESC')->paginate(10);
+   return view('admin.dashboard.login_history',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+   
+
+}
+
 public function editPackage($package_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);

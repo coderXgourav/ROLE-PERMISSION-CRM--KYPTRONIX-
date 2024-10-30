@@ -1782,6 +1782,8 @@ foreach ($managers as $key => $value) {
      $service_data = Service::find($clients->customer_service_id);
      return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
   }
+
+  
   public function getPackage(Request $request){
   $id = $request->package_id;
   $package_details=Package::find($id);

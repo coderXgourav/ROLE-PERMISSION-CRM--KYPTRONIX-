@@ -1,0 +1,58 @@
+
+@include('admin.dashboard.header')
+ {{-- @extends('admin.dashboard.header') --}}
+@push('title')
+    <title>Login History</title>
+@endpush
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>Name</th>
+										<th>Type</th>
+										<th>IP Address</th>
+										<th>Location</th>
+										<th>Login Time</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    @if(count($data)>0)
+                                    @php
+                                        $i=1;
+                                    @endphp
+                                    @foreach($data as $key => $value)
+                                    <tr>
+										<td>{{$i++}}</td>
+										<td>{{$value->first_name}} {{$value->last_name}}</td>
+										<td>{{$value->user_type}}</td>
+										<td>{{$value->ip_address}}</td>
+										<td>{{$value->city, $value->country}}</td>
+										<td>{{date('d-m-Y,   h:i a' )}}</td>
+									
+								
+									</tr>
+                                    @endforeach
+                                    @else 
+                                    <tr>
+										<td colspan="6" style="text-align: center; color:red;"><b> Records Not Found..!</b></td>
+										
+									</tr>
+                                    @endif
+									
+								</tbody>
+							
+							</table> <br>
+							<div>{{$data->links()}}</div>
+						</div>
+					</div>
+				</div>
+@include('admin.dashboard.footer')
+<script>
+	 $('#myTable').DataTable({
+	 });
+</script>

@@ -132,6 +132,7 @@ Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->nam
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage']);
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
 Route::get('/admin/payment',[ContactController::class,'payment'])->name('admin.payment');
+Route::get('/admin/login-history',[AdminController::class,'loginHistory'])->name('admin.loginHistory');
 
 Route::get('/not-access',function(){
     return view('not_access');

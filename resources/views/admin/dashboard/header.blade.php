@@ -401,7 +401,7 @@
                             <div class="menu-title">Login History</div>
                         </a>
                         <ul>
-                            <li> <a href="#"><i
+                            <li> <a href="{{route('admin.loginHistory')}}"><i
                                 class='bx bx-radio-circle'></i>
                                 View History</a>
                            </li>
