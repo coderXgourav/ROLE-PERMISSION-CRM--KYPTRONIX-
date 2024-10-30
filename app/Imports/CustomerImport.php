@@ -15,6 +15,7 @@ class CustomerImport implements ToModel,WithHeadingRow
     */
     public function model(array $row)
     {
+        
         // echo "<pre>";
         // print_r($row);
         // die;
