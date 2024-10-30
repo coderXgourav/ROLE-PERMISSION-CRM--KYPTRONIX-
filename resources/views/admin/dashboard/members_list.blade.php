@@ -45,6 +45,7 @@
 								</tbody>
 							
 							</table>
+							<div>{{$team_member->links()}}</div>
 						</div>
 					</div>
 				</div>
