@@ -60,7 +60,7 @@ class AdminMiddleware
             'admin.updateContact' => $admin_data->user_registration_permission,
             'admin.deleteContact' => $admin_data->user_registration_permission,
             'admin.customer' => $admin_data->customer_permission,
-            'admin.assign' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" && $admin_data->$admin_data->lead_assign_permission || $admin_data->user_type=="team_manager" && $admin_data->$admin_data->lead_assign_permission)?1:0,
+            'admin.assign' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" && $admin_data->lead_assign_permission || $admin_data->user_type=="team_manager" && $admin_data->lead_assign_permission)?1:0,
             'admin.noneassign' => $admin_data->lead_assign_permission,
             'admin.email' => $admin_data->email_sms_permission,
             'admin.emailshow' => $admin_data->email_sms_permission,
