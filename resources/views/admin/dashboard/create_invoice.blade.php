@@ -121,7 +121,7 @@
 							 	contentType: false,
 							 	processData: false,
 							 	success: function (data) {
-							 		//console.log(data.price);
+							 		console.log(data.price);
 							 		$('#price').val(data.price);
 							 	    $('#description').val(data.desc);
 
