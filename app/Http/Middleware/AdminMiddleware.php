@@ -142,7 +142,7 @@ class AdminMiddleware
             'post20' => 1,
             'post21' => 1,
             'post22' => 1,
-
+            'admin.change_username'=>1,
             
 
             
