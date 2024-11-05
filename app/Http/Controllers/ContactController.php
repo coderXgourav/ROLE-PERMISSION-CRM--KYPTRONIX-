@@ -1816,7 +1816,7 @@ public function payment(){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    return view('admin.dashboard.payment',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+    return view('admin.pay',['admin_data'=>$admin_data,'user_type'=>$user_type]);
 }
 public function emailSend(Request $request){
    $id = $request->customer_id;

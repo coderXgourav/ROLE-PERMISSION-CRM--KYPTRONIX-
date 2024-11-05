@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +134,7 @@ Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->nam
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage'])->name('admin.get_package');
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
 Route::get('/admin/payment',[ContactController::class,'payment'])->name('admin.payment');
+Route::post('/payment', [HomeController::class, 'store'])->name('payment.store');
 Route::get('/admin/login-history',[AdminController::class,'loginHistory'])->name('admin.loginHistory');
 
 Route::get('/not-access',function(){

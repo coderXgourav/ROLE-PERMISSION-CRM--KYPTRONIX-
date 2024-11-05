@@ -28,4 +28,3 @@ Route::get('/all',function(){
 Route::get('/pay',function(){
     return view('admin.pay');
 });
-Route::post('/payment', [HomeController::class, 'store'])->name('payment.store');

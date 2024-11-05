@@ -52,17 +52,18 @@ public function formSubmit(Request $request){
      
 }
 //   THIS IS A formSubmit FUNCTION 
+
 public function store(Request $request){
-        //echo '<pre>';
-       // print_r($_POST);die;
         $request->validate([
             'stripeToken' => 'required'
         ]);
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
+        
         try {
             Charge::create([
-                'amount' => $request->amount * 100, 
+                'amount' => 1*100, 
+                // 'amount' => $request->amount * 100, 
                 'currency' => 'usd',
                 'description' => 'Payment Description',
                 'source' => $request->stripeToken,
