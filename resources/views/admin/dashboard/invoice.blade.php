@@ -76,9 +76,9 @@
     <div class="header">
         <h1>Invoice</h1>
         <div class="company-info">
-            <img src="https://kyptronix.us/images/webp/logo.webp" style="width: 85px;" alt="">
+            <img src="/assets/images/logo-icon.png" style="width: 75px;" alt="">
             <div class="company-tagline"></div>
-            <div class="company-name">Kyptronix LLP</div>
+            <div class="company-name" style="text-align: center">Oradah</div>
         </div>
     </div>
   <form id="invoice_email_send">

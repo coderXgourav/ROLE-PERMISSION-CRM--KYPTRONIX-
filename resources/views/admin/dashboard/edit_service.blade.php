@@ -20,10 +20,10 @@
 							<div class="card-body p-4">
 								<h5 class="mb-4">Edit Service </h5>
 									<div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Service Name</label>
+										<label for="input42" class="col-sm-3 col-form-label">Service Name</label>	
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Service Name" name="name" id="name" value="{{$data->name}}" required>
+												<input type="text" class="form-control" placeholder="Type Service Name" name="name" id="name" value="{{ucwords($data->name)}}" required>
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
 											</div>
 										</div>

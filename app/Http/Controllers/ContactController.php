@@ -772,7 +772,7 @@ public function export()
         Excel::import(new CustomerImport,
         request()->file('csv'));
         // if($file==true){
-         return self::toastr('success','All Clients Upload Successfull','success','Success');    
+         return self::toastr('success','All Leads Uploaded Successfull','success','Success');    
         // }else{
       // return self::toastr('error','Sorry Not Upload Clients','error','Error');    
         // }
@@ -1829,12 +1829,16 @@ public function emailSend(Request $request){
     $email =$customer_data->customer_email;
     $msg=$customer_data->msg;
     $user['to'] = $email;
+
     $invoice_details = Invoice::find($invoice_id);
-    $data = ['invoice_details'=>$invoice_details,'admin_data'=>$admin_data,'user_type'=>$user_type,'clients'=>$customer_data];
+    // dd($customer_data);
+
+    $data = ['invoice_details'=>$invoice_details,'admin_data'=>$admin_data,' '=>$user_type,'clients'=>$customer_data];
     $send =   Mail::send('admin.dashboard.invoice_mail',$data,function($messages)use($user)
     {$messages->to($user['to']);
       $messages->subject('Business Email');
     });
+
   if($send){
     $save = new EmailModel;
     $save->email_admin = session('admin');

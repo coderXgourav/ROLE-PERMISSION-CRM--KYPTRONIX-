@@ -1,209 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="margin: 0; padding: 0; box-sizing: border-box;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Invoice</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            padding: 2rem;
-        }
-
-        .invoice-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .company-logo {
-            width: 150px;
-            height: 50px;
-            background-color: #2563eb;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .invoice-info {
-            text-align: right;
-        }
-
-        .invoice-title {
-            color: #1f2937;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .invoice-details {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .addresses {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-
-        .address-block {
-            flex: 1;
-            max-width: 250px;
-        }
-
-        .address-block h3 {
-            color: #4b5563;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .address-content {
-            color: #6b7280;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2rem;
-        }
-
-        th {
-            background-color: #2563eb;
-            color: white;
-            text-align: left;
-            padding: 1rem;
-            font-weight: 500;
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            color: #4b5563;
-        }
-
-        .total-row {
-            background-color: #f8fafc;
-            font-weight: bold;
-        }
-
-        .btn-send {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-
-        .btn-send:hover {
-            background-color: #1d4ed8;
-        }
-
-        .notes {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 2px solid #f0f0f0;
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-    </style>
+    <title>Professional Invoice</title>
 </head>
-<body>
-    <div class="invoice-container">
-        <div class="invoice-header">
-            <div class="company-logo">
-               <img src="https://kyptronix.us/images/webp/logo.webp" style="width: 85px;" alt="">
-                Kyptronix LLP
+<body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #1e293b; max-width: 850px; margin: 20px auto; padding: 20px; background-color: #f8fafc;">
+    <div style="background: #ffffff; border-radius: 16px; padding: 48px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
+        <!-- Header Section -->
+        <div style="display:flex; justify-content:space-between; ">
+            <div style="flex: 1;">
+                <img src="/assets/images/logo-icon.png" style="width: 75px;" alt="">
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #1e40af; letter-spacing: -0.025em; margin: 0;">Oradah</h2>
+                <p style="color: #64748b; font-size: 0.875rem; margin-top: 4px;">Professional Business Solutions</p>
             </div>
-            <div class="invoice-info">
-                <h1 class="invoice-title">Invoice</h1>
-                <div class="invoice-details">
-                    <p>Number: INV0001</p>
-                    <p>Date: 04 May 2018</p>
-                    <p>Due: 05 May 2018</p>
-                    <p>Terms: Next Day</p>
+            <div style="text-align: right;">
+                <h1 style="color: #1e40af; font-size: 2.75rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 16px; text-transform: uppercase;">Invoice</h1>
+                <div style="background: #f1f5f9; padding: 16px 20px; border-radius: 12px; font-size: 0.9rem;">
+                    <p style="margin: 6px 0;"><strong>Invoice No:</strong> INV-{{rand(4, 9999);}}</p>
+                    <p style="margin: 6px 0;"><strong>Issue Date:</strong> {{$invoice_details->date}}</p>
+                    <div style="display: inline-block; padding: 4px 12px; background: #059669; color: white; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px;">Unpaid</div>
                 </div>
             </div>
         </div>
 
-        <div class="addresses">
-            <div class="address-block">
-                <h3>From</h3>
-                <div class="address-content">
-                    <p>{{$admin_data->first_name}} {{$admin_data->last_name}}</p>
-                    <p>{{$admin_data->email_address}}</p>
-                    <p>Your address</p>
-                    <p>P: {{$clients->customer_number}}</p>
+        <!-- Invoice Details -->
+        <div style="display:flex; justify-content:space-between; ">
+            <div style="padding: 24px; background: #f1f5f9; border-radius: 12px; position: relative; border-left: 4px solid #3b82f6;">
+                <h3 style="color: #1e40af; font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.025em;">From</h3>
+                <div style="color: #64748b;">
+                    <p style="margin: 8px 0;"><strong style="color: #1e293b; font-weight: 500;">Oradah</strong></p>
+                    <p style="margin: 8px 0;">123 Business Avenue</p>
+                    <p style="margin: 8px 0;">Suite 100</p>
+                    <p style="margin: 8px 0;">City, State ZIP</p>
+                    <p style="margin: 8px 0;">Tax ID: XX-XXXXXXX</p>
+                    <p style="margin: 8px 0;">Phone: (555) 555-5555</p>
+                    <p style="margin: 8px 0;">Email: billing@yourcompany.com</p>
                 </div>
             </div>
 
-            <div class="address-block">
-                <h3>For</h3>
-                <div class="address-content">
-                    <p>{{$clients->customer_name}}</p>
-                    <p>{{$clients->customer_email}}</p>
-                    <p>Client address</p>
-                    <p>P: {{$clients->customer_number}}</p>
+            <div style="padding: 24px; background: #f1f5f9; border-radius: 12px; position: relative; border-left: 4px solid #3b82f6;">
+                <h3 style="color: #1e40af; font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.025em;">Bill To</h3>
+                <div style="color: #64748b;">
+                    <p style="margin: 8px 0;"><strong style="color: #1e293b; font-weight: 500;">{{$clients->customer_name}}</strong></p>
+                    <p style="margin: 8px 0;">{{$clients->address}}</p>
+                    <p style="margin: 8px 0;">{{$clients->state, $clients->zip}}</p>
+                    <p style="margin: 8px 0;">Phone: {{$clients->customer_number}}</p>
+                    <p style="margin: 8px 0;">Email: {{$clients->customer_email}}</p>
                 </div>
             </div>
         </div>
 
-        <table>
+        <!-- Items Table -->
+        <table style="width: 100%; border-collapse: collapse; margin: 32px 0; font-size: 0.95rem;">
             <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Price</th>
+                <tr style="background: #1e40af; color: white;">
+                    <th style="padding: 16px; text-align: left; font-weight: 600; letter-spacing: 0.025em; border-top-left-radius: 12px;">Description</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; letter-spacing: 0.025em;">Quantity</th>
+                    <th style="padding: 16px; text-align: right; font-weight: 600; letter-spacing: 0.025em; border-top-right-radius: 12px;">Amount</th>
                 </tr>
             </thead>
             <tbody>
-             <?php if(!empty($invoice_details)){
-                $timestamp = strtotime($invoice_details->created_at);
-                $date = date('d-M-Y', $timestamp);
-
-             ?>
-          
-                <tr>
-                    <td>{{$date}}</td>
-                    <td>{{$invoice_details->description}}</td>
-                    <td>{{$invoice_details->price}}$</td>
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 16px;">
+                        <div style="font-weight: 500; color: #1e293b;">{{$invoice_details->description}}</div>
+                    </td>
+                    <td style="padding: 16px;">1</td>
+                    <td style="padding: 16px; text-align: right;">${{$invoice_details->amount==null ? $invoice_details->price : $invoice_details->amount}}</td>
                 </tr>
-                <tr class="total-row">
-                    <td colspan="2" style="text-align: right">Subtotal:</td>
-                    <td><b>{{$invoice_details->price}}$</b></td>
-                </tr>
-                <?php } ?>
             </tbody>
         </table>
 
-        <div class="notes">
-            Notes: any relevant info, terms, payment instructions, etc
+        <!-- Footer -->
+        <div style="margin-top: 48px; text-align: center;">
+            <h3 style="font-size: 1.5rem; color: #1e40af; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.025em;">Thank You for Your Business!</h3>
+            <div style="margin-top: 24px; padding: 24px; background: #f1f5f9; border-radius: 12px; text-align: left;">
+                <h4 style="color: #1e40af; margin-bottom: 12px; font-size: 1.1rem;">Payment Information</h4>
+                <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                    <p style="margin: 8px 0; color: #64748b;"><strong style="color: #1e293b;">Bank Transfer:</strong></p>
+                    <p style="margin: 8px 0; color: #64748b;">Bank Name: [Bank Name]</p>
+                    <p style="margin: 8px 0; color: #64748b;">Account Name: [Account Name]</p>
+                    <p style="margin: 8px 0; color: #64748b;">Account Number: XXXX-XXXX-XXXX-XXXX</p>
+                    <p style="margin: 8px 0; color: #64748b;">Routing Number: XXXXXXXXX</p>
+                    <p style="margin: 8px 0; color: #64748b;">Swift Code: XXXXXXXX</p>
+                </div>
+            
+            </div>
         </div>
     </div>
 </body>

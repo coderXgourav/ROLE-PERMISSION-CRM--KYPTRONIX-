@@ -71,7 +71,7 @@ class ServiceController extends Controller
    
     // THIS IS serviceAdd FUNCTION 
     public function serviceAdd(Request $request){
-      $name = $request->name;
+      $name = strtolower(trim($request->name));
       $user_type = $request->user_type;
      if(Service::where('name',$name)->first()){
          return self::toastr(false,"Service Name Already Registered","error","Error");
@@ -125,7 +125,7 @@ class ServiceController extends Controller
   //editService End
   //updateService Start
   public function updateService(Request $request){
-      $name = $request->name;
+        $name = strtolower(trim($request->name));
       $service_id = $request->service_id;
       $service_details = Service::find($service_id);
       $service_details->name = $name;

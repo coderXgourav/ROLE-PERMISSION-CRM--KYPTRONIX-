@@ -27,7 +27,7 @@
                                     @foreach($data as $key => $value)
                                     <tr id="{{$value->service_id}}">
 										<td>{{$i++}}</td>
-										<td>{{$value->name}}</td>
+										<td>{{ucwords($value->name)}}</td>
 										<td>{{$value->created_at}}</td>
 										@php
 										$service_id = Crypt::encrypt($value->service_id);

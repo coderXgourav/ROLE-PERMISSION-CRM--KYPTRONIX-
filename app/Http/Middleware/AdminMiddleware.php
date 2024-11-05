@@ -143,6 +143,7 @@ class AdminMiddleware
             'post21' => 1,
             'post22' => 1,
             'admin.change_username'=>1,
+            'admin.payment'=>1
             
 
             
