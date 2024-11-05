@@ -1,15 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" style="margin: 0; padding: 0; box-sizing: border-box;">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Invoice</title>
+    <style>
+        #m_-7726197597817698929mainbox{
+            display:flex !important;
+            justify-content:space-between !important;
+        }
+        #m_-7726197597817698929mainbox2{
+            display:flex !important;
+            justify-content:space-between !important;
+        }
+    </style>
 </head>
+<html lang="en" style="margin: 0; padding: 0; box-sizing: border-box;">
 <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #1e293b; max-width: 850px; margin: 20px auto; padding: 20px; background-color: #f8fafc;">
     <div style="background: #ffffff; border-radius: 16px; padding: 48px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
         <!-- Header Section -->
-        <div style="display:flex; justify-content:space-between; ">
-            <div style="flex: 1;">
+        <div id="mainbox" >
+            <div style="flex: 1; justify-content:space-between;">
                 <img src="/assets/images/logo-icon.png" style="width: 75px;" alt="">
                 <h2 style="font-size: 1.5rem; font-weight: 700; color: #1e40af; letter-spacing: -0.025em; margin: 0;">Oradah</h2>
                 <p style="color: #64748b; font-size: 0.875rem; margin-top: 4px;">Professional Business Solutions</p>
@@ -22,20 +29,19 @@
                     <div style="display: inline-block; padding: 4px 12px; background: #059669; color: white; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px;">Unpaid</div>
                 </div>
             </div>
-        </div>
+        </div> <br>
 
         <!-- Invoice Details -->
-        <div style="display:flex; justify-content:space-between; ">
+        <div id="mainbox2" >
             <div style="padding: 24px; background: #f1f5f9; border-radius: 12px; position: relative; border-left: 4px solid #3b82f6;">
                 <h3 style="color: #1e40af; font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.025em;">From</h3>
                 <div style="color: #64748b;">
                     <p style="margin: 8px 0;"><strong style="color: #1e293b; font-weight: 500;">Oradah</strong></p>
-                    <p style="margin: 8px 0;">123 Business Avenue</p>
-                    <p style="margin: 8px 0;">Suite 100</p>
-                    <p style="margin: 8px 0;">City, State ZIP</p>
-                    <p style="margin: 8px 0;">Tax ID: XX-XXXXXXX</p>
-                    <p style="margin: 8px 0;">Phone: (555) 555-5555</p>
-                    <p style="margin: 8px 0;">Email: billing@yourcompany.com</p>
+                    <p style="margin: 8px 0;">30 N Gould St Ste R</p>
+                    <p style="margin: 8px 0;">Sheridan</p>
+                    <p style="margin: 8px 0;">WY, 82801</p>
+                    <p style="margin: 8px 0;">Phone:  +1(617) 35-18006 </p>
+                    <p style="margin: 8px 0;">Email: oradahinc@gmail.com</p>
                 </div>
             </div>
 
@@ -56,7 +62,7 @@
             <thead>
                 <tr style="background: #1e40af; color: white;">
                     <th style="padding: 16px; text-align: left; font-weight: 600; letter-spacing: 0.025em; border-top-left-radius: 12px;">Description</th>
-                    <th style="padding: 16px; text-align: left; font-weight: 600; letter-spacing: 0.025em;">Quantity</th>
+                    {{-- <th style="padding: 16px; text-align: left; font-weight: 600; letter-spacing: 0.025em;">Quantity</th> --}}
                     <th style="padding: 16px; text-align: right; font-weight: 600; letter-spacing: 0.025em; border-top-right-radius: 12px;">Amount</th>
                 </tr>
             </thead>
@@ -65,7 +71,7 @@
                     <td style="padding: 16px;">
                         <div style="font-weight: 500; color: #1e293b;">{{$invoice_details->description}}</div>
                     </td>
-                    <td style="padding: 16px;">1</td>
+                    {{-- <td style="padding: 16px;">1</td> --}}
                     <td style="padding: 16px; text-align: right;">${{$invoice_details->amount==null ? $invoice_details->price : $invoice_details->amount}}</td>
                 </tr>
             </tbody>
@@ -73,16 +79,13 @@
 
         <!-- Footer -->
         <div style="margin-top: 48px; text-align: center;">
-            <h3 style="font-size: 1.5rem; color: #1e40af; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.025em;">Thank You for Your Business!</h3>
+            {{-- <h3 style="font-size: 1.5rem; color: #1e40af; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.025em;">Thank You for Your Business!</h3> --}}
             <div style="margin-top: 24px; padding: 24px; background: #f1f5f9; border-radius: 12px; text-align: left;">
-                <h4 style="color: #1e40af; margin-bottom: 12px; font-size: 1.1rem;">Payment Information</h4>
+                <h4 style="color: #1e40af; margin-bottom: 12px; font-size: 1.1rem;">Payment Link</h4>
                 <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
-                    <p style="margin: 8px 0; color: #64748b;"><strong style="color: #1e293b;">Bank Transfer:</strong></p>
-                    <p style="margin: 8px 0; color: #64748b;">Bank Name: [Bank Name]</p>
-                    <p style="margin: 8px 0; color: #64748b;">Account Name: [Account Name]</p>
-                    <p style="margin: 8px 0; color: #64748b;">Account Number: XXXX-XXXX-XXXX-XXXX</p>
-                    <p style="margin: 8px 0; color: #64748b;">Routing Number: XXXXXXXXX</p>
-                    <p style="margin: 8px 0; color: #64748b;">Swift Code: XXXXXXXX</p>
+                    {{-- <p style="margin: 8px 0; color: #64748b;"><strong style="color: #1e293b;">Click to stripe link & pay:</strong></p> --}}
+                    <p style="margin: 8px 0; color: #64748b;">{{env('APP_URL')}}/{{'payment/1/5'}}</p>
+                   
                 </div>
             
             </div>
