@@ -3,6 +3,7 @@
 @push('title')
     <title>Add Contact</title>
 @endpush
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div>
       <div>
@@ -39,7 +40,13 @@
 
                       <div class="mt-3">
                         <h4>{{$customer->customer_name}}</h4>
-                        <p class="text-secondary mb-1">Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
+                        <?php $id=encrypt($customer->customer_id);?>
+                         <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>
+                        <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+                    
+                         <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary"><i class="fa fa-commenting" aria-hidden="true"></i></a> 
+                                    
+                        <p class="text-secondary mb-1"><br>Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
                         <p class="text-muted font-size-sm">Service Name - {{$service_data->name}}</p>
                         <p class="text-secondary mb-1">Email -{{$customer->customer_email}}</p>
                         <p class="text-muted font-size-sm">Number -{{$customer->customer_number}}</p>
