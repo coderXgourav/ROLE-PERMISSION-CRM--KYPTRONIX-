@@ -50,7 +50,7 @@
 											</p>
 										</div>
 										<div class="" >
-											<div class="message"><p> {!!$item->email_text!!} </p>...</div>
+											<div class="message"><p> <!--{!!$item->email_text!!}--> Send Invoice </p>...</div>
 										</div>
 										<div class="ms-auto">
 											<p class="mb-0 email-time">
