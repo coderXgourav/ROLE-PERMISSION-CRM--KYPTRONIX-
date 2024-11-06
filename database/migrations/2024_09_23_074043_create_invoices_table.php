@@ -22,7 +22,9 @@ return new class extends Migration
             $table->integer('package_id')->nullable();
             $table->string('role')->nullable();
             $table->integer('amount')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
+            $table->string('invoice_unique_id')->nullable();
+            $table->string('payment_status')->default(0);
             $table->timestamps();
         });
     } 

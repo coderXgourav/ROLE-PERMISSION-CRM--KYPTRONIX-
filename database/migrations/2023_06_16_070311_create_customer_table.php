@@ -46,7 +46,7 @@ return new class extends Migration
             $table->string('business_title')->nullable();
             $table->string('point_of_contact')->nullable();
             $table->text('msg')->nullable();
-
+            $table->integer('paid_customer')->default(0);
 
             $table->timestamps();
         });

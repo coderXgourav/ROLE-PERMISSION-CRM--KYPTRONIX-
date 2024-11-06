@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use App\Models\Service;
+use App\Models\invoice;
+use App\Models\PaymentModel;
 use Stripe\Stripe;
 use Stripe\Charge;
 
@@ -54,6 +56,16 @@ public function formSubmit(Request $request){
 //   THIS IS A formSubmit FUNCTION 
 
 public function store(Request $request){
+
+    // echo "<pre>";
+    // print_r($_POST);
+    // die;
+
+    $invoice_id = $request->invoice_id;
+    $lead_id = $request->lead_id;
+    $amount = $request->amount;
+    $email = $request->stripeEmail;
+    
         $request->validate([
             'stripeToken' => 'required'
         ]);
@@ -61,17 +73,38 @@ public function store(Request $request){
         Stripe::setApiKey(env('STRIPE_SECRET'));
         
         try {
+            $payment_details = new PaymentModel;
+            $payment_details->lead_invoice_id = $invoice_id;
+            $payment_details->leads_id = $lead_id;
+            $payment_details->amount = $amount;
+            $payment_details->payment_email = $email;
+            $payment_details->save();
+
             Charge::create([
-                'amount' => 1*100, 
+                'amount' => $amount*100, 
                 // 'amount' => $request->amount * 100, 
                 'currency' => 'usd',
                 'description' => 'Payment Description',
                 'source' => $request->stripeToken,
             ]);
 
-            return back()->with('success', 'Payment Successful!');
+            $update_payments = PaymentModel::find($payment_details->payment_id);
+            $update_payments->pay_status = 1;
+            $update_payments->save();
+
+            $invoice = Invoice::find($invoice_id);
+            $invoice->payment_status = 1;
+            $invoice->save();
+            
+            $customer = CustomerModel::find($lead_id);
+            $customer->paid_customer = 1;
+            $customer->save();
+
+            return view('admin.success',['amount'=>$amount]);
         } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+            return view('admin.failed',['amount'=>$amount]);
+
+            // return back()->with('error', $e->getMessage());
         }
 }
 

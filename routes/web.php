@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ContactController;
 use App\Models\Service; 
 
 /*
@@ -25,6 +26,16 @@ Route::post('/request',[HomeController::class,'formSubmit']);
 Route::get('/all',function(){
     session()->forget('team');
 });
-Route::get('/pay',function(){
-    return view('admin.pay');
+
+Route::get('/admin/pay',[ContactController::class,'payment']);
+Route::post('/payment', [HomeController::class, 'store'])->name('payment.store');
+Route::get('/payment-success',function(){
+    return view('admin.success');
 });
+Route::get('/payment-failed',function(){
+    return view('admin.failed');
+});
+
+// Route::get('admin/pay',function(){
+//     return view('admin.pay');
+// });

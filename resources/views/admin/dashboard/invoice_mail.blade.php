@@ -24,7 +24,7 @@
             <div style="text-align: right;">
                 <h1 style="color: #1e40af; font-size: 2.75rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 16px; text-transform: uppercase;">Invoice</h1>
                 <div style="background: #f1f5f9; padding: 16px 20px; border-radius: 12px; font-size: 0.9rem;">
-                    <p style="margin: 6px 0;"><strong>Invoice No:</strong> INV-{{rand(4, 9999);}}</p>
+                    <p style="margin: 6px 0;"><strong>Invoice No:</strong> {{$invoice_details->invoice_unique_id}}</p>
                     <p style="margin: 6px 0;"><strong>Issue Date:</strong> {{$invoice_details->date}}</p>
                     <div style="display: inline-block; padding: 4px 12px; background: #059669; color: white; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px;">Unpaid</div>
                 </div>
@@ -84,7 +84,7 @@
                 <h4 style="color: #1e40af; margin-bottom: 12px; font-size: 1.1rem;">Payment Link</h4>
                 <div style="background: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
                     {{-- <p style="margin: 8px 0; color: #64748b;"><strong style="color: #1e293b;">Click to stripe link & pay:</strong></p> --}}
-                    <p style="margin: 8px 0; color: #64748b;">{{env('APP_URL')}}/{{'payment/1/5'}}</p>
+                    <p style="margin: 8px 0; color: #64748b;">{{env('APP_URL')}}/admin/pay?invoice={{Crypt::encrypt($invoice_details->invoice_id)}}&customer={{Crypt::encrypt($invoice_details->customer_id)}}</p>
                    
                 </div>
             

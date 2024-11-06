@@ -1551,7 +1551,9 @@ public function invoiceAdd(Request $request){
       $role=$request->role;
       $service_id=$request->service_id;
       $package_id=$request->package;
+      $invoice_id="INV-".rand(4, 9999);
 
+      
       $invoice_details = new Invoice;
       $invoice_details->price = $price;
       $invoice_details->date = $date;
@@ -1561,8 +1563,11 @@ public function invoiceAdd(Request $request){
       $invoice_details->role = $role;
       $invoice_details->service_id=$service_id;
       $invoice_details->package_id=$package_id;
+      $invoice_details->invoice_unique_id=$invoice_id;
       $save = $invoice_details->save();
-      $invoice_id =$invoice_details->invoice_id;
+
+      $invoice_id=$invoice_details->invoice_id;
+
 
       if($save){
          return self::toastr(true,$invoice_id,"success","Success");
@@ -1607,17 +1612,33 @@ public function convertToClient(Request $request){
 }
 //convertToClient Function End
 //viewClients Function Start
+// public function viewClients(){
+//       $id = session('admin');
+//       $admin_data = self::userDetails($id);
+//       $user_type = self::userType($admin_data->user_type);
+//       $client_data = DB::table('customer')
+//       ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','paid_customer.paid_customer_id','customer.status','services.name as services_name','main_user.first_name','main_user.last_name')
+//       ->join('paid_customer','paid_customer.customer_id','=','customer.customer_id')
+//       ->leftjoin('main_user','main_user.id','=','customer.team_member')
+//       ->join('services','services.service_id','=','customer.customer_service_id')
+//       ->where('customer.status',0)
+//       ->get();
+//       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
+//  }
+
+
 public function viewClients(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
+      
       $client_data = DB::table('customer')
-      ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','paid_customer.paid_customer_id','customer.status','services.name as services_name','main_user.first_name','main_user.last_name')
-      ->join('paid_customer','paid_customer.customer_id','=','customer.customer_id')
-      ->leftjoin('main_user','main_user.id','=','customer.team_member')
       ->join('services','services.service_id','=','customer.customer_service_id')
-      ->where('customer.status',0)
+      ->where('customer.paid_customer',1)
       ->get();
+      echo "<pre>";
+      print_r($client_data);
+      die;
       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
  }
  //viewClients Function End
@@ -1812,11 +1833,34 @@ public function allReports(){
     $services = Service::orderBy('service_id','DESC')->paginate(10);
     return view('admin.dashboard.all_reports',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
 }
-public function payment(){
-    $id = session('admin');
-    $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
-    return view('admin.pay',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+
+public function payment(Request $request){
+  $customer = $request->customer; 
+  $invoice = $request->invoice;
+if(!$customer  || !$invoice){
+  return redirect('/');
+}
+$customer_id = Crypt::decrypt($customer); 
+$invoice_id = Crypt::decrypt($invoice); 
+
+    $invoice_detials =  Invoice::find($invoice_id);
+    if($invoice_detials){
+      if($invoice_detials->payment_status>0){
+        return view('admin.payment_done');
+      }
+
+    $price = 0;
+    if($invoice_detials->amount==null){
+      $price = $invoice_detials->price;
+    }else{
+      $price = $invoice_detials->amount;
+    }
+    }else{
+  return redirect('/');
+    }
+
+   
+    return view('admin.pay',['price'=>$price,'invoice'=>$invoice_detials]);
 }
 public function emailSend(Request $request){
    $id = $request->customer_id;
