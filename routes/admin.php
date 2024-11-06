@@ -146,6 +146,10 @@ Route::fallback(function () {
 Route::post('/admin/invoice-send-email',[ContactController::class,'emailSend'])->name('admin.invoice-send-email');
 Route::get('/admin/show-invoice/{id}',[ContactController::class,'showInvoiceList'])->name('admin.show-invoice');
 
+Route::get('/admin/success-payments',[ContactController::class,'showSuccessfullPayments'])->name('admin.success-payments');
+
+Route::get('/admin/failed-payments',[ContactController::class,'showFailedPayments'])->name('admin.failed-payments');
+
 });
 
 

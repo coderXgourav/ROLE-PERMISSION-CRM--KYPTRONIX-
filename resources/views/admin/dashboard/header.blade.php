@@ -379,11 +379,11 @@
                             <div class="menu-title">Payments</div>
                         </a>
                         <ul>
-                            <li> <a href="#"><i
+                            <li> <a href="{{route('admin.success-payments')}}"><i
                                 class='bx bx-radio-circle'></i>
                                 Successfull Payments</a>
                            </li>
-                           <li> <a href="#"><i
+                           <li> <a href="{{route('admin.failed-payments')}}"><i
                             class='bx bx-radio-circle'></i>
                             Failed Payments</a>
                        </li>
