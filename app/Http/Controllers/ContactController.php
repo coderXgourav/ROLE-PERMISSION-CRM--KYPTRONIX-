@@ -1918,8 +1918,8 @@ public function emailSend(Request $request){
    ->orderBy('payments.payment_id','DESC')
    ->paginate(10);
   return view('admin.dashboard.successfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
-
   }
+  
   
     public function showFailedPayments(){
         $user_id=session('admin');

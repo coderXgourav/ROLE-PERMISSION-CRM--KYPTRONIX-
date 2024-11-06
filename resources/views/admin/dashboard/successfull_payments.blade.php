@@ -48,7 +48,8 @@
 									</tr>
                                     @endif
 									
-								</tbody>
+								</tbody> 
+								
 							
 							</table>
 							<div>{{$data->links()}}</div>
