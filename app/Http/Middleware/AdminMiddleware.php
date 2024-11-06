@@ -98,7 +98,8 @@ class AdminMiddleware
             'admin.send-message' => $admin_data->email_sms_permission,
             'admin.create-invoice' => $admin_data->invoice_permission,
             'admin.invoice2' => $admin_data->invoice_permission,
-            
+            'admin.success-payments'=>$admin_data->payment_permission,
+            'admin.failed-payments'=>$admin_data->payment_permission,
             'admin.view_clients' => $admin_data->customer_permission,
             'admin.view-invoice' => $admin_data->invoice_permission,
             'admin.show_invoice' => $admin_data->invoice_permission,

@@ -1936,6 +1936,32 @@ public function emailSend(Request $request){
   return view('admin.dashboard.leads_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
 
   }
+
+  public function showSuccessfullPayments(){
+   $user_id=session('admin');
+   $admin_data = self::userDetails($user_id);
+   $user_type = self::userType($admin_data->user_type);
+   $data = DB::table('payments')
+   ->join('customer','customer.customer_id','=','payments.leads_id')
+   ->where('payments.pay_status',1)
+   ->orderBy('payments.payment_id','DESC')
+   ->paginate(10);
+  return view('admin.dashboard.successfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+
+  }
+  
+    public function showFailedPayments(){
+        $user_id=session('admin');
+   $admin_data = self::userDetails($user_id);
+   $user_type = self::userType($admin_data->user_type);
+   $data = DB::table('payments')
+   ->join('customer','customer.customer_id','=','payments.leads_id')
+   ->where('payments.pay_status',0)
+   ->orderBy('payments.payment_id','DESC')
+   ->paginate(10);
+  return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+    
+  }
  
 
 // THIS IS END OF THE CLASS 
