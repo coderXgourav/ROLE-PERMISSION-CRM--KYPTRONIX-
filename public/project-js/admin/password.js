@@ -40,6 +40,11 @@ $("#change_password_form").validate({
                     $("#change_password_form").trigger("reset");
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -74,6 +79,11 @@ $("#change_username_form").validate({
                 if (data.status) {
                     $("#change_username_form").trigger("reset");
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },

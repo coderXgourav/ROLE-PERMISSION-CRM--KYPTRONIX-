@@ -132,6 +132,11 @@ function DeleteTeam(id) {
                         $("#" + id).hide();
                     }
                 },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
+                },
             });
         }
     });
@@ -173,6 +178,11 @@ $("#assign_client_form").validate({
                     }, 2000);
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -211,6 +221,11 @@ $("#update_assign_client_form").validate({
                         location.reload();
                     }, 2000);
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },
@@ -284,6 +299,11 @@ function DeleteCustomer(id) {
                         $("#" + id).hide();
                     }
                 },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
+                },
             });
         }
     });
@@ -334,6 +354,11 @@ $("#add_team_members_form").validate({
                     $("#add_team_members_form").trigger("reset");
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -363,6 +388,11 @@ function DeleteTeamMembers(id) {
                     if (data.status) {
                         $("#" + id).hide();
                     }
+                },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
                 },
             });
         }
@@ -415,6 +445,11 @@ $("#update_team_members").validate({
                     $("#update_team_members").trigger("reset");
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -423,7 +458,6 @@ $("#add_customer_form").validate({
     rules: {
         customer_service_id: "required",
         type: "required",
-        
     },
     messages: {},
     submitHandler: function (form, event) {
@@ -446,6 +480,11 @@ $("#add_customer_form").validate({
                 if (data.status) {
                     $("#add_customer_form").trigger("reset");
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },
@@ -482,6 +521,11 @@ $("#remark_form").validate({
                     location.reload();
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -512,6 +556,11 @@ $("#email_send").validate({
                 if (data.status) {
                     $(".cke_wysiwyg_frame ").css("display", "none");
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },
@@ -588,6 +637,11 @@ $("#create_invoice_form").validate({
                         "/admin/invoice2/" + customer_id + "/" + invoice_id;
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -619,6 +673,11 @@ function ConvertToClient(customer_id = "", user_id = "", role = "") {
                     if (data.status) {
                         $("#" + customer_id).hide();
                     }
+                },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
                 },
             });
         }
@@ -652,6 +711,11 @@ $("#email_template_send").validate({
                     $(".cke_wysiwyg_frame ").css("display", "none");
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });
@@ -680,6 +744,11 @@ $("#invoice_email_send").validate({
                 if (data.status) {
                     $(".cke_wysiwyg_frame ").css("display", "none");
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },

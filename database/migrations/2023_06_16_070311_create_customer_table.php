@@ -39,8 +39,9 @@ return new class extends Migration
             $table->string('business_name')->nullable();
             $table->string('industry')->nullable();
 
-            // $table->string('business_phone_no')->nullable();
-            // $table->string('business_email')->nullable();
+            $table->string('fax')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->string('contact_email')->nullable();
 
             $table->string('ein')->nullable();
             $table->string('business_title')->nullable();

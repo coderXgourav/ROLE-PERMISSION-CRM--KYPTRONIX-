@@ -1299,6 +1299,11 @@ public function addLead(){
  
 
       }else if($type==2){
+        $email_address = $request->email_address;
+        $fax = $request->fax;
+        $contact_number = $request->contact_number;
+        
+        $email_address = $request->email_address;
         $business_name=$request->business_name;
         $industry=$request->industry;
         $business_phone_no=$request->business_phone_no;
@@ -1330,6 +1335,11 @@ public function addLead(){
         $business_details->zip=$business_zip;
         $business_details->business_title=$business_title;
         $business_details->point_of_contact=$point_of_contact;
+
+        $business_details->fax=$fax;
+        $business_details->contact_number=$contact_number;
+        $business_details->contact_email=$email_address;
+
         $business_details->msg=$msg;
         $save = $business_details->save();
 
