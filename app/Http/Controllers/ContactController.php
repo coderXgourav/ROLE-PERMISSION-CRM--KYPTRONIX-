@@ -1851,7 +1851,19 @@ public function emailSend(Request $request){
   }
   
 }
+ public function showInvoiceList($id){
+   $user_id=session('admin');
+   $admin_data = self::userDetails($user_id);
+   $user_type = self::userType($admin_data->user_type);
+   $invoice_data = DB::table('invoices')
+       ->select('invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.role')
+       ->join('customer','customer.customer_id','=','invoices.customer_id')
+       ->where('invoices.customer_id',$id)
+       ->paginate(10);   
+  return view('admin.dashboard.leads_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
 
+  }
+ 
 
 // THIS IS END OF THE CLASS 
 }

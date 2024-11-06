@@ -20,6 +20,8 @@
           </div>
           <div class="ms-auto">
             <div class="btn-group">
+              <a href="{{route('admin.show-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">View Invoice</a>
+              &nbsp;
               <a href="{{route('admin.create-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">Generate Invoice</a>
             
             </div>
