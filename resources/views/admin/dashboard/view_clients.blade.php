@@ -17,14 +17,10 @@
 										<th>Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
-										<th>Message</th>
 										<th>Service</th>
-										<th>Package</th>
 										<th>Assigned to Manager</th>
 										<th>Assigned to Team member</th>
-										<th>Invoice Status</th>
 										<th>Document</th>
-										<th>Status</th>
 										<th style="text-align: center">Action</th>
 									</tr>
 								</thead>
@@ -34,21 +30,50 @@
                                         $i=1;
                                     @endphp
                                     @foreach($data as $key => $value)
+                                    <?php
+                                      if(!empty($value->team_member)){
+	                                      $main_user_id = json_decode($value->team_member);
+	                                      $main_user_data=DB::table('main_user')
+	                                      ->select('main_user.first_name','main_user.last_name')
+	                                      ->whereIn('main_user.id',$main_user_id)
+	                                      ->get();
+	                                   }
+	                                   if(!empty($value->customer_service_id)){
+                                          $team_manager_services=DB::table('team_manager_services')
+	                                       ->where('team_manager_services.managers_services_id',$value->customer_service_id)->first();
+	                                 
+	                                   }
+	                                   if(!empty($team_manager_services)){
+	                                   	  $team_manager=DB::table('main_user')
+	                                   	  ->select('main_user.first_name','main_user.last_name')
+	                                      ->where('main_user.id','=',$team_manager_services->team_manager_id)
+	                                      ->get();
+ 
+	                                   }
+                                     ?>
                                     <tr id="{{$value->customer_id}}">
 										<td>{{$i++}}</td>
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->msg}}</td>
 										<td>{{$value->services_name}}</td>
+										<td><?php if(!empty($team_manager)){ 
+                                                  foreach($team_manager as $val){
+                                                      echo $val->first_name .' ' . $val->last_name.'<br>';
+
+
+                                              } } ?>
+                                              	
+                                        </td>
+										<td>
+                                              <?php if(!empty($main_user_data)){ 
+                                                  foreach($main_user_data as $val){
+                                                      echo $val->first_name .' ' . $val->last_name.'<br>';
+
+
+                                              } } ?>
+										</td>
 										<td></td>
-										<td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td>
-										<td>{{$value->first_name}} {{$value->last_name}}</td>
-										<td></td>
-										<td></td>
-										<td><?php if($value->status == '1'){
-											   echo 'Active';}else{ echo 'Disable';}?>
-									    </td>
 										<td colspan="3" style="display: flex; justify-content:center;">
 											{{-- <center> --}}
 									  @php
@@ -58,19 +83,19 @@
 								      <input type="hidden" name="role" value="{{$admin_data->user_type}}">
 								     <input type="hidden" name="user_id" value="{{$admin_data->id}}">
 								   
-								     <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+								     <a href="{{route('admin.leads-view',['id'=>$id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     
                                  	 &nbsp;
 
 									 <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>
 									&nbsp;
-                                   
+                                  
                                     <div id="volume-indicators">
 									
-									   <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+									    <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
 										
 									   <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary"><i class="fa fa-commenting" aria-hidden="true"></i></a>
-                                       {{-- </center> --}}
+                                      {{-- </center> --}}
 									</td>
 									
 									</tr>
