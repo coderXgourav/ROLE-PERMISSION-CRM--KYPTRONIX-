@@ -1612,35 +1612,35 @@ public function convertToClient(Request $request){
 }
 //convertToClient Function End
 //viewClients Function Start
-// public function viewClients(){
-//       $id = session('admin');
-//       $admin_data = self::userDetails($id);
-//       $user_type = self::userType($admin_data->user_type);
-//       $client_data = DB::table('customer')
-//       ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','paid_customer.paid_customer_id','customer.status','services.name as services_name','main_user.first_name','main_user.last_name')
-//       ->join('paid_customer','paid_customer.customer_id','=','customer.customer_id')
-//       ->leftjoin('main_user','main_user.id','=','customer.team_member')
-//       ->join('services','services.service_id','=','customer.customer_service_id')
-//       ->where('customer.status',0)
-//       ->get();
-//       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
-//  }
-
-
 public function viewClients(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      
       $client_data = DB::table('customer')
+      ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','paid_customer.paid_customer_id','customer.status','services.name as services_name','main_user.first_name','main_user.last_name')
+      ->join('paid_customer','paid_customer.customer_id','=','customer.customer_id')
+      ->leftjoin('main_user','main_user.id','=','customer.team_member')
       ->join('services','services.service_id','=','customer.customer_service_id')
-      ->where('customer.paid_customer',1)
+      ->where('customer.status',0)
       ->get();
-      echo "<pre>";
-      print_r($client_data);
-      die;
       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
  }
+
+
+// public function viewClients(){
+//       $id = session('admin');
+//       $admin_data = self::userDetails($id);
+//       $user_type = self::userType($admin_data->user_type);
+      
+//       $client_data = DB::table('customer')
+//       ->join('services','services.service_id','=','customer.customer_service_id')
+//       ->where('customer.paid_customer',1)
+//       ->get();
+//       echo "<pre>";
+//       print_r($client_data);
+//       die;
+//       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
+//  }
  //viewClients Function End
  //viewInvoiceList Function Start
   public function viewInvoiceList(){
