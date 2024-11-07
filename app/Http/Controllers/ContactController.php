@@ -772,13 +772,13 @@ public function export()
         Excel::import(new CustomerImport,
         request()->file('csv'));
         // if($file==true){
-         return self::toastr('success','All Leads Uploaded Successfull','success','Success');    
+         return self::toastr(true,'All Leads Uploaded Successfull','success','Success');    
         // }else{
       // return self::toastr('error','Sorry Not Upload Clients','error','Error');    
         // }
 
     }else{
-          return self::toastr('error','Please Upload csv , xls or xlsx Files','error','Error');    
+          return self::toastr(false,'Please Upload csv , xls or xlsx Files','error','Error');    
     } 
     
     }
