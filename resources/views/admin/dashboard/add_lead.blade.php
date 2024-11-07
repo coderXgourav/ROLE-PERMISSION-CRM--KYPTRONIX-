@@ -1,12 +1,12 @@
 @include('admin.dashboard.header')
 {{-- <!-- @extends('team.dashboard.header') --> --}}
-<style>
+{{-- <style>
 @media only screen and (max-width: 1500px) {
   #phone{
 width: 100% !important;
   }
 }
-</style>
+</style> --}}
 @push('title')
     <title>Add Contact</title>
 @endpush
@@ -75,7 +75,7 @@ width: 100% !important;
 										<label for="input43" class="col-sm-3 col-form-label">Phone No <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												 <input type="tel" id="phone" class="form-control" name="phone" placeholder="Type Phone Number" style="width: 575px;" required>
+												 <input type="tel" id="" class="form-control" name="phone" placeholder="Type Phone Number"  required>
                                                  <input type="hidden" id="country_code" name="country_code" value="">												
 											</div>
 										</div>
@@ -170,7 +170,7 @@ width: 100% !important;
 										<label for="input43" class="col-sm-3 col-form-label">Phone No <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												 <input type="tel" id="phone" class="form-control" name="business_phone_no" placeholder="Type Phone Number" style="width: 575px;" required>
+												 <input type="tel" id="" class="form-control" name="business_phone_no" placeholder="Type Phone Number" required>
                                                  <input type="hidden" id="country_code" name="country_code" value="">												
 											</div>
 										</div>

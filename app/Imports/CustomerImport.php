@@ -5,9 +5,11 @@ namespace App\Imports;
 use App\Models\CustomerModel;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\Service;
 
-class CustomerImport implements ToModel,WithHeadingRow
+class CustomerImport implements ToModel,WithHeadingRow, SkipsEmptyRows, WithValidation
 {
       
     /**
@@ -17,6 +19,9 @@ class CustomerImport implements ToModel,WithHeadingRow
     */
     public function model(array $row)
     {
+        // echo "<pre>";
+        // print_r($row);
+        // die;
         $services = Service::pluck('name','service_id')->toArray();
         $serviceId = array_search(strtolower(trim($row['service_name'])), $services);
         
@@ -41,5 +46,15 @@ class CustomerImport implements ToModel,WithHeadingRow
             'point_of_contact' => $row['point_of_contact'],
             'msg' => $row['description'],
         ]);
+    }
+
+      public function rules(): array
+    {
+        return [
+            'customer_number' => 'unique:customer',
+            'customer_email' => 'unique:customer', 
+            'contact_number' => 'unique:customer', 
+            'contact_email' => 'unique:customer', 
+        ];
     }
 }

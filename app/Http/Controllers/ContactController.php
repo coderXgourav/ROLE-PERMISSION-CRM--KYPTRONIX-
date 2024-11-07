@@ -772,13 +772,13 @@ public function export()
         Excel::import(new CustomerImport,
         request()->file('csv'));
         // if($file==true){
-         return self::toastr('success','All Leads Uploaded Successfull','success','Success');    
+         return self::toastr(true,'All Leads Uploaded Successfull','success','Success');    
         // }else{
       // return self::toastr('error','Sorry Not Upload Clients','error','Error');    
         // }
 
     }else{
-          return self::toastr('error','Please Upload csv , xls or xlsx Files','error','Error');    
+          return self::toastr(false,'Please Upload csv , xls or xlsx Files','error','Error');    
     } 
     
     }
@@ -1286,6 +1286,13 @@ public function addLead(){
       $ssn=$request->ssn;
       $msg=$request->msg;
       $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
+        $check = CustomerModel::where('customer_email',$email)
+        ->orWhere('customer_number',$phone)->first();
+        if($check){
+         return self::toastr(false,"Number or Email already exist","error","Error");
+        }
+        
+
       
       $individual_details = new CustomerModel;
       $individual_details->customer_name = $customer_name;
@@ -1311,7 +1318,7 @@ public function addLead(){
         $fax = $request->fax;
         $contact_number = $request->contact_number;
         
-        $email_address = $request->email_address;
+        // $email_address = $request->email_address;
         $business_name=$request->business_name;
         $industry=$request->industry;
         $business_phone_no=$request->business_phone_no;
@@ -1327,6 +1334,12 @@ public function addLead(){
         $business_title=$request->business_title;
         $point_of_contact=$request->point_of_contact;
         $msg=$request->msg;
+        
+         $check = CustomerModel::where('customer_email',$customer_email)
+        ->orWhere('customer_number',$customer_number)->first();
+        if($check){
+         return self::toastr(false,"Number or Email already exist","error","Error");
+        }
 
         $business_details = new CustomerModel;
         $business_details->business_name=$business_name;

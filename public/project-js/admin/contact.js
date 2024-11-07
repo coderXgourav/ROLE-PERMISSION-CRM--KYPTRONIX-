@@ -260,6 +260,8 @@ $("#upload_clients").validate({
                 }
             },
             error: function (xhr) {
+                console.log(xhr);
+
                 if (xhr.status == 500) {
                     $("#btn").attr("disabled", false);
                     $("#btn").html("Upload Clients");
@@ -267,6 +269,16 @@ $("#upload_clients").validate({
                         "Please Upload Formated Excel File ",
                         "Error"
                     );
+                } else {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Upload Clients");
+                    $.each(xhr.responseJSON.errors, function (field, messages) {
+                        // Join all the error messages for a specific field (if there are multiple)
+                        var message = messages.join(" ");
+
+                        // Display the error message with Toastr
+                        toastr["error"](message, "Error");
+                    });
                 }
             },
         });
