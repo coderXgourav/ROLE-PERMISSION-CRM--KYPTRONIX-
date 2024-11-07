@@ -27,23 +27,20 @@ class CustomerImport implements ToModel,WithHeadingRow, SkipsEmptyRows, WithVali
         
  
         return new CustomerModel([
-             'customer_name' => $row['leadbusiness_name'],
-             'customer_number' => $row['leadbusiness_number'],
-            'customer_email' => $row['leadbusiness_email'],
+             'customer_name' => $row['business_name'],
+             'customer_number' => $row['business_number'],
+            'customer_email' => $row['business_email'],
             'customer_service_id' => !empty($serviceId) ? $serviceId : null, // If service is found, assign its ID; else null
-            'dob' => $row['dob'],
             'address' => $row['address'],
             'city' => $row['city'],
             'state' => $row['state'],
             'zip' => $row['zip_code'],
-            'ssn' => $row['ssn'],
             'industry' => $row['industry'],
-            'ein' => $row['ein'],
             'fax' => $row['fax'],
             'contact_number' => $row['contact_number'],
             'contact_email' => $row['contact_email'],
-            'business_title' => $row['business_title'],
             'point_of_contact' => $row['point_of_contact'],
+            'business_title' => $row['title'],
             'msg' => $row['description'],
         ]);
     }
@@ -53,8 +50,6 @@ class CustomerImport implements ToModel,WithHeadingRow, SkipsEmptyRows, WithVali
         return [
             'customer_number' => 'unique:customer',
             'customer_email' => 'unique:customer', 
-            'contact_number' => 'unique:customer', 
-            'contact_email' => 'unique:customer', 
         ];
     }
 }

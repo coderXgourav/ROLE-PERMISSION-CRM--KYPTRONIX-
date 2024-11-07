@@ -19,24 +19,52 @@
                 </ol>
               </nav>
             </div>
-          </div>
-<form id="upload_clients">
+
+            
+          </div> <br><br>
+<div style="display: flex;
+    justify-content: space-evenly;">
+  <div>
+    <form id="upload_individual_lead">
   <div class="card ">
-  <div class="p-4">
-      {{@csrf_field()}} <br> 
-      <label for=""><b>Select File</b></label>
+  <div class="p-4" style="padding: 3.5rem!important;">
+      {{@csrf_field()}}
+      <h5 for="" class=" "><b>Import Individual Leads</b> </h5>
 <input type="file" name="csv" class="form-control" required>  
  <br>
  <label for="">Please Download Excel Sheet Format</label>
- <a href="{{url('/leads_format_sheet.xlsx')}}"> Click Here</a>
+ <a href="{{url('/individual.xlsx')}}"> Click Here</a>
 
   <div style="display: flex; justify-content:center; margin-top:15px;"> 
-    <button type="submit" id="btn" style="height:46px;" class="m-auto btn btn-primary">Upload Clients</button>
+    <button type="submit" id="btn1" style="height:46px;" class="m-auto btn btn-primary btn-sm">Upload Individual Leads</button>
  
   </div>
   </div>
   </div>
 </form>
+  </div>
+  <div><form id="upload_clients">
+  <div class="card ">
+  <div class="p-4" style="padding: 3.5rem!important;">
+      {{@csrf_field()}} 
+      <h5 for="" class=" "><b>Import Business Leads</b> </h5>
+
+<input type="file" name="csv" class="form-control" required>  
+ <br>
+ <label for="">Please Download Excel Sheet Format</label>
+ <a href="{{url('/business.xlsx')}}"> Click Here</a>
+
+  <div style="display: flex; justify-content:center; margin-top:15px;"> 
+    <button type="submit" id="btn2" style="height:46px;" class="m-auto btn btn-success btn-sm">Upload Business Leads</button>
+ 
+  </div>
+  </div>
+  </div>
+</form></div>
+</div>
+
+
+
 
   {{-- <script>
     CKEDITOR.replace('editor2');

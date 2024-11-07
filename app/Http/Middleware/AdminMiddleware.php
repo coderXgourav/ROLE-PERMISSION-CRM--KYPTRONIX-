@@ -125,6 +125,7 @@ class AdminMiddleware
             'admin.all-package'=>1,
             // POST METHODS
             'post1' => 1,
+            'post30' => 1,
             'post2' => 1,
             'post3' => 1,
             'post4' => 1,

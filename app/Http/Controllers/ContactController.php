@@ -10,6 +10,7 @@ use App\Models\EmailModel;
 use App\Exports\CustomerExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CustomerImport;
+use App\Imports\IndividualImport;
 use App\Models\TeamMember; 
 use App\Models\Service; 
 use App\Models\Invoice;
@@ -21,6 +22,7 @@ use App\Models\MemberServiceModel;
 use App\Models\EmailTemplate;
 use App\Models\TeamManagersServicesModel;
 use App\Models\Package;
+
 use DB;
 use Twilio\Rest\Client;
 use Crypt;
@@ -782,6 +784,27 @@ public function export()
     } 
     
     }
+
+
+     public function individualImport(Request $request) 
+    {
+       $file_ex = $request->csv->getClientOriginalExtension();
+    if($file_ex=="csv"|| $file_ex=="xls"|| $file_ex=="xlsx"){
+        Excel::import(new IndividualImport,
+        request()->file('csv'));
+        // if($file==true){
+         return self::toastr(true,'All Leads Uploaded Successfull','success','Success');    
+        // }else{
+      // return self::toastr('error','Sorry Not Upload Clients','error','Error');    
+        // }
+
+    }else{
+          return self::toastr(false,'Please Upload csv , xls or xlsx Files','error','Error');    
+    } 
+    
+    }
+
+    
 // THIS IS IMPORT FUNCTION 
 
 // THIS IS importPage FUNCTION  

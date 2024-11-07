@@ -58,6 +58,7 @@ Route::get('/admin/email-show/{id}',[ContactController::class,'emailShow'])->nam
 Route::get('/export',[ContactController::class,'export'])->name('admin.export');
 Route::get('/admin/import',[ContactController::class,'importPage'])->name('admin.import');
 Route::post('/admin/upload_csv',[ContactController::class,'import'])->name('post9');
+Route::post('/admin/upload_individual_csv',[ContactController::class,'individualImport'])->name('post30');
 Route::get('/admin/sms',[ContactController::class,'smsPage'])->name('admin.sms');
 Route::get('/admin/message-show/{id}',[ContactController::class,'smsShow'])->name('admin.smsShow');
 Route::post('/admin/client_delete',[ContactController::class,'deleteClient'])->name('post10');

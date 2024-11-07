@@ -239,10 +239,10 @@ $("#upload_clients").validate({
     messages: {},
     submitHandler: function (form, event) {
         event.preventDefault();
-        $("#btn").html(
+        $("#btn2").html(
             "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
         );
-        $("#btn").attr("disabled", true);
+        $("#btn2").attr("disabled", true);
         $.ajax({
             url: "/admin/upload_csv",
             method: "POST",
@@ -252,8 +252,8 @@ $("#upload_clients").validate({
             enctype: "multipart/form-data",
             processData: false,
             success: function (data) {
-                $("#btn").attr("disabled", false);
-                $("#btn").html("Upload Clients");
+                $("#btn2").attr("disabled", false);
+                $("#btn2").html("Upload Business Leads");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
                     $("#upload_clients").trigger("reset");
@@ -263,15 +263,15 @@ $("#upload_clients").validate({
                 console.log(xhr);
 
                 if (xhr.status == 500) {
-                    $("#btn").attr("disabled", false);
-                    $("#btn").html("Upload Clients");
+                    $("#btn2").attr("disabled", false);
+                    $("#btn2").html("Upload Business Leads");
                     Command: toastr["error"](
                         "Please Upload Formated Excel File ",
                         "Error"
                     );
                 } else {
-                    $("#btn").attr("disabled", false);
-                    $("#btn").html("Upload Clients");
+                    $("#btn2").attr("disabled", false);
+                    $("#btn2").html("Upload Business Leads");
                     $.each(xhr.responseJSON.errors, function (field, messages) {
                         // Join all the error messages for a specific field (if there are multiple)
                         var message = messages.join(" ");
@@ -286,6 +286,59 @@ $("#upload_clients").validate({
 });
 
 // THIS IS upload_clients FUNCTION
+
+$("#upload_individual_lead").validate({
+    rules: {
+        csv: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn1").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn1").attr("disabled", true);
+        $.ajax({
+            url: "/admin/upload_individual_csv",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            enctype: "multipart/form-data",
+            processData: false,
+            success: function (data) {
+                $("#btn1").attr("disabled", false);
+                $("#btn1").html("Upload Individual Leads");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#upload_individual_lead").trigger("reset");
+                }
+            },
+            error: function (xhr) {
+                console.log(xhr);
+
+                if (xhr.status == 500) {
+                    $("#btn1").attr("disabled", false);
+                    $("#btn1").html("Upload Individual Leads");
+                    Command: toastr["error"](
+                        "Please Upload Formated Excel File ",
+                        "Error"
+                    );
+                } else {
+                    $("#btn1").attr("disabled", false);
+                    $("#btn1").html("Upload Individual Leads");
+                    $.each(xhr.responseJSON.errors, function (field, messages) {
+                        // Join all the error messages for a specific field (if there are multiple)
+                        var message = messages.join(" ");
+
+                        // Display the error message with Toastr
+                        toastr["error"](message, "Error");
+                    });
+                }
+            },
+        });
+    },
+});
 
 // THIS IS DeleteTeam FUNCTION
 
