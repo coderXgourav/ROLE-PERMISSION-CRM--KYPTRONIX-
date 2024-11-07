@@ -159,7 +159,7 @@
       <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
     </ul>
     <div class="sidebar-footer">
-      <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <a href="{{ route('user-logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </div>
 

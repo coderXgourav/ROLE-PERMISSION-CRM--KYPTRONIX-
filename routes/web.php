@@ -42,9 +42,6 @@ Route::get('/payment-failed',function(){
 
 // USER 
 
-Route::get('/customer/login',function(){
-    return view('user.index');
-});
 Route::get('/customer/dashboard',function(){
     return view('user.dashboard.index');
 });
