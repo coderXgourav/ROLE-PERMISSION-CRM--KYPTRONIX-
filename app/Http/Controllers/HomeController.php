@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use App\Models\Service;
-use App\Models\invoice;
+use App\Models\Invoice;
 use App\Models\PaymentModel;
 use App\Models\PaidCustomer;
 use Stripe\Stripe;
