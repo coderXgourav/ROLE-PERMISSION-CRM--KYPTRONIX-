@@ -20,12 +20,7 @@
             </nav>
           </div>
           <div class="ms-auto">
-            <div class="btn-group">
-              <a href="{{route('admin.show-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">View Invoice</a>
-              &nbsp;
-              <a href="{{route('admin.create-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">Generate Invoice</a>
-            
-            </div>
+         
           </div>
         </div>
         <!--end breadcrumb-->
@@ -39,13 +34,26 @@
                       <img src="{{url('assets/images/team.png')}}" alt="Team Member" class="rounded-circle p-1 bg-primary" width="120">
 
                       <div class="mt-3">
-                        <h4>{{$customer->customer_name}}</h4>
+                        <h4>{{$customer->customer_name}}</h4><br>
                         <?php $id=encrypt($customer->customer_id);?>
                          <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>
                         <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
                     
                          <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary"><i class="fa fa-commenting" aria-hidden="true"></i></a> 
-                                    
+                         <div> <br>
+                            <div class="btn-group">
+              <a href="{{route('admin.show-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">View Invoice</a>
+              &nbsp;
+              <a href="{{route('admin.create-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">Generate Invoice</a>
+            
+            </div>  
+         
+                         </div>   <br>
+                           <?php $id=encrypt($customer->customer_id);?>
+                       <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-primary btn-sm">Show Remarks</a>
+
+                            
+                                
                         <p class="text-secondary mb-1"><br>Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
                         <p class="text-muted font-size-sm">Service Name - {{$service_data->name}}</p>
                         <p class="text-secondary mb-1">Email -{{$customer->customer_email}}</p>
@@ -71,6 +79,7 @@
                           <?php if(!empty($customer->ssn)){?>
                             <p class="text-muted font-size-sm">SSN -{{$customer->ssn}}</p>
                           <?php } ?>
+
                         <?php }else{ ?>
                           <p class="text-muted font-size-sm">Business Name -{{$customer->business_name}}</p>
                           <?php if(!empty($customer->business_title)){?>
@@ -82,6 +91,12 @@
                           <?php if(!empty($customer->ein)){ ?>
                              <p class="text-muted font-size-sm">EIN -{{$customer->ein}}</p>
                           <?php } ?>
+                           <?php if(!empty($customer->fax)){ ?>
+                             <p class="text-muted font-size-sm">FAX -{{$customer->fax}}</p>
+                          <?php } ?>
+
+                        
+
                           <?php if(!empty($customer->address)){?>
                              <p class="text-muted font-size-sm">Address -{{$customer->address}}</p>
                           <?php } ?>
@@ -97,13 +112,24 @@
                           <?php if(!empty($customer->point_of_contact)){?>
                             <p class="text-muted font-size-sm">Point of Contact -{{$customer->point_of_contact}}</p>
                           <?php } ?>
+                                  <?php if(!empty($customer->business_title)){?>
+                            <p class="text-muted font-size-sm">Point of Contact -{{$customer->business_title}}</p>
+                          <?php } ?>
+
+                             <?php if(!empty($customer->contact_number)){ ?>
+                             <p class="text-muted font-size-sm">Contact Number -{{$customer->contact_number}}</p>
+                          <?php } ?>
+                              <?php if(!empty($customer->contact_email)){ ?>
+                             <p class="text-muted font-size-sm">Contact Email -{{$customer->contact_email}}</p>
+                          <?php } ?>
+
+
                         <?php } ?>
 
                         <!--<button class="btn btn-primary">Follow</button>
                         <button class="btn btn-outline-primary">Message</button>-->
                       </div>
-                      <?php $id=encrypt($customer->customer_id);?>
-                       <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-primary btn-sm">Show Remarks</a>
+                    
                                     
                     </div>
                     <hr class="my-4" />

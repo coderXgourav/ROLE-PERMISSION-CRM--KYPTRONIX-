@@ -39,6 +39,11 @@ $("#admin_login_form").validate({
                     }, 2000);
                 }
             },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Sign in");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
         });
     },
 });

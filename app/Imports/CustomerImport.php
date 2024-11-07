@@ -20,15 +20,7 @@ class CustomerImport implements ToModel,WithHeadingRow
         $services = Service::pluck('name','service_id')->toArray();
         $serviceId = array_search(strtolower(trim($row['service_name'])), $services);
         
-        // if (!empty($serviceName)) {
-    // if (in_array($serviceName, $services)) {
-    // } else {
-    // return self::toastr('error','Invalid Service Name','error','Error');    
-    // }
-    // } else {
-    //       return self::toastr('error','Empty Service Name','error','Error');    
-    // }
-
+ 
         return new CustomerModel([
              'customer_name' => $row['leadbusiness_name'],
              'customer_number' => $row['leadbusiness_number'],
@@ -42,6 +34,9 @@ class CustomerImport implements ToModel,WithHeadingRow
             'ssn' => $row['ssn'],
             'industry' => $row['industry'],
             'ein' => $row['ein'],
+            'fax' => $row['fax'],
+            'contact_number' => $row['contact_number'],
+            'contact_email' => $row['contact_email'],
             'business_title' => $row['business_title'],
             'point_of_contact' => $row['point_of_contact'],
             'msg' => $row['description'],

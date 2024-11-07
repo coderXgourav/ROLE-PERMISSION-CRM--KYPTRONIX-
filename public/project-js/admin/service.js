@@ -1,34 +1,39 @@
 //function addServices() {
-    $("#add_service_form").validate({
-        rules: {
-            name: "required",
-        },
-        messages: {},
-        submitHandler: function (form, event) {
-            event.preventDefault();
-            $("#btn").html(
-                "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
-                );
-            $("#btn").attr("disabled", true);
-            $.ajax({
-                url: "/admin/add-service",
-                method: "POST",
-                dataType: "JSON",
-                data: new FormData(form),
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    $("#btn").attr("disabled", false);
-                    $("#btn").html("Submit");
-                    Command: toastr[data.icon](data.title, data.msg);
-                    if(data.status){
-                       // $("#add_service_form").trigger("reset");
-                       document.getElementById('name').value='';
-                    }
-                },
-            });
-        },
-    });
+$("#add_service_form").validate({
+    rules: {
+        name: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/add-service",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    // $("#add_service_form").trigger("reset");
+                    document.getElementById("name").value = "";
+                }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
+        });
+    },
+});
 //}
 //ServiceDelete Start
 function DeleteService(id) {
@@ -53,6 +58,11 @@ function DeleteService(id) {
                         $("#" + id).hide();
                     }
                 },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
+                },
             });
         }
     });
@@ -62,7 +72,7 @@ function DeleteService(id) {
 $("#update_service_form").validate({
     rules: {
         name: "required",
-       },
+    },
     messages: {},
     submitHandler: function (form, event) {
         event.preventDefault();
@@ -82,9 +92,13 @@ $("#update_service_form").validate({
                 $("#btn").html("Update");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
-                  document.getElementById('name').value='';
-
+                    document.getElementById("name").value = "";
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },

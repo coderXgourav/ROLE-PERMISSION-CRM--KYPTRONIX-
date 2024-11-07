@@ -185,11 +185,20 @@ width: 100% !important;
 											</div>
 										</div>
 									</div>
-									<div class="row mb-3">
+									     <div class="row mb-3">
 											<label for="input42" class="col-sm-3 col-form-label">EIN/Tax</label>
 											<div class="col-sm-9">
 												<div class="position-relative input-icon">
 													<input type="text" class="form-control" placeholder="Type EIN/Tax" name="ein">
+													<span class="position-absolute top-50 translate-middle-y"></span>
+												</div>
+											</div>
+										</div> 
+										    <div class="row mb-3">
+											<label for="input42" class="col-sm-3 col-form-label">FAX</label>
+											<div class="col-sm-9">
+												<div class="position-relative input-icon">
+													<input type="text" class="form-control" placeholder="Type FAX" name="fax">
 													<span class="position-absolute top-50 translate-middle-y"></span>
 												</div>
 											</div>
@@ -230,6 +239,18 @@ width: 100% !important;
 											</div>
 										</div>
 									</div> 
+									
+								   
+								    <div class="row mb-3">
+										<label for="input42" class="col-sm-3 col-form-label">Point of Contact</label>
+										<div class="col-sm-9">
+											<div class="position-relative input-icon">
+												<input type="text" class="form-control" placeholder="Type Point of Contact" name="point_of_contact">
+												<span class="position-absolute top-50 translate-middle-y"></span>
+											</div>
+										</div>
+									</div> 
+
 									 <div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Title</label>
 										<div class="col-sm-9">
@@ -239,12 +260,21 @@ width: 100% !important;
 											</div>
 										</div>
 									</div> 
-								   
-								    <div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Point of Contact</label>
+
+									<div class="row mb-3">
+										<label for="input42" class="col-sm-3 col-form-label">Contact Number</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Point of Contact" name="point_of_contact">
+												<input type="text" class="form-control" placeholder="Contact Number" name="contact_number">
+												<span class="position-absolute top-50 translate-middle-y"></span>
+											</div>
+										</div>
+									</div> 
+										<div class="row mb-3">
+										<label for="input42" class="col-sm-3 col-form-label">Email Address</label>
+										<div class="col-sm-9">
+											<div class="position-relative input-icon">
+												<input type="text" class="form-control" placeholder="Email Address" name="email_address">
 												<span class="position-absolute top-50 translate-middle-y"></span>
 											</div>
 										</div>

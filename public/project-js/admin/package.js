@@ -1,40 +1,45 @@
 $("#add_package_form").validate({
-        rules: {
-            title: "required",
-            price: "required",
-        },
-        messages: {},
-        submitHandler: function (form, event) {
-            event.preventDefault();
-            $("#btn").html(
-                "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
-                );
-            $("#btn").attr("disabled", true);
-            $.ajax({
-                url: "/admin/save_package",
-                method: "POST",
-                dataType: "JSON",
-                data: new FormData(form),
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    $("#btn").attr("disabled", false);
-                    $("#btn").html("Submit");
-                    Command: toastr[data.icon](data.title, data.msg);
-                    if(data.status){
-                      document.getElementById('title').value='';
-                      document.getElementById('price').value='';
-                      document.getElementById('desc').value='';
-                    }
-                },
-            });
-        },
-    });
+    rules: {
+        title: "required",
+        price: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/save_package",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    document.getElementById("title").value = "";
+                    document.getElementById("price").value = "";
+                    document.getElementById("desc").value = "";
+                }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
+        });
+    },
+});
 
 $("#update_package_form").validate({
     rules: {
         name: "required",
-       },
+    },
     messages: {},
     submitHandler: function (form, event) {
         event.preventDefault();
@@ -54,11 +59,15 @@ $("#update_package_form").validate({
                 $("#btn").html("Update");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
-                   document.getElementById('title').value='';
-                   document.getElementById('price').value='';
-                   document.getElementById('desc').value='';
-
+                    document.getElementById("title").value = "";
+                    document.getElementById("price").value = "";
+                    document.getElementById("desc").value = "";
                 }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },
@@ -85,6 +94,11 @@ function DeletePackage(id) {
                     if (data.status) {
                         $("#" + id).hide();
                     }
+                },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
                 },
             });
         }
