@@ -121,6 +121,8 @@ class AdminMiddleware
             'admin.invoice-send-email'=>1,
             'admin.get_package'=>1,
             'admin.show-invoice'=>1,
+            'admin.add-package'=>1,
+            'admin.all-package'=>1,
             // POST METHODS
             'post1' => 1,
             'post2' => 1,

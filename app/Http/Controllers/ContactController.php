@@ -1626,11 +1626,9 @@ public function viewClients(){
             $client_data = DB::table('customer')
             ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','customer.paid_customer','services.name as services_name','customer.team_member','customer.customer_service_id')
             ->join('services','services.service_id','=','customer.customer_service_id')
-            ->join('invoices','invoices.customer_id','=','customer.customer_id')
             ->where('customer.paid_customer',1)
-            ->where('invoices.user_id',$admin_data->id)
+            ->whereJsonContains('customer.team_member',"$admin_data->id")
             ->paginate(10);    
- 
       }else if($admin_data->user_type == 'team_manager'){
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             if(!empty($team_manager_services)){
