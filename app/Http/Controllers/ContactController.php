@@ -1121,13 +1121,21 @@ public function showClientsList($manager_id){
     $user_type = self::userType($admin_data->user_type);
     $main_user_data =MainUserModel::find($manager_id);
     if(isset($main_user_data) && $main_user_data->user_type=='customer_success_manager'){
-      $customer_service=MemberServiceModel::where('member_id',$manager_id)->first();
-      $clients=DB::table('customer')
-      ->select('customer.*','services.name as service_name')
-      ->join('services','services.service_id','=','customer.customer_service_id')
-      ->where('customer.customer_service_id','=',$customer_service->member_service_id)
-      ->whereJsonContains('customer.team_member',$manager_id)
-      ->paginate(10);
+      $customer_service=MemberServiceModel::where('member_id',$manager_id)->get();
+      if(!empty($customer_service)){
+          $service_id = [];
+            foreach($customer_service as $service){
+              $service_id[] = $service->member_service_id;
+            }
+            $clients=DB::table('customer')
+            ->select('customer.*','services.name as service_name')
+            ->join('services','services.service_id','=','customer.customer_service_id')
+            ->whereIn('customer.customer_service_id',$service_id)
+            ->whereJsonContains('customer.team_member',$manager_id)
+            ->paginate(10);
+         
+         
+      }
     }else if(isset($main_user_data) && $main_user_data->user_type=='team_manager'){
        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$manager_id)->get();
         if(!empty($team_manager_services)){
@@ -1853,7 +1861,17 @@ foreach ($managers as $key => $value) {
      $customer_id =   Crypt::decrypt($customer_id);
      $clients = CustomerModel::find($customer_id);
      $service_data = Service::find($clients->customer_service_id);
-     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data]);
+     $customers = DB::table('customer')
+     
+     ->join('remark','remark.customer_id','=','customer.customer_id')
+     ->join('main_user','main_user.id','=','remark.user_id')
+     ->where('customer.customer_id','=',$customer_id)
+     ->get(['remark.*','customer.customer_id','customer.customer_service_id','customer.customer_name','main_user.user_type','main_user.first_name','main_user.last_name']);
+     
+    //  echo '<pre>';
+    //  print_r($customers);die;
+     
+     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers]);
   }
 
   

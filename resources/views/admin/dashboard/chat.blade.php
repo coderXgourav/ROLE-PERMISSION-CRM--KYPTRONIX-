@@ -47,26 +47,26 @@
                             <p class="mb-0 chat-time text-end" id="time-ago">
 
                                 <?php $dateTime = new DateTime($value->created_at);
-$now = new DateTime();
+                                    $now = new DateTime();
 
-$interval = $now->diff($dateTime);
+                                    $interval = $now->diff($dateTime);
 
-if ($interval->y > 0) {
-    $timeAgo = $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';
-} elseif ($interval->m > 0) {
-    $timeAgo = $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' ago';
-} elseif ($interval->d > 0) {
-    $timeAgo = $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
-} elseif ($interval->h > 0) {
-    $timeAgo = $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
-} elseif ($interval->i > 0) {
-    $timeAgo = $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
-} else {
-    $timeAgo = 'just now';
-}
+                                    if ($interval->y > 0) {
+                                        $timeAgo = $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';
+                                    } elseif ($interval->m > 0) {
+                                        $timeAgo = $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' ago';
+                                    } elseif ($interval->d > 0) {
+                                        $timeAgo = $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
+                                    } elseif ($interval->h > 0) {
+                                        $timeAgo = $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
+                                    } elseif ($interval->i > 0) {
+                                        $timeAgo = $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
+                                    } else {
+                                        $timeAgo = 'just now';
+                                    }
 
-echo $timeAgo;
- ?> 
+                                    echo $timeAgo;
+                                     ?> 
                                   
                             </p>
                             <p class="chat-right-msg">{{$value->remark}}</p> 
