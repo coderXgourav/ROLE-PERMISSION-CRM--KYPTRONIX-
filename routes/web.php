@@ -39,3 +39,12 @@ Route::get('/payment-failed',function(){
 // Route::get('admin/pay',function(){
 //     return view('admin.pay');
 // });
+
+// USER 
+
+Route::get('/customer/login',function(){
+    return view('user.index');
+});
+Route::get('/customer/dashboard',function(){
+    return view('user.dashboard.index');
+});

@@ -8,8 +8,12 @@ use App\Models\CustomerModel;
 use App\Models\Service;
 use App\Models\invoice;
 use App\Models\PaymentModel;
+use App\Models\PaidCustomer;
 use Stripe\Stripe;
 use Stripe\Charge;
+use Mail;
+
+
 
 class HomeController extends Controller
 {
@@ -65,12 +69,6 @@ public function store(Request $request){
     $lead_id = $request->lead_id;
     $amount = $request->amount;
     $email = $request->stripeEmail;
-    
-        $request->validate([
-            'stripeToken' => 'required'
-        ]);
-
-        Stripe::setApiKey(env('STRIPE_SECRET'));
         
         try {
             $payment_details = new PaymentModel;
@@ -79,14 +77,40 @@ public function store(Request $request){
             $payment_details->amount = $amount;
             $payment_details->payment_email = $email;
             $payment_details->save();
+           
+            $customer = CustomerModel::find($lead_id);
+            
 
-            Charge::create([
+            $pwd = rand(5,99999);
+            $paid_customer = new PaidCustomer;
+            $paid_customer->customer_id = $customer->customer_id;
+            $paid_customer->email = $customer->customer_email;
+            $paid_customer->password = $pwd;
+            $paid_customer->save();
+
+    $user['to'] = $customer->customer_email;
+    $data = ['email'=>$customer->customer_email,'password'=>$pwd];
+    $send =   Mail::send('admin.send_login_details',$data,function($messages)use($user)
+    {$messages->to($user['to']);
+      $messages->subject('Login Credential for uploading files');
+    });
+    
+       $request->validate([
+            'stripeToken' => 'required'
+        ]);
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+         Charge::create([
                 'amount' => $amount*100, 
                 // 'amount' => $request->amount * 100, 
                 'currency' => 'usd',
                 'description' => 'Payment Description',
                 'source' => $request->stripeToken,
             ]);
+
+            $customer->paid_customer = 1;
+            $customer->save();
 
             $update_payments = PaymentModel::find($payment_details->payment_id);
             $update_payments->pay_status = 1;
@@ -95,10 +119,6 @@ public function store(Request $request){
             $invoice = Invoice::find($invoice_id);
             $invoice->payment_status = 1;
             $invoice->save();
-            
-            $customer = CustomerModel::find($lead_id);
-            $customer->paid_customer = 1;
-            $customer->save();
 
             return view('admin.success',['amount'=>$amount]);
         } catch (\Exception $e) {
