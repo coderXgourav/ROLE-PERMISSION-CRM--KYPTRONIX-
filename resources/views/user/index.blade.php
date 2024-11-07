@@ -3,8 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" href="{{url('assets/images/favicon-32x32.png')}}" type="image/png" />
+  <!--plugins--> 
+  <link href="{{url('assets/plugins/simplebar/css/simplebar.css')}}" rel="stylesheet" />
+  <link href="{{url('assets/plugins/metismenu/css/metisMenu.min.css')}}" rel="stylesheet" />
+        <!-- loader-->
+        
+  <link href="{{url('assets/css/pace.min.css')}}" rel="stylesheet" />
+  <script src="{{url('assets/js/pace.min.js')}}"></script>
+  <!-- Bootstrap CSS -->
+  <link href=" {{url('assets/css/bootstrap.min.css')}}" rel="stylesheet" />
+  <link href="{{url('assets/css/bootstrap-extended.css')}}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+  <link href="assets/css/app.css" rel="stylesheet" />
+  <link href="assets/css/icons.css" rel="stylesheet" />
+  {{-- TOASTR  --}}
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="{{url('project-js/alert_show.js')}}"></script>
+
+        {{-- TOASTR  --}}
+
+
+  <title>Login</title>
   <style>
     * {
       box-sizing: border-box;
@@ -133,21 +157,39 @@
 <body>
   <div class="login-container">
     <h1>Login</h1>
+    <form id="customer_login">
+      {{@csrf_field()}}
     <div class="input-group">
-      <input type="email" id="email" placeholder=" " required>
+      <input type="email" id="email" placeholder="" name="username" required>
       <label for="email">Email</label>
     </div>
     <div class="input-group">
-      <input type="password" id="password" placeholder=" " required>
+      <input type="password" id="password" placeholder=" " name="password" required>
       <label for="password">Password</label>
     </div>
-    <button class="login-button">Login</button>
+    <button type="submit" class="login-button" id="loginBtn">Login</button>
     <div class="forgot-password">
       <a href="#">Forgot Password?</a>
     </div>
+  </form>
     <div class="signup-link">
       Don't have an account? <a href="#">Sign up</a>
     </div>
   </div>
+    <script src=" {{url('assets/js/bootstrap.bundle.min.js')}}"></script>
+    <!--plugins-->
+    <script src="{{url('assets/js/jquery.min.js')}}"></script>
+    <script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
+    <script src="{{url('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
+    <script src="{{url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js')}}"></script>
+
+    <!--app JS-->
+    <script src="{{url('assets/js/app.js')}}"></script>
+    <script src="{{url('project-js/jquery.js')}}"></script>
+    <script src="{{url('project-js/validation.js')}}"></script>
+    <script src="{{url('project-js/sweetalert.js')}}"></script>
+
+    <script src="{{url('project-js/user/login.js')}}"></script>
+
 </body>
 </html>
