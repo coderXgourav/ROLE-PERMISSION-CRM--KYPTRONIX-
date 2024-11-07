@@ -114,7 +114,7 @@
     <table class="main" width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td class="logo">
-          <img src="{{env('APP_URL')}}/assets/images/logo-icon.png" alt="Company Logo">
+          <img src="{{url('/assets/images/logo-icon.png')}}" alt="Company Logo">
         </td>
       </tr>
       <tr>
