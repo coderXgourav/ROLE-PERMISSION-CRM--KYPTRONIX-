@@ -185,8 +185,8 @@
   <div class="sidebar">
     <ul class="sidebar-menu">
       <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-      <li><a href="#"><i class="fas fa-file-upload"></i> Upload</a></li>
-      <li><a href="#"><i class="fas fa-file-alt"></i> Files</a></li>
+      <li><a href="{{route('upload-file')}}"><i class="fas fa-file-upload"></i> Upload</a></li>
+      <li><a href="{{ route('view-files')}}"><i class="fas fa-file-alt"></i> Files</a></li>
       <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
     </ul>
     <div class="sidebar-footer">

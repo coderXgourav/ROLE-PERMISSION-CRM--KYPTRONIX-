@@ -64,11 +64,12 @@ class UserController extends Controller
           //   }
 
             // Generate a unique name for the file and store it in the public directory
-            $path = $file->move('uploads', uniqid() . '.' . $file->getClientOriginalExtension(), 'public');
+            $filename=uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->move('uploads',$filename );
             $file_data=new File;
             $file_data->paid_customer_id=$customer_id;
             $file_data->customer_id=$customer_data->customer_id;
-            $file_data->file=$path;
+            $file_data->file=$filename;
             $file_data->save();
            // print_r($path);die;
            return self::swal(true,'File uploaded successfully','success');
@@ -80,4 +81,16 @@ class UserController extends Controller
         }
 
    }
+   public function viewFiles(){
+      $id=session('customer');
+      $file_data=File::where('paid_customer_id',$id)->paginate(10);
+      return view('user.dashboard.all_files',['file_data'=>$file_data]);
+   }
+   public function fileShow($filename){
+    return view('user.dashboard.file_view',['filename'=>$filename]);
+
+  }
+  
+  
+  
 }
