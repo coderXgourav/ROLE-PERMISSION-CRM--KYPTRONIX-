@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('paid_customer_id');
-            $table->string('file');
+            $table->string('customer_id');
+            $table->text('file');
             $table->timestamps();
         });
     }

@@ -1,3 +1,10 @@
+@if(session()->has('customer'))
+<script>window.location="/customer/dashboard"</script>
+
+@endif
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
