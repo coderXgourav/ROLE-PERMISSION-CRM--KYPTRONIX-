@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PaidCustomer;
+use App\Models\File;
 use DB;
 
 class UserController extends Controller
@@ -27,7 +28,7 @@ class UserController extends Controller
        if($check_paid_customer){
          if($check_paid_customer->password  == $password){
            session()->put('customer',$check_paid_customer->paid_customer_id);
-           return self::swal(true,'Login Successfull','success');
+           return self::swal(true,'Login Successfully','success');
          }else{
        return self::swal(false,'Invalid Password','error');
          }
@@ -40,5 +41,34 @@ class UserController extends Controller
 	  session()->forget('customer');
 	  return redirect('/customer/login');
    }
+   public function customerDashboard(){
+   	 $id=session('customer');
+   	 return view('user.dashboard.index',['customer_id'=>$id]);
+   }
+   public function fileUpload(Request $request){
+   	   $customer_id=$request->paid_customer_id;
+   	   $request->validate([
+            'file' => 'required|file|mimes:jpeg,png,pdf,doc,docx|max:10240', // Max 10MB
+        ]);
+        
+        if ($request->hasFile('file')) {
+            // Get the file from the request
+            $file = $request->file('file');
 
+            // Generate a unique name for the file and store it in the public directory
+            $path = $file->move('uploads', uniqid() . '.' . $file->getClientOriginalExtension(), 'public');
+            $file_data=new File;
+            $file_data->paid_customer_id=$customer_id;
+            $file_data->file=$path;
+            $file_data->save();
+           // print_r($path);die;
+           return self::swal(true,'File uploaded successfully','success');
+ 
+
+        } else {
+           return self::swal(false,'Unable to upload file','error');
+
+        }
+
+   }
 }

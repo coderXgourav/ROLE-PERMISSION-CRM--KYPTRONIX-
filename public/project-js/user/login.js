@@ -47,3 +47,44 @@ $("#customer_login").validate({
         });
     },
 });
+
+$("#file_upload").validate({
+    rules: {
+        file: "required",
+        },
+   submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#uploadBtn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#uploadBtn").attr("disabled", true);
+        var formData = new FormData(this); 
+
+        $.ajax({
+            url: "/file-upload",
+            method: "POST",
+            dataType: "JSON",
+            enctype:"multipart/form-data",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#uploadBtn").attr("disabled", false);
+                swal.fire({
+                    title: data.title,
+                    icon: data.icon,
+                });
+                if (data.status) {
+                    setTimeout(() => {
+                        window.location = "/customer/dashboard";
+                    }, 2000);
+                }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
+        });
+    },
+});
+
