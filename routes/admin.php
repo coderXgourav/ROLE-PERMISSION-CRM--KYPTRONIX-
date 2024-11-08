@@ -150,6 +150,7 @@ Route::get('/admin/show-invoice/{id}',[ContactController::class,'showInvoiceList
 Route::get('/admin/success-payments',[ContactController::class,'showSuccessfullPayments'])->name('admin.success-payments');
 
 Route::get('/admin/failed-payments',[ContactController::class,'showFailedPayments'])->name('admin.failed-payments');
+Route::get('/admin/document/{id}',[ContactController::class,'documentPage'])->name('admin.document');
 
 });
 

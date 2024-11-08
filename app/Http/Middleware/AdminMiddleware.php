@@ -123,6 +123,7 @@ class AdminMiddleware
             'admin.show-invoice'=>1,
             'admin.add-package'=>1,
             'admin.all-package'=>1,
+            'admin.document'=>1,
             // POST METHODS
             'post1' => 1,
             'post30' => 1,

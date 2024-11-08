@@ -73,13 +73,14 @@
 
                                               } } ?>
 										</td>
-										<td></td>
-										<td colspan="3" style="display: flex; justify-content:center;">
-											{{-- <center> --}}
-									  @php
+										 @php
 										  $id = encrypt($value->customer_id);
-									  @endphp
-								     <input type="hidden" id="phone-number" type="text" value="{{$value->customer_number}}"  />
+									    @endphp								     
+										<td> <a href="{{route('admin.document',['id'=>$id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                       </td>
+									   <td colspan="3" style="display: flex; justify-content:center;">
+									   {{-- <center> --}}
+									 <input type="hidden" id="phone-number" type="text" value="{{$value->customer_number}}"  />
 								      <input type="hidden" name="role" value="{{$admin_data->user_type}}">
 								     <input type="hidden" name="user_id" value="{{$admin_data->id}}">
 								   
