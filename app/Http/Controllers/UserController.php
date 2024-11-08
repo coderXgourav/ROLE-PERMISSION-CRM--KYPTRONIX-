@@ -46,19 +46,28 @@ class UserController extends Controller
    	 return view('user.dashboard.index',['customer_id'=>$id]);
    }
    public function fileUpload(Request $request){
+      
    	   $customer_id=$request->paid_customer_id;
+      $customer_data = PaidCustomer::find($customer_id);
+
    	   $request->validate([
-            'file' => 'required|file|mimes:jpeg,png,pdf,doc,docx|max:10240', // Max 10MB
+            'file' => 'required|file|mimes:jpeg,png,pdf,webp|max:10240', // Max 10MB
         ]);
         
         if ($request->hasFile('file')) {
             // Get the file from the request
             $file = $request->file('file');
+            $ex = $file->getClientOriginalExtension();
+          //   if($ex!="jpeg"||$ex!="png"||$ex!="pdf"||$ex!="webp"){
+          //  return self::swal(true,'The file field must be a file of type: jpeg, png, pdf, webp, ','error');
+              
+          //   }
 
             // Generate a unique name for the file and store it in the public directory
             $path = $file->move('uploads', uniqid() . '.' . $file->getClientOriginalExtension(), 'public');
             $file_data=new File;
             $file_data->paid_customer_id=$customer_id;
+            $file_data->customer_id=$customer_data->customer_id;
             $file_data->file=$path;
             $file_data->save();
            // print_r($path);die;

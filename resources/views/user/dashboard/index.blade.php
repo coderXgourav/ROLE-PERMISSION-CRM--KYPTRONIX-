@@ -1,6 +1,15 @@
+@if(!session()->has('customer'))
+<script>window.location="/customer/login"</script>
+@endif
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+    .error{
+      color: red;
+    }
+  </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - FinTech</title>
@@ -24,23 +33,7 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-  <script src="{{url('project-js/alert_show.js')}}"></script>
 
-        {{-- TOASTR  --}}
-   <script src=" {{url('assets/js/bootstrap.bundle.min.js')}}"></script>
-    <!--plugins-->
-    <script src="{{url('assets/js/jquery.min.js')}}"></script>
-    <script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
-    <script src="{{url('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
-
-    <!--app JS-->
-    <script src="{{url('assets/js/app.js')}}"></script>
-    <script src="{{url('project-js/jquery.js')}}"></script>
-    <script src="{{url('project-js/validation.js')}}"></script>
-    <script src="{{url('project-js/sweetalert.js')}}"></script>
-
-    <script src="{{url('project-js/user/login.js')}}"></script>
 
 
   <style>
@@ -204,7 +197,7 @@
   <div class="main-content">
     <div class="upload-container">
       <h2>Upload File</h2>
-      <form id="file_upload" enctype="">
+      <form id="file_uploads">
         {{@csrf_field()}}
         <input type="hidden" name="paid_customer_id" value="{{$customer_id}}">
         <input type="file" id="file-input" name="file" required>
@@ -232,5 +225,21 @@
       </div>
     </div>
   </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="{{url('project-js/alert_show.js')}}"></script>
+        {{-- TOASTR  --}}
+   <script src=" {{url('assets/js/bootstrap.bundle.min.js')}}"></script>
+    <!--plugins-->
+    <script src="{{url('assets/js/jquery.min.js')}}"></script>
+    <script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
+    <script src="{{url('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
+
+    <!--app JS-->
+    <script src="{{url('assets/js/app.js')}}"></script>
+    <script src="{{url('project-js/jquery.js')}}"></script>
+    <script src="{{url('project-js/validation.js')}}"></script>
+    <script src="{{url('project-js/sweetalert.js')}}"></script>
+
+    <script src="{{url('project-js/user/login.js')}}"></script>
 </body>
 </html>
