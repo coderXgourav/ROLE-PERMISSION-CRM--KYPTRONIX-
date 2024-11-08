@@ -169,8 +169,10 @@
 				</div>
 			</div>
 <script>
+  <?php if(count($file_data)>0){?>
 	 $('#myTable').DataTable({
 	 });
+   <?php } ?>
 </script>
 </body>
 </html>
