@@ -5,6 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - FinTech</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" href="{{url('assets/images/favicon-32x32.png')}}" type="image/png" />
+  <!--plugins--> 
+  <link href="{{url('assets/plugins/simplebar/css/simplebar.css')}}" rel="stylesheet" />
+  <link href="{{url('assets/plugins/metismenu/css/metisMenu.min.css')}}" rel="stylesheet" />
+        <!-- loader-->
+        
+  <link href="{{url('assets/css/pace.min.css')}}" rel="stylesheet" />
+  <script src="{{url('assets/js/pace.min.js')}}"></script>
+  <!-- Bootstrap CSS -->
+  <link href=" {{url('assets/css/bootstrap.min.css')}}" rel="stylesheet" />
+  <link href="{{url('assets/css/bootstrap-extended.css')}}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+  <link href="assets/css/app.css" rel="stylesheet" />
+  <link href="assets/css/icons.css" rel="stylesheet" />
+  {{-- TOASTR  --}}
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="{{url('project-js/alert_show.js')}}"></script>
+
+        {{-- TOASTR  --}}
+   <script src=" {{url('assets/js/bootstrap.bundle.min.js')}}"></script>
+    <!--plugins-->
+    <script src="{{url('assets/js/jquery.min.js')}}"></script>
+    <script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
+    <script src="{{url('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
+
+    <!--app JS-->
+    <script src="{{url('assets/js/app.js')}}"></script>
+    <script src="{{url('project-js/jquery.js')}}"></script>
+    <script src="{{url('project-js/validation.js')}}"></script>
+    <script src="{{url('project-js/sweetalert.js')}}"></script>
+
+    <script src="{{url('project-js/user/login.js')}}"></script>
+
+
   <style>
     * {
       box-sizing: border-box;
@@ -166,8 +204,12 @@
   <div class="main-content">
     <div class="upload-container">
       <h2>Upload File</h2>
-      <input type="file" id="file-input" multiple>
-      <button class="upload-button">Upload</button>
+      <form id="file_upload" enctype="">
+        {{@csrf_field()}}
+        <input type="hidden" name="paid_customer_id" value="{{$customer_id}}">
+        <input type="file" id="file-input" name="file" required>
+        <button type="submit" class="upload-button" id="uploadBtn">Upload</button>
+      </form>
     </div>
 
     <div class="file-list">
