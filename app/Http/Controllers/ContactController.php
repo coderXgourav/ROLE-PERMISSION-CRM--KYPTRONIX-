@@ -2024,7 +2024,18 @@ public function emailSend(Request $request){
   return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
     
   }
- 
+  public function documentPage($customers_id){
+      $user_id=session('admin');
+      $admin_data = self::userDetails($user_id);
+      $user_type = self::userType($admin_data->user_type);
+      $customer_id = decrypt($customers_id);
+      if($admin_data->user_type=='admin'){
+        $data=DB::table('files')
+        ->join('customer','customer.customer_id','=','files.customer_id')
+        ->where('customer.customer_id','=',$customer_id)
+        ->paginate(10);
+      }
+  }
 
 // THIS IS END OF THE CLASS 
 }
