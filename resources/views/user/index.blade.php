@@ -37,6 +37,9 @@
 
   <title>Login</title>
   <style>
+    .error{
+      color: red !important;
+    }
     * {
       box-sizing: border-box;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
