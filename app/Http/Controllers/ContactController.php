@@ -2010,6 +2010,14 @@ public function emailSend(Request $request){
    ->paginate(10);
   return view('admin.dashboard.successfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
   }
+
+  public function fileShow($filename){
+    $user_id=session('admin');
+    $admin_data = self::userDetails($user_id);
+    $user_type = self::userType($admin_data->user_type);
+    return view('admin.dashboard.file_view',['admin_data'=>$admin_data,'user_type'=>$user_type,'filename'=>$filename]);
+
+  }
   
   
     public function showFailedPayments(){
@@ -2029,12 +2037,15 @@ public function emailSend(Request $request){
       $admin_data = self::userDetails($user_id);
       $user_type = self::userType($admin_data->user_type);
       $customer_id = decrypt($customers_id);
-      if($admin_data->user_type=='admin'){
-        $data=DB::table('files')
+      $data=DB::table('files')
+        ->select('customer.customer_id','files.file','files.paid_customer_id','files.created_at')
         ->join('customer','customer.customer_id','=','files.customer_id')
         ->where('customer.customer_id','=',$customer_id)
         ->paginate(10);
-      }
+      //  echo '<pre>';
+      //  print_r($data);die;
+          
+      return view('admin.dashboard.document_list',['admin_data'=>$admin_data,'document_data'=>$data,'user_type'=>$user_type]);
   }
 
 // THIS IS END OF THE CLASS 

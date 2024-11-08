@@ -136,13 +136,7 @@ Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPacka
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
 Route::get('/admin/login-history',[AdminController::class,'loginHistory'])->name('admin.loginHistory');
 
-Route::get('/not-access',function(){
-    return view('not_access');
-})->name('not-access');
 
-Route::fallback(function () {
-     return view('not_found');
-})->name('fallback');
 
 Route::post('/admin/invoice-send-email',[ContactController::class,'emailSend'])->name('admin.invoice-send-email');
 Route::get('/admin/show-invoice/{id}',[ContactController::class,'showInvoiceList'])->name('admin.show-invoice');
@@ -152,7 +146,19 @@ Route::get('/admin/success-payments',[ContactController::class,'showSuccessfullP
 Route::get('/admin/failed-payments',[ContactController::class,'showFailedPayments'])->name('admin.failed-payments');
 Route::get('/admin/document/{id}',[ContactController::class,'documentPage'])->name('admin.document');
 
+
+Route::get('/admin/view-file/{filename}',[ContactController::class,'fileShow'])->name('admin.fileShow');
+
 });
+
+Route::get('/not-access',function(){
+    return view('not_access');
+})->name('not-access');
+
+Route::fallback(function () {
+     return view('not_found');
+})->name('fallback');
+
 
 
 
