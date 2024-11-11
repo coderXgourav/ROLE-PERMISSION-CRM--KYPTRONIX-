@@ -248,6 +248,24 @@
                         </ul>
                     </li>
                     @endif
+                    @if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
+
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bx bx-folder"></i>
+                            </div>
+                            <div class="menu-title">Import Leads</div>
+                        </a>
+                        <ul>
+                            <li> <a href="{{route('admin.import-leads')}}"><i
+                                class='bx bx-radio-circle'></i>
+                                Show Import Leads</a>
+                           </li>
+                         
+                            
+                        </ul>
+                    </li>
+                    @endif
 
             @if($admin_data->leads_permission>0)
                     <li>

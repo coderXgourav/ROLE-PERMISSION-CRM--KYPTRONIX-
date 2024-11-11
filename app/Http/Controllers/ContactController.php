@@ -1415,6 +1415,7 @@ public function addLead(){
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
         )
         ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->where('services.service_id','!=',14)
         ->groupBy('customer.customer_email') 
         ->paginate(10);
 
