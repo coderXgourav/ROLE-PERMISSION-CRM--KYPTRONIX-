@@ -24,13 +24,13 @@ width: 100% !important;
 								<h5 class="mb-4">Add New Lead  </h5>
 								   <div class="row mb-3">
 								   	<label for="input42" class="col-sm-3 col-form-label">Service <span class="text-danger">*</span></label>
-								    	<div class="col-sm-9" style="    display: flex;
-    /* justify-content: center; */
-    align-items: center;
-    gap: 22px;">
+								    	<div class="col-sm-9" style="display: flex;
+								    	/* justify-content: center; */
+								    	align-items: center;
+								    	gap: 22px;">
 								    	
 										    @foreach ($all_services as $services)
-										    <input id="service" type="checkbox"  onclick="checkService(this)" name="customer_service_id" value="{{$services->service_id}}" style="width: 25px"> 
+										    <input id="service" type="checkbox" name="customer_service_id[]" value="{{$services->service_id}}" style="width: 25px"> 
 										    {{$services->name}}											
 											@endforeach
 													
