@@ -219,7 +219,7 @@ class ContactController extends Controller
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
      $data = MainUserModel::find($contact_id);
-     $services = Service::orderBy('service_id','DESC')->get();
+     $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
 
      
      $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
@@ -1286,7 +1286,7 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      $all_services = Service::all();
+      $all_services = Service::where('name','!=','uncategorized')->get();
     return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type,'all_services'=>$all_services]);
 }
  public function leadAdd(Request $request){
