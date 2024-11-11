@@ -43,7 +43,7 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->name}}</td>
+										<td>{{$value->service_names}}</td>
 										{{-- <td>{{$value->first_name}} {{$value->last_name}}</td> --}}
 										{{-- <td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td> --}}
 										{{-- <td></td> --}}

@@ -1293,49 +1293,50 @@ public function addLead(){
       $service_id =$request->customer_service_id;
       $type=$request->type;
       if($type==1){
-       $phone= $request->phone;
-       $country_code = $request->country_code;
-       $customer_number = $country_code.$phone;
-       $first_name = $request->first_name;
-       $middle_name =$request->middle_name;
-       $last_name=$request->last_name;
-      $email = $request->email;
-      $msg = $request->msg;
-      $dob=$request->dob;
-      $address=$request->address;
-      $city=$request->city;
-      $state=$request->state;
-      $zip=$request->zip;
-      $ssn=$request->ssn;
-      $msg=$request->msg;
-      $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
-        $check = CustomerModel::where('customer_email',$email)
-        ->orWhere('customer_number',$phone)->first();
-        if($check){
-         return self::toastr(false,"Number or Email already exist","error","Error");
-        }
-        
-
-      
-      $individual_details = new CustomerModel;
-      $individual_details->customer_name = $customer_name;
-      $individual_details->customer_number = $customer_number ;
-      $individual_details->customer_email = $email ;
-      $individual_details->customer_service_id = $service_id;
-      $individual_details->type=$type;
-      $individual_details->first_name=$first_name;
-      $individual_details->middle_name=$middle_name;
-      $individual_details->last_name=$last_name;
-      $individual_details->dob=$dob;
-      $individual_details->address=$address;
-      $individual_details->city=$city;
-      $individual_details->state=$state;
-      $individual_details->zip=$zip;
-      $individual_details->ssn=$ssn;
-      $individual_details->msg=$msg;
-      $save = $individual_details->save();
+           $phone= $request->phone;
+           $country_code = $request->country_code;
+           $customer_number = $country_code.$phone;
+           $first_name = $request->first_name;
+           $middle_name =$request->middle_name;
+           $last_name=$request->last_name;
+            $email = $request->email;
+            $msg = $request->msg;
+            $dob=$request->dob;
+            $address=$request->address;
+            $city=$request->city;
+            $state=$request->state;
+            $zip=$request->zip;
+            $ssn=$request->ssn;
+            $msg=$request->msg;
+            $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
+              $check = CustomerModel::where('customer_email',$email)
+              ->orWhere('customer_number',$phone)->first();
+              if($check){
+               return self::toastr(false,"Number or Email already exist","error","Error");
+              }
+            
+          if(!empty($service_id)){
+              foreach ($service_id as $key => $value) {
+                $individual_details = new CustomerModel;
+                $individual_details->customer_name = $customer_name;
+                $individual_details->customer_number = $customer_number ;
+                $individual_details->customer_email = $email ;
+                $individual_details->customer_service_id = $value;
+                $individual_details->type=$type;
+                $individual_details->first_name=$first_name;
+                $individual_details->middle_name=$middle_name;
+                $individual_details->last_name=$last_name;
+                $individual_details->dob=$dob;
+                $individual_details->address=$address;
+                $individual_details->city=$city;
+                $individual_details->state=$state;
+                $individual_details->zip=$zip;
+                $individual_details->ssn=$ssn;
+                $individual_details->msg=$msg;
+                $save = $individual_details->save();
  
-
+             }
+          }      
       }else if($type==2){
         $email_address = $request->email_address;
         $fax = $request->fax;
@@ -1363,30 +1364,33 @@ public function addLead(){
         if($check){
          return self::toastr(false,"Number or Email already exist","error","Error");
         }
+        if(!empty($service_id)){
+           foreach ($service_id as $key => $value) {
+                $business_details = new CustomerModel;
+                $business_details->business_name=$business_name;
+                $business_details->customer_name=$business_name;
+                $business_details->industry=$industry;
+                $business_details->customer_number=$customer_number;
+                $business_details->customer_email=$customer_email;
+                $business_details->customer_service_id = $value;
+                $business_details->type=$type;
+                $business_details->ein=$ein;
+                $business_details->address=$business_address;
+                $business_details->city=$business_city;
+                $business_details->state=$business_state;
+                $business_details->zip=$business_zip;
+                $business_details->business_title=$business_title;
+                $business_details->point_of_contact=$point_of_contact;
 
-        $business_details = new CustomerModel;
-        $business_details->business_name=$business_name;
-        $business_details->customer_name=$business_name;
-        $business_details->industry=$industry;
-        $business_details->customer_number=$customer_number;
-        $business_details->customer_email=$customer_email;
-        $business_details->customer_service_id = $service_id;
-        $business_details->type=$type;
-        $business_details->ein=$ein;
-        $business_details->address=$business_address;
-        $business_details->city=$business_city;
-        $business_details->state=$business_state;
-        $business_details->zip=$business_zip;
-        $business_details->business_title=$business_title;
-        $business_details->point_of_contact=$point_of_contact;
+                $business_details->fax=$fax;
+                $business_details->contact_number=$contact_number;
+                $business_details->contact_email=$email_address;
 
-        $business_details->fax=$fax;
-        $business_details->contact_number=$contact_number;
-        $business_details->contact_email=$email_address;
+                $business_details->msg=$msg;
+                $save = $business_details->save();
 
-        $business_details->msg=$msg;
-        $save = $business_details->save();
-
+           }
+        }
       }
       if($save){
          return self::toastr(true,"Lead Add Successfull","success","Success");
@@ -1401,11 +1405,21 @@ public function addLead(){
       $user_type = self::userType($admin_data->user_type);
       if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
         $leads_data = DB::table('customer')
-        ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','services.name','customer.status','customer.type')
-        ->join('services','services.service_id','=','customer.customer_service_id')
-        // ->leftjoin('main_user','main_user.id','=','customer.team_member')
-        // ->where('customer.status',1)
-        ->paginate(10); 
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.type) as type'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->paginate(10);
+
+     // echo '<pre>';
+     // print_r($leads_data);die;
       }else if($admin_data->user_type == 'team_manager'){
 
         $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
@@ -1414,24 +1428,41 @@ public function addLead(){
             foreach($team_manager_services as $service){
               $service_id[] = $service->managers_services_id;
             }
-            $leads_data=DB::table('customer')
-            ->select('customer.*','services.name as name')
-            ->join('services','services.service_id','=','customer.customer_service_id')
+           $leads_data = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
             ->whereIn('customer.customer_service_id',$service_id)
             ->paginate(10);
-          
+
         }
 
       }else if($admin_data->user_type == 'customer_success_manager'){
 
           $customer_service=MemberServiceModel::where('member_id',$admin_data->id)->first();
-          $leads_data=DB::table('customer')
-          ->select('customer.customer_id', 'customer.customer_name', 'customer.customer_number', 'customer.customer_email','customer.msg','customer.status','services.name','customer.type')
-          ->join('services','services.service_id','=','customer.customer_service_id')
-         // ->where('customer.customer_service_id','=',$customer_service->member_service_id)
-          ->whereJsonContains('customer.team_member',"$admin_data->id")
-          ->where('customer.status',1)
-          ->paginate(10);
+          $leads_data = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereJsonContains('customer.team_member',"$admin_data->id")
+            ->paginate(10);
+
       }
       return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
@@ -1883,7 +1914,15 @@ foreach ($managers as $key => $value) {
      $user_type = self::userType($admin_data->user_type);
      $customer_id =   Crypt::decrypt($customer_id);
      $clients = CustomerModel::find($customer_id);
-     $service_data = Service::find($clients->customer_service_id);
+     $service_data = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email')
+        ->where('customer.customer_email',$clients->customer_email) 
+        ->get();
      $customers = DB::table('customer')
      
      ->join('remark','remark.customer_id','=','customer.customer_id')
