@@ -39,8 +39,9 @@
 												<h4>{{$customer_data->customer_name}}</h4>
 												<p class="text-secondary mb-1">Email -{{$customer_data->customer_email}}</p>
 												<p class="text-muted font-size-sm">Number -{{$customer_data->customer_number}}</p>
-												<p class="text-muted font-size-sm">Service Name - {{$services_data->name}}</p>
-											
+												<?php if(!empty($services_data)){?>
+												<p class="text-muted font-size-sm">Service Name - <?php foreach($services_data as $val){echo $val->service_names;}?></p>
+											    <?php } ?>
 												<!--<button class="btn btn-primary">Follow</button>
 												<button class="btn btn-outline-primary">Message</button>-->
 											</div>

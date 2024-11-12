@@ -54,7 +54,9 @@
                         <button class="btn btn-primary btn-sm" id="remarks">Show Remarks</button>
 
                         <p class="text-secondary mb-1"><br>Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
-                        <p class="text-muted font-size-sm">Service Name - <?php foreach($service_data as $val){echo $val->service_names;}?></p>
+                        <?php if(!empty($service_data)){?>
+                          <p class="text-muted font-size-sm">Service Name - <?php foreach($service_data as $val){echo $val->service_names;}?></p>
+                        <?php } ?>
                         <p class="text-secondary mb-1">Email -{{$customer->customer_email}}</p>
                         <p class="text-muted font-size-sm">Number -{{$customer->customer_number}}</p>
 

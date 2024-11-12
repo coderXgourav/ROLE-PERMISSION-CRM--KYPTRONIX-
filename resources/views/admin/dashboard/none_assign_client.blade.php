@@ -61,7 +61,7 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->name}}</td>
+										<td>{{$value->service_names}}</td>
 										<td>{{$value->msg}}</td>
 									</tr>
                                     @endforeach
