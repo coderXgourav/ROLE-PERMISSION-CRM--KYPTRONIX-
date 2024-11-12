@@ -19,8 +19,8 @@ class IndividualImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithV
     public function model(array $row)
     {
         // Fetch the list of services from the Service model
-        $services = Service::pluck('name', 'service_id')->toArray();
-        $serviceId = array_search(strtolower(trim($row['service_name'])), $services);
+        // $services = Service::pluck('name', 'service_id')->toArray();
+        // $serviceId = array_search(strtolower(trim($row['service_name'])), $services);
 
    
 
@@ -32,8 +32,9 @@ class IndividualImport implements ToModel, WithHeadingRow, SkipsEmptyRows, WithV
             'customer_email' => $row['email_address'],
             'customer_number' => $row['phone_number'],
             'customer_name' => $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'],
-            'customer_service_id' => !empty($serviceId) ? $serviceId : null, // Assign service ID if found
-            'dob' => $row['data_of_birth'],
+            // 'customer_service_id' => !empty($serviceId) ? $serviceId : null, 
+            'customer_service_id' => 14,
+            'dob' => $row['date_of_birth'],
             'address' => $row['address'],
             'city' => $row['city'],
             'state' => $row['state'],

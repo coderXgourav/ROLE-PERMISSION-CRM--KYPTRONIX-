@@ -5,11 +5,10 @@
   @push('title')
       <title>Dashboard</title>
   @endpush
-
-         
                     <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
 						@if($admin_data->user_type=="admin")
                       <div class="col">
+
                             <div class="card radius-10">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
