@@ -206,6 +206,39 @@
                             
                         </div>
 						@endif
+                        	@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" )
+						
+                           <div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">
+                                               Import Leads
+                                            </p>
+                                            <h4 class="my-1">{{$import_lead}}</h4>
+                                            <p
+                                                class="mb-0 font-13 text-success"
+                                            >
+                                                <i
+                                                    class="bx bxs-up-arrow align-middle"
+                                                ></i
+                                                ><a href="{{route('admin.import-leads')}}" class="text-success">View Import Leads </a>
+                                            </p>
+                                        </div>
+                                        
+                                         <div
+                                            class="widgets-icons bg-light-success text-success ms-auto"
+                                        >
+                                             <i class="bx bxs-group"></i>
+                                        </div>
+                                    </div>
+                                    <div id="chart8"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+						@endif
 
 						@if($admin_data->user_type=="customer_success_manager")
 
@@ -273,8 +306,7 @@
                      
                      
                     </div>
-						@if($admin_data->user_type=="admin")
-
+						{{-- @if($admin_data->user_type=="admin")
                     <div class="row row-cols-1 row-cols-lg-3">
 						<div class="col d-flex">
 							<div class="card radius-10 w-100">
@@ -374,9 +406,7 @@
 							</div>
 						</div>
 					</div>
-					@endif
-            <!--end page wrapper -->
-            <!--start overlay-->
+					@endif --}}
             <div class="overlay toggle-icon"></div>
             <!--end overlay-->
             <!--Start Back To Top Button-->

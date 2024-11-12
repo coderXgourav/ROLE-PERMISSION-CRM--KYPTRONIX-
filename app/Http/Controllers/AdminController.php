@@ -128,6 +128,7 @@ public function dashboardPage(){
   $id = session('admin');
   
   $total_team_member=0;
+  $import_lead=0;
   $total_invoices_data=0;
   $convert_to_clients=0;
   $total_clients=0;
@@ -156,6 +157,7 @@ public function dashboardPage(){
               $operation_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"operation_manager")->count();
               $team_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"team_manager")->count();
               $team_member = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"customer_success_manager")->count();
+              $import_lead = CustomerModel::where('customer_service_id',14)->count();
 
             }else if($user_details->user_type=="team_manager"){
 
@@ -204,7 +206,7 @@ public function dashboardPage(){
 
    $user_type = self::userType($user_details->user_type);
           
-   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member]);
+   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member,'import_lead'=>$import_lead]);
 }
 //  THIS IS dashboardPage FUNCTIOIN 
 

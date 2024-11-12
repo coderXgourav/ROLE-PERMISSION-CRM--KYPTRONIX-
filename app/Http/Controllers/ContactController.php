@@ -2115,21 +2115,58 @@ public function importsLeadPage(Request $request){
 public function assignLeadsToService(Request $request){
   $customers[] = $request->customer;
   $service[] = $request->service;
+  
   // echo "<pre>";
   // print_r($customers);  
   // print_r($service);
   // die;
   
-  foreach ($customers[0] as $item => $customer_id) {
+foreach ($customers[0] as $item => $customer_id) {
     foreach ($service[0] as $key => $service_id) {
-   
+        // Find the existing customer record by customer_id
         $update = CustomerModel::find($customer_id);
-        $update->customer_service_id=$service_id;
-        $update->save();
+
+
+        // print_r($update);
+        // die;
+        
+        if ($update) {
+            // Create a new CustomerModel instance
+            $customer = new CustomerModel();
+            $customer->customer_service_id = $service_id;  // Here, you're assigning the service ID instead of the old one
+            $customer->customer_name = $update->customer_name;
+            $customer->customer_number = $update->customer_number;
+            $customer->customer_email = $update->customer_email;
+            $customer->task = $update->task;
+            $customer->team_member = $update->team_member;
+            $customer->status = $update->status;
+            $customer->type = $update->type;
+            $customer->first_name = $update->first_name;
+            $customer->middle_name = $update->middle_name;
+            $customer->last_name = $update->last_name;
+            $customer->dob = $update->dob;
+            $customer->address = $update->address;
+            $customer->city = $update->city;
+            $customer->state = $update->state;
+            $customer->zip = $update->zip;
+            $customer->ssn = $update->ssn;
+            $customer->business_name = $update->business_name;
+            $customer->industry = $update->industry;
+            $customer->fax = $update->fax;
+            $customer->contact_number = $update->contact_number;
+            $customer->contact_email = $update->contact_email;
+            $customer->ein = $update->ein;
+            $customer->business_title = $update->business_title;
+            $customer->point_of_contact = $update->point_of_contact;
+            $customer->msg = $update->msg;
+            $customer->paid_customer = $update->paid_customer;
+            $customer->save();
+          }
     }
+          $update->delete();
 
+}
 
-  }
   return self::swal(true,'Assign Successfull','success');
 }
 
