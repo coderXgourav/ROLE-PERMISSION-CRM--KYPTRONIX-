@@ -25,6 +25,8 @@
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Service</th>
+										<th>City</th>
+										<th>State</th>
 										{{-- <th>Assigned To Team member</th> --}}
 										{{-- <th>Assigned To Manager</th> --}}
 										{{-- <th>Invoice Status</th> --}}
@@ -44,10 +46,16 @@
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->service_names}}</td>
+										<td>{{$value->city}}</td>
+										<td>{{$value->state}}</td>
+
+										{{-- <td>{{$value->city}}</td> --}}
+										{{-- <td>{{$value->state}}</td> --}}
 										{{-- <td>{{$value->first_name}} {{$value->last_name}}</td> --}}
 										{{-- <td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td> --}}
 										{{-- <td></td> --}}
-										{{-- <td><?php if($value->status == '1'){
+										{{-- <td>
+											<?php if($value->status == '1'){
 											   echo 'Active';}else{ echo 'Disable';}?></td> --}}
 
 

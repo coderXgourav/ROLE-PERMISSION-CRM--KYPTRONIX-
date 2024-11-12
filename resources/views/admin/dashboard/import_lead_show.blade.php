@@ -26,6 +26,8 @@
 										<th>Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
+										<th>City</th>
+										<th>State</th>
 										<th>Message</th>
 									</tr>
 								</thead>
@@ -43,12 +45,14 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
+										<td>{{$value->city}}</td>
+										<td>{{$value->state}}</td>
 										<td>{{$value->msg}}</td>
 									</tr>
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="7" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
+										<td colspan="7" style="text-align: center; color:red;"><b>Imports Leads Record Not Found..!</b></td>
 										
 									</tr>
                                     @endif
@@ -73,7 +77,7 @@
     <option value="">Select Team Member</option>
 </select> --}}
 <div id="team_member_container">
-    <p>Select Team Members:</p>
+    <p>Select Services:</p>
     <!-- Checkboxes will be appended here -->
     <div>
           <div style="display: flex;
