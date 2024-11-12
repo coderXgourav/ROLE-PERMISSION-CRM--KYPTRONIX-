@@ -2088,5 +2088,50 @@ public function emailSend(Request $request){
       return view('admin.dashboard.document_list',['admin_data'=>$admin_data,'document_data'=>$data,'user_type'=>$user_type]);
   }
 
+
+  //  THIS IS noneAssginClientspage FUNCTION 
+public function importsLeadPage(Request $request){
+    $service_filter = $request->service;
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $user_type = self::userType($admin_data->user_type);
+
+    if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
+       $services = Service::orderBy('service_id','DESC')->where('name','!=','uncategorized')->get();
+         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')
+        ->where('customer.customer_service_id','=',14)
+        ->paginate(25);
+  }else{
+    return redirect('/login');
+  }
+
+
+
+  return view('admin.dashboard.import_lead_show',['user_type'=>$user_type,'admin_data'=>$admin_data,'data'=>$customers,'services'=>$services]);
+
+}
+
+
+public function assignLeadsToService(Request $request){
+  $customers[] = $request->customer;
+  $service[] = $request->service;
+  // echo "<pre>";
+  // print_r($customers);  
+  // print_r($service);
+  // die;
+  
+  foreach ($customers[0] as $item => $customer_id) {
+    foreach ($service[0] as $key => $service_id) {
+   
+        $update = CustomerModel::find($customer_id);
+        $update->customer_service_id=$service_id;
+        $update->save();
+    }
+
+
+  }
+  return self::swal(true,'Assign Successfull','success');
+}
+
 // THIS IS END OF THE CLASS 
 }

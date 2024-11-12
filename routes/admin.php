@@ -52,11 +52,13 @@ Route::get('/admin/clients',[ContactController::class,'Clientspage'])->name('adm
 Route::get('/admin/assign-clients',[ContactController::class,'assginClientspage'])->name('admin.assign');
 Route::get('/admin/none-assign-clients',[ContactController::class,'noneAssginClientspage'])->name('admin.noneassign');
 Route::post('/admin/assign',[ContactController::class,'assign'])->name('post7');
+Route::post('/admin/assign_lead_to_service',[ContactController::class,'assignLeadsToService'])->name('post37');
 Route::post('/admin/update-assign',[ContactController::class,'UpdateAssign'])->name('post8');
 Route::get('/admin/email',[ContactController::class,'emailPage'])->name('admin.email');
 Route::get('/admin/email-show/{id}',[ContactController::class,'emailShow'])->name('admin.emailshow');
 Route::get('/export',[ContactController::class,'export'])->name('admin.export');
 Route::get('/admin/import',[ContactController::class,'importPage'])->name('admin.import');
+Route::get('/admin/import-leads',[ContactController::class,'importsLeadPage'])->name('admin.import-leads');
 Route::post('/admin/upload_csv',[ContactController::class,'import'])->name('post9');
 Route::post('/admin/upload_individual_csv',[ContactController::class,'individualImport'])->name('post30');
 Route::get('/admin/sms',[ContactController::class,'smsPage'])->name('admin.sms');
