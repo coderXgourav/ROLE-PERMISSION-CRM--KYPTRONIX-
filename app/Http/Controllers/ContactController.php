@@ -422,10 +422,47 @@ public function assginClientspage(Request $request){
   if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
    $services = Service::orderBy('service_id','DESC')->get();
     if($service_filter !=""){
-      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)
-      ->where('customer.customer_service_id',$service_filter)->orderBy('customer_id','DESC')->paginate(10);
+      /*$customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)
+      ->where('customer.customer_service_id',$service_filter)->orderBy('customer_id','DESC')->paginate(10);*/
+      $customers = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.type) as type'),
+            DB::raw('MAX(services.service_id) as service_id'),
+            DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->where('customer.team_member','!=',null)    
+        ->where('customer.customer_service_id',$service_filter) 
+        ->orderBy('customer_id','DESC')
+        ->paginate(10);
+
     }else{
-         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)->orderBy('customer_id','DESC')->paginate(10);
+        /* $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)->orderBy('customer_id','DESC')->paginate(10);*/
+        $customers = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.type) as type'),
+            DB::raw('MAX(services.service_id) as service_id'),
+            DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->where('customer.team_member','!=',null)     
+        ->orderBy('customer_id','DESC')
+        ->paginate(10);
+
     }
   }else if($admin_data->user_type=="team_manager"){
   $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
@@ -437,20 +474,57 @@ public function assginClientspage(Request $request){
             $services = Service::whereIn('service_id',$service_id)->get();
 
      if($service_filter!=""){
-            $customers=DB::table('customer')
+           /* $customers=DB::table('customer')
                       ->select('customer.*','services.name as name','services.service_id as service_id')
                       ->join('services','services.service_id','=','customer.customer_service_id')
                       ->whereIn('customer.customer_service_id',$service_id)
                       ->where('customer.customer_service_id',$service_filter)
                       ->where('customer.team_member','!=',null)
-                      ->paginate(10);
+                      ->paginate(10);*/
+               $customers = DB::table('customer')
+              ->select(
+                  'customer.customer_email',
+                  DB::raw('MAX(customer.customer_id) as customer_id'),
+                  DB::raw('MAX(customer.customer_number) as customer_number'),
+                  DB::raw('MAX(customer.customer_name) as customer_name'),
+                  DB::raw('MAX(customer.status) as status'),
+                  DB::raw('MAX(customer.type) as type'),
+                  DB::raw('MAX(services.service_id) as service_id'),
+                  DB::raw('MAX(customer.msg) as msg'),
+                  DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+              )
+              ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+              ->groupBy('customer.customer_email') 
+              ->where('customer.team_member','!=',null)     
+              ->where('customer.customer_service_id',$service_filter)
+              ->whereIn('customer.customer_service_id',$service_id)
+              ->paginate(10);
+
           }else{
-            $customers=DB::table('customer')
+           /* $customers=DB::table('customer')
             ->select('customer.*','services.name as name','services.service_id as service_id')
             ->join('services','services.service_id','=','customer.customer_service_id')
             ->whereIn('customer.customer_service_id',$service_id)
             ->where('customer.team_member','!=',null)
-            ->paginate(10);
+            ->paginate(10);*/
+             $customers = DB::table('customer')
+              ->select(
+                  'customer.customer_email',
+                  DB::raw('MAX(customer.customer_id) as customer_id'),
+                  DB::raw('MAX(customer.customer_number) as customer_number'),
+                  DB::raw('MAX(customer.customer_name) as customer_name'),
+                  DB::raw('MAX(customer.status) as status'),
+                  DB::raw('MAX(customer.type) as type'),
+                  DB::raw('MAX(services.service_id) as service_id'),
+                  DB::raw('MAX(customer.msg) as msg'),
+                  DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+              )
+              ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+              ->groupBy('customer.customer_email') 
+              ->where('customer.team_member','!=',null)     
+              ->whereIn('customer.customer_service_id',$service_id)
+              ->paginate(10);
+
           }
           
         }
@@ -522,10 +596,47 @@ public function noneAssginClientspage(Request $request){
     if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
    $services = Service::orderBy('service_id','DESC')->get();
     if($service_filter !=""){
-      $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)
-      ->where('customer.customer_service_id',$service_filter)->orderBy('customer_id','DESC')->paginate(10);
+     /* $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)
+      ->where('customer.customer_service_id',$service_filter)->orderBy('customer_id','DESC')->paginate(10);*/
+      $customers = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.type) as type'),
+            DB::raw('MAX(services.service_id) as service_id'),
+            DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->where('customer.team_member',null)
+        ->where('customer.customer_service_id',$service_filter)
+        ->orderBy('customer_id','DESC')
+        ->paginate(10);
+
     }else{
-         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')->paginate(10);
+        /* $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')->paginate(10);*/
+        $customers = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.type) as type'),
+            DB::raw('MAX(services.service_id) as service_id'),
+            DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->where('customer.team_member',null)
+        ->orderBy('customer_id','DESC')
+        ->paginate(10);
+
     }
   }else if($admin_data->user_type=="team_manager"){
     
@@ -537,22 +648,56 @@ public function noneAssginClientspage(Request $request){
       }
       $services = Service::whereIn('service_id',$service_id)->get();
       if($service_filter!=""){
-      $customers=DB::table('customer')
+      /*$customers=DB::table('customer')
       ->select('customer.*','services.name as name','services.service_id as service_id')
       ->join('services','services.service_id','=','customer.customer_service_id')
       ->whereIn('customer.customer_service_id',$service_id)
       ->where('customer.customer_service_id',$service_filter)
       ->where('customer.team_member','=',null)
-      ->paginate(10);
+      ->paginate(10);*/
+        $customers = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(services.service_id) as service_id'),
+            DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->where('customer.team_member',null)
+        ->whereIn('customer.customer_service_id',$service_id)
+        ->where('customer.customer_service_id',$service_filter)
+        ->paginate(10);
+
 
        }else{
-        $customers=DB::table('customer')
+       /* $customers=DB::table('customer')
         ->select('customer.*','services.name as name','services.service_id as service_id')
         ->join('services','services.service_id','=','customer.customer_service_id')
         ->whereIn('customer.customer_service_id',$service_id)
-        // ->where('customer.customer_service_id',$service_id)
         ->where('customer.team_member','=',null)
+        ->paginate(10);*/
+        $customers = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(services.service_id) as service_id'),
+            DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+        ->where('customer.team_member',null)
+        ->whereIn('customer.customer_service_id',$service_id)
         ->paginate(10);
+
        }
       }
 
@@ -1050,8 +1195,22 @@ public function viewTeamMember($team_manager_id){
         ->groupBy('member_service.member_id')
         ->get();
 
-
-       $total_clients = CustomerModel::whereIn('customer_service_id',$service_id)->count();
+       $total_clients = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(services.service_id) as service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id) 
+            ->get();
        $total_invoices_data = Invoice::whereIn('service_id',$service_id)->count();
     
        $service_data=DB::table('services')
@@ -1075,8 +1234,25 @@ public function viewTeamMember($team_manager_id){
               }
 
             $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
-            $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();
-            
+           /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
+           $total_clients = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(services.service_id) as service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id) 
+            ->whereJsonContains('customer.team_member',"$data->id")
+            ->get();
+
             $service_data=DB::table('services')
             ->join('member_service','member_service.member_service_id','=','services.service_id')
             ->where('member_service.member_id',$team_manager_id)
@@ -1150,12 +1326,30 @@ public function showClientsList($manager_id){
             foreach($customer_service as $service){
               $service_id[] = $service->member_service_id;
             }
-            $clients=DB::table('customer')
+           /* $clients=DB::table('customer')
             ->select('customer.*','services.name as service_name')
             ->join('services','services.service_id','=','customer.customer_service_id')
             ->whereIn('customer.customer_service_id',$service_id)
             ->whereJsonContains('customer.team_member',$manager_id)
+            ->paginate(10);*/
+           $clients = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(services.service_id) as service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id)
+            ->whereJsonContains('customer.team_member',$manager_id)
             ->paginate(10);
+
          
          
       }
@@ -1166,11 +1360,28 @@ public function showClientsList($manager_id){
             foreach($team_manager_services as $service){
               $service_id[] = $service->managers_services_id;
             }
-            $clients=DB::table('customer')
+           /* $clients=DB::table('customer')
             ->select('customer.*','services.name as service_name')
             ->join('services','services.service_id','=','customer.customer_service_id')
             ->whereIn('customer.customer_service_id',$service_id)
+            ->paginate(10);*/
+            $clients = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(services.service_id) as service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id)
             ->paginate(10);
+      
    
         }
     }else{
@@ -1703,18 +1914,56 @@ public function viewClients(){
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
       if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
-           $client_data = DB::table('customer')
+          /* $client_data = DB::table('customer')
             ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','customer.paid_customer','services.name as services_name','customer.team_member','customer.customer_service_id')
             ->join('services','services.service_id','=','customer.customer_service_id')
             ->where('customer.paid_customer',1)
-            ->paginate(10);    
-      }else if($admin_data->user_type == 'customer_success_manager'){
+            ->paginate(10); */
+
             $client_data = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.paid_customer) as paid_customer'),
+                DB::raw('MAX(customer.customer_service_id) as customer_service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('MAX(customer.team_member) as team_member'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->where('customer.paid_customer',1)
+            ->paginate(10);
+        
+      }else if($admin_data->user_type == 'customer_success_manager'){
+            /*$client_data = DB::table('customer')
             ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','customer.paid_customer','services.name as services_name','customer.team_member','customer.customer_service_id')
             ->join('services','services.service_id','=','customer.customer_service_id')
             ->where('customer.paid_customer',1)
             ->whereJsonContains('customer.team_member',"$admin_data->id")
-            ->paginate(10);    
+            ->paginate(10);  */
+            $client_data = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.paid_customer) as paid_customer'),
+                DB::raw('MAX(customer.customer_service_id) as customer_service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('MAX(customer.team_member) as team_member'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->where('customer.paid_customer',1)
+            ->whereJsonContains('customer.team_member',"$admin_data->id")
+            ->paginate(10);
+  
       }else if($admin_data->user_type == 'team_manager'){
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             if(!empty($team_manager_services)){
@@ -1722,13 +1971,32 @@ public function viewClients(){
                 foreach($team_manager_services as $service){
                   $service_id[] = $service->managers_services_id;
                 }
-                $client_data=DB::table('customer')
+              /*  $client_data=DB::table('customer')
                   ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','customer.paid_customer','services.name as services_name','customer.team_member','customer.customer_service_id')
                   ->join('services','services.service_id','=','customer.customer_service_id')
                   ->join('invoices','invoices.customer_id','=','customer.customer_id')
                   ->where('customer.paid_customer',1)
                   ->whereIn('customer.customer_service_id',$service_id)
-                  ->paginate(10);
+                  ->paginate(10);*/
+                  $client_data = DB::table('customer')
+                    ->select(
+                        'customer.customer_email',
+                        DB::raw('MAX(customer.customer_id) as customer_id'),
+                        DB::raw('MAX(customer.customer_number) as customer_number'),
+                        DB::raw('MAX(customer.customer_name) as customer_name'),
+                        DB::raw('MAX(customer.status) as status'),
+                        DB::raw('MAX(customer.paid_customer) as paid_customer'),
+                        DB::raw('MAX(customer.customer_service_id) as customer_service_id'),
+                        DB::raw('MAX(customer.msg) as msg'),
+                        DB::raw('MAX(customer.team_member) as team_member'),
+                        DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+                    )
+                    ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+                    ->groupBy('customer.customer_email') 
+                    ->where('customer.paid_customer',1)
+                    ->whereIn('customer.customer_service_id',$service_id)
+                    ->paginate(10);
+          
               
             }
 
@@ -1892,7 +2160,17 @@ public function savePackage(Request $request){
     ->whereIn('main_user.id',$main_user_id)
     ->get();
     
-    $services_data = Service::find($customer_details->customer_service_id);
+   // $services_data = Service::find($customer_details->customer_service_id);
+    $services_data = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email')
+        ->where('customer.customer_email',$customer_details->customer_email) 
+        ->get();
+    
   $invoices = Invoice::where("customer_id",$customer_id)->count();
 
     $managers = DB::table("team_manager_services")->join("services",'services.service_id','=',"team_manager_services.managers_services_id")->where("team_manager_services.managers_services_id",$customer_service_id)->get();

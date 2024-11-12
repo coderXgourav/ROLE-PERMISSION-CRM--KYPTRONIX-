@@ -28,7 +28,7 @@
                                     <tr id="{{$value->customer_id }}">
 										<td>{{$i++}}</td>
 										<td>{{$value->customer_name}}</td>
-										<td>{{$value->service_name}}</td>
+										<td>{{$value->service_names}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
 										
