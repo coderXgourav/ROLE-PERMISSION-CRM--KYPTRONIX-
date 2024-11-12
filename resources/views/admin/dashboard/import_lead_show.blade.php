@@ -26,6 +26,8 @@
 										<th>Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
+										<th>City</th>
+										<th>State</th>
 										<th>Message</th>
 									</tr>
 								</thead>
@@ -43,6 +45,8 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
+										<td>{{$value->city}}</td>
+										<td>{{$value->state}}</td>
 										<td>{{$value->msg}}</td>
 									</tr>
                                     @endforeach

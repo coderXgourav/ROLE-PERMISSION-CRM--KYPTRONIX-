@@ -432,6 +432,8 @@ public function assginClientspage(Request $request){
             DB::raw('MAX(customer.customer_name) as customer_name'),
             DB::raw('MAX(customer.status) as status'),
             DB::raw('MAX(customer.type) as type'),
+            DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
@@ -605,6 +607,8 @@ public function noneAssginClientspage(Request $request){
             DB::raw('MAX(customer.customer_number) as customer_number'),
             DB::raw('MAX(customer.customer_name) as customer_name'),
             DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(customer.type) as type'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
@@ -627,6 +631,8 @@ public function noneAssginClientspage(Request $request){
             DB::raw('MAX(customer.customer_name) as customer_name'),
             DB::raw('MAX(customer.status) as status'),
             DB::raw('MAX(customer.type) as type'),
+             DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
@@ -662,6 +668,8 @@ public function noneAssginClientspage(Request $request){
             DB::raw('MAX(customer.customer_number) as customer_number'),
             DB::raw('MAX(customer.customer_name) as customer_name'),
             DB::raw('MAX(customer.status) as status'),
+             DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
@@ -1340,6 +1348,8 @@ public function showClientsList($manager_id){
                 DB::raw('MAX(customer.customer_name) as customer_name'),
                 DB::raw('MAX(customer.status) as status'),
                 DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
                 DB::raw('MAX(services.service_id) as service_id'),
                 DB::raw('MAX(customer.msg) as msg'),
                 DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
@@ -1373,6 +1383,8 @@ public function showClientsList($manager_id){
                 DB::raw('MAX(customer.customer_name) as customer_name'),
                 DB::raw('MAX(customer.status) as status'),
                 DB::raw('MAX(customer.type) as type'),
+                    DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
                 DB::raw('MAX(services.service_id) as service_id'),
                 DB::raw('MAX(customer.msg) as msg'),
                 DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
@@ -1622,6 +1634,8 @@ public function addLead(){
             DB::raw('MAX(customer.customer_number) as customer_number'),
             DB::raw('MAX(customer.customer_name) as customer_name'),
             DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(customer.type) as type'),
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
         )
@@ -1647,6 +1661,8 @@ public function addLead(){
                 DB::raw('MAX(customer.customer_number) as customer_number'),
                 DB::raw('MAX(customer.customer_name) as customer_name'),
                 DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
                 DB::raw('MAX(customer.type) as type'),
                 DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
             )
@@ -1667,6 +1683,8 @@ public function addLead(){
                 DB::raw('MAX(customer.customer_number) as customer_number'),
                 DB::raw('MAX(customer.customer_name) as customer_name'),
                 DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
                 DB::raw('MAX(customer.type) as type'),
                 DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
             )

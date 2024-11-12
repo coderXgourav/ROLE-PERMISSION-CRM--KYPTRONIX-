@@ -45,6 +45,8 @@
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Service</th>
+										<th>City</th>
+										<th>State</th>
 										<th>Message</th>
 										<th>Show Details</th>
 									</tr>
@@ -64,6 +66,8 @@
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->service_names}}</td>
+										<td>{{$value->city}}</td>
+										<td>{{$value->State}}</td>
 										<td>{{$value->msg}}</td>
 										<td><a href="{{route('admin.view_assign_client',['id'=>$value->customer_id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     </td>
@@ -71,7 +75,7 @@
                                     @endforeach
                                     @else  
                                     <tr>
-										<td colspan="8" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
+										<td colspan="10" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
 										
 									</tr>
                                     @endif

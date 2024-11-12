@@ -17,6 +17,8 @@
 										<th>Service</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
+										<th>City</th>
+										<th>State</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -31,6 +33,8 @@
 										<td>{{$value->service_names}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
+										<td>{{$value->city}}</td>
+										<td>{{$value->state}}</td>
 										
 									
 									</tr>
