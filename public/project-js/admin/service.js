@@ -196,3 +196,35 @@ jQuery.fn.extend({
         });
     }
 });
+
+function DeleteSubService(id) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/admin/sub_service_delete",
+                method: "GET",
+                data: { id: id },
+                dataType: "JSON",
+                success: function (data) {
+                    Command: toastr[data.icon](data.title, data.msg);
+                    if (data.status) {
+                        $("#" + id).hide();
+                    }
+                },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
+                },
+            });
+        }
+    });
+}

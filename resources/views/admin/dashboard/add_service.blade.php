@@ -48,7 +48,7 @@
 							<div class="col-sm-9">
 								<div class="d-md-flex d-grid align-items-center gap-3">
 									<button type="submit" class="btn btn-primary px-4" style="height:46px;" id="btn">Submit</button>
-						<button type="button" class="btn btn-success px-4 btn-add" onclick="addSubcategory()" style="height:46px;" id="btn">Add Sub category</button>
+						<button type="button" class="btn btn-success px-4 btn-add" onclick="addSubcategory()" style="height:46px;" id="btn">Add Sub Service</button>
 
 
 							   </div>

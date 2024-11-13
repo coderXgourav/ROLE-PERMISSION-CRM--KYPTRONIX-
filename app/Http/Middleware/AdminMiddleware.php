@@ -150,6 +150,7 @@ class AdminMiddleware
             'post20' => 1,
             'post21' => 1,
             'post22' => 1,
+            'post23' => 1,
             'admin.change_username'=>1,
             'admin.fileShow'=>1,
             // 'admin.payment'=>1,  

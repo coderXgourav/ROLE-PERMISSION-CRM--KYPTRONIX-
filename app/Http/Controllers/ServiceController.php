@@ -135,22 +135,45 @@ class ServiceController extends Controller
     $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
-   return view('admin.dashboard.edit_service',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+    $sub_service_details =Subservice::where('service_id',$s_id)->get();
+   return view('admin.dashboard.edit_service',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'sub_service_details'=>$sub_service_details]);
    
   }
   //editService End
   //updateService Start
   public function updateService(Request $request){
-        $name = strtolower(trim($request->name));
+      $name = strtolower(trim($request->name));
       $service_id = $request->service_id;
-      $service_details = Service::find($service_id);
-      $service_details->name = $name;
-      $save = $service_details->save();
-      if($save){
-         return self::toastr(true,"Service Details Updated Successfull","success","Success");
-      }else{
-         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      $sub_service_id = $request->sub_service_id;
+      $sub_service_name = $request->subcategory;
+      $add_sub_service =$request->sub_service;
+        
+
+      if(!empty($sub_service_id)){
+
+          $service_details = Service::find($service_id);
+          $service_details->name = $name;
+          $service_details->save();
+
+          for($i=0; $i<count($sub_service_id); $i++){
+                  $sub_service_details = Subservice::find($sub_service_id[$i]);
+                 $sub_service_details->service_name = $sub_service_name[$i];
+                 $sub_service_details->save();            
+          }
+
+      }if(!empty($add_sub_service)){
+           foreach ($add_sub_service as $key => $value) {
+              $s_details = new Subservice;
+              if($value!=""){
+              $s_details->service_id = $service_id;
+              $s_details->service_name = $value;
+              $s_details->save();
+              }
+            
+           }
       }
+      return self::toastr(true,"Service Details Updated Successfull","success","Success");
+
   } 
   //updateService End
   //viewService Start
@@ -250,5 +273,16 @@ public function teamManagerList($service_id){
     }*/
     return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$team_manager_data,'user_type'=>$user_type]);
 }
+public function deleteSubService(Request $request){  
+    $id = $request->id;
+    $delete = Subservice::find($id)->delete();
+    if($delete){
+       return self::toastr(true,'Deleted Successfully','success','Success');
+    }else{
+      return self::toastr(false,'Technical Issue','error','Error');
+        
+    }
+  }
+
 
 }
