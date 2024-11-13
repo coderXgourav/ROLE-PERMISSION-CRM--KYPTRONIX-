@@ -2,10 +2,15 @@
 $("#add_service_form").validate({
     rules: {
         name: "required",
+      
     },
+
     messages: {},
     submitHandler: function (form, event) {
         event.preventDefault();
+    //     const subService = document.getElementsByClassName('subcategory-input');
+    // console.log(subService[0]);
+
         $("#btn").html(
             "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
         );
@@ -22,7 +27,7 @@ $("#add_service_form").validate({
                 $("#btn").html("Submit");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
-                    // $("#add_service_form").trigger("reset");
+                    $("#add_service_form").trigger("reset");
                     document.getElementById("name").value = "";
                 }
             },

@@ -45,7 +45,7 @@ jQuery.fn.extend({
             var removeButton = itemClone.find('.remove-btn');
 
             if (key == 0) {
-              //  removeButton.attr('disabled', true);
+               // removeButton.attr('disabled', true);
             } else {
                 removeButton.attr('disabled', false);
             }
@@ -82,5 +82,6 @@ jQuery.fn.extend({
             addItem($(items[0]), key);
             key++;
         });
+        
     }
 });

@@ -72,32 +72,36 @@ class ServiceController extends Controller
    
     // THIS IS serviceAdd FUNCTION 
     public function serviceAdd(Request $request){
+
       $name = strtolower(trim($request->name));
-      $sub_service_name =$request->sub_service_name;
+      $sub_service_name =$request->subcategory;
       $user_type = $request->user_type;
      if(Service::where('name',$name)->first()){
-         return self::toastr(false,"Service Name Already Registered","error","Error");
+         return self::toastr(false,"Service Already Exist","error","Error");
      }
-     
-      $service_details = new Service;
-      $service_details->name = $name;
-      $service_details->user_type = $user_type;
-      $save = $service_details->save();
-      $service_id =$service_details->service_id;
-      if(!empty($sub_service_name)){
-        foreach ($sub_service_name as $key => $value) {
-          $sub_service_details = new Subservice;
-          $sub_service_details->service_id = $service_id;
-          $sub_service_details->service_name = $value;
-          $sub_service_details->save();
-        }
-      }
+     if(!empty($sub_service_name)){
 
-      if($save){
-         return self::toastr(true,"Service Add Successfull","success","Success");
-      }else{
-         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
-      }
+            $service_details = new Service;
+            $service_details->name = $name;
+            $service_details->user_type = $user_type;
+            $service_details->save();
+            $service_id =$service_details->service_id;
+            // print_r($service_id);die;
+            foreach ($sub_service_name as $key => $value) {
+              $sub_service_details = new Subservice;
+              if($value!=""){
+              $sub_service_details->service_id = $service_id;
+              $sub_service_details->service_name = $value;
+              $sub_service_details->save();
+              }
+            
+            }
+
+       return self::toastr(true,"Service Add Successfull","success","Success");
+    }else{
+      
+    }
+
       
     }
     // THIS IS serviceAdd FUNCTION 
