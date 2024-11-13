@@ -151,6 +151,7 @@ Route::get('/admin/document/{id}',[ContactController::class,'documentPage'])->na
 
 Route::get('/admin/view-file/{filename}',[ContactController::class,'fileShow'])->name('admin.fileShow');
 Route::get('/admin/sub_service_delete',[ServiceController::class,'deleteSubService'])->name('post23');
+Route::get('/admin/sub-service-list/{id}',[ServiceController::class,'subServiceList'])->name('admin.sub-service-list');
 
 });
 
