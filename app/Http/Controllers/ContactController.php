@@ -1643,6 +1643,8 @@ public function addLead(){
         ->where('services.service_id','!=',14)
         ->groupBy('customer.customer_email') 
         ->paginate(10);
+        $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
+        
 
      // echo '<pre>';
      // print_r($leads_data);die;
@@ -1670,6 +1672,8 @@ public function addLead(){
             ->groupBy('customer.customer_email') 
             ->whereIn('customer.customer_service_id',$service_id)
             ->paginate(10);
+        $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
+
 
         }
 
@@ -1692,9 +1696,11 @@ public function addLead(){
             ->groupBy('customer.customer_email') 
             ->whereJsonContains('customer.team_member',"$admin_data->id")
             ->paginate(10);
+        $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
+
 
       }
-      return view('admin.dashboard.view_leads',['admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
+      return view('admin.dashboard.view_leads',['services'=>$service,'admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
  }
  //chatShow FUNCTION START
   public function chatShow($customer_id){

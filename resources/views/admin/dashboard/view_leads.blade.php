@@ -16,6 +16,23 @@
 							<div></div><br>
 
 						<div class="table-responsive">
+								<div >
+									<form action={{route('admin.view-lead')}} method="GET">
+										<div class="row">
+										<div class="col-md-4">
+								<select name="service"  class="form-control" id="" >
+									<option value="">Filter Services</option>
+									@foreach ($services as $item)
+										<option {{ request('service') == $item->service_id ? 'selected' : '' }} value="{{$item->service_id}}">{{$item->name}}</option>
+									@endforeach
+									
+								</select>
+										</div>
+										<div class="col-md-2"><button type="submit" class="btn btn-success">Search</button></div>
+									</div>
+								
+								</form> <br>
+								</div>
 						
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
 								<thead>
