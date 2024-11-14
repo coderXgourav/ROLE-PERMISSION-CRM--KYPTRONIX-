@@ -2465,6 +2465,24 @@ foreach ($customers[0] as $item => $customer_id) {
 
   return self::swal(true,'Assign Successfull','success');
 }
+public function changeStatus(Request $request){
+      $customer_id =$request->customer_id;
+      $customer_details = CustomerModel::find($customer_id);
+      if($customer_details->status == '1'){
+         $customer_details->status = 0;
+      }else if($customer_details->status == '0'){
+         $customer_details->status = 1;
+      }
+     
+      $save=$customer_details->save();
+      if($save){
+         return self::toastr(true,"Success","success","Success");
+
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
+      
+}
 
 // THIS IS END OF THE CLASS 
 }
