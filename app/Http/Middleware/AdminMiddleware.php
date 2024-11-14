@@ -126,6 +126,7 @@ class AdminMiddleware
             'admin.document'=>1,
             'admin.sub-service-list'=>1,
             'admin.import-leads'=>($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager")?1:0,
+            'change_status'=>1,
             // POST METHODS
             'post37'=>1,
             'post1' => 1,

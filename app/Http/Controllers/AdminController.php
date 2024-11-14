@@ -132,7 +132,6 @@ public function dashboardPage(){
   $total_invoices_data=0;
   $convert_to_clients=0;
   $total_clients=0;
-  $service_data='';
   $email_send_cound = 0;
   $sms_count = 0;$operation_manager =0;
   $team_manager = 0;
@@ -140,8 +139,8 @@ public function dashboardPage(){
   $assign_clients_count = 0;
   $none_assign_clients_count = 0;
   $team_member = 0;
-
-
+  $service_data = '';
+  $paid_customer_count = 0;
       $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->where('main_user.id',$id)
@@ -158,7 +157,8 @@ public function dashboardPage(){
               $team_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"team_manager")->count();
               $team_member = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"customer_success_manager")->count();
               $import_lead = CustomerModel::where('customer_service_id',14)->count();
-
+              $service_data = Service::all();
+              $paid_customer_count =DB::table('payments')->join('customer','customer.customer_id','=','payments.leads_id')->where('payments.pay_status',1)->count();
             }else if($user_details->user_type=="team_manager"){
 
               $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->distinct()->get(['managers_services_id']);
@@ -206,7 +206,7 @@ public function dashboardPage(){
 
    $user_type = self::userType($user_details->user_type);
           
-   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member,'import_lead'=>$import_lead]);
+   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member,'import_lead'=>$import_lead,'service_data'=>$service_data,'paid_customer_count'=>$paid_customer_count]);
 }
 //  THIS IS dashboardPage FUNCTIOIN 
 

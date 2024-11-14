@@ -860,3 +860,40 @@ $("#invoice_email_send").validate({
         });
     },
 });
+
+function ChangeStatus(customer_id = "") {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You want to change the Lead Status!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, change it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/admin/change_status",
+                data: {
+                    customer_id: customer_id,
+                },
+                dataType: "JSON",
+                success: function (data) {
+                    swal.fire({
+                        icon: data.icon,
+                        title: data.title,
+                    });
+                    location.reload();
+                    if (data.status) {
+                        $("#" + customer_id).hide();
+                    }
+                },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
+                },
+            });
+        }
+    });
+}

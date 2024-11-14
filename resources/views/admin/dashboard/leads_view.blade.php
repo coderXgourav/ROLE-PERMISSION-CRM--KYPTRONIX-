@@ -36,22 +36,32 @@
                       <div class="mt-3">
                         <h4>{{$customer->customer_name}}</h4><br>
                         <?php $id=encrypt($customer->customer_id);?>
-                         <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>
-                        <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+                         
+                         <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-phone" aria-hidden="true"></i></a>
+                        <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-envelope" aria-hidden="true"></i></a>
                     
-                         <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary"><i class="fa fa-commenting" aria-hidden="true"></i></a> 
+                         <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-commenting" aria-hidden="true"></i></a> 
+
+                          <a href="#" class="" onclick="ChangeStatus({{$customer->customer_id}})">
+                            @if($customer->status == '0')
+                            <button class="btn btn-success">Enable</button>
+                          </a>
+                          @else <button class="btn btn-danger">Disable</button>
+                          @endif
+
+
                          <div> <br>
                             <div class="btn-group">
-                              <a href="{{route('admin.show-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">View Invoice</a>
+                              <a href="{{route('admin.show-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none;background: #d3d3d3; border: #d3d3d3 " <?php } ?>>View Invoice</a>
                               &nbsp;
-                              <a href="{{route('admin.create-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success">Generate Invoice</a>
+                              <a href="{{route('admin.create-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>>Generate Invoice</a>
                             
                             </div>  
                          
                          </div>   <br>
                            <?php $id=encrypt($customer->customer_id);?>
                       <!-- <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-primary btn-sm ">Show Remarks</a>-->
-                        <button class="btn btn-primary btn-sm" id="remarks">Show Remarks</button>
+                        <button class="btn btn-primary btn-sm" id="remarks" >Show Remarks</button>
 
                         <p class="text-secondary mb-1"><br>Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
                         <?php if(!empty($service_data)){?>
