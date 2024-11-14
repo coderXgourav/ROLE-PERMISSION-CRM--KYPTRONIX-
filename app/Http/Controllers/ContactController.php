@@ -1865,7 +1865,9 @@ public function invoiceAdd(Request $request){
       $user_id=$request->user_id;
       $role=$request->role;
       $service_id=$request->service_id;
+      $custom=$request->custom;
       $package_id=$request->package;
+      $custom_title=$request->title;
       $invoice_id="INV-".rand(4, 9999);
 
       
@@ -1877,7 +1879,13 @@ public function invoiceAdd(Request $request){
       $invoice_details->user_id = $user_id;
       $invoice_details->role = $role;
       $invoice_details->service_id=$service_id;
-      $invoice_details->package_id=$package_id;
+      $invoice_details->title=$custom_title;
+      if($package_id !=''){
+       $invoice_details->package_id=$package_id;
+      }else{
+       $invoice_details->package_id=$custom;
+
+      }
       $invoice_details->invoice_unique_id=$invoice_id;
       $save = $invoice_details->save();
 
@@ -2229,8 +2237,15 @@ foreach ($managers as $key => $value) {
      
     //  echo '<pre>';
     //  print_r($customers);die;
-     
-     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers]);
+     $package_details =DB::table('customer')
+     ->select('packages.title','packages.price as package_price','invoices.price as invoice_price','packages.package_id','invoices.title as custom_title' )
+     ->join('invoices','invoices.customer_id','=','customer.customer_id')
+     ->leftjoin('packages','packages.package_id','=','invoices.package_id')
+     ->where('customer.customer_id','=',$customer_id)
+     ->get();
+     //echo '<pre>';
+    // print_r($package_details);die;
+     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers,'package_details'=>$package_details]);
   }
 
   

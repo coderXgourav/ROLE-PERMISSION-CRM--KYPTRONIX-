@@ -136,6 +136,16 @@
 
 
                         <?php } ?>
+                         <?php if(!empty($package_details)){ 
+                             foreach ($package_details as  $value) {
+                         ?>
+                         <?php  if($value->package_id == ''){ ?>
+
+                             <p class="text-muted font-size-sm">Package Title -<?=$value->custom_title?> </p>
+                          <?php }else{ ?>
+                             <p class="text-muted font-size-sm">Package Title - <?=$value->title?></p>
+
+                          <?php } } } ?>
 
                         <!--<button class="btn btn-primary">Follow</button>
                         <button class="btn btn-outline-primary">Message</button>-->
