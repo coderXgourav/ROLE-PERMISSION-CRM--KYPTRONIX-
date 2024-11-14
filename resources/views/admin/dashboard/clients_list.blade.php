@@ -20,7 +20,7 @@
 										<th>City</th>
 										<th>State</th>
 									</tr>
-								</thead>
+								</thead> 
 								<tbody>
                                     @if(count($clients)>0)
                                     @php
