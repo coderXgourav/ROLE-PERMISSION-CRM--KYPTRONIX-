@@ -154,6 +154,8 @@ Route::get('/admin/sub_service_delete',[ServiceController::class,'deleteSubServi
 Route::get('/admin/sub-service-list/{id}',[ServiceController::class,'subServiceList'])->name('admin.sub-service-list');
 Route::get('/admin/change_status',[ContactController::class,'changeStatus'])->name('change_status');
 
+Route::get('/admin/login-list/{id}',[ContactController::class,'loginDetails'])->name('admin.login-list');
+
 });
 
 Route::get('/not-access',function(){

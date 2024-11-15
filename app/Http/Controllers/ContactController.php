@@ -22,6 +22,8 @@ use App\Models\MemberServiceModel;
 use App\Models\EmailTemplate;
 use App\Models\TeamManagersServicesModel;
 use App\Models\Package;
+use App\Models\LoginHistoryModel;
+use Carbon\Carbon;
 
 use DB;
 use Twilio\Rest\Client;
@@ -1186,7 +1188,8 @@ public function viewTeamMember($team_manager_id){
     $convert_to_clients=0;
     $total_clients=0;
     $service_data='';
-
+    $user_login_details=0;
+    $user_logout=0;
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
         $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
@@ -1226,13 +1229,38 @@ public function viewTeamMember($team_manager_id){
        ->where('team_manager_services.team_manager_id',$team_manager_id)
        ->distinct()
        ->get(['name']);
-       
+
+        $user_login_details = DB::table('main_user')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->where('main_user.id', $team_manager_id)
+        ->where('login_history.operation','login')
+        ->get();
+        $user_logout = DB::table('main_user')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->where('main_user.id', $team_manager_id)
+        ->where('login_history.operation','logout')
+        ->get();
                   
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
           // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
+        $user_login_details = DB::table('main_user')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->where('main_user.id', $team_manager_id)
+        ->where('login_history.operation','login')
+        ->get();     
+        $user_logout = DB::table('main_user')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->where('main_user.id', $team_manager_id)
+        ->where('login_history.operation','logout')
+        ->get();
+
           $customer_success_manager_services = MemberServiceModel::where('member_id', $data->id)
-    ->distinct()
-    ->get(['member_service_id']); // Specify the columns you want to be distinct
+          ->distinct()
+          ->get(['member_service_id']); // Specify the columns you want to be distinct
 
 
           $service_id=[];
@@ -1279,7 +1307,7 @@ public function viewTeamMember($team_manager_id){
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
     }
 
-    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data]);
+    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout]);
 }
 
 
@@ -2504,6 +2532,48 @@ public function changeStatus(Request $request){
       }
       
 }
+public function loginDetails($id){
+  $user_id=session('admin');
+  $admin_data = self::userDetails($user_id);
+  $user_type = self::userType($admin_data->user_type);
+
+// Query to join login and logout events for the user, and group by day
+  $user_login_details = DB::table('login_history as lh1')
+    ->join('login_history as lh2', function ($join) {
+        // Join login and logout events for the same user_id
+        $join->on('lh1.user_id', '=', 'lh2.user_id')
+            ->where('lh1.operation', '=', 'login')   // Login event
+            ->where('lh2.operation', '=', 'logout')  // Logout event
+            ->whereRaw('lh1.logged_in_at < lh2.logged_in_at');  // Ensure login comes before logout chronologically
+    })
+    ->where('lh1.user_id', $id)  // Filter by the specific user ID
+    ->select(DB::raw('DATE(lh1.logged_in_at) as login_date'), 
+             DB::raw('SUM(TIMESTAMPDIFF(SECOND, lh1.logged_in_at, lh2.logged_in_at)) as total_seconds'))
+    ->groupBy(DB::raw('DATE(lh1.logged_in_at)'))  // Group by login date
+    ->orderBy(DB::raw('DATE(lh1.logged_in_at)'))  // Order by date
+    ->get();
+// Initialize an array to store daily login times
+  $daily_login_times = [];
+
+// Process each day's login time
+foreach ($user_login_details as $session) {
+    // Convert total_seconds to hours and minutes
+    $total_hours = $session->total_seconds / 3600;  // Convert seconds to hours
+    $formatted_hours = floor($total_hours);  // Whole hours
+    $formatted_minutes = round(($total_hours - $formatted_hours) * 60);  // Remaining minutes
+
+    // Store the result for each day
+    $daily_login_times[] = [
+        'date' => Carbon::parse($session->login_date)->format('Y-m-d'),
+        'hours' => $formatted_hours,
+        'minutes' => $formatted_minutes
+    ];
+}
+
+  return view('admin.dashboard.login_details',['admin_data'=>$admin_data,'user_type'=>$user_type,'daily_login_times'=>$daily_login_times]);
+
+  }
+
 
 // THIS IS END OF THE CLASS 
 }
