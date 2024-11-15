@@ -2279,9 +2279,9 @@ foreach ($managers as $key => $value) {
      ->leftjoin('packages','packages.package_id','=','invoices.package_id')
      ->where('customer.customer_id','=',$customer_id)
      ->get();
-     //echo '<pre>';
-    // print_r($package_details);die;
-     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers,'package_details'=>$package_details]);
+    // echo '<pre>';
+    //print_r($package_details);die;
+     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers,'package_details'=>$package_details,'services'=>$services]);
   }
 
   

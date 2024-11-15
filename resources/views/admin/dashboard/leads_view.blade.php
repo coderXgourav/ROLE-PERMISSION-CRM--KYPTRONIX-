@@ -135,40 +135,20 @@
                                 </tr>
 
                                 <?php } ?>
-                          
-                            
+                                <?php if(!empty($package_details)){
+                                      foreach ($package_details as  $value) {
+                                ?>
+                                <tr>
+                                  <th>Package Title</th>
+                                 <?php if($value->package_id != ''){?>
+                                  <td><?=$value->title?></td>
+                                  <?php }else{?>
+                                  <td><?=$value->custom_title?></td>
 
-                          <?php if(!empty($customer->address)){?>
-                             <p class="text-muted font-size-sm">Address -{{$customer->address}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->city)){?>
-                             <p class="text-muted font-size-sm">City -{{$customer->city}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->state)){?>
-                            <p class="text-muted font-size-sm">State -{{$customer->state}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->zip)){?>
-                            <p class="text-muted font-size-sm">Zip -{{$customer->zip}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->point_of_contact)){?>
-                            <p class="text-muted font-size-sm">Point of Contact -{{$customer->point_of_contact}}</p>
-                          <?php } ?>
-                                  <?php if(!empty($customer->business_title)){?>
-                            <p class="text-muted font-size-sm">Point of Contact -{{$customer->business_title}}</p>
-                          <?php } ?>
+                                  <?php } ?>
+                                </tr>
+                                <?php } } ?>
 
-                             <?php if(!empty($customer->contact_number)){ ?>
-                             <p class="text-muted font-size-sm">Contact Number -{{$customer->contact_number}}</p>
-                          <?php } ?>
-                              <?php if(!empty($customer->contact_email)){ ?>
-                             <p class="text-muted font-size-sm">Contact Email -{{$customer->contact_email}}</p>
-                          <?php } ?>
-
-
-                        <?php } ?>
-
-                        <!--<button class="btn btn-primary">Follow</button>
-                        <button class="btn btn-outline-primary">Message</button>-->
                       </div>
                        <button class="btn btn-primary btn-sm" id="remarks" >Show Remarks</button> <br>
                                     
