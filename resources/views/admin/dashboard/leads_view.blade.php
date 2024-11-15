@@ -34,22 +34,33 @@
                       <img src="{{url('assets/images/team.png')}}" alt="Team Member" class="rounded-circle p-1 bg-primary" width="120">
 
                       <div class="mt-3">
-                        <h4>{{$customer->customer_name}}</h4><br>
-                        <?php $id=encrypt($customer->customer_id);?>
-                         
-                         <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-phone" aria-hidden="true"></i></a>
-                        <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-envelope" aria-hidden="true"></i></a>
-                    
-                         <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-commenting" aria-hidden="true"></i></a> 
+                        <h4 class="my-2">{{$customer->customer_name}}</h4>
+                        <div>
+                            <button class="btn btn-primary" onclick="AddMoreService()" id="addmorebtn">Add Service</button>
 
-                          <a href="#" class="" onclick="ChangeStatus({{$customer->customer_id}})">
+                             <a href="#" class="" onclick="ChangeStatus({{$customer->customer_id}})">
                             @if($customer->status == '0')
                             <button class="btn btn-success">Enable</button>
                           </a>
                           @else <button class="btn btn-danger">Disable</button>
                           @endif
+                        </div>
 
+                        <div id="categoryTable" style="display: none; align-items: center; gap: 20px; ">
+                            @foreach ($services as $item)
+                               <td > <input type="checkbox" name="service_id[]" value="{{$item->service_id}}" style="width: 25px"></td>
+                               <td class="text-mute">{{$item->name}}</td>
+                            @endforeach
 
+                        </div>
+                       
+                        <?php $id=encrypt($customer->customer_id);?>
+                         <div><br></div>
+                         <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-phone" aria-hidden="true"></i></a>
+                        <a href="{{route('admin.send-email',['id'=>$id])}}"  class="btn btn-primary" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-envelope" aria-hidden="true"></i></a>
+                    
+                         <a href="{{route('admin.send-message',['id'=>$id])}}" class="btn btn-secondary" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-commenting" aria-hidden="true"></i></a> 
+                          <a href="https://wa.me/{{$customer->customer_number}}" target="_blank" class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="lni lni-whatsapp" aria-hidden="true"></i></a> 
                          <div> <br>
                             <div class="btn-group">
                               <a href="{{route('admin.show-invoice',['id'=>$customer->customer_id])}}" class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none;background: #d3d3d3; border: #d3d3d3 " <?php } ?>>View Invoice</a>
@@ -59,88 +70,82 @@
                             </div>  
                          
                          </div>   <br>
+                          <table class="table table-striped"> 
+                              @foreach ($service_data as $item)
+                            <tr>
+                              <th>Service Name</th>
+                              <td>{{$item->service_names}}</td>
+                            </tr>
+                            @endforeach
+                            <tr>
+                              <th>Type</th>
+                              <td><?php if($customer->type==1){echo 'Individual'; }else if($customer->type==2){echo 'Business';}else{echo "...";}?></td>
+                              <th>Email Address</th>
+                              <td>{{$customer->customer_email}}</td>
+                            </tr>
+                            <tr>
+                              <th>Phone Number</th>
+                              <td>{{$customer->customer_number}}</td>
+                              <th>Address</th>
+                              <td>{{$customer->address}}</td> 
+                            </tr>
+
+                             <?php if($customer->business_name==null){?>
+                              <tr>
+                                <th>State</th>
+                                <td>{{$customer->state}}</td>
+                                <th>City</th>
+                                <td>{{$customer->city}}</td>
+                              </tr>
+
+                               <tr>
+                                <th>Zip Code</th>
+                                <td>{{$customer->zip}}</td>
+                                <th>Date Of Birth</th>
+                                <td>{{$customer->dob}}</td>
+                              </tr>
+                              <tr>
+                                <th>SSN </th>
+                                <td>{{$customer->ssn}}</td>
+                              </tr>
+                              <?php } else{ ?>
+                                <tr>
+                                  <th>Business Name</th>
+                                  <td>{{$customer->business_name}}</td>
+                                  <th>Title</th>
+                                  <td>{{$customer->business_title}}</td>
+                                </tr>
+                                <tr>
+                                  <th>Industry</th>
+                                  <td>{{$customer->industry}}</td>
+                                  <th>EIN</th>
+                                  <td>{{$customer->ein}}</td>
+                                </tr>
+                                 <tr>
+                                  <th>FAX</th>
+                                  <td>{{$customer->fax}}</td>
+                                  <th>Point of Contact</th>
+                                  <td>{{$customer->point_of_contact}}</td>
+                                </tr>
+                                <tr>
+                                  <th>Contact Number</th>
+                                  <td>{{$customer->contact_number}}</td>
+                                  <th>Contact Email</th>
+                                  <td>{{$customer->contact_email}}</td>
+                                </tr>
+
+                                <?php } ?>
+                          
+                            
+
+                          </table>
+
+
                            <?php $id=encrypt($customer->customer_id);?>
                       <!-- <a href="{{route('admin.chat',['id'=>$id])}}" class="btn btn-primary btn-sm ">Show Remarks</a>-->
-                        <button class="btn btn-primary btn-sm" id="remarks" >Show Remarks</button>
 
-                        <p class="text-secondary mb-1"><br>Type -<?php if($customer->type==1){echo 'Individual';}else if($customer->type==2){echo 'Business';}?></p>
-                        <?php if(!empty($service_data)){?>
-                          <p class="text-muted font-size-sm">Service Name - <?php foreach($service_data as $val){echo $val->service_names;}?></p>
-                        <?php } ?>
-                        <p class="text-secondary mb-1">Email -{{$customer->customer_email}}</p>
-                        <p class="text-muted font-size-sm">Number -{{$customer->customer_number}}</p>
-
-                        <?php if($customer->business_name==null){?>
-                          <?php if(!empty($customer->dob)){?>
-                           <p class="text-muted font-size-sm">Date Of Birth -{{$customer->dob}}</p>
-                          <?php } ?>
-                         
-                          <?php if(!empty($customer->address)){?>
-                           <p class="text-muted font-size-sm">Address -{{$customer->address}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->city)){?>
-                            <p class="text-muted font-size-sm">City -{{$customer->city}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->state)){?>
-                            <p class="text-muted font-size-sm">State -{{$customer->state}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->zip)){?>
-                            <p class="text-muted font-size-sm">Zip -{{$customer->zip}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->ssn)){?>
-                            <p class="text-muted font-size-sm">SSN -{{$customer->ssn}}</p>
-                          <?php } ?>
-
-                        <?php }else{ ?>
-                          <p class="text-muted font-size-sm">Business Name -{{$customer->business_name}}</p>
-                          <?php if(!empty($customer->business_title)){?>
-                             <p class="text-muted font-size-sm">Title -{{$customer->business_title}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->industry)){?>
-                             <p class="text-muted font-size-sm">Industry -{{$customer->industry}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->ein)){ ?>
-                             <p class="text-muted font-size-sm">EIN -{{$customer->ein}}</p>
-                          <?php } ?>
-                           <?php if(!empty($customer->fax)){ ?>
-                             <p class="text-muted font-size-sm">FAX -{{$customer->fax}}</p>
-                          <?php } ?>
-
-                        
-
-                          <?php if(!empty($customer->address)){?>
-                             <p class="text-muted font-size-sm">Address -{{$customer->address}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->city)){?>
-                             <p class="text-muted font-size-sm">City -{{$customer->city}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->state)){?>
-                            <p class="text-muted font-size-sm">State -{{$customer->state}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->zip)){?>
-                            <p class="text-muted font-size-sm">Zip -{{$customer->zip}}</p>
-                          <?php } ?>
-                          <?php if(!empty($customer->point_of_contact)){?>
-                            <p class="text-muted font-size-sm">Point of Contact -{{$customer->point_of_contact}}</p>
-                          <?php } ?>
-                                  <?php if(!empty($customer->business_title)){?>
-                            <p class="text-muted font-size-sm">Point of Contact -{{$customer->business_title}}</p>
-                          <?php } ?>
-
-                             <?php if(!empty($customer->contact_number)){ ?>
-                             <p class="text-muted font-size-sm">Contact Number -{{$customer->contact_number}}</p>
-                          <?php } ?>
-                              <?php if(!empty($customer->contact_email)){ ?>
-                             <p class="text-muted font-size-sm">Contact Email -{{$customer->contact_email}}</p>
-                          <?php } ?>
-
-
-                        <?php } ?>
-
-                        <!--<button class="btn btn-primary">Follow</button>
-                        <button class="btn btn-outline-primary">Message</button>-->
                       </div>
-                    
+                       <button class="btn btn-primary btn-sm" id="remarks" >Show Remarks</button> <br>
                                     
                     </div>
                     <hr class="my-4" />
@@ -254,6 +259,7 @@
                                     </div> 
                                   </form>
                         <!--Show Remarks End-->    
+                        
                       
                 </div>
 
@@ -268,7 +274,14 @@
     </div>
    <script type="text/javascript">
      $('#remarks').click(function(){
-        $('#show_remarks').show();
+        $('#show_remarks').css.display="block";
+        // $('#show_remarks').css.alignItems="center";
      });
+
+     function AddMoreService(){
+    $('#categoryTable').show(200);
+      
+     }
+
   </script>
 @include('admin.dashboard.footer')

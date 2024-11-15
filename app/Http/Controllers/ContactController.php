@@ -2232,11 +2232,13 @@ foreach ($managers as $key => $value) {
      ->join('main_user','main_user.id','=','remark.user_id')
      ->where('customer.customer_id','=',$customer_id)
      ->get(['remark.*','customer.customer_id','customer.customer_service_id','customer.customer_name','main_user.user_type','main_user.first_name','main_user.last_name']);
+
+     $services = Service::where('name','!=','uncategorized')->get();
      
     //  echo '<pre>';
     //  print_r($customers);die;
      
-     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers]);
+     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients,'user_type'=>$user_type,'service_data'=>$service_data,'data'=>$customers,'services'=>$services]);
   }
 
   
