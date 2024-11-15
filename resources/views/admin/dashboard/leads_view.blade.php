@@ -54,6 +54,7 @@
 
                         </div>
                        
+                        
                         <?php $id=encrypt($customer->customer_id);?>
                          <div><br></div>
                          <a href="{{ route('admin.call',['id'=>$id])}}"  class="btn btn-success" <?php if($customer->status == '0'){?> style="pointer-events: none; background: #d3d3d3; border: #d3d3d3" <?php } ?>><i class="fa fa-phone" aria-hidden="true"></i></a>
