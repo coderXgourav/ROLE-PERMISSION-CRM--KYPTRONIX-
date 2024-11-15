@@ -45,13 +45,14 @@ class AdminController extends Controller
             $client = new Client();
             $response = $client->get("http://ip-api.com/json/{$ip}");
             $locationData = json_decode($response->getBody(), true);
-            
+            $operation ='login';
                LoginHistoryModel::create([
                 'user_id'=>$user_id,
                 'ip_address' => $ip,
                 'country' => $locationData['country'] ?? null,
                 'city' => $locationData['city'] ?? null,
                 'region' => $locationData['regionName'] ?? null,
+                'operation'=>$operation,
                ]);
         
             if($user_details->disable_account>0){
@@ -225,6 +226,22 @@ public function chnagePasswordPage(){
 
 // THIS IS A logout FUNCTION 
 public function logout(){
+    $id = session('admin');
+    $user_details = self::userDetails($id);
+    $user_id = $user_details->id;
+    $ip  = request()->ip();
+    $client = new Client();
+    $response = $client->get("http://ip-api.com/json/{$ip}");
+    $locationData = json_decode($response->getBody(), true);
+    $operation ='logout';
+    LoginHistoryModel::create([
+      'user_id'=>$user_id,
+      'ip_address' => $ip,
+      'country' => $locationData['country'] ?? null,
+      'city' => $locationData['city'] ?? null,
+      'region' => $locationData['regionName'] ?? null,
+      'operation'=>$operation,
+    ]);
   session()->forget('admin');
   return redirect('/login');
 }
