@@ -2539,6 +2539,7 @@ public function loginDetails($id){
   $admin_data = self::userDetails($user_id);
   $user_type = self::userType($admin_data->user_type);
 
+
 // Query to join login and logout events for the user, and group by day
   $user_login_details = DB::table('login_history as lh1')
     ->join('login_history as lh2', function ($join) {
@@ -2556,9 +2557,8 @@ public function loginDetails($id){
     ->get();
 // Initialize an array to store daily login times
   $daily_login_times = [];
-
 // Process each day's login time
-foreach ($user_login_details as $session) {
+/*foreach ($user_login_details as $session) {
     // Convert total_seconds to hours and minutes
     $total_hours = $session->total_seconds / 3600;  // Convert seconds to hours
     $formatted_hours = floor($total_hours);  // Whole hours
@@ -2570,7 +2570,36 @@ foreach ($user_login_details as $session) {
         'hours' => $formatted_hours,
         'minutes' => $formatted_minutes
     ];
+}*/
+// Process each day's login time
+foreach ($user_login_details as $session) {
+    // Convert total_seconds to hours and minutes
+    $total_hours = $session->total_seconds / 3600;  // Convert seconds to hours
+    $formatted_hours = floor($total_hours);  // Whole hours
+    $formatted_minutes = round(($total_hours - $formatted_hours) * 60);  // Remaining minutes
+
+    // Check if this date already exists in the array
+    if (isset($daily_login_times[$session->login_date])) {
+        // If the date exists, add the current session's hours and minutes to the existing values
+        $daily_login_times[$session->login_date]['hours'] += $formatted_hours;
+        $daily_login_times[$session->login_date]['minutes'] += $formatted_minutes;
+        
+        // Handle minute overflow (e.g., 60 minutes should be converted to 1 hour)
+        if ($daily_login_times[$session->login_date]['minutes'] >= 60) {
+            $extra_hours = floor($daily_login_times[$session->login_date]['minutes'] / 60);
+            $daily_login_times[$session->login_date]['hours'] += $extra_hours;
+            $daily_login_times[$session->login_date]['minutes'] %= 60;
+        }
+    } else {
+        // If the date doesn't exist, store the current session's hours and minutes
+        $daily_login_times[$session->login_date] = [
+            'date' => Carbon::parse($session->login_date)->format('Y-m-d'),
+            'hours' => $formatted_hours,
+            'minutes' => $formatted_minutes,
+        ];
+    }
 }
+
 
   return view('admin.dashboard.login_details',['admin_data'=>$admin_data,'user_type'=>$user_type,'daily_login_times'=>$daily_login_times]);
 
