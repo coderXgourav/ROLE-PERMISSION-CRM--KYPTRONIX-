@@ -157,6 +157,8 @@ Route::get('/admin/change_status',[ContactController::class,'changeStatus'])->na
 Route::get('/admin/login-list/{id}',[ContactController::class,'loginDetails'])->name('admin.login-list');
 Route::get('/admin/subservices/{serviceIds}', [ServiceController::class, 'getSubservicesByServiceId'])->name('admin.subservices');
 
+Route::get('/admin/package_subservices/{serviceIds}', [ServiceController::class, 'getSubservices'])->name('admin.package_subservices');
+
 
 });
 

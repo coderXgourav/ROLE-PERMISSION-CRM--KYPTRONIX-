@@ -301,5 +301,11 @@ public function subServiceList($service_id){
         $subservices = Subservice::whereIn('service_id', $sIds)->get();
         return response()->json($subservices);
     }
+     public function getSubservices($serviceIds)
+    {
+        $sIds = explode(',', $serviceIds);
+        $subservices = Subservice::whereIn('service_id', $sIds)->get();
+        return response()->json($subservices);
+    }
 
 }
