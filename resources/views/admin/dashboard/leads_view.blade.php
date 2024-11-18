@@ -132,12 +132,25 @@
                                            value="{{$item->service_id}}">
                                     <label class="form-check-label">{{$item->name}}</label>
                                 </div>
+
                             </div>
+
                             @endforeach
                         </div>
                     </div>
+                    <!-- Sub Service -->
+                     <div class="mt-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-check text-start" id="subservices"></div>
+                            </div>
 
-                    <!-- Communication Buttons -->
+                        </div>
+                       
+
+                    </div>
+    
+                  <!-- Communication Buttons -->
                     <div class="d-flex justify-content-center gap-2 mt-4">
                         <a href="{{ route('admin.call', ['id' => encrypt($customer->customer_id)]) }}" 
                            class="btn btn-outline-success {{ $customer->status == '0' ? 'disabled' : '' }}">
@@ -364,6 +377,38 @@ function AddMoreService() {
     $('#categoryTable').show(200);
       
      }
+     $(document).ready(function() {
+            $('.service-checkbox').on('change', function() {
+                var selectedServiceIds = [];
+                $('.service-checkbox:checked').each(function() {
+                    selectedServiceIds.push($(this).val());
+                });
 
+                if (selectedServiceIds.length === 0) {
+                    $('#subservices').html('');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/admin/subservices/' + selectedServiceIds.join(','),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var subserviceHtml = '';
+                        if (response.length > 0) {
+                            response.forEach(function(subservices) {
+                                subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox" name="subservices[]" value="' + subservices.id + '" /><label class="form-check-label"> ' + subservices.service_name + '</label><br>';
+                            });
+                        } else {
+                            subserviceHtml = 'No subservices available for the selected service.';
+                        }
+                        $('#subservices').html(subserviceHtml);
+                    },
+                    error: function() {
+                        alert('Error fetching subservices.');
+                    }
+                });
+            });
+        });
   </script>
 @include('admin.dashboard.footer')

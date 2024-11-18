@@ -295,5 +295,11 @@ public function subServiceList($service_id){
     return view('admin.dashboard.sub_service_list',['admin_data'=>$admin_data,'sub_service'=>$data,'user_type'=>$user_type]);
 }
 
+    public function getSubservicesByServiceId($serviceIds)
+    {
+        $sIds = explode(',', $serviceIds);
+        $subservices = Subservice::whereIn('service_id', $sIds)->get();
+        return response()->json($subservices);
+    }
 
 }

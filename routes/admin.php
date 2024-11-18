@@ -155,6 +155,8 @@ Route::get('/admin/sub-service-list/{id}',[ServiceController::class,'subServiceL
 Route::get('/admin/change_status',[ContactController::class,'changeStatus'])->name('change_status');
 
 Route::get('/admin/login-list/{id}',[ContactController::class,'loginDetails'])->name('admin.login-list');
+Route::get('/admin/subservices/{serviceIds}', [ServiceController::class, 'getSubservicesByServiceId'])->name('admin.subservices');
+
 
 });
 
