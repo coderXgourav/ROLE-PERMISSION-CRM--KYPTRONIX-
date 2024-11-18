@@ -47,7 +47,7 @@
 										{{-- <th>Assigned To Team member</th> --}}
 										{{-- <th>Assigned To Manager</th> --}}
 										{{-- <th>Invoice Status</th> --}}
-										{{-- <th>Status</th> --}}
+										<th>Status</th>
 										<th style="text-align: center">Action</th>
 									</tr>
 								</thead>
@@ -71,9 +71,9 @@
 										{{-- <td>{{$value->first_name}} {{$value->last_name}}</td> --}}
 										{{-- <td>{{$admin_data->first_name}} {{$admin_data->last_name}}</td> --}}
 										{{-- <td></td> --}}
-										{{-- <td>
+										 <td>
 											<?php if($value->status == '1'){
-											   echo 'Active';}else{ echo 'Disable';}?></td> --}}
+											   echo 'Disable';}else{ echo 'Enable';}?></td>
 
 
 										<td colspan="3" style="display: flex; justify-content:center;">

@@ -2542,8 +2542,10 @@ public function changeStatus(Request $request){
       }else if($customer_details->status == '0'){
          $customer_details->status = 1;
       }
-     
-      $save=$customer_details->save();
+     $save=$customer_details->save();
+     /* $data=CustomerModel::where('customer_email',$customer_details->customer_email)->->update([
+        'status' => $newStatus]);*/
+    
       if($save){
          return self::toastr(true,"Success","success","Success");
 
