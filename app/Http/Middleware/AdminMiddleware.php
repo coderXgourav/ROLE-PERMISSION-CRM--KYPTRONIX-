@@ -129,6 +129,7 @@ class AdminMiddleware
             'change_status'=>1,
             'admin.login-list'=>1,
             'admin.subservices'=>1,
+            'admin.package_subservices'=>1,
             // POST METHODS
             'post37'=>1,
             'post1' => 1,

@@ -13,6 +13,8 @@
 								<thead>
 									<tr>
 										<th>No.</th>
+										<th>Service</th>
+										<th>Sub service</th>
 										<th>Title</th>
 										<th>Price</th>
 										<th>Action</th>
@@ -26,6 +28,8 @@
                                     @foreach($data as $key => $value)
                                     <tr id="{{$value->package_id}}">
 										<td>{{$i++}}</td>
+										<td>{{$value->service_name}}</td>
+										<td>{{$value->subservice_name}}</td>
 										<td>{{$value->title}}</td>
 										<td>{{$value->price}}</td>
 										@php

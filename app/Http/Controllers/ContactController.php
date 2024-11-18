@@ -2159,15 +2159,30 @@ public function allEmailTemplate(){
 public function savePackage(Request $request){
       $title = $request->title;
       $price = $request->price;
-      $desc  = $request->desc;
+      $service_id  = $request->service_id;
+      $subservices  = $request->subservices;
+
      if(Package::where('title',$title)->first()){
          return self::toastr(false,"Package Title Already Exit","error","Error");
      }
-      $package_details = new Package;
-      $package_details->title = $title;
-      $package_details->price = $price;
-      $package_details->desc  = $desc;
-      $save = $package_details->save();
+     if(!empty($subservices)){
+      foreach ($subservices as $key => $value) {
+         $package_details = new Package;
+         $package_details->title = $title;
+         $package_details->price = $price;
+         $package_details->service_id =$service_id;
+         $package_details->subservice_id =$value;
+         $save = $package_details->save();
+     
+      }
+     }else{
+         $package_details = new Package;
+         $package_details->title = $title;
+         $package_details->price = $price;
+         $package_details->service_id =$service_id;
+         $save = $package_details->save();
+     
+     }
         if($save){
           return self::toastr(true,"Package Added","success","Success");
         }else{
@@ -2177,14 +2192,17 @@ public function savePackage(Request $request){
    public function updatePackage(Request $request){
       $title = $request->title;
       $price = $request->price;
-      $desc  = $request->desc;
       $package_id = $request->package_id;
+      $service_id = $request->service_id;
+      $subservices = $request->subervice_id;
+     
       $package_details = Package::find($package_id);
       $package_details->title = $title;
       $package_details->price = $price;
-      $package_details->desc  = $desc;
+      $package_details->service_id  = $service_id;  
+      $package_details->subservice_id =$subservices;
       $save = $package_details->save();
-    
+     
       if($save){
          return self::toastr(true,"Package Details Updated Successfull","success","Success");
       }else{

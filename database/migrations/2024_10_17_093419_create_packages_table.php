@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('price')->nullable();
             $table->string('desc')->nullable();
+            $table->string('service_id')->nullable();
+            $table->string('subservice_id')->nullable();
             $table->timestamps();
         });
     }
