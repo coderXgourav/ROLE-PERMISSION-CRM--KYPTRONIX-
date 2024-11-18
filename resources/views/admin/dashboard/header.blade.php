@@ -117,14 +117,14 @@
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-user-circle"></i>
                         </div>
-                        <div class="menu-title">User</div>
+                        <div class="menu-title">Staff</div>
                     </a>
                     <ul>
                         <li> <a href="{{ route('admin.add-contact') }}"><i
                                     class='bx bx-radio-circle'></i>Registration</a>
                         </li>
                         <li> <a href="{{ route('admin.contact') }}"><i
-                                    class='bx bx-radio-circle'></i>View Users</a>
+                                    class='bx bx-radio-circle'></i>View Staffs</a>
                         </li>
                       
                     </ul>

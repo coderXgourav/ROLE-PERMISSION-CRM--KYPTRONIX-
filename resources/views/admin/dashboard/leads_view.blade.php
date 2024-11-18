@@ -101,7 +101,7 @@
                 <div class="card-body text-center">
                     <img src="{{url('assets/images/team.png')}}" 
                          class="rounded-circle profile-image mb-4" 
-                         alt="{{$customer->customer_name}}">
+                         alt="{{$customer->customer_name}}"> 
                     
                     <h4 class="mb-3">{{$customer->customer_name}}</h4>
                     <p class="text-muted">
@@ -122,13 +122,15 @@
 
                     <!-- Service Selection -->
                     <div id="categoryTable" class="mt-4" style="display: none;">
-                        <div class="row g-3">
+                        <div class="row g-2">
+                            <span>Select One Service</span>
+                            <hr>
                             @foreach ($services as $item)
                             <div class="col-12">
                                 <div class="form-check text-start">
                                     <input type="checkbox" 
-                                           class="form-check-input service-checkbox" 
-                                           name="service_id[]" 
+                                           class="form-check-input service-checkbox"  
+                                           name="service_id" 
                                            value="{{$item->service_id}}">
                                     <label class="form-check-label">{{$item->name}}</label>
                                 </div>
@@ -142,6 +144,7 @@
                      <div class="mt-4">
                         <div class="row g-3">
                             <div class="col-12">
+                                <hr>
                                 <div class="form-check text-start" id="subservices"></div>
                             </div>
 
@@ -362,7 +365,12 @@ function toggleRemarks() {
 
 function AddMoreService() {
     const categoryTable = document.getElementById('categoryTable');
-    categoryTable.style.display = categoryTable.style.display === 'none' ? 'block' : 'none';
+    categoryTable.style.display === 'none' ? 'block' : 'none';
+}
+
+function AddMoreService() {
+    const categoryTable = document.getElementById('categoryTable');
+    categoryTable.style.display === 'none' ? 'block' : 'none';
 }
 
 // Add your existing JavaScript functions here
@@ -389,18 +397,35 @@ function AddMoreService() {
                     return;
                 }
 
+
+  const checkboxes = document.querySelectorAll('.service-checkbox');
+
+    // checkboxes.forEach(checkbox => {
+    //   checkbox.addEventListener('click', function() {
+    //     if (this.checked) {
+    //       checkboxes.forEach(cb => {
+    //         if (cb !== this) {
+    //           cb.checked = false;
+    //         }
+    //       });
+    //     }
+    //   });
+    // });
+
+
+
                 $.ajax({
                     url: '/admin/subservices/' + selectedServiceIds.join(','),
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        var subserviceHtml = '';
+                        var subserviceHtml = '<p class="text-center">Choose Sub-Services </p>';
                         if (response.length > 0) {
                             response.forEach(function(subservices) {
-                                subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox" name="subservices[]" value="' + subservices.id + '" /><label class="form-check-label"> ' + subservices.service_name + '</label><br>';
+                                subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox " name="subservices[]" value="' + subservices.id + '" /><label class="form-check-label"> ' + subservices.service_name + '</label><br>';
                             });
                         } else {
-                            subserviceHtml = 'No subservices available for the selected service.';
+                            subserviceHtml = '<p style="color:red">No subservices available for the selected service.</p>';
                         }
                         $('#subservices').html(subserviceHtml);
                     },

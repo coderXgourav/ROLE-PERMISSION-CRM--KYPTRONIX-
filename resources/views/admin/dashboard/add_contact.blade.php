@@ -18,11 +18,9 @@ width: 100% !important;
 						<div class="card">
 							<form id="add_contact_form">
 							<div class="card-body p-4">
-								<h5 class="mb-4">User Registration </h5>
+								<h5 class="mb-4">Staff Registration </h5>
 								<div id="message" style="display: none; ">
-									<div class="" style=" background: #16bccfa3;
-    padding: 15px;
-    border-radius: 5px;">
+									<div class="" style=" background: #16bccfa3; padding: 15px; border-radius: 5px;">
 										<h5 class="text-center"> Please Add at Least One Service</h5>
 									</div>
 									<br><br>
@@ -119,12 +117,9 @@ width: 100% !important;
                                     
 									
 									<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">User Type</label>
+										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
 										<div class="col-sm-9">
-											<div style="    display: flex;
-    align-items: center;
-    gap: 10px;
-}">
+											<div style="    display: flex;align-items: center;gap: 10px;}">
 												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager"  style="width: 25px"> </div>
 												<div><p>Operation Manager</p></div>
 
@@ -138,15 +133,7 @@ width: 100% !important;
 
 											</div>
 											
-											{{-- <div class="position-relative input-icon">
-												<select name="user_type" id="" class="form-control" required onchange="checkManager(this.value)">
-													<option value="">Select User Type</option>
-													<option value="operation_manager">Operation Manager</option>
-													<option value="team_manager">Team Manager</option>
-													<option value="customer_success_manager">Customer Success Manager</option>
-												</select>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
-											</div> --}}
+										
 										</div>
 									</div>
 
@@ -154,13 +141,8 @@ width: 100% !important;
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
 										<div class="col-sm-9">
-											{{-- <div class="position-relative input-icon"> 
-												<select multiple name="services[]"  class="form-control" required >
-													<option value="">Select Services </option>
-													</select>
-											</div> --}}
-
-<div style="display: flex;align-items: center;gap: 10px;}">
+										
+                                    <div style="display: flex;align-items: center;gap: 10px;}">
 													@foreach ($services as $item)
 
 													
@@ -182,7 +164,7 @@ width: 100% !important;
 
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">User Privilage</label>
-						<div class="col-sm-9">
+						          <div class="col-sm-9">
 									<div class="row">
 										{{-- <div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
@@ -298,34 +280,6 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-										{{-- <div class="col-sm-3" class="tm">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="client_financial" value="0">
-													<input class="form-check-input" value="1" name="client_financial" type="checkbox" role="switch" id="flexSwitchCheckDefault12" >
-													<label class="form-check-label" for="flexSwitchCheckDefault12">Client Financial Data</label>
-												</div>
-						                    </div>
-										</div> --}}
-										{{-- <div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="client_contact_info" value="0">
-													<input class="form-check-input" value="1" name="client_contact_info" type="checkbox" role="switch" id="flexSwitchCheckDefault13" >
-													<label class="form-check-label" for="flexSwitchCheckDefault13">Client Contact Info</label>
-												</div>
-						                    </div>
-										</div> --}}
-										{{-- <div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="delete_client" value="0">
-													<input class="form-check-input" name="delete_client" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault15" >
-													<label class="form-check-label" for="flexSwitchCheckDefault15">Delete Client Record</label>
-												</div>
-						                    </div>
-										</div> --}}
-											
 								</div>
 					        </div>
 							</div>
@@ -336,15 +290,7 @@ width: 100% !important;
 								
 									<div class="row">
 											
-										{{-- <div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="delete_all_record" value="0">
-													<input class="form-check-input" name="delete_all_record" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault19" >
-													<label class="form-check-label" for="flexSwitchCheckDefault19">Delete All Record</label>
-												</div>
-						                    </div>
-										</div> --}}
+									
 											<div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
 												<div class="form-check form-switch">
@@ -363,16 +309,7 @@ width: 100% !important;
 												</div>
 						                    </div>
 										</div>
-										{{-- <div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="email_template" value="0">
-													
-													<input class="form-check-input" name="email_template" value="1" type="checkbox" role="switch" id="helo2" >
-													<label class="form-check-label" for="helo2">Email Template </label>
-												</div>
-						                    </div>
-										</div> --}}
+										
 								</div>
 					        </div>
 							</div>
@@ -392,25 +329,7 @@ width: 100% !important;
 						                    </div>
 										</div>
 
-										{{-- <div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="member_manage" value="0">
-													<input class="form-check-input" name="member_manage" value="1" type="checkbox" role="switch" id="565" >
-													<label class="form-check-label" for="565">Manage Customer Success Manager</label>
-												</div>
-						                    </div>
-										</div>
-
-											<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="manager_manage" value="0">
-													<input class="form-check-input" name="manager_manage" value="1" type="checkbox" role="switch" id="211" >
-													<label class="form-check-label" for="211">Team Manager Manage</label>
-												</div>
-						                    </div>
-										</div> --}} 
+									
 
 										<div class="col-sm-3">
 												<div class="d-flex align-items-center gap-3">
@@ -472,18 +391,7 @@ width: 100% !important;
 				<script>
 
 
-					// function checkManager(val){
-					// 	if(val=="team_manager"){
-					// 		document.getElementById("service_field").style.display="block";
-					// 	}else{
-					// 		document.getElementById("service_field").style.display="none";
-					// 	}
-					// 	if(val=="customer_success_manager"){
-					// 		document.getElementById("member_service").style.display="block";
-					// 	}else{
-					// 		document.getElementById("member_service").style.display="none";
-					// 	}
-					// }
+				
 					
 
 function resetCheckboxes(checkedBox) {
