@@ -17,23 +17,47 @@
 
 						<div class="table-responsive">
 								<div >
-									<form action={{route('admin.view-lead')}} method="GET">
+									<form id="filterForm" method="GET">
 										<div class="row">
-										<div class="col-md-4">
-								<select name="service"  class="form-control" id="" >
-									<option value="">Filter Services</option>
-									@foreach ($services as $item)
-										<option {{ request('service') == $item->service_id ? 'selected' : '' }} value="{{$item->service_id}}">{{$item->name}}</option>
-									@endforeach
-									
-								</select>
+										<div class="col-md-3">
+											<select name="service"  class="form-control" id="serviceFilter" >
+												<option value="">Filter Services</option>
+												@foreach ($services as $item)
+													<option  value="{{$item->service_id}}">{{$item->name}}</option>
+												@endforeach
+												
+											</select>
 										</div>
+										<div class="col-md-3">
+											<input type="text" name="lead_name" id="lead_name" placeholder="Name" class="form-control">
+										</div>
+									    <div class="col-md-3">
+											<input type="text" name="lead_email" placeholder="Email" id="email" class="form-control">
+										</div>
+									     <div class="col-md-3">
+											<input type="text" name="lead_ph_number" id="ph_number" placeholder="Number" class="form-control">
+										</div>
+									    <div class="col-md-3">
+											<input type="text" name="lead_city" id="city" placeholder="City" class="form-control">
+										</div>
+									   <div class="col-md-3">
+											<input type="text" name="lead_state" placeholder="State" id="state" class="form-control">
+										</div>
+									    <div class="col-md-3">
+											<select name="status"  class="form-control" id="status">
+												<option value="">Status</option>
+													<option  value="0">Enable</option>
+													<option  value="1">Disable</option>
+												
+											</select>
+										</div>
+										
 										<div class="col-md-2"><button type="submit" class="btn btn-success">Search</button></div>
 									</div>
 								
 								</form> <br>
 								</div>
-						
+						    <div id="serviceResults"></div>
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
 								<thead>
 									<tr>
@@ -122,4 +146,48 @@
 <script>
 	 $('#myTable').DataTable({
 	 });
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get filter values
+        let service = Array.from(document.getElementById('serviceFilter').selectedOptions).map(option => option.value);
+        let status = Array.from(document.getElementById('status').selectedOptions).map(option => option.value);
+
+        let lead_name = document.getElementById('lead_name').value;
+        let lead_email = document.getElementById('email').value;
+        let lead_ph_number = document.getElementById('ph_number').value;
+        let lead_city = document.getElementById('city').value;
+        let lead_state = document.getElementById('state').value;
+
+        // Prepare the data for the AJAX request
+        let filterData = {
+            service: service,
+            status:status,
+            lead_name:lead_name,
+            lead_email:lead_email,
+            lead_ph_number:lead_ph_number,
+            lead_city:lead_city,
+            lead_state:lead_state
+        };
+
+        // Send AJAX request to Laravel backend
+        fetch('/admin/service_filter?' + new URLSearchParams(filterData).toString())
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response and update the UI
+                let myTable = document.getElementById('myTable');
+                myTable.innerHTML='';
+                serviceResults.innerHTML = '';
+                
+                data.forEach(service => {
+                    let serviceElement = document.createElement('div');
+                    serviceElement.innerHTML = ``;
+                    serviceResults.appendChild(serviceElement);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+//{service.name}
 </script>

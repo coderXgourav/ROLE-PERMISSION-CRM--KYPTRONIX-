@@ -113,8 +113,7 @@
                         <button class="btn btn-primary" onclick="AddMoreService()" id="addmorebtn">
                             <i class="lni lni-circle-plus"></i> Add Service
                         </button>
-                        
-                        <a href="#" onclick="ChangeStatus({{$customer->customer_id}})" class="btn {{ $customer->status == '0' ? 'btn-success' : 'btn-danger' }}">
+                        <a href="#" onclick="ChangeStatus('{{$customer->customer_id}}','{{$customer->status}}')" class="btn {{ $customer->status == '0' ? 'btn-success' : 'btn-danger' }}">
                             <i class="lni lni-warning"></i> 
                             {{ $customer->status == '0' ? 'Enable' : 'Disable' }}
                         </a>

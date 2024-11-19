@@ -861,7 +861,7 @@ $("#invoice_email_send").validate({
     },
 });
 
-function ChangeStatus(customer_id = "") {
+function ChangeStatus(customer_id = "",status="") {
     Swal.fire({
         title: "Are you sure?",
         text: "You want to change the Lead Status!",
@@ -876,6 +876,7 @@ function ChangeStatus(customer_id = "") {
                 url: "/admin/change_status",
                 data: {
                     customer_id: customer_id,
+                    status:status
                 },
                 dataType: "JSON",
                 success: function (data) {

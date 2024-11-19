@@ -307,5 +307,53 @@ public function subServiceList($service_id){
         $subservices = Subservice::whereIn('service_id', $sIds)->get();
         return response()->json($subservices);
     }
+    public function filterServices(Request $request)
+    {
+        $id = session('admin');
+        $admin_data = self::userDetails($id);
+        $user_type = self::userType($admin_data->user_type);
+        $lead_name=$request->lead_name;
+       if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
+          // Base query
+    $query = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_id) as customer_id'),
+            DB::raw('MAX(customer.customer_number) as customer_number'),
+            DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.status) as status'),
+            DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
+            DB::raw('MAX(customer.type) as type'),
+            DB::raw('MAX(customer.customer_service_id) as customer_service_id'),
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names')
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email');
+
+
+    // Apply filters based on available parameters
+    if ($request->has('service')) {
+        $query->where('customer.customer_service_id', $request->service);
+    }else if ($request->has('lead_name')) {
+        $query->whereRaw('LOWER(customer.customer_name) LIKE ?', ['%' . strtolower($request->lead_name) . '%']);
+    }else if ($request->has('lead_email')) {
+        $query->where('customer.customer_email', 'like', '%' . $request->lead_email . '%');
+    }else if ($request->has('lead_ph_number')) {
+        $query->where('customer.customer_number', 'like', '%' . $request->lead_ph_number . '%');
+    }else if ($request->has('lead_city')) {
+        $query->where('customer.city', 'like', '%' . $request->lead_city . '%');
+    }else if ($request->has('lead_state')) {
+        $query->where('customer.state', 'like', '%' . $request->lead_state . '%');
+    }
+
+    // Get the filtered data
+    $data = $query->get();
+        // echo '<pre>';
+        // print_r($data);die;
+
+    }
+        return response()->json($data);
+    }
 
 }

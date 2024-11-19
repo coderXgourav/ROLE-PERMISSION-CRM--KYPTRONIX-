@@ -159,6 +159,7 @@ Route::get('/admin/subservices/{serviceIds}', [ServiceController::class, 'getSub
 
 Route::get('/admin/package_subservices/{serviceIds}', [ServiceController::class, 'getSubservices'])->name('admin.package_subservices');
 
+Route::get('/admin/service_filter', [ServiceController::class, 'filterServices'])->name('admin.service_filter');
 
 });
 
