@@ -17,37 +17,37 @@
 
 						<div class="table-responsive">
 								<div >
-									<form id="filterForm" method="GET">
+									<form id="filterForm" action="/admin/service_filter" method="GET">
 										<div class="row">
 										<div class="col-md-3">
 											<select name="service"  class="form-control" id="serviceFilter" >
 												<option value="">Filter Services</option>
 												@foreach ($services as $item)
-													<option  value="{{$item->service_id}}">{{$item->name}}</option>
+													<option  value="{{$item->service_id}}" {{ request('service') == $item->service_id ? 'selected' : '' }}>{{$item->name}}</option>
 												@endforeach
 												
 											</select>
 										</div>
 										<div class="col-md-3">
-											<input type="text" name="lead_name" id="lead_name" placeholder="Name" class="form-control">
+											<input type="text" name="lead_name" id="lead_name" placeholder="Name" class="form-control" value="{{@request('lead_name')}}">
 										</div>
 									    <div class="col-md-3">
-											<input type="text" name="lead_email" placeholder="Email" id="email" class="form-control">
+											<input type="text" name="lead_email" placeholder="Email" id="email" class="form-control"  value="{{@request('lead_email')}}">
 										</div>
 									     <div class="col-md-3">
-											<input type="text" name="lead_ph_number" id="ph_number" placeholder="Number" class="form-control">
+											<input type="text" name="lead_ph_number" id="ph_number" placeholder="Number" class="form-control" value="{{@request('lead_ph_number')}}">
 										</div>
 									    <div class="col-md-3">
-											<input type="text" name="lead_city" id="city" placeholder="City" class="form-control">
+											<input type="text" name="lead_city" id="city" placeholder="City" class="form-control" value="{{@request('lead_city')}}">
 										</div>
 									   <div class="col-md-3">
-											<input type="text" name="lead_state" placeholder="State" id="state" class="form-control">
+											<input type="text" name="lead_state" placeholder="State" id="state" class="form-control" value="{{@request('lead_state')}}">
 										</div>
 									    <div class="col-md-3">
-											<select name="status"  class="form-control" id="status">
+											<select name="status"  class="form-control" id="status" >
 												<option value="">Status</option>
-													<option  value="0">Enable</option>
-													<option  value="1">Disable</option>
+													<option {{ request('status') ==0? 'selected' : '' }}  value="0" >Enable</option>
+													<option {{ request('status') ==1? 'selected' : '' }}   value="1" >Disable</option>
 												
 											</select>
 										</div>
@@ -129,14 +129,14 @@
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="6" style="text-align: center; color:red;"><b> Records Not Found..!</b></td>
+										<td colspan="9" style="text-align: center; color:red;"><b> Records Not Found..!</b></td>
 										
 									</tr>
                                     @endif
 									
 								</tbody>
 							
-							</table>
+							</table> </br>
 							<div>{{$data->links()}}</div>
 						</div>
 					</div>
@@ -146,48 +146,6 @@
 <script>
 	 $('#myTable').DataTable({
 	 });
-    document.getElementById('filterForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+  
 
-        // Get filter values
-        let service = Array.from(document.getElementById('serviceFilter').selectedOptions).map(option => option.value);
-        let status = Array.from(document.getElementById('status').selectedOptions).map(option => option.value);
-
-        let lead_name = document.getElementById('lead_name').value;
-        let lead_email = document.getElementById('email').value;
-        let lead_ph_number = document.getElementById('ph_number').value;
-        let lead_city = document.getElementById('city').value;
-        let lead_state = document.getElementById('state').value;
-
-        // Prepare the data for the AJAX request
-        let filterData = {
-            service: service,
-            status:status,
-            lead_name:lead_name,
-            lead_email:lead_email,
-            lead_ph_number:lead_ph_number,
-            lead_city:lead_city,
-            lead_state:lead_state
-        };
-
-        // Send AJAX request to Laravel backend
-        fetch('/admin/service_filter?' + new URLSearchParams(filterData).toString())
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response and update the UI
-                let myTable = document.getElementById('myTable');
-                myTable.innerHTML='';
-                serviceResults.innerHTML = '';
-                
-                data.forEach(service => {
-                    let serviceElement = document.createElement('div');
-                    serviceElement.innerHTML = ``;
-                    serviceResults.appendChild(serviceElement);
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
-//{service.name}
 </script>
