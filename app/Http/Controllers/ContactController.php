@@ -1559,7 +1559,12 @@ public function addLead(){
             $zip=$request->zip;
             $ssn=$request->ssn;
             $msg=$request->msg;
-            $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
+            if(!empty($middle_name)){
+               $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
+             }else{
+               $customer_name=$first_name.' '.$last_name;
+             }
+           
               $check = CustomerModel::where('customer_email',$email)
               ->orWhere('customer_number',$phone)->first();
               if($check){
