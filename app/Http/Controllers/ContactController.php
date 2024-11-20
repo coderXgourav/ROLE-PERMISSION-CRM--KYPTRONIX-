@@ -1668,7 +1668,6 @@ public function addLead(){
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
         )
         ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-        ->where('services.service_id','!=',14)
         ->groupBy('customer.customer_email') 
         ->paginate(10);
         $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
@@ -2536,17 +2535,17 @@ foreach ($customers[0] as $item => $customer_id) {
 }
 public function changeStatus(Request $request){
       $customer_id =$request->customer_id;
+      $status=$request->status;
       $customer_details = CustomerModel::find($customer_id);
-      if($customer_details->status == '1'){
-         $customer_details->status = 0;
-      }else if($customer_details->status == '0'){
-         $customer_details->status = 1;
+      if($status == '1'){
+         $customer_status = 0;
+      }else if($status == '0'){
+         $customer_status = 1;
       }
-     $save=$customer_details->save();
-     /* $data=CustomerModel::where('customer_email',$customer_details->customer_email)->->update([
-        'status' => $newStatus]);*/
+      $data=CustomerModel::where('customer_email',$customer_details->customer_email)->update([
+        'status' => $customer_status]);
     
-      if($save){
+      if($data){
          return self::toastr(true,"Success","success","Success");
 
       }else{
