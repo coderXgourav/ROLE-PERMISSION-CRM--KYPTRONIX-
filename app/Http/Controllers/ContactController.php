@@ -2275,15 +2275,19 @@ foreach ($managers as $key => $value) {
      $user_type = self::userType($admin_data->user_type);
      $customer_id =   Crypt::decrypt($customer_id);
      $clients = CustomerModel::find($customer_id);
-     $service_data = DB::table('customer')
-        ->select(
-            'customer.customer_email',
-            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
-        )
-        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-        ->groupBy('customer.customer_email')
-        ->where('customer.customer_email',$clients->customer_email) 
-        ->get();
+
+        $service_data = DB::table('customer')
+    ->select(
+        'customer.customer_email',
+        DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names'),
+        DB::raw('GROUP_CONCAT(services.service_id ORDER BY services.name ASC SEPARATOR ", ") as service_ids') // Add service_ids concatenation
+    )
+    ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+    ->groupBy('customer.customer_email')
+    ->where('customer.customer_email', $clients->customer_email)
+    ->get();
+   
+
      $customers = DB::table('customer')
      
      ->join('remark','remark.customer_id','=','customer.customer_id')
