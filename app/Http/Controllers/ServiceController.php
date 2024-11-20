@@ -351,7 +351,9 @@ public function subServiceList($service_id){
               $query->where('customer.status',$request->status);
           }
           // Get the filtered data
+             
           $leads_data = $query->paginate(10);
+          
       
       }
     return view('admin.dashboard.view_leads',['services'=>$service,'admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);

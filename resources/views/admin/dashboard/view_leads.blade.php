@@ -100,7 +100,7 @@
 
 						<div class="table-responsive">
 								<div >
-									<form id="filterForm" method="GET">
+									<form id="filterForm" method="GET" action="{{route('admin.service_filter')}}">
 										  <div class="card-header bg-white py-3">
     </div>
     {{-- <div class="card-body">
