@@ -1,5 +1,6 @@
 
 @include('admin.dashboard.header')
+
  {{-- <!-- @extends('team.dashboard.header') --> --}}
 @push('title')
     <title>My Clients</title>
@@ -18,6 +19,95 @@
 						<div class="table-responsive">
 								<div >
 									<form id="filterForm" method="GET">
+										<div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h5 class="card-title mb-0">Filter Leads</h5>
+    </div>
+    <div class="card-body">
+        <form id="filterForm" method="GET" class="needs-validation">
+            <div class="row g-3">
+                <!-- Service Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <select name="service" class="form-select" id="serviceFilter">
+                            <option value="">All Services</option>
+                            @foreach ($services as $item)
+                                <option value="{{ $item->service_id }}" {{ request('service') == $item->service_id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label for="serviceFilter">Service</label>
+                    </div>
+                </div>
+
+                <!-- Name Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lead_name" name="lead_name" 
+                               placeholder="Enter name" value="{{ request('lead_name') }}">
+                        <label for="lead_name">Name</label>
+                    </div>
+                </div>
+
+                <!-- Email Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="email" name="lead_email" 
+                               placeholder="Enter email" value="{{ request('lead_email') }}">
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+
+                <!-- Phone Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="ph_number" name="lead_ph_number" 
+                               placeholder="Enter phone" value="{{ request('lead_ph_number') }}">
+                        <label for="ph_number">Phone Number</label>
+                    </div>
+                </div>
+
+                <!-- City Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="city" name="lead_city" 
+                               placeholder="Enter city" value="{{ request('lead_city') }}">
+                        <label for="city">City</label>
+                    </div>
+                </div>
+
+                <!-- State Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="state" name="lead_state" 
+                               placeholder="Enter state" value="{{ request('lead_state') }}">
+                        <label for="state">State</label>
+                    </div>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="form-floating">
+                        <select name="status" class="form-select" id="status">
+                            <option value="">All Status</option>
+                            <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Enable</option>
+                            <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Disable</option>
+                        </select>
+                        <label for="status">Status</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-md-3 col-sm-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 										<div class="row">
 										<div class="col-md-3">
 											<select name="service"  class="form-control" id="serviceFilter" >
