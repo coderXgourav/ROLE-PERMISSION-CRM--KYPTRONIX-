@@ -2281,10 +2281,7 @@ foreach ($managers as $key => $value) {
     ->groupBy('customer.customer_email')
     ->where('customer.customer_email', $clients->customer_email)
     ->get();
-        echo "<pre>";
-        print_r($service_data);
-        die;
-     
+   
 
      $customers = DB::table('customer')
      
