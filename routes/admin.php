@@ -161,6 +161,9 @@ Route::get('/admin/package_subservices/{serviceIds}', [ServiceController::class,
 
 Route::get('/admin/service_filter', [ServiceController::class, 'filterServices'])->name('admin.service_filter');
 
+Route::post('/admin/update_service_data',[ServiceController::class,'updateServiceData'])->name('admin.update_service_data');
+
+
 });
 
 Route::get('/not-access',function(){
