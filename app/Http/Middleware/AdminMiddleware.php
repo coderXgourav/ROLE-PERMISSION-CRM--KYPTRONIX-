@@ -161,7 +161,7 @@ class AdminMiddleware
             'admin.fileShow'=>1,
             // 'admin.payment'=>1,  
             'payment.store'=>1,
-            
+            'admin.update_service_data'=>1,
 
             
         ];

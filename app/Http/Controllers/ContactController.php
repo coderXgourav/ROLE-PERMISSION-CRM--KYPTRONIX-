@@ -2275,21 +2275,20 @@ foreach ($managers as $key => $value) {
      $user_type = self::userType($admin_data->user_type);
      $customer_id =   Crypt::decrypt($customer_id);
      $clients = CustomerModel::find($customer_id);
-
-        $service_data = DB::table('customer')
-    ->select(
-        'customer.customer_email',
-        DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names'),
-        DB::raw('GROUP_CONCAT(services.service_id ORDER BY services.name ASC SEPARATOR ", ") as service_ids') // Add service_ids concatenation
-    )
-    ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-    ->groupBy('customer.customer_email')
-    ->where('customer.customer_email', $clients->customer_email)
-    ->get();
-   
-
-     $customers = DB::table('customer')
-     
+     $service_data = DB::table('customer')
+        ->select(
+            'customer.customer_email',
+            DB::raw('MAX(customer.customer_sub_service_id) as customer_sub_service_id'),
+            DB::raw('GROUP_CONCAT(services.service_id ORDER BY services.name ASC SEPARATOR ", ") as service_ids'), // Add service_ids concatenation
+            DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names'),
+            DB::raw('GROUP_CONCAT(customer.customer_id ORDER BY customer.customer_id ASC SEPARATOR ", ") as customer_ids')
+        )
+        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->groupBy('customer.customer_email') 
+              ->where('customer.customer_email', $clients->customer_email)
+        ->get();
+    
+     $customers = DB::table('customer')   
      ->join('remark','remark.customer_id','=','customer.customer_id')
      ->join('main_user','main_user.id','=','remark.user_id')
      ->where('customer.customer_id','=',$customer_id)

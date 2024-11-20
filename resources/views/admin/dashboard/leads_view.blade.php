@@ -118,19 +118,55 @@
                             {{ $customer->status == '0' ? 'Enable' : 'Disable' }}
                         </a>
                     </div>
-
+                   <form id="add-service">
+                     {{@csrf_field();}}
                     <!-- Service Selection -->
+                    <input type="hidden" name="customer_id" value="{{$service_data[0]->customer_ids}}">
+                    <input type="hidden" name="customer_name" value="{{$customer->customer_name}}">
+                    <input type="hidden" name="customer_number" value="{{$customer->customer_number}}">
+                    <input type="hidden" name="customer_email" value="{{$customer->customer_email}}">
+                    <input type="hidden" name="task" value="{{$customer->task}}">
+                    <input type="hidden" name="team_member" value="{{$customer->team_member}}">
+                    <input type="hidden" name="status" value="{{$customer->status}}">
+                    <input type="hidden" name="type" value="{{$customer->type}}">
+                    <input type="hidden" name="first_name" value="{{$customer->first_name}}">
+                    <input type="hidden" name="middle_name" value="{{$customer->middle_name}}">
+                    <input type="hidden" name="last_name" value="{{$customer->last_name}}">
+                    <input type="hidden" name="dob" value="{{$customer->dob}}">
+                    <input type="hidden" name="address" value="{{$customer->address}}">
+                    <input type="hidden" name="city" value="{{$customer->city}}">
+                    <input type="hidden" name="state" value="{{$customer->state}}">
+                    <input type="hidden" name="ssn" value="{{$customer->ssn}}">
+                    <input type="hidden" name="business_name" value="{{$customer->business_name}}">
+                    <input type="hidden" name="industry" value="{{$customer->industry}}">
+                    <input type="hidden" name="fax" value="{{$customer->fax}}">
+                    <input type="hidden" name="contact_number" value="{{$customer->contact_number}}">
+                    <input type="hidden" name="contact_email" value="{{$customer->contact_email}}">
+                    <input type="hidden" name="ein" value="{{$customer->ein}}">
+                    <input type="hidden" name="business_title" value="{{$customer->business_title}}">
+                    <input type="hidden" name="msg" value="{{$customer->msg}}">
+                    <input type="hidden" name="point_of_contact" value="{{$customer->point_of_contact}}">
+                    <input type="hidden" name="paid_customer" value="{{$customer->paid_customer}}">
+
+
                     <div id="categoryTable" class="mt-4" style="display: none;">
                         <div class="row g-2">
                             <span>Select One Service</span>
                             <hr>
+                            <?php 
+                            $s_id=$service_data[0]->service_ids;
+                            $service_idss=explode(',', $s_id);
+                            $sub_s_id=$service_data[0]->customer_sub_service_id;
+                            $sub_service_idss=explode(',', $sub_s_id);
+
+                            ?>
                             @foreach ($services as $item)
                             <div class="col-12">
                                 <div class="form-check text-start">
                                     <input type="checkbox" 
                                            class="form-check-input service-checkbox"  
-                                           name="service_id" 
-                                           value="{{$item->service_id}}">
+                                           name="service_id[]" 
+                                           value="{{$item->service_id}}" <?php if(in_array($item->service_id,$service_idss)){ echo 'checked';} ?>>
                                     <label class="form-check-label">{{$item->name}}</label>
                                 </div>
 
@@ -146,12 +182,13 @@
                                 <hr>
                                 <div class="form-check text-start" id="subservices"></div>
                             </div>
-
                         </div>
-                       
-
                     </div>
-    
+                         <button type="submit" class="btn btn-primary" onclick="" id="updateBtn">
+                            Update
+                        </button>
+
+                   </form>
                   <!-- Communication Buttons -->
                     <div class="d-flex justify-content-center gap-2 mt-4">
                         <a href="{{ route('admin.call', ['id' => encrypt($customer->customer_id)]) }}" 

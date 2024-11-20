@@ -898,3 +898,35 @@ function ChangeStatus(customer_id = "",status="") {
         }
     });
 }
+
+$("#add-service").validate({
+    
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/update_service_data",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("update");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("update");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
+        });
+    },
+});
