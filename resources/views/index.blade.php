@@ -1,6 +1,5 @@
 @if(session()->has('admin'))
-<script>window.location="/login/dashboard"</script>
-
+<script>window.location="/login/dashboard"</script> 
 @else 
 <script>window.location="/login"</script>
 
