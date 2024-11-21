@@ -920,10 +920,10 @@ $("#add-service").validate({
                 $("#btn").html("update");
                 var customer_id = data;
 
-                 Command: toastr["success"]("Success", "Updated Sucessfully");
+                 Command: toastr["success"]("Success", "Updated Successfully");
                  setTimeout(()=>{
-                window.location ="/admin/leads-view/" + customer_id;
-
+                    window.location ="/admin/leads-view/" + customer_id;
+ 
                  },1500)
 
 
