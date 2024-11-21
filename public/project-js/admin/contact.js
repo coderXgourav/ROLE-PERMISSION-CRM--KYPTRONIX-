@@ -919,7 +919,13 @@ $("#add-service").validate({
                 $("#btn").attr("disabled", false);
                 $("#btn").html("update");
                 var customer_id = data;
+
+                 Command: toastr["success"]("Success", "Updated Sucessfully");
+                 setTimeout(()=>{
                 window.location ="/admin/leads-view/" + customer_id;
+
+                 },1500)
+
 
             },
             error: function () {
