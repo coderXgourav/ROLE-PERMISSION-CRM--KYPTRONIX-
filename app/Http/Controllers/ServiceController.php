@@ -348,8 +348,10 @@ public function subServiceList($service_id){
               $query->where('customer.city', 'like', '%' . $request->lead_city . '%');
           } if (!empty($request->lead_state)) {
               $query->where('customer.state', 'like', '%' . $request->lead_state . '%');
-          } if (!empty($request->status)) {
-              $query->where('customer.status',$request->status);
+          } if (isset($request->status) && $request->status==0) {
+              $query->where('customer.status',0);
+          }if (isset($request->status) && $request->status==1) {
+              $query->where('customer.status',1);
           }
           // Get the filtered data
              
@@ -385,9 +387,9 @@ public function subServiceList($service_id){
       }
       
       if($type==1){
-           $phone= $request->contact_number;
-           $country_code = $request->country_code;
-           $customer_number = $country_code.$phone;
+           $phone= $request->customer_number;
+           //$country_code = $request->country_code;
+           $customer_number = $phone;
            $first_name = $request->first_name;
            $middle_name =$request->middle_name;
            $last_name=$request->last_name;
@@ -432,7 +434,7 @@ public function subServiceList($service_id){
       }else if($type==2){
         $email_address = $request->customer_email;
         $fax = $request->fax;
-        $contact_number = $request->contact_number;
+        $contact_number = $request->customer_number;
         $business_name=$request->business_name;
         $industry=$request->industry;
         $address=$request->address;
