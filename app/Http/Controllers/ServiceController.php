@@ -426,7 +426,8 @@ public function subServiceList($service_id){
                 $individual_details->ssn=$ssn;
                 $individual_details->msg=$msg;
                 $save = $individual_details->save();
- 
+                $customer_id=encrypt($individual_details->customer_id);
+
              }
           }      
       }else if($type==2){
@@ -471,11 +472,13 @@ public function subServiceList($service_id){
 
                 $business_details->msg=$msg;
                 $save = $business_details->save();
+                $customer_id=encrypt($business_details->customer_id);
+
 
            }
         }
       }
-      return self::toastr(true,"updated successfully","success","Success");
+       return response()->json($customer_id);
 
     }
 

@@ -918,14 +918,13 @@ $("#add-service").validate({
             success: function (data) {
                 $("#btn").attr("disabled", false);
                 $("#btn").html("update");
-                Command: toastr[data.icon](data.title, data.msg);
-                if (data.status) {
-                }
+                var customer_id = data;
+                window.location ="/admin/leads-view/" + customer_id;
+
             },
             error: function () {
                 $("#btn").attr("disabled", false);
                 $("#btn").html("update");
-                Command: toastr["error"]("Error", "Technical Issue");
             },
         });
     },

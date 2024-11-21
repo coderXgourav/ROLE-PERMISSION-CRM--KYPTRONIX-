@@ -158,8 +158,10 @@
                             $service_idss=explode(',', $s_id);
                             $sub_s_id=$service_data[0]->customer_sub_service_id;
                             $sub_service_idss=explode(',', $sub_s_id);
-
                             ?>
+                            <input type="hidden" id="subservices_id" name="subservices_id" value="<?= $sub_s_id; ?>">
+
+
                             @foreach ($services as $item)
                             <div class="col-12">
                                 <div class="form-check text-start">
@@ -174,20 +176,21 @@
 
                             @endforeach
                         </div>
-                    </div>
-                    <!-- Sub Service -->
-                     <div class="mt-4">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <hr>
-                                <div class="form-check text-start" id="subservices"></div>
+                        <!-- Sub Service -->
+                         <div class="mt-4">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <hr>
+                                    <div class="form-check text-start" id="subservices"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
                          <button type="submit" class="btn btn-primary" onclick="" id="updateBtn">
                             Update
                         </button>
 
+                    </div>
+                    
                    </form>
                   <!-- Communication Buttons -->
                     <div class="d-flex justify-content-center gap-2 mt-4">
@@ -411,7 +414,10 @@ function AddMoreService() {
 
 // Add your existing JavaScript functions here
 </script>
+
    <script type="text/javascript">
+
+
      $('#remarks').click(function(){
         $('#show_remarks').css.display="block";
         // $('#show_remarks').css.alignItems="center";
@@ -422,54 +428,61 @@ function AddMoreService() {
       
      }
      $(document).ready(function() {
+          var checkedValue=$(".service-checkbox").is(":checked");
+          if(checkedValue==true){
+              var selectedServiceIds = [];
+                $('.service-checkbox:checked').each(function() {
+                   selectedServiceIds.push($(this).val());
+                   fetchSubServices(selectedServiceIds);
+                });
+
+          }
             $('.service-checkbox').on('change', function() {
                 var selectedServiceIds = [];
                 $('.service-checkbox:checked').each(function() {
-                    selectedServiceIds.push($(this).val());
+                   selectedServiceIds.push($(this).val());
+                   fetchSubServices(selectedServiceIds);
                 });
 
                 if (selectedServiceIds.length === 0) {
                     $('#subservices').html('');
                     return;
                 }
+             });
 
-
-  const checkboxes = document.querySelectorAll('.service-checkbox');
-
-    // checkboxes.forEach(checkbox => {
-    //   checkbox.addEventListener('click', function() {
-    //     if (this.checked) {
-    //       checkboxes.forEach(cb => {
-    //         if (cb !== this) {
-    //           cb.checked = false;
-    //         }
-    //       });
-    //     }
-    //   });
-    // });
-
-
-
-                $.ajax({
-                    url: '/admin/subservices/' + selectedServiceIds.join(','),
+    });
+      
+     function fetchSubServices(serviceIds){
+        $.ajax({
+                    url: '/admin/subservices/' + serviceIds.join(','),
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
+
                         var subserviceHtml = '<p class="text-center">Choose Sub-Services </p>';
+
                         if (response.length > 0) {
-                            response.forEach(function(subservices) {
-                                subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox " name="subservices[]" value="' + subservices.id + '" /><label class="form-check-label"> ' + subservices.service_name + '</label><br>';
-                            });
+                            const sub_service = $("#subservices_id").val();
+                            const sub_service_array = sub_service.split(",");
+
+                          response.forEach(function(subservices) {
+                        // Check if subservices.id is in the sub_service_array
+                      const isChecked = sub_service_array.includes(subservices.id.toString());  // Ensure both are compared as strings
+
+                            // If it matches, mark the checkbox as checked
+                            subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox" name="subservices[]" value="' + subservices.id + '" ' + (isChecked ? 'checked' : '') + ' />';
+                            subserviceHtml += '<label class="form-check-label"> ' + subservices.service_name + '</label><br>';
+                        });
                         } else {
-                            subserviceHtml = '<p style="color:red">No subservices available for the selected service.</p>';
+                            subserviceHtml = '';
                         }
                         $('#subservices').html(subserviceHtml);
                     },
                     error: function() {
                         alert('Error fetching subservices.');
                     }
-                });
-            });
         });
+
+     }
   </script>
 @include('admin.dashboard.footer')
