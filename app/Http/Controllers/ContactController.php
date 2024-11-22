@@ -2668,6 +2668,8 @@ function loginDetails($userId) {
         }
     }
 
+    
+
     // Format and print results
 
   return view('admin.dashboard.login_details',['admin_data'=>$admin_data,'user_type'=>$user_type,'daily_login_times'=>$dailyDurations]);
