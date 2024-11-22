@@ -63,7 +63,7 @@ class ContactController extends Controller
           
             return $user_details;
     }
-   /* public function userType($type){
+    public function userType($type){
       switch ($type) {
                   case 'customer_success_manager':
                return $user_type = "Customer Manager";
@@ -85,7 +85,7 @@ class ContactController extends Controller
                   default:
                     break;
                 }
-    } */  
+    } 
    
     // THIS IS contactAdd FUNCTION 
     public function contactAdd(Request $request){
@@ -855,34 +855,34 @@ public function export()
     // filterUsers
     public function filterUsers(Request $request){
       $filter = $request->filter;
-      if($filter != ""){
-        switch($filter){
-          case "Operation Managers":
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"operation_manager")->orderBy('id','DESC')->paginate(10);
-            $id = session('admin');
-          $admin_data = self::userDetails($id);
-          $user_type = self::userType($admin_data->user_type);
-         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-            break;
-            case "Team Managers":
-                $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"team_manager")->orderBy('id','DESC')->paginate(10);
-            $id = session('admin');
-          $admin_data = self::userDetails($id);
-          $user_type = self::userType($admin_data->user_type);
-         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-            break;
-                 case "Customer Success Manager":
-                    $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"customer_success_manager")->orderBy('id','DESC')->paginate(10);
-            $id = session('admin');
-          $admin_data = self::userDetails($id);
-          $user_type = self::userType($admin_data->user_type);
-         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+      // if($filter != ""){
+      //   switch($filter){
+      //     case "Operation Managers":
+      //         $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"operation_manager")->orderBy('id','DESC')->paginate(10);
+      //       $id = session('admin');
+      //     $admin_data = self::userDetails($id);
+      //     $user_type = self::userType($admin_data->user_type);
+      //    return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+      //       break;
+      //       case "Team Managers":
+      //           $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"team_manager")->orderBy('id','DESC')->paginate(10);
+      //       $id = session('admin');
+      //     $admin_data = self::userDetails($id);
+      //     $user_type = self::userType($admin_data->user_type);
+      //    return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+      //       break;
+      //            case "Customer Success Manager":
+      //               $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"customer_success_manager")->orderBy('id','DESC')->paginate(10);
+      //       $id = session('admin');
+      //     $admin_data = self::userDetails($id);
+      //     $user_type = self::userType($admin_data->user_type);
+      //    return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
             
-            break;
-            default:
-            break;
-        }
-      }else{
+      //       break;
+      //       default:
+      //       break;
+      //   }
+      // }else{
         $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = $admin_data->user_type;
@@ -925,7 +925,7 @@ public function export()
             
           $user_type = self::userType($admin_data->user_type);
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-      }
+      // }
 
     }
 
