@@ -5,7 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -163,6 +163,12 @@ Route::get('/admin/service_filter', [ServiceController::class, 'filterServices']
 
 Route::post('/admin/update_service_data',[ServiceController::class,'updateServiceData'])->name('admin.update_service_data');
 
+Route::get('/admin/add-role',[AdminController::class,'addRolePage'])->name('admin.add-role');
+Route::post('/admin/add-role',[RoleController::class,'RoleAdd'])->name('post24');
+Route::get('/admin/all-role',[RoleController::class,'allRoles'])->name('admin.all-role');
+Route::get('admin/edit-role/{id}',[RoleController::class,'editRole'])->name('admin.edit-role');
+Route::post('/admin/update_role',[RoleController::class,'updateRole'])->name('post25');
+Route::post('/admin/role_delete',[RoleController::class,'role_delete'])->name('post26');
 
 });
 

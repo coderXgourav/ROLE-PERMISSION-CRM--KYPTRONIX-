@@ -147,7 +147,7 @@ width: 100% !important;
 
 													
 												    <div>
-														<input type="checkbox"  name="services[]" value="{{$item->service_id}}"  style="width: 25px"> 
+														<input type="checkbox"  name="services[]" class="services-checkbox"value="{{$item->service_id}}"  style="width: 25px"> 
 													</div>
 													<div>{{$item->name}}</div>
 
@@ -157,8 +157,15 @@ width: 100% !important;
 												
 										</div>
 									</div>
-									</div>
-
+								 </div>
+								<!--	<div class="row mb-3" id="sub_services">
+										<label for="input42" class="col-sm-3 col-form-label">Sub Service</label>
+										<div class="col-sm-9">
+											<div id="subservices"></div>
+										</div>
+									</div> -->
+								
+                                    
 								
 
 
@@ -388,18 +395,54 @@ width: 100% !important;
 												</script>
 												<?php
 											} ?>
-				<script>
-
-
-				
+<script>
 					
 
 function resetCheckboxes(checkedBox) {
 	let user = checkedBox.value;
 	if(user==="operation_manager"){
+		//$('#sub_services').hide();
 		document.getElementById("service_field").style.display="none";
-	}else{
+	}else if(user==="team_manager"){
+		//$('#sub_services').hide();
 		document.getElementById("service_field").style.display="block";
+	}else if(user==="customer_success_manager"){
+		/*document.getElementById("service_field").style.display="block";
+            $('.services-checkbox').on('change', function() {
+                var selectedServiceIds = [];
+                $('.services-checkbox:checked').each(function() {
+                    selectedServiceIds.push($(this).val());
+                });
+
+                if (selectedServiceIds.length === 0) {
+                	$('#sub_services').hide();
+                    $('#subservices').html('');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/admin/package_subservices/' + selectedServiceIds.join(','),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var subserviceHtml = '';
+                        if (response.length > 0) {
+                            response.forEach(function(subservices) {
+                                subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox" name="subservices[]" value="' + subservices.id + '" />  ' +    subservices.service_name+' ';
+                            });
+                        } else {
+                            subserviceHtml = 'No subservices available for the selected service.';
+                        }
+                     	$('#sub_services').show();                   
+                        $('#subservices').html(subserviceHtml);
+                    },
+                    error: function() {
+                        alert('Error fetching subservices.');
+                    }
+                });
+            });*/
+
+
 	}
 
     const checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_type"]');
@@ -409,6 +452,7 @@ function resetCheckboxes(checkedBox) {
         }
     });
 }
-				</script>
+//$('#sub_services').hide();
+</script>
 				
 @include('admin.dashboard.footer')
