@@ -120,15 +120,10 @@ width: 100% !important;
 										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
 										<div class="col-sm-9">
 											<div style="    display: flex;align-items: center;gap: 10px;}">
-												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager"  style="width: 25px"> </div>
-												<div><p>Operation Manager</p></div>
-
-
-												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="team_manager"  style="width: 25px"> </div>
-												<div><p>Team Manager</p></div>
-
-													<div><input type="checkbox" name="user_type" onclick="resetCheckboxes(this)" value="customer_success_manager"  style="width: 25px"> </div>
-												<div><p>Team Member</p></div>
+												       @foreach($roles as $val)
+												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
+												<div><p>{{$val->role_name}}</p></div>
+												   @endforeach                                 
 
 
 											</div>
@@ -399,15 +394,15 @@ width: 100% !important;
 					
 
 function resetCheckboxes(checkedBox) {
-	let user = checkedBox.value;
+	/*let user = checkedBox.value;
 	if(user==="operation_manager"){
-		//$('#sub_services').hide();
+		$('#sub_services').hide();
 		document.getElementById("service_field").style.display="none";
 	}else if(user==="team_manager"){
-		//$('#sub_services').hide();
+		$('#sub_services').hide();
 		document.getElementById("service_field").style.display="block";
 	}else if(user==="customer_success_manager"){
-		/*document.getElementById("service_field").style.display="block";
+		document.getElementById("service_field").style.display="block";
             $('.services-checkbox').on('change', function() {
                 var selectedServiceIds = [];
                 $('.services-checkbox:checked').each(function() {
@@ -440,10 +435,10 @@ function resetCheckboxes(checkedBox) {
                         alert('Error fetching subservices.');
                     }
                 });
-            });*/
+            });
 
 
-	}
+	}*/
 
     const checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_type"]');
     checkboxes.forEach(checkbox => {

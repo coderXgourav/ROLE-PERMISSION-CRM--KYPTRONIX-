@@ -23,6 +23,7 @@ use App\Models\EmailTemplate;
 use App\Models\TeamManagersServicesModel;
 use App\Models\Package;
 use App\Models\LoginHistoryModel;
+use App\Models\RoleService;
 use Carbon\Carbon;
 
 use DB;
@@ -62,7 +63,7 @@ class ContactController extends Controller
           
             return $user_details;
     }
-    public function userType($type){
+   /* public function userType($type){
       switch ($type) {
                   case 'customer_success_manager':
                return $user_type = "Customer Manager";
@@ -84,7 +85,7 @@ class ContactController extends Controller
                   default:
                     break;
                 }
-    }   
+    } */  
    
     // THIS IS contactAdd FUNCTION 
     public function contactAdd(Request $request){
@@ -98,12 +99,12 @@ class ContactController extends Controller
 
       $services_status = 0;
        $services = $request->services;
-      if($user_type=="team_manager"){
+      /*if($user_type=="team_manager"){
         $services_status = 1;
       }
       if($user_type=="customer_success_manager"){
         $services_status = 2;
-      }
+      }*/
       
 
       $service_manage = $request->service_manage;
@@ -190,7 +191,7 @@ class ContactController extends Controller
       $permissions->user_registration_permission = $user_registration_permission ;
       $permissions->save();
 
-    if($services_status==1){
+   /* if($services_status==1){
      foreach ($services as $key => $value) {
       $data = new TeamManagersServicesModel;
       $data->team_manager_id = $user_id;
@@ -200,18 +201,23 @@ class ContactController extends Controller
      
     }
     if($services_status==2){
-      // if(!empty($request->subservices)){
-      //      $subservices=implode(',', $request->subservices);
-      //   }else{$subservices='';}
       foreach ($services as $key => $value) {
         $data = new MemberServiceModel;
         $data->member_id = $user_id;
         $data->member_service_id = $value;
         $data->save();
       }
+    }*/
+    if(!empty($services)){
+       foreach ($services as $key => $value) {
+             $data = new RoleService;
+             $data->member_id = $user_id;
+             $data->service_id = $value;
+             $data->user_type =$user_type;
+             $data->save();
+       }
     }
-
-      return self::toastr(true,"Registration Successfull","success","Success");
+      return self::toastr(true,"Registration Successfully","success","Success");
       
     }
     // THIS IS contactAdd FUNCTION 
@@ -222,8 +228,10 @@ class ContactController extends Controller
   public function editUserPage($contact_id){
      $id = session('admin');
      $admin_data = self::userDetails($id);
-     $user_type = self::userType($admin_data->user_type);
+    // $user_type = self::userType($admin_data->user_type);
+     $user_details='';$services_he_manage='';
      $data = MainUserModel::find($contact_id);
+     
      $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
 
      
@@ -265,7 +273,7 @@ class ContactController extends Controller
      // echo "<pre>";
      // print_r($services_he_manage); die;
     }
-return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_type'=>$user_type,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage]);
+return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage]);
    
   }
  

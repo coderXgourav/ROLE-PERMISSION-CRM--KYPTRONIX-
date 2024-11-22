@@ -124,9 +124,9 @@ width: 100% !important;
 										<label for="input42" class="col-sm-3 col-form-label">User Type</label>
 										<div class="col-sm-9">
 											<div style="    display: flex;
-    align-items: center;
-    gap: 10px;
-}">
+                                                align-items: center;
+                                                      gap: 10px;
+                                                   }">
 												<div><input type="checkbox" @if($user_details->user_type == "operation_manager") {{"checked"}} @endif  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager"  style="width: 25px"> </div>
 												<div><p>Operation Manager</p></div>
 

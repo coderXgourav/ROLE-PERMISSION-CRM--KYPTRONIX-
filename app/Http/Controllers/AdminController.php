@@ -16,7 +16,7 @@ use App\Models\MemberServiceModel;
 use App\Models\LoginHistoryModel; 
 use GuzzleHttp\Client;
 use App\Models\Subservice;
-
+use App\Models\Role;
 
 use App\Models\Package;
 use Mail;
@@ -338,7 +338,8 @@ public function addContactPage(){
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
     $services =  Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
-    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services]);
+    $roles = Role::orderBy('id','DESC')->get();
+    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services,'roles'=>$roles]);
     
 }
 // THIS IS addContactPage FUNCTION  
