@@ -101,7 +101,7 @@ class ContactController extends Controller
       if($user_type=="team_manager"){
         $services_status = 1;
       }
-         if($user_type=="customer_success_manager"){
+      if($user_type=="customer_success_manager"){
         $services_status = 2;
       }
       
@@ -199,10 +199,13 @@ class ContactController extends Controller
      }
      
     }
-      if($services_status==2){
+    if($services_status==2){
+      // if(!empty($request->subservices)){
+      //      $subservices=implode(',', $request->subservices);
+      //   }else{$subservices='';}
       foreach ($services as $key => $value) {
-      $data = new MemberServiceModel;
-       $data->member_id = $user_id;
+        $data = new MemberServiceModel;
+        $data->member_id = $user_id;
         $data->member_service_id = $value;
         $data->save();
       }

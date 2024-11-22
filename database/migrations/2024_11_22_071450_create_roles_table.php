@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('member_service', function (Blueprint $table) {
-            $table->id('id');
-            $table->string('member_id');
-            $table->string('member_service_id');
-            $table->string('member_sub_service_id')->nullable();
-            $table->string('user_type')->default('customer_success_manager');
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('role_name')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('member_service');
+        Schema::dropIfExists('roles');
     }
 };

@@ -109,6 +109,25 @@
                     </ul>
                 </li>
                 @endif
+                
+                 @if($admin_data->user_type=="operation_manager" && $admin_data->service_permission>0 || $admin_data->user_type=="admin")
+                <li>
+                    <a href="javascript:;" class="has-arrow">
+                        <div class="parent-icon"><i class="bx bx-category"></i>
+                        </div>
+                        <div class="menu-title">Role </div>
+                    </a>
+                    <ul>
+                        <li> <a href="{{ route('admin.add-role')}}"><i
+                                    class='bx bx-radio-circle'></i>Add Role</a>
+                        </li>
+                        <li> <a href="{{ route('admin.all-role')}}"><i
+                                    class='bx bx-radio-circle'></i>Roles</a>
+                        </li>
+                      
+                    </ul>
+                </li>
+                @endif
     
                 
                

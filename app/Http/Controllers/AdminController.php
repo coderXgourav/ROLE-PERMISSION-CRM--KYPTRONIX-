@@ -450,6 +450,12 @@ public function editPackage($package_id){
    return view('admin.dashboard.edit_package',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'services_data'=>$services_data,'services'=>$services,'sub_service_data'=>$sub_service_data,'subservices_data'=>$subservices_data]);
    
   }
+public function addRolePage(){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  return view('admin.dashboard.add_role',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
 
 // THIS IS END OF CLASS 
  

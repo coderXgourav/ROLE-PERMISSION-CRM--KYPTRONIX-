@@ -935,3 +935,109 @@ $("#add-service").validate({
         });
     },
 });
+
+$("#add_role_form").validate({
+    rules: {
+        name: "required",
+      
+    },
+
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/add-role",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    $("#add_role_form").trigger("reset");
+                    document.getElementById("name").value = "";
+                }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
+        });
+    },
+});
+
+$("#update_role_form").validate({
+    rules: {
+        name: "required",
+    },
+    messages: {},
+    submitHandler: function (form, event) {
+        event.preventDefault();
+        $("#btn").html(
+            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        );
+        $("#btn").attr("disabled", true);
+        $.ajax({
+            url: "/admin/update_role",
+            method: "POST",
+            dataType: "JSON",
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Update");
+                Command: toastr[data.icon](data.title, data.msg);
+                if (data.status) {
+                    document.getElementById("name").value = "";
+                }
+            },
+            error: function () {
+                $("#btn").attr("disabled", false);
+                $("#btn").html("Submit");
+                Command: toastr["error"]("Error", "Technical Issue");
+            },
+        });
+    },
+});
+
+function DeleteRole(id) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/admin/role_delete",
+                method: "POST",
+                data: { id: id },
+                dataType: "JSON",
+                success: function (data) {
+                    Command: toastr[data.icon](data.title, data.msg);
+                    if (data.status) {
+                        $("#" + id).hide();
+                    }
+                },
+                error: function () {
+                    $("#btn").attr("disabled", false);
+                    $("#btn").html("Submit");
+                    Command: toastr["error"]("Error", "Technical Issue");
+                },
+            });
+        }
+    });
+}
