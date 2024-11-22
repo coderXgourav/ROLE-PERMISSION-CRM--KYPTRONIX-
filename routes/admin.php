@@ -136,6 +136,9 @@ Route::get('/admin/team-manager-list/{id}',[ServiceController::class,'teamManage
 Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->name('admin.leads-view');
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage'])->name('admin.get_package');
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
+Route::get('/admin/individual-reports',[ContactController::class,'individualReport'])->name('admin.individual-report');
+Route::get('/admin/business-reports',[ContactController::class,'businessReport'])->name('admin.business-report');
+Route::get('/admin/staff-reports',[ContactController::class,'staffReport'])->name('admin.staff-report');
 Route::get('/admin/login-history',[AdminController::class,'loginHistory'])->name('admin.loginHistory');
 
 

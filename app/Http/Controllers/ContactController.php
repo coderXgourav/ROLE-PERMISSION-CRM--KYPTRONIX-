@@ -2677,6 +2677,13 @@ function loginDetails($userId) {
     // echo "<pre>";
     // print_r($result);
     // die;
+
+    public function individualReport(){
+       $user_id=session('admin');
+  $admin_data = self::userDetails($user_id);
+    $user_type = self::userType($admin_data->user_type);
+      return view('admin.dashboard.individual_report',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+    }
     
 
 

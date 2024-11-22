@@ -170,83 +170,9 @@
                 </li>
                 @endif
 
-
-<!--                 <li>
-                    <a href="javascript:;" class="has-arrow">
-                        <div class="parent-icon"><i class='bx bx-cart'></i>
-                        </div>
-                        <div class="menu-title">Lead Manage </div>
-                    </a>
-                    <ul>
-                        <li> <a href="{{ route('admin.customer') }}"><i
-                                    class='bx bx-radio-circle'></i>View Clients</a>
-                        </li>
-                        <li> <a href="{{ route('admin.assign') }}"><i
-                                    class='bx bx-radio-circle'></i>Assigned Clients</a>
-                        </li>
-                        <li> <a href="{{ route('admin.noneassign') }}"><i
-                            class='bx bx-radio-circle'></i>None Assigned Clients</a>
-                        </li>
-                    </ul>
-                </li>
- -->                      
- 
-        
-
-                    {{-- <li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                            </div>
-                            <div class="menu-title">Customer</div>
-                        </a>
-                        <ul>
-                            <li> <a href="{{ route('admin.view-customers')}}"><i
-                                class='bx bx-radio-circle'></i>
-                                View Customers</a>
-                           </li>
-                           
-                            
-                        </ul>
-                    </li> --}}
                         @if($admin_data->user_type=="admin")
-                    {{-- <li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
-                            </div>
-                            <div class="menu-title">Operation Manager</div>
-                        </a>
-                        <ul>
-                           <!-- <li> <a href="{{ route('team.team-member-add') }}"><i
-                                class='bx bx-radio-circle'></i>Add Team Member</a>
-                            </li>-->
-                            <li> <a href="{{ route('admin.view-operation-managers') }}"><i
-                                class='bx bx-radio-circle'></i>View Operation Mn.</a>
-                            </li>
-
-                        </ul>
-                    </li> --}}
+               
                     @endif
-
-            {{-- @if($admin_data->team_manager_permission>0)
-                    <li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bx bx-user-circle"></i>
-                            </div>
-                            <div class="menu-title">Team Manager</div>
-                        </a>
-                        <ul>
-                           <!-- <li> <a href="{{ route('admin.add-contact') }}"><i
-                                        class='bx bx-radio-circle'></i>Add New Manager</a>
-                            </li>-->
-                            <li> <a href="{{ route('admin.view-managers') }}"><i
-                                        class='bx bx-radio-circle'></i>View Managers</a>
-                            </li>
-                          
-                        </ul>
-                    </li>
-                @endif   --}}
-
-                        
 
 
             @if($admin_data->user_type=="admin")
@@ -258,12 +184,17 @@
                         </a>
                         <ul>
                             <li> <a href="{{route('admin.all-reports')}}"><i
-                                class='bx bx-radio-circle'></i>Report</a>
+                                class='bx bx-radio-circle'></i>Count Report</a>
                             </li>
-                           <!-- <li> <a href="#"><i
-                                class='bx bx-radio-circle'></i>Members Report</a>
-                            </li>-->
-
+                           <li> <a href="{{route('admin.staff-report')}}"><i
+                                class='bx bx-radio-circle'></i>Staff Report</a>
+                            </li>
+                             <li> <a href="{{route('admin.individual-report')}}"><i
+                                class='bx bx-radio-circle'></i>Individual Report</a>
+                            </li>
+                              <li> <a href="{{route('admin.business-report')}}"><i
+                                class='bx bx-radio-circle'></i>Business Report</a>
+                            </li>
                         </ul>
                     </li>
                     @endif
@@ -335,25 +266,7 @@
                     </ul>
                   </li>
                   @endif
-    {{-- @if($admin_data->email_template_permission>0)
-                  
-                  <li>
-                    <a href="javascript:;" class="has-arrow">
-                        <div class="parent-icon"><i class="bx bx-square"></i>
-                        </div>
-                        <div class="menu-title">Template </div>
-                    </a>
-                    <ul>
-                       <li> <a href="{{route('admin.email-template')}}"><i
-                            class='bx bx-radio-circle'></i>Email Template</a>
-                       </li>   
-                       <li> <a href="{{route('admin.view-mail-template')}}"><i
-                            class='bx bx-radio-circle'></i>View Template</a>
-                       </li>  
-
-                    </ul>
-                </li>
-                @endif --}}
+  
                 @if($admin_data->user_type!="customer_success_manager" && $admin_data->invoice_permission>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
@@ -369,21 +282,6 @@
                     </ul>
                 </li>
                 @endif
-
-                    <!--<li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bx bx-grid-alt"></i>
-                            </div>
-                            <div class="menu-title">Invoicing</div>
-                        </a>
-                        <ul>
-                            <li> <a href="#"><i
-                                class='bx bx-radio-circle'></i>
-                                View Invoice</a>
-                           </li>
-                            
-                        </ul>
-                    </li>-->   
                     
                 @if($admin_data->email_sms_permission>0)
                       <li>
@@ -474,28 +372,11 @@
                         </ul>
                     </li>
              
-               
-               
-                {{-- <li>
-                    <a class="" href="{{ route('admin.email') }}">
-                        <div class="parent-icon"><i class="bx bx-repeat"></i>
-                        </div>
-                        <div class="menu-title">Sending Emails</div>
-                    </a>
-                </li>
-                <li>
-                    <a class="" href="{{ route('admin.sms') }}">
-                        <div class="parent-icon"><i class="bx bx-line-chart"></i></div>
-                        <div class="menu-title">Sending SMS</div>
-                    </a>
-                </li> --}}
-              
-
+          
             </ul>
-            <!--end navigation-->
+         
         </div>
-        <!--end sidebar wrapper -->
-        <!--start header -->
+     
         <header>
             <div class="topbar d-flex align-items-center">
                 <nav class="navbar navbar-expand gap-3">
@@ -507,10 +388,7 @@
                         data-bs-target="#SearchModal">
                         <input class="form-control px-5" disabled type="search" placeholder="Search"
                             style="display:none;" />
-                        {{-- <span
-                                class="position-absolute top-50 search-show ms-3 translate-middle-y start-0 top-50 fs-5"
-                                ><i class="bx bx-search" ></i
-                            ></span> --}}
+                    
                     </div>
 
                     <div class="top-menu ms-auto">
@@ -689,22 +567,7 @@
                                     href="{{ route('admin-dashboard') }}"><i
                                         class="bx bx-home-circle fs-5"></i><span>Dashboard</span></a>
                             </li>
-                            {{-- <li>
-                                    <a
-                                        class="dropdown-item d-flex align-items-center"
-                                        href="javascript:;"
-                                        ><i class="bx bx-dollar-circle fs-5"></i
-                                        ><span>Earnings</span></a
-                                    >
-                                </li> --}}
-                            {{-- <li>
-                                    <a
-                                        class="dropdown-item d-flex align-items-center"
-                                        href="javascript:;"
-                                        ><i class="bx bx-download fs-5"></i
-                                        ><span>Downloads</span></a
-                                    >
-                                </li> --}}
+                       
                             <li>
                                 <div class="dropdown-divider mb-0"></div>
                             </li>
