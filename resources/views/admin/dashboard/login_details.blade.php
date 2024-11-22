@@ -14,7 +14,7 @@
 									<tr>
 										<th>No.</th>
 										<th>Date</th>
-										<th>Total Login Time</th>
+										<th>Total Working Time</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -23,11 +23,19 @@
                                         $i=1;
                                     @endphp
                                     @foreach($daily_login_times as $key => $value)
+
+
                                     <tr>
 										<td>{{$i++}}</td>
-										<td>{{$value['date']}}</td>
-										<td>{{$value['hours']}} hours {{$value['minutes']}} minutes</td>
-										
+										<td>{{$key}}</td>
+										<td><?php 
+										 
+                          echo  floor($value / 3600) ." Hour " ;
+                          echo  floor(($value % 3600) / 60)." minutes ";
+                         echo   floor($value % 60)." seconds";
+    
+										?></td>
+
 									</tr>
                                     @endforeach
                                     @else 

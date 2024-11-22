@@ -1190,6 +1190,7 @@ public function viewTeamMember($team_manager_id){
     $service_data='';
     $user_login_details=0;
     $user_logout=0;
+
     if(isset($data->user_type) && $data->user_type == 'team_manager'){
         $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
@@ -1236,12 +1237,17 @@ public function viewTeamMember($team_manager_id){
         ->where('main_user.id', $team_manager_id)
         ->where('login_history.operation','login')
         ->get();
+        
         $user_logout = DB::table('main_user')
-        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
         ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
         ->where('main_user.id', $team_manager_id)
         ->where('login_history.operation','logout')
         ->get();
+
+
+     
                   
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
           // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
@@ -2561,77 +2567,115 @@ public function changeStatus(Request $request){
       }
       
 }
-public function loginDetails($id){
-  $user_id=session('admin');
-  $admin_data = self::userDetails($user_id);
-  $user_type = self::userType($admin_data->user_type);
 
 
-// Query to join login and logout events for the user, and group by day
-  $user_login_details = DB::table('login_history as lh1')
-    ->join('login_history as lh2', function ($join) {
-        // Join login and logout events for the same user_id
-        $join->on('lh1.user_id', '=', 'lh2.user_id')
-            ->where('lh1.operation', '=', 'login')   // Login event
-            ->where('lh2.operation', '=', 'logout')  // Logout event
-            ->whereRaw('lh1.logged_in_at < lh2.logged_in_at');  // Ensure login comes before logout chronologically
-    })
-    ->where('lh1.user_id', $id)  // Filter by the specific user ID
-    ->select(DB::raw('DATE(lh1.logged_in_at) as login_date'), 
-             DB::raw('SUM(TIMESTAMPDIFF(SECOND, lh1.logged_in_at, lh2.logged_in_at)) as total_seconds'))
-    ->groupBy(DB::raw('DATE(lh1.logged_in_at)'))  // Group by login date
-    ->orderBy(DB::raw('DATE(lh1.logged_in_at)'))  // Order by date
-    ->get();
-// Initialize an array to store daily login times
-  $daily_login_times = [];
-// Process each day's login time
-/*foreach ($user_login_details as $session) {
-    // Convert total_seconds to hours and minutes
-    $total_hours = $session->total_seconds / 3600;  // Convert seconds to hours
-    $formatted_hours = floor($total_hours);  // Whole hours
-    $formatted_minutes = round(($total_hours - $formatted_hours) * 60);  // Remaining minutes
+function calculateUserDailyLoggedTime($userId) {
+    // Fetch all login and logout records for the user, ordered by date
+    $loginHistory = \DB::table('login_history')
+                ->where('user_id', $userId)
+                ->whereIn('operation', ['login', 'logout'])
+                ->orderBy('logged_in_at', 'asc')
+                ->get();
 
-    // Store the result for each day
-    $daily_login_times[] = [
-        'date' => Carbon::parse($session->login_date)->format('Y-m-d'),
-        'hours' => $formatted_hours,
-        'minutes' => $formatted_minutes
-    ];
-}*/
-// Process each day's login time
-foreach ($user_login_details as $session) {
-    // Convert total_seconds to hours and minutes
-    $total_hours = $session->total_seconds / 3600;  // Convert seconds to hours
-    $formatted_hours = floor($total_hours);  // Whole hours
-    $formatted_minutes = round(($total_hours - $formatted_hours) * 60);  // Remaining minutes
+    $dailyDurations = []; // To store the working time for each date
 
-    // Check if this date already exists in the array
-    if (isset($daily_login_times[$session->login_date])) {
-        // If the date exists, add the current session's hours and minutes to the existing values
-        $daily_login_times[$session->login_date]['hours'] += $formatted_hours;
-        $daily_login_times[$session->login_date]['minutes'] += $formatted_minutes;
-        
-        // Handle minute overflow (e.g., 60 minutes should be converted to 1 hour)
-        if ($daily_login_times[$session->login_date]['minutes'] >= 60) {
-            $extra_hours = floor($daily_login_times[$session->login_date]['minutes'] / 60);
-            $daily_login_times[$session->login_date]['hours'] += $extra_hours;
-            $daily_login_times[$session->login_date]['minutes'] %= 60;
+    $currentLogin = null; // Keep track of the login timestamp
+
+    foreach ($loginHistory as $entry) {
+        $entryDate = Carbon::parse($entry->logged_in_at)->toDateString(); // Extract the date (YYYY-MM-DD)
+
+        if ($entry->operation === 'login') {
+            // Save the login timestamp
+            $currentLogin = Carbon::parse($entry->logged_in_at);
+        } elseif ($entry->operation === 'logout' && $currentLogin) {
+            // Calculate the duration if a logout follows a login
+            $logoutTime = Carbon::parse($entry->logged_in_at);
+            $duration = $logoutTime->diffInSeconds($currentLogin);
+
+            // Store the duration for the corresponding date
+            if (!isset($dailyDurations[$entryDate])) {
+                $dailyDurations[$entryDate] = 0;
+            }
+            $dailyDurations[$entryDate] += $duration;
+
+            // Reset the current login to null after logout
+            $currentLogin = null;
         }
-    } else {
-        // If the date doesn't exist, store the current session's hours and minutes
-        $daily_login_times[$session->login_date] = [
-            'date' => Carbon::parse($session->login_date)->format('Y-m-d'),
-            'hours' => $formatted_hours,
-            'minutes' => $formatted_minutes,
+    }
+
+    // Convert durations to a human-readable format (HH:MM:SS)
+    $result = [];
+    foreach ($dailyDurations as $date => $totalSeconds) {
+        $hours = floor($totalSeconds / 3600);
+        $minutes = floor(($totalSeconds % 3600) / 60);
+        $seconds = $totalSeconds % 60;
+
+        $result[$date] = [
+            'total_seconds' => $totalSeconds,
+            'formatted' => sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds)
         ];
     }
+
+    return $result;
 }
 
 
-  return view('admin.dashboard.login_details',['admin_data'=>$admin_data,'user_type'=>$user_type,'daily_login_times'=>$daily_login_times]);
-
-  }
 
 
 // THIS IS END OF THE CLASS 
+
+function loginDetails($userId) {
+  $user_id=session('admin');
+  $admin_data = self::userDetails($user_id);
+  $user_type = self::userType($admin_data->user_type);
+    // Fetch all login and logout records for the user, ordered by date
+
+  $loginHistory = \DB::table('login_history')
+        ->where('user_id', $userId)
+        ->whereIn('operation', ['login', 'logout'])
+        ->orderBy('logged_in_at', 'asc')
+        ->get();
+
+    $dailyDurations = []; // To store total logged-in time per day
+    $currentLogin = null; // To track the current login time
+
+    foreach ($loginHistory as $entry) {
+        $entryDate = Carbon::parse($entry->logged_in_at)->toDateString(); // Extract the date (YYYY-MM-DD)
+
+        if ($entry->operation === 'login') {
+            // Start tracking login time for this user
+            $currentLogin = Carbon::parse($entry->logged_in_at);
+        } elseif ($entry->operation === 'logout' && $currentLogin) {
+            // Calculate duration if logout follows a login
+            $logoutTime = Carbon::parse($entry->logged_in_at);
+
+            // Ensure logout is after login
+            if ($logoutTime->greaterThan($currentLogin)) {
+                $duration = $logoutTime->diffInSeconds($currentLogin);
+
+                // Add duration to the total for the day
+                if (!isset($dailyDurations[$entryDate])) {
+                    $dailyDurations[$entryDate] = 0;
+                }
+                $dailyDurations[$entryDate] += $duration;
+            }
+
+            // Reset current login after calculating duration
+            $currentLogin = null;
+        }
+    }
+
+    // Format and print results
+
+  return view('admin.dashboard.login_details',['admin_data'=>$admin_data,'user_type'=>$user_type,'daily_login_times'=>$dailyDurations]);
+
+}
+
+    // echo "<pre>";
+    // print_r($result);
+    // die;
+    
+
+
+
 }
