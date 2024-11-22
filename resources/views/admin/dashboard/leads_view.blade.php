@@ -185,7 +185,7 @@
                                 </div>
                             </div>
                         </div>
-                         <button type="submit" class="btn btn-primary" onclick="" id="updateBtn">
+                         <button type="submit" class="btn btn-primary" onclick="Update()" id="updateBtn">
                             Update
                         </button>
 

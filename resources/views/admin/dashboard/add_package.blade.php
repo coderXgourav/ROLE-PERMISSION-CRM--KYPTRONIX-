@@ -22,9 +22,12 @@
 								<h5 class="mb-4">Add Package </h5>
 								   <div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Service</label>
-										<div class="col-sm-9">
+										<div class="col-sm-9" style="display: flex;  align-items:center; flex-wrap:wrap">
 												@foreach($services as $item)
-												<input type="checkbox" class="services-checkbox" name="service_id" value="{{$item->service_id}}" onclick="resetCheckboxes(this)" required>  {{$item->name}}
+												<div style="display:flex; align-items:center;">
+													<input type="checkbox" class="services-checkbox" name="service_id" value="{{$item->service_id}}" onclick="resetCheckboxes(this)" required   style="width: 25px">  &nbsp; <span>{{$item->name}}</span>
+												 &nbsp;&nbsp;</div>
+												
 												@endforeach
 										</div>
 									</div>
