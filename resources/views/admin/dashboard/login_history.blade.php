@@ -17,7 +17,8 @@
 										<th>Type</th>
 										<th>IP Address</th>
 										<th>Location</th>
-										<th>Login Time</th>
+										<th>Date</th>
+										<th> Time</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -32,7 +33,10 @@
 										<td>{{$value->user_type}}</td>
 										<td>{{$value->ip_address}}</td>
 										<td>{{$value->city, $value->country}}</td>
-										<td>{{date('d-m-Y,   h:i a' )}}</td>
+									<td>{{ $value->logged_in_at ? \Carbon\Carbon::parse($value->logged_in_at)->format('d-m-Y') : 'N/A' }}</td>
+
+									<td>{{ $value->logged_in_at ? \Carbon\Carbon::parse($value->logged_in_at)->format('h:i A') : 'N/A' }}</td>
+
 									
 								
 									</tr>

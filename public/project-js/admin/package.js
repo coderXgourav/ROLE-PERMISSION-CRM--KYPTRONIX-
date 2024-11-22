@@ -21,11 +21,7 @@ $("#add_package_form").validate({
                 $("#btn").attr("disabled", false);
                 $("#btn").html("Submit");
                 Command: toastr[data.icon](data.title, data.msg);
-                if (data.status) {
-                    document.getElementById("title").value = "";
-                    document.getElementById("price").value = "";
-                    document.getElementById("desc").value = "";
-                }
+                $("#add_package_form").trigger("reset");
             },
             error: function () {
                 $("#btn").attr("disabled", false);
