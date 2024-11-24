@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packages', function (Blueprint $table) {
-            $table->id('package_id');
-            $table->string('title')->nullable();
-            $table->string('price')->nullable();
-            $table->string('desc')->nullable();
+        Schema::create('role_services', function (Blueprint $table) {
+            $table->id('role_services_id');
+            $table->string('member_id');
             $table->string('service_id')->nullable();
-            $table->string('subservice_id')->nullable();
+            $table->string('user_type');           
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('packages');
+        Schema::dropIfExists('role_services');
     }
 };

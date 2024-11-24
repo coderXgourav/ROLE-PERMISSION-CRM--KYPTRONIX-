@@ -3,201 +3,180 @@
 @push('title')
     <title>Add Contact</title>
 @endpush
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+	
+    <style>
+        .profile-stats {
+            transition: all 0.3s ease;
+        }
+        
+        .profile-stats:hover {
+            transform: translateY(-3px);
+            /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); */
+        }
+
+        .profile-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f3f4f6 100%);
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+    </style>
 
 <div>
-			<div>
-				<!--breadcrumb-->
-				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3"></div>
-					<div class="ps-3">
-						<nav aria-label="breadcrumb">
-							<ol class="breadcrumb mb-0 p-0">
-								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
-								</li>
-								<li class="breadcrumb-item active" aria-current="page">User Details</li>
-							</ol>
-						</nav>
-					</div>
-				
-				</div>
-				<!--end breadcrumb-->
-				<div class="container">
-					<div class="main-body">
-						<div class="row">
-							<div class="col-lg-4">
-								<div class="card">
-									<div class="card-body">
-										<div class="d-flex flex-column align-items-center text-center">
-											<img src="{{url('assets/images/team.png')}}" alt="Team Member" class="rounded-circle p-1 bg-primary" width="120">
+			<body class="bg-gray-50 shadow-lg p-4">
+    <div class="container mx-auto px-4 py-8 ">
+        <div class="max-w-8xl mx-auto"> <br>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden profile-card">
+                <div class="p-8">
+                    <div class="flex flex-col md:flex-row" style="gap: 40px;">
+                        <div class="md:w-1/3 text-center md:text-left">
+                            <div class="relative">
+                                <img src="{{ url('assets/images/team.png') }}" 
+                                     alt="Profile Picture" 
+                                     class="w-32 h-32 rounded-full border-4 border-blue-500 mx-auto md:mx-0">
+                                @if($data->user_type == "operation_manager")
+                                    <span class="absolute bottom-0 right-0 bg-green-500 p-1.5 rounded-full border-2 border-white"></span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="md:w-2/3 mt-6 md:mt-0 md:pl-8">
+                            <h2 class="text-3xl font-bold text-gray-800">
+                                {{ $data['first_name'] }} {{ $data['last_name'] }}
+                            </h2>
+                            
+                            <div class="mt-2">
+                                <span class="badge px-4 py-1 rounded-full text-white text-sm">
+                                    @switch($data->user_type)
+                                        @case("operation_manager")
+                                            Operation Manager
+                                            @break
+                                        @case("team_manager")
+                                            Team Manager
+                                            @break
+                                        @case("customer_success_manager")
+                                            Team Member
+                                            @break
+                                    @endswitch
+                                </span>
+                            </div>
 
-											<div class="mt-3">
-												<h4>{{$data['first_name']}} {{$data['last_name']}}</h4>
-												<p class="alert alert-info alert-sm"> @switch($data->user_type)
-													@case("operation_manager")
-														{{"Operation Manager"}}
-														@break
-													@case("team_manager")
-														{{"Team Manager"}}
-														@break
-														@case("customer_success_manager")
-														{{"Team Member"}}
-														@break
-													@default
-													@break
-														
-												@endswitch</p>
-												@if($data->user_type=="operation_manager")
-												<div class="alert alert-success">
-													<p>Operation Manager can manage all the services</p>
-												</div>
-												@endif
+                            @if($data->user_type == "operation_manager")
+                                <div class="mt-4 bg-green-100 border-l-4 border-green-500 p-4 rounded">
+                                    <p class="text-green-700">Operation Manager can manage all the services</p>
+                                </div>
+                            @endif
 
+                            @if($data->user_type != "operation_manager")
+                                <div class="mt-4">
+                                    <h3 class="text-lg font-semibold text-gray-700">Services</h3>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach($service_data as $val)
+                                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                                                {{ $val->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
 
-												@if($data->user_type!="operation_manager") 
+                            <div class="mt-4 space-y-2">
+                                <p class="flex items-center text-gray-600">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ $data['email_address'] }}
+                                </p>
+                                <p class="flex items-center text-gray-600">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    {{ $data['phone_number'] }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-												<p class="text-muted font-size-sm">Service -
-													
-													<?php 
-													 if(!empty($service_data)){
-													foreach($service_data as $val){
-												?>
-												{{$val->name}},							
-											     <?php } } ?>
+                    @if($data->user_type != "operation_manager")
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            @if(isset($data) && ($data->user_type == 'team_manager'))
+                                <a href="{{ route('admin.show-team-member-list', ['id' => $data->id]) }}" 
+                                   class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-sm text-gray-500">Team Members</p>
+                                            <p class="text-2xl font-bold text-gray-800">{{ count($total_team_member) }}</p>
+                                        </div>
+                                        <div class="bg-blue-100 p-3 rounded-full">
+                                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endif
 
+                            <a href="{{ route('admin.show-clients-list', ['id' => $data->id]) }}" 
+                               class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Leads</p>
+                                        <p class="text-2xl font-bold text-gray-800">{{ count($clients) }}</p>
+                                    </div>
+                                    <div class="bg-green-100 p-3 rounded-full">
+                                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
 
-												 </p>
-												 @endif
-													
-												<p class="text-secondary mb-1">{{$data['email_address']}}</p>
-												<p class="text-muted font-size-sm">{{$data['phone_number']}}</p>
-												<!--<button class="btn btn-primary">Follow</button>
-												<button class="btn btn-outline-primary">Message</button>-->
-											</div>
-										</div>
-										<hr class="my-4" />
-										@if($data->user_type!="operation_manager") 
+                            <a href="{{ route('admin.invoice_list', ['id' => $data->id]) }}" 
+                               class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Invoices</p>
+                                        <p class="text-2xl font-bold text-gray-800">{{ $invoice_data }}</p>
+                                    </div>
+                                    <div class="bg-purple-100 p-3 rounded-full">
+                                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
 
-										<ul class="list-group list-group-flush">
-											<?php if(isset($data) && ($data->user_type =='team_manager')){?>
-											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-										 	<a href="{{route('admin.show-team-member-list',['id'=>$data->id ])}}">
-
-												<h6 class="mb-0">
-													<!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>-->
-												Team Member</h6></a>
-												<span class="text-secondary">{{count($total_team_member)}}</span>
-											</li>
-										   <?php } ?>
-											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-										    	<a href="{{route('admin.show-clients-list',['id'=>$data->id ])}}">
-
-												<h6 class="mb-0"><!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github me-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>-->Leads</h6></a>
-												<span class="text-secondary">{{$clients}}</span>
-											</li>
-											<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-										       <a href="{{route('admin.invoice_list',['id'=>$data->id])}}">
-
-												<h6 class="mb-0"><!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter me-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>-->Invoice</h6></a>
-												<span class="text-secondary">{{$invoice_data}}</span>
-											</li>
-											<!--<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-											   <a href="{{route('admin.manager_convert_to_clients',['id'=>$data->id])}}">
-
-												<h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram me-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Convert to Clients</h6></a>
-												<span class="text-secondary">{{$convert_to_clients}}</span>
-											</li>-->
-											<!--<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-												<h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook me-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-												<span class="text-secondary">codervent</span>
-											</li>-->
-										</ul>
-										@endif
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-8">
-								<div class="col d-flex">
-									<div class="card radius-10 w-100 overflow-hidden">
-										<div class="card-body">
-											<div class="d-flex align-items-center">
-												<div>
-													<h5 class="mb-0">Sales Overiew</h5>
-												</div>
-												<div class="dropdown ms-auto">
-													<a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
-														data-bs-toggle="dropdown"><i
-															class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
-													</a>
-													<ul class="dropdown-menu">
-														<li><a class="dropdown-item" href="javascript:;">Action</a>
-														</li>
-														<li><a class="dropdown-item" href="javascript:;">Another action</a>
-														</li>
-														<li>
-															<hr class="dropdown-divider">
-														</li>
-														<li><a class="dropdown-item" href="javascript:;">Something else
-																here</a>
-														</li>
-													</ul>
-												</div>
-											</div>
-											<div class="mt-5" id="chart20"></div>
-										</div>
-										<div class="card-footer bg-transparent border-top-0">
-											<div
-												class="d-flex align-items-center justify-content-between text-center">
-												<div>
-													<h6 class="mb-1 font-weight-bold">$289.42</h6>
-													<p class="mb-0 text-secondary">Last Week</p>
-												</div>
-												<div class="mb-1">
-													<h6 class="mb-1 font-weight-bold">$856.14</h6>
-													<p class="mb-0 text-secondary">Last Month</p>
-												</div>
-												<div>
-													<h6 class="mb-1 font-weight-bold">$987,25</h6>
-													<p class="mb-0 text-secondary">Last Year</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>	
-							
-								
-								<!-- <div class="row">
-									<div class="col-sm-12">
-										<div class="card">
-											<div class="card-body">
-												<h5 class="d-flex align-items-center mb-3">Project Status</h5>
-												<p>Web Design</p>
-												<div class="progress mb-3" style="height: 5px">
-													<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-												</div>
-												<p>Website Markup</p>
-												<div class="progress mb-3" style="height: 5px">
-													<div class="progress-bar bg-danger" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-												</div>
-												<p>One Page</p>
-												<div class="progress mb-3" style="height: 5px">
-													<div class="progress-bar bg-success" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-												</div>
-												<p>Mobile Template</p>
-												<div class="progress mb-3" style="height: 5px">
-													<div class="progress-bar bg-warning" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-												</div>
-												<p>Backend API</p>
-												<div class="progress" style="height: 5px">
-													<div class="progress-bar bg-info" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>-->			
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                            <a href="{{ route('admin.login-list', ['id' => $data->id]) }}" 
+                               class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Logins</p>
+                                        <p class="text-2xl font-bold text-gray-800">{{ count($user_login_details) }}</p>
+                                    </div>
+                                    <div class="bg-yellow-100 p-3 rounded-full">
+                                        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+			<br>
+        </div>
+    </div>
+</body>
 		</div>
 @include('admin.dashboard.footer')

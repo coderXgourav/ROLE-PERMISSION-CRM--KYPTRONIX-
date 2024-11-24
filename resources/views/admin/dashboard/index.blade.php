@@ -5,11 +5,10 @@
   @push('title')
       <title>Dashboard</title>
   @endpush
-
-         
                     <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
 						@if($admin_data->user_type=="admin")
                       <div class="col">
+
                             <div class="card radius-10">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
@@ -207,6 +206,39 @@
                             
                         </div>
 						@endif
+                        	@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" )
+						
+                           <div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">
+                                               Import Leads
+                                            </p>
+                                            <h4 class="my-1">{{$import_lead}}</h4>
+                                            <p
+                                                class="mb-0 font-13 text-success"
+                                            >
+                                                <i
+                                                    class="bx bxs-up-arrow align-middle"
+                                                ></i
+                                                ><a href="{{route('admin.import-leads')}}" class="text-success">View Import Leads </a>
+                                            </p>
+                                        </div>
+                                        
+                                         <div
+                                            class="widgets-icons bg-light-success text-success ms-auto"
+                                        >
+                                             <i class="bx bxs-group"></i>
+                                        </div>
+                                    </div>
+                                    <div id="chart8"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+						@endif
 
 						@if($admin_data->user_type=="customer_success_manager")
 
@@ -288,24 +320,25 @@
 									</div>
 									<div class="mt-5" id="chart15"></div>
 								</div>
-								<ul class="list-group list-group-flush">
-									<li
-										class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Service 1
-										<span class="badge bg-success rounded-pill">25</span>
-									</li>
-									<li
-										class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Service 2
-										<span class="badge bg-danger rounded-pill">10</span>
-									</li>
-									<li
-										class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Service 3
-										<span class="badge bg-primary rounded-pill">65</span>
-									</li>
-									<li
-										class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Service 4
-										<span class="badge bg-warning text-dark rounded-pill">14</span>
-									</li>
-								</ul>
+							    <ul class="list-group list-group-flush">
+                                @if(!empty($service_data))
+                                  @foreach($service_data as $value)
+                                    @php
+                                      $total_sub_service=0;
+                                      $total_sub_service = DB::table('subservices')->where('service_id',$value->service_id)->count();
+
+                                    @endphp
+                              
+                                    <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">{{$value->name}}
+                                      <a href="{{route('admin.sub-service-list',['id'=>$value->service_id])}}">
+                                        <span class="badge bg-success rounded-pill">{{$total_sub_service}}</span>
+                                      </a>
+                                    </li>
+                                    @endforeach
+                                @endif
+                         
+                                </ul>
+                               
 							</div>
 						</div>
 						<div class="col d-flex">
@@ -314,14 +347,9 @@
 									<p class="font-weight-bold mb-1 text-secondary">Customers</p>
 									<div class="d-flex align-items-center">
 										<div>
-											<h4 class="mb-0">12,021</h4>
+											<h4 class="mb-0">{{$paid_customer_count}}</h4>
 										</div>
-										<div class>
-											<p
-												class="mb-0 align-self-center font-weight-bold text-success ms-2">4.4
-												<i class='bx bxs-up-arrow-alt mr-2'></i>
-											</p>
-										</div>
+									
 									</div>
 									<div id="chart21"></div>
 								</div>
@@ -377,7 +405,7 @@
 					</div>
 					@endif --}}
             <!--end page wrapper -->
-            <!--start overlay-->  
+            <!--start overlay-->
             <div class="overlay toggle-icon"></div>
             <!--end overlay-->
             <!--Start Back To Top Button-->

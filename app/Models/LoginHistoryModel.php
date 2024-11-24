@@ -19,5 +19,6 @@ class LoginHistoryModel extends Model
         'city',
         'region',
         'logged_in_at',
+        'operation',
     ];
 }

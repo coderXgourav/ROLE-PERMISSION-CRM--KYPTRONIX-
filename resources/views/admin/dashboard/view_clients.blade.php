@@ -39,14 +39,10 @@
 	                                      ->get();
 	                                   }
 	                                   if(!empty($value->customer_service_id)){
-                                          $team_manager_services=DB::table('team_manager_services')
-	                                       ->where('team_manager_services.managers_services_id',$value->customer_service_id)->first();
-	                                 
-	                                   }
-	                                   if(!empty($team_manager_services)){
-	                                   	  $team_manager=DB::table('main_user')
+	                                      $team_manager=DB::table('main_user')
 	                                   	  ->select('main_user.first_name','main_user.last_name')
-	                                      ->where('main_user.id','=',$team_manager_services->team_manager_id)
+	                                   	  ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
+	                                      ->where('team_manager_services.managers_services_id',$value->customer_service_id)
 	                                      ->get();
  
 	                                   }
@@ -56,7 +52,7 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->services_name}}</td>
+										<td>{{$value->service_names}}</td>
 										<td><?php if(!empty($team_manager)){ 
                                                   foreach($team_manager as $val){
                                                       echo $val->first_name .' ' . $val->last_name.'<br>';

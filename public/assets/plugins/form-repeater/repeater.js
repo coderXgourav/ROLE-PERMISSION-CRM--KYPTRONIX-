@@ -21,7 +21,7 @@ jQuery.fn.extend({
             var item = itemContent;
             var input = item.find('input,select,textarea');
 
-            input.each(function (index, el) {
+          /*  input.each(function (index, el) {
                 var attrName = $(el).data('name');
                 var skipName = $(el).data('skip-name');
                 if (skipName != true) {
@@ -37,7 +37,7 @@ jQuery.fn.extend({
 
                 $(el).attr('id', generateId($(el).attr('name')));
                 $(el).parent().find('label').attr('for', generateId($(el).attr('name')));
-            })
+            })*/
 
             var itemClone = items;
 
@@ -45,7 +45,7 @@ jQuery.fn.extend({
             var removeButton = itemClone.find('.remove-btn');
 
             if (key == 0) {
-                removeButton.attr('disabled', true);
+               // removeButton.attr('disabled', true);
             } else {
                 removeButton.attr('disabled', false);
             }
@@ -82,5 +82,6 @@ jQuery.fn.extend({
             addItem($(items[0]), key);
             key++;
         });
+        
     }
 });

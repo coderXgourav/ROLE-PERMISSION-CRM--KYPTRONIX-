@@ -5,7 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,11 +52,13 @@ Route::get('/admin/clients',[ContactController::class,'Clientspage'])->name('adm
 Route::get('/admin/assign-clients',[ContactController::class,'assginClientspage'])->name('admin.assign');
 Route::get('/admin/none-assign-clients',[ContactController::class,'noneAssginClientspage'])->name('admin.noneassign');
 Route::post('/admin/assign',[ContactController::class,'assign'])->name('post7');
+Route::post('/admin/assign_lead_to_service',[ContactController::class,'assignLeadsToService'])->name('post37');
 Route::post('/admin/update-assign',[ContactController::class,'UpdateAssign'])->name('post8');
 Route::get('/admin/email',[ContactController::class,'emailPage'])->name('admin.email');
 Route::get('/admin/email-show/{id}',[ContactController::class,'emailShow'])->name('admin.emailshow');
 Route::get('/export',[ContactController::class,'export'])->name('admin.export');
 Route::get('/admin/import',[ContactController::class,'importPage'])->name('admin.import');
+Route::get('/admin/import-leads',[ContactController::class,'importsLeadPage'])->name('admin.import-leads');
 Route::post('/admin/upload_csv',[ContactController::class,'import'])->name('post9');
 Route::post('/admin/upload_individual_csv',[ContactController::class,'individualImport'])->name('post30');
 Route::get('/admin/sms',[ContactController::class,'smsPage'])->name('admin.sms');
@@ -134,6 +136,9 @@ Route::get('/admin/team-manager-list/{id}',[ServiceController::class,'teamManage
 Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->name('admin.leads-view');
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage'])->name('admin.get_package');
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');
+Route::get('/admin/individual-reports',[ContactController::class,'individualReport'])->name('admin.individual-report');
+Route::get('/admin/business-reports',[ContactController::class,'businessReport'])->name('admin.business-report');
+Route::get('/admin/staff-reports',[ContactController::class,'staffReport'])->name('admin.staff-report');
 Route::get('/admin/login-history',[AdminController::class,'loginHistory'])->name('admin.loginHistory');
 
 
@@ -148,6 +153,25 @@ Route::get('/admin/document/{id}',[ContactController::class,'documentPage'])->na
 
 
 Route::get('/admin/view-file/{filename}',[ContactController::class,'fileShow'])->name('admin.fileShow');
+Route::get('/admin/sub_service_delete',[ServiceController::class,'deleteSubService'])->name('post23');
+Route::get('/admin/sub-service-list/{id}',[ServiceController::class,'subServiceList'])->name('admin.sub-service-list');
+Route::get('/admin/change_status',[ContactController::class,'changeStatus'])->name('change_status');
+
+Route::get('/admin/login-list/{id}',[ContactController::class,'loginDetails'])->name('admin.login-list');
+Route::get('/admin/subservices/{serviceIds}', [ServiceController::class, 'getSubservicesByServiceId'])->name('admin.subservices');
+
+Route::get('/admin/package_subservices/{serviceIds}', [ServiceController::class, 'getSubservices'])->name('admin.package_subservices');
+
+Route::get('/admin/service_filter', [ServiceController::class, 'filterServices'])->name('admin.service_filter');
+
+Route::post('/admin/update_service_data',[ServiceController::class,'updateServiceData'])->name('admin.update_service_data');
+
+Route::get('/admin/add-role',[AdminController::class,'addRolePage'])->name('admin.add-role');
+Route::post('/admin/add-role',[RoleController::class,'RoleAdd'])->name('post24');
+Route::get('/admin/all-role',[RoleController::class,'allRoles'])->name('admin.all-role');
+Route::get('admin/edit-role/{id}',[RoleController::class,'editRole'])->name('admin.edit-role');
+Route::post('/admin/update_role',[RoleController::class,'updateRole'])->name('post25');
+Route::post('/admin/role_delete',[RoleController::class,'role_delete'])->name('post26');
 
 });
 

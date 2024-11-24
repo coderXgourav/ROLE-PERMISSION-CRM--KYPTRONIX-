@@ -24,7 +24,7 @@
           </div> <br><br>
 <div style="display: flex;
     justify-content: space-evenly;">
-  <div>
+  <div class="col-md-5">
     <form id="upload_individual_lead">
   <div class="card ">
   <div class="p-4" style="padding: 3.5rem!important;">
@@ -43,7 +43,7 @@
   </div>
 </form>
   </div>
-  <div><form id="upload_clients">
+  <div class="col-md-5"><form id="upload_clients">
   <div class="card ">
   <div class="p-4" style="padding: 3.5rem!important;">
       {{@csrf_field()}} 

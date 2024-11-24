@@ -36,7 +36,7 @@
 								   	<label for="input42" class="col-sm-3 col-form-label"></label>
 								   	<div class="col-sm-9">
 											<div class="position-relative input-icon">
-											<input class="form-check-input" value="1" type="checkbox" id="custom_package" name="" onchange="check_custom()"> Custom
+											<input class="form-check-input" value="0" type="checkbox" id="custom_package" name="custom" onchange="check_custom()"> Custom
 											
 										   </div>
                                       </div>
@@ -60,6 +60,15 @@
                                       </div>
 								   			
 								   </div>
+								   	<div class="row mb-3 custom_title">
+										<label for="input42" class="col-sm-3 col-form-label">Title</label>
+										<div class="col-sm-9">
+											<div class="position-relative input-icon">
+												<input type="text" class="form-control" placeholder="Title" name="title" id="title" required>
+												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
+											</div>
+										</div>
+									</div> 
 								
 									<div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Price</label>
@@ -98,7 +107,7 @@
 					</div>
 				</div><!--end row-->
 				<script type="text/javascript">
-					  
+					  $('.custom_title').hide();
 					  function check_custom(){
                          var checkedValue=$("#custom_package").is(":checked");
                          console.log(checkedValue);
@@ -106,8 +115,11 @@
                          	$('.package').hide();
                          	$('#price').val('');
 							$('#description').val('');
+							$('.custom_title').show();
                          }else{
                             $('.package').show();
+                            $('.custom_title').hide();
+
                           }
                          
 					  }

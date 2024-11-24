@@ -2,7 +2,7 @@
 @include('admin.dashboard.header')
  {{-- @extends('admin.dashboard.header') --}}
 @push('title')
-    <title>Package</title>
+    <title>Sub Service</title>
 @endpush
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -13,42 +13,45 @@
 								<thead>
 									<tr>
 										<th>No.</th>
-										<th>Service</th>
-										<th>Sub service</th>
-										<th>Title</th>
-										<th>Price</th>
+										<th>Sub Service</th>
+										@if ($admin_data->user_type=="admin")
+
 										<th>Action</th>
+										@endif
+
 									</tr>
 								</thead>
 								<tbody>
-                                    @if(count($data)>0)
+                                    @if(count($sub_service)>0)
                                     @php
                                         $i=1;
                                     @endphp
-                                    @foreach($data as $key => $value)
-                                    <tr id="{{$value->package_id}}">
+                                    @foreach($sub_service as $key => $value)
+
+                                    <tr id="{{$value->id }}">
 										<td>{{$i++}}</td>
 										<td>{{$value->service_name}}</td>
-										<td>{{$value->subservice_name}}</td>
-										<td>{{$value->title}}</td>
-										<td>{{$value->price}}</td>
-										@php
-										$package_id = Crypt::encrypt($value->package_id);
-									   @endphp
+										@if ($admin_data->user_type=="admin")
 										<td>
+											@php
+										     $service_id = Crypt::encrypt($value->service_id);
+									        @endphp
 										
-										  <div class="d-flex order-actions">
-											<a href="{{route('admin.edit-package',['id'=>$package_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
-@if($admin_data->user_type=="admin")
-												<a href="javascript:;" onclick="DeletePackage({{$value->package_id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
-												@endif
-											 </div>
+										 <div class="d-flex order-actions">
+
+											<a href="{{route('admin.edit-service',['id'=>$service_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
+												<a href="javascript:;"  onclick="DeleteSubService({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
+												
+										 </div>
+										
 										</td>
+										@endif
+	
 									</tr>
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="5" style="text-align: center; color:red;"><b> Records Not Found..!</b></td>
+										<td colspan="5" style="text-align: center; color:red;"><b>Sub Service Not Found!</b></td>
 										
 									</tr>
                                     @endif
@@ -56,7 +59,7 @@
 								</tbody>
 							
 							</table>
-							<div>{{$data->links()}}</div>
+							<div>{{$sub_service->links()}}</div>
 						</div>
 					</div>
 				</div>

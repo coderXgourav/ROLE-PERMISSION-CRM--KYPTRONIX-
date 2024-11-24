@@ -15,8 +15,8 @@ use App\Models\TeamManagersServicesModel;
 use App\Models\MemberServiceModel; 
 use App\Models\LoginHistoryModel; 
 use GuzzleHttp\Client;
-
-
+use App\Models\Subservice;
+use App\Models\Role;
 
 use App\Models\Package;
 use Mail;
@@ -45,13 +45,14 @@ class AdminController extends Controller
             $client = new Client();
             $response = $client->get("http://ip-api.com/json/{$ip}");
             $locationData = json_decode($response->getBody(), true);
-            
+            $operation ='login';
                LoginHistoryModel::create([
                 'user_id'=>$user_id,
                 'ip_address' => $ip,
                 'country' => $locationData['country'] ?? null,
                 'city' => $locationData['city'] ?? null,
                 'region' => $locationData['regionName'] ?? null,
+                'operation'=>$operation,
                ]);
         
             if($user_details->disable_account>0){
@@ -128,10 +129,10 @@ public function dashboardPage(){
   $id = session('admin');
   
   $total_team_member=0;
+  $import_lead=0;
   $total_invoices_data=0;
   $convert_to_clients=0;
   $total_clients=0;
-  $service_data='';
   $email_send_cound = 0;
   $sms_count = 0;$operation_manager =0;
   $team_manager = 0;
@@ -139,8 +140,8 @@ public function dashboardPage(){
   $assign_clients_count = 0;
   $none_assign_clients_count = 0;
   $team_member = 0;
-
-
+  $service_data = '';
+  $paid_customer_count = 0;
       $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->where('main_user.id',$id)
@@ -156,7 +157,9 @@ public function dashboardPage(){
               $operation_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"operation_manager")->count();
               $team_manager = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"team_manager")->count();
               $team_member = DB::table("main_user")->join("permission","permission.user_id","=","main_user.id")->where('main_user.user_type',"customer_success_manager")->count();
-
+              $import_lead = CustomerModel::where('customer_service_id',14)->count();
+              $service_data = Service::all();
+              $paid_customer_count =DB::table('payments')->join('customer','customer.customer_id','=','payments.leads_id')->where('payments.pay_status',1)->count();
             }else if($user_details->user_type=="team_manager"){
 
               $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->distinct()->get(['managers_services_id']);
@@ -204,7 +207,7 @@ public function dashboardPage(){
 
    $user_type = self::userType($user_details->user_type);
           
-   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member]);
+   return view('admin.dashboard.index',['admin_data'=>$user_details,'total_customer'=>$customer_count,'assign_customer'=>$assign_clients_count,'none_assign_customer'=>$none_assign_clients_count,'total_email'=>$email_send_cound,'sms_count'=>$sms_count,'user_type'=>$user_type,'operation_manager'=>$operation_manager,'team_manager'=>$team_manager,'team_member'=>$team_member,'import_lead'=>$import_lead,'service_data'=>$service_data,'paid_customer_count'=>$paid_customer_count]);
 }
 //  THIS IS dashboardPage FUNCTIOIN 
 
@@ -223,6 +226,22 @@ public function chnagePasswordPage(){
 
 // THIS IS A logout FUNCTION 
 public function logout(){
+    $id = session('admin');
+    $user_details = self::userDetails($id);
+    $user_id = $user_details->id;
+    $ip  = request()->ip();
+    $client = new Client();
+    $response = $client->get("http://ip-api.com/json/{$ip}");
+    $locationData = json_decode($response->getBody(), true);
+    $operation ='logout';
+    LoginHistoryModel::create([
+      'user_id'=>$user_id,
+      'ip_address' => $ip,
+      'country' => $locationData['country'] ?? null,
+      'city' => $locationData['city'] ?? null,
+      'region' => $locationData['regionName'] ?? null,
+      'operation'=>$operation,
+    ]);
   session()->forget('admin');
   return redirect('/login');
 }
@@ -318,8 +337,9 @@ public function addContactPage(){
     
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $services =  Service::orderBy('service_id','DESC')->get();
-    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services]);
+    $services =  Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
+    $roles = Role::orderBy('id','DESC')->get();
+    return view('admin.dashboard.add_contact',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services,'roles'=>$roles]);
     
 }
 // THIS IS addContactPage FUNCTION  
@@ -388,14 +408,21 @@ public function addPackagePage(){
   $id = session('admin');
   $admin_data = self::userDetails($id);
   $user_type = self::userType($admin_data->user_type);
-  return view('admin.dashboard.add_package',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+  $services =Service::orderBy('service_id','DESC')->get();
+  return view('admin.dashboard.add_package',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services]);
 }
 // THIS IS addPackagePage FUNCTION  
 public function allPackages(){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
+   // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
+    $all_packages = DB::table('packages')
+    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+    ->join('services','services.service_id','=','packages.service_id')
+    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+    ->orderBy('packages.package_id','DESC')
+    ->paginate(10);
     return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages,'user_type'=>$user_type]);
 }
 
@@ -414,11 +441,22 @@ public function editPackage($package_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $s_id =   Crypt::decrypt($package_id);
-    $data = Package::find($s_id);
-   return view('admin.dashboard.edit_package',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+    $services =Service::orderBy('service_id','DESC')->get();
+    $p_id =   Crypt::decrypt($package_id);
+    $data = Package::find($p_id);
+    $services_data = Service::find($data->service_id);
+    $subservices_data = Subservice::where('service_id',$data->service_id)->get();
+
+    $sub_service_data =Subservice::find($data->subservice_id);
+   return view('admin.dashboard.edit_package',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'services_data'=>$services_data,'services'=>$services,'sub_service_data'=>$sub_service_data,'subservices_data'=>$subservices_data]);
    
   }
+public function addRolePage(){
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+  $user_type = self::userType($admin_data->user_type);
+  return view('admin.dashboard.add_role',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+}
 
 // THIS IS END OF CLASS 
  

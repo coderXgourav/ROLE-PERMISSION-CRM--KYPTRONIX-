@@ -2,7 +2,7 @@
 @include('admin.dashboard.header')
  {{-- @extends('admin.dashboard.header') --}}
 @push('title')
-    <title>Client</title>
+    <title> Role Table</title>
 @endpush
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -13,30 +13,32 @@
 								<thead>
 									<tr>
 										<th>No.</th>
-										<th>Name</th>
-										<th>Service</th>
-										<th>Mobile No.</th>
-										<th>Email</th>
-										<th>City</th>
-										<th>State</th>
+										<th>Role Name</th>
+										<th>Date</th>
+										<th>Action</th>
 									</tr>
-								</thead> 
+								</thead>
 								<tbody>
-                                    @if(count($clients)>0)
+                                    @if(count($data)>0)
                                     @php
                                         $i=1;
                                     @endphp
-                                    @foreach($clients as $key => $value)
-                                    <tr id="{{$value->customer_id }}">
+                                    @foreach($data as $key => $value)
+                                    <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
-										<td>{{$value->customer_name}}</td>
-										<td>{{$value->service_names}}</td>
-										<td>{{$value->customer_number}}</td>
-										<td>{{$value->customer_email}}</td>
-										<td>{{$value->city}}</td>
-										<td>{{$value->state}}</td>
+										<td>{{ucwords($value->role_name)}}</td>
+										<td>{{$value->created_at}}</td>
+										@php
+										$role_id = Crypt::encrypt($value->id);
+									   @endphp
+										<td>
 										
-									
+											 <div class="d-flex order-actions">
+											    <a href="{{route('admin.edit-role',['id'=>$role_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
+												<a href="javascript:;"  onclick="DeleteRole({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
+												
+											 </div>
+										</td>
 									</tr>
                                     @endforeach
                                     @else 
@@ -49,7 +51,9 @@
 								</tbody>
 							
 							</table>
-							<div>{{$clients->links()}}</div>
+							<div>
+								{{$data->links()}}
+							</div>
 						</div>
 					</div>
 				</div>

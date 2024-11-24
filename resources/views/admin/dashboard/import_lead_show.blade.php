@@ -2,9 +2,8 @@
 @include('admin.dashboard.header')
  {{-- @extends('admin.dashboard.header') --}}
 @push('title')
-    <title> Customers/Clients Table</title>
+    <title> Imports Leads</title>
 @endpush
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
@@ -13,28 +12,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 					<div class="card-body">
 						<div class="table-responsive">
-								<div >
-									<form action={{route('admin.assign')}} method="GET">
-										<div class="row">
-										<div class="col-md-4">
-								<select name="service"  class="form-control" id="" >
-									<option value="">Filter Services</option>
-									@foreach ($services as $item)
-										<option {{ request('service') == $item->service_id ? 'selected' : '' }} value="{{$item->service_id}}">{{$item->name}}</option>
-									@endforeach
-									
-								</select>
-										</div>
-										<div class="col-md-2"><button type="submit" class="btn btn-success">Search</button></div>
-									</div>
-								
-								</form> <br>
-								</div>
 								{{-- <div class="bg-info" style="padding: 2px;">
 									<p class="text-light text-center ">Please select only one type of lead. Selecting multiple service leads will disable the assignment feature</p>
 								</div> --}}
 								<br>
-							<form id="update_assign_client_form">
+							<form id="assign_lead_to_service">
 							<table id="myTable" class="table table-striped table-bordered" style="width:100%">
 							
 								<thead>
@@ -44,11 +26,9 @@
 										<th>Name</th>
 										<th>Mobile No.</th>
 										<th>Email</th>
-										<th>Service</th>
 										<th>City</th>
 										<th>State</th>
 										<th>Message</th>
-										<th>Show Details</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -65,17 +45,14 @@
 										<td>{{$value->customer_name}}</td>
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
-										<td>{{$value->service_names}}</td>
 										<td>{{$value->city}}</td>
-										<td>{{$value->State}}</td>
+										<td>{{$value->state}}</td>
 										<td>{{$value->msg}}</td>
-										<td><a href="{{route('admin.view_assign_client',['id'=>$value->customer_id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                    </td>
 									</tr>
                                     @endforeach
-                                    @else  
+                                    @else 
                                     <tr>
-										<td colspan="10" style="text-align: center; color:red;"><b>Customer Records Not Found..!</b></td>
+										<td colspan="7" style="text-align: center; color:red;"><b>Imports Leads Record Not Found..!</b></td>
 										
 									</tr>
                                     @endif
@@ -90,7 +67,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Choose Customer Success Manager </h5>
+        <h5 class="modal-title" id="exampleModalLabel">Choose Team Member </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -100,8 +77,20 @@
     <option value="">Select Team Member</option>
 </select> --}}
 <div id="team_member_container">
-    <p>Select Team Members:</p>
+    <p>Select Services:</p>
     <!-- Checkboxes will be appended here -->
+    <div>
+          <div style="display: flex;
+  
+    align-items: center;
+    gap: 15px; flex-wrap:wrap;">
+       @foreach ($services as $item)
+    <input id="{{$item->service_id}}" style="width: 25px;" type="checkbox" name="service[]" value="{{$item->service_id}}">
+    <label for="{{$item->service_id}}" style="cursor: pointer">{{$item->name}}</label>
+@endforeach
+
+            </div>
+    </div>
 </div>
 <br>
       </div>
@@ -116,7 +105,7 @@
 							<div>{{$data->links()}}</div>
 							  @if(count($data)>0)
 							<div style="display: flex; justify-content:center; margin-bottom: 20px; margin-top:20px;">
-								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" id="assign" style="background-color: #38833c; border:1px solid #38833c; width:500px;">Update Customer success Manager</button>
+								 <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal" id="assign" style="background-color: #38833c; border:1px solid #38833c; width:500px;">Assign Service</button>
 								</div>
 								@endif
 							</form>
@@ -128,25 +117,24 @@
 	 $('#myTable').DataTable({
 	 });
 </script>
-
 <script>
-	let leads = [];
-	let service = [];
+	// let leads = [];
+	// let service = [];
 
-	function getLeads(id,service_id){
-		console.log(id, service_id);
+	// function getLeads(id,service_id){
+	// 	console.log(id, service_id);
 		
-		if(leads.includes(id)  && service.includes(service_id)){
-			leads.splice(leads.indexOf(id), 1);
-			service.splice(service.indexOf(service_id), 1);
-				console.log(allValuesSame(service));
-		}else{
-			leads.push(id);
-			service.push(service_id);
-			console.log(allValuesSame(service));
-		}
+	// 	if(leads.includes(id)  && service.includes(service_id)){
+	// 		leads.splice(leads.indexOf(id), 1);
+	// 		service.splice(service.indexOf(service_id), 1);
+	// 			console.log(allValuesSame(service));
+	// 	}else{
+	// 		leads.push(id);
+	// 		service.push(service_id);
+	// 		console.log(allValuesSame(service));
+	// 	}
 
-	}
+	// }
 
 	function allValuesSame(array) {
    
@@ -197,7 +185,7 @@ function toggleAll(selectAllCheckbox) {
 		service.push(serviceId);
 		leads.push(checkbox.value);
         checkbox.checked = selectAllCheckbox.checked;
-	  getLeads(checkbox.value,serviceId); 
+	//   getLeads(checkbox.value,serviceId); 
       
     });
 }

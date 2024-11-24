@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id('invoice_id');
             $table->integer('price')->nullable();
+            $table->string('title')->nullable();
             $table->string('date')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('customer_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('service_id')->nullable();
-            $table->integer('package_id')->nullable();
+            $table->integer('package_id')->default(0);
             $table->string('role')->nullable();
             $table->integer('amount')->nullable();
             $table->text('description')->nullable();

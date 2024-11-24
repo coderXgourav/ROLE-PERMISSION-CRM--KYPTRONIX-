@@ -2,7 +2,7 @@
 @include('admin.dashboard.header')
  {{-- @extends('admin.dashboard.header') --}}
 @push('title')
-    <title>Client</title>
+    <title>Package</title>
 @endpush
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -13,30 +13,29 @@
 								<thead>
 									<tr>
 										<th>No.</th>
-										<th>Name</th>
-										<th>Service</th>
-										<th>Mobile No.</th>
-										<th>Email</th>
-										<th>City</th>
-										<th>State</th>
+										<th>Date</th>
+										<th>Total Working Time</th>
 									</tr>
-								</thead> 
+								</thead>
 								<tbody>
-                                    @if(count($clients)>0)
+                                    @if(count($daily_login_times)>0)
                                     @php
                                         $i=1;
                                     @endphp
-                                    @foreach($clients as $key => $value)
-                                    <tr id="{{$value->customer_id }}">
+                                    @foreach($daily_login_times as $key => $value)
+
+
+                                    <tr>
 										<td>{{$i++}}</td>
-										<td>{{$value->customer_name}}</td>
-										<td>{{$value->service_names}}</td>
-										<td>{{$value->customer_number}}</td>
-										<td>{{$value->customer_email}}</td>
-										<td>{{$value->city}}</td>
-										<td>{{$value->state}}</td>
-										
-									
+										<td>{{$key}}</td>
+										<td><?php 
+										 
+                          echo  floor($value / 3600) ." Hour " ;
+                          echo  floor(($value % 3600) / 60)." minutes ";
+                         echo   floor($value % 60)." seconds";
+    
+										?></td>
+
 									</tr>
                                     @endforeach
                                     @else 
@@ -49,7 +48,6 @@
 								</tbody>
 							
 							</table>
-							<div>{{$clients->links()}}</div>
 						</div>
 					</div>
 				</div>
