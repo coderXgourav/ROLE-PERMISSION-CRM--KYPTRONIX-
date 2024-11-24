@@ -121,8 +121,8 @@ width: 100% !important;
 										<div class="col-sm-9">
 											<div style="    display: flex;align-items: center;gap: 10px;}">
 												       @foreach($roles as $val)
-												<div><input type="checkbox"  name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
-												<div><p>{{$val->role_name}}</p></div>
+												<div><input type="checkbox" id="role".{{$val->id}}  name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
+												<label style="cursor: pointer" for="role".{{$val->id}} >{{$val->role_name}}</label>
 												   @endforeach                                 
 
 
@@ -142,17 +142,39 @@ width: 100% !important;
 
 													
 												    <div>
-														<input type="checkbox"  name="services[]" class="services-checkbox"value="{{$item->service_id}}"  style="width: 25px"> 
+														
+														<input type="checkbox" id={{$item->service_id}}  name="services[]" class="services-checkbox"value="{{$item->service_id}}"  style="width: 25px"> 
 													</div>
-													<div>{{$item->name}}</div>
+													<label style="cursor: pointer" for={{$item->service_id}}>{{$item->name}}</label>
 
 											
 													@endforeach
 													</div>
+													
 												
 										</div>
+
+										<div class="row"  id="service_field">
+											<div class="row mb-3" >
+											<label for="input42" class="col-sm-3 col-form-label">Allow Manage System</label>
+											<div class="col-sm-9">
+											
+										    <div style="display: flex;align-items: center;gap: 10px;}">
+								<div>
+										
+				<input type="radio" id="manage1"  name="manage" class="services-checkbox"value="0"  style="width: 25px"><label for="manage1" style="cursor: pointer">Manage only Assigned Leads</label> 
+								</div>
+								<div>
+										
+									<input type="radio" id="manage2"  name="manage" class="services-checkbox"value="1"  style="width: 25px"> <label for="manage2" style="cursor: pointer">Manage Total Service Leads</label>
+													</div>
+														</div>
+														
+													
+											</div>
 									</div>
 								 </div>
+								 
 								<!--	<div class="row mb-3" id="sub_services">
 										<label for="input42" class="col-sm-3 col-form-label">Sub Service</label>
 										<div class="col-sm-9">

@@ -24,6 +24,7 @@ use App\Models\TeamManagersServicesModel;
 use App\Models\Package;
 use App\Models\LoginHistoryModel;
 use App\Models\RoleService;
+use App\Models\Role;
 use Carbon\Carbon;
 
 use DB;
@@ -95,6 +96,7 @@ class ContactController extends Controller
       $first_name = $request->first_name;
       $last_name = $request->last_name;
       $email = $request->email;
+      $manage = $request->manage;
       $user_type = $request->user_type;
 
       $services_status = 0;
@@ -180,6 +182,7 @@ class ContactController extends Controller
       $permissions->communication_permission = $communication ;
       $permissions->report_permission = $report ;
       $permissions->document_view_permission = $document_view ;
+      $permissions->service_manage_system = $manage ;
       // $permissions->client_financial_data_permission = $client_financial ;
       // $permissions->client_contact_permission = $client_contact_info ;
       // $permissions->delete_all_record_permission = $delete_all_record ;
@@ -229,51 +232,24 @@ class ContactController extends Controller
      $id = session('admin');
      $admin_data = self::userDetails($id);
     // $user_type = self::userType($admin_data->user_type);
-     $user_details='';$services_he_manage='';
+     $user_details='';
+     $services_he_manage='';
      $data = MainUserModel::find($contact_id);
+    $roles = Role::orderBy('id','DESC')->get();
      
      $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
-
-     
-     $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
+    //  $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
     //  $team_services_id=''; $s_data='';$customer_service='';
      
-     if($data['user_type'] == 'team_manager'){
-
       $user_details =  DB::table("main_user")
       ->join("permission",'permission.user_id','=','main_user.id')
        ->where('main_user.id',$contact_id)
       ->first();
 
-      $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->id)
-      ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
+      $services_he_manage = DB::table('role_services')->where('member_id',$user_details->id)
+      ->join('services','services.service_id','=','role_services.service_id')->get();
 
-      
-     }else if($data['user_type'] == 'customer_success_manager'){
-
-       $user_details =  DB::table("main_user")
-      ->join("permission",'permission.user_id','=','main_user.id')
-       ->where('main_user.id',$contact_id)
-      ->first();
-
-      $services_he_manage = DB::table('member_service')->where('member_id',$user_details->id)
-      ->join('services','services.service_id','=','member_service.member_service_id')
-      ->get();
-
-      // echo "<pre>";
-      // print_r($services_he_manage); die;
-     }
-     else if($data['user_type'] == 'operation_manager'){
-
-      $user_details =  DB::table("main_user")
-     ->join("permission",'permission.user_id','=','main_user.id')
-      ->where('main_user.id',$contact_id)
-     ->first();
-     $services_he_manage = Service::orderBy("service_id","DESC")->get();
-     // echo "<pre>";
-     // print_r($services_he_manage); die;
-    }
-return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage]);
+return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'roles'=>$roles]);
    
   }
  
@@ -286,6 +262,7 @@ public function updateContact(Request $request){
       $first_name = $request->first_name;
       $last_name = $request->last_name;
       $email = $request->email;
+      $manage = $request->manage;
       $user_type = $request->user_type;
       $user_id = $request->main_user_id;
       $permissions_id = $request->permissions_id;
@@ -342,6 +319,7 @@ public function updateContact(Request $request){
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
       $permissions->payment_permission = $payment_manage ;
+      $permissions->service_manage_system = $manage ;
       $permissions->customer_permission = $customer_manage ;
       $permissions->email_sms_permission = $email_sms_manage ;
       $permissions->communication_permission = $communication ;
@@ -1202,10 +1180,9 @@ public function viewTeamMember($team_manager_id){
     $user_login_details=0;
     $user_logout=0;
 
-    if(isset($data->user_type) && $data->user_type == 'team_manager'){
-        $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
-        $service_id = [];
+        $team_manager_services = RoleService::where('member_id',$team_manager_id)->distinct()->get(['member_id']);
 
+        $service_id = [];
         foreach($team_manager_services as $service){
           $service_id[] = $service->managers_services_id;
         }
@@ -1234,6 +1211,7 @@ public function viewTeamMember($team_manager_id){
             ->groupBy('customer.customer_email') 
             ->whereIn('customer.customer_service_id',$service_id) 
             ->get();
+            
        $total_invoices_data = Invoice::whereIn('service_id',$service_id)->count();
     
        $service_data=DB::table('services')
@@ -1260,69 +1238,69 @@ public function viewTeamMember($team_manager_id){
 
      
                   
-    }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
-          // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
-        $user_login_details = DB::table('main_user')
-        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
-        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
-        ->where('main_user.id', $team_manager_id)
-        ->where('login_history.operation','login')
-        ->get();     
-        $user_logout = DB::table('main_user')
-        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
-        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
-        ->where('main_user.id', $team_manager_id)
-        ->where('login_history.operation','logout')
-        ->get();
+    // else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
+    //       // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
+    //     $user_login_details = DB::table('main_user')
+    //     ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+    //     ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+    //     ->where('main_user.id', $team_manager_id)
+    //     ->where('login_history.operation','login')
+    //     ->get();     
+    //     $user_logout = DB::table('main_user')
+    //     ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+    //     ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+    //     ->where('main_user.id', $team_manager_id)
+    //     ->where('login_history.operation','logout')
+    //     ->get();
 
-          $customer_success_manager_services = MemberServiceModel::where('member_id', $data->id)
-          ->distinct()
-          ->get(['member_service_id']); // Specify the columns you want to be distinct
-
-
-          $service_id=[];
-        if(!empty($customer_success_manager_services)){
-             foreach($customer_success_manager_services as $service){
-                 $service_id[] = $service->member_service_id;
-              }
-
-            $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
-           /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
-           $total_clients = DB::table('customer')
-            ->select(
-                'customer.customer_email',
-                DB::raw('MAX(customer.customer_id) as customer_id'),
-                DB::raw('MAX(customer.customer_number) as customer_number'),
-                DB::raw('MAX(customer.customer_name) as customer_name'),
-                DB::raw('MAX(customer.status) as status'),
-                DB::raw('MAX(customer.type) as type'),
-                DB::raw('MAX(services.service_id) as service_id'),
-                DB::raw('MAX(customer.msg) as msg'),
-                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
-            )
-            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-            ->groupBy('customer.customer_email') 
-            ->whereIn('customer.customer_service_id',$service_id) 
-            ->whereJsonContains('customer.team_member',"$data->id")
-            ->get();
-
-            $service_data=DB::table('services')
-            ->join('member_service','member_service.member_service_id','=','services.service_id')
-            ->where('member_service.member_id',$team_manager_id)
-            ->distinct()
-            ->get(['name']);
-
-            // echo "<pre>";
-            // print_r($service_data);
-            // die;
-        }
+    //       $customer_success_manager_services = MemberServiceModel::where('member_id', $data->id)
+    //       ->distinct()
+    //       ->get(['member_service_id']); // Specify the columns you want to be distinct
 
 
-    }else if(isset($data->user_type) && $data->user_type == 'admin'){
-      $total_clients=CustomerModel::all()->count();
-      $total_invoices_data=Invoice::all()->count();
-      $total_team_member=CustomerModel::where('team_member','!=','null')->count();
-    }
+    //       $service_id=[];
+    //     if(!empty($customer_success_manager_services)){
+    //          foreach($customer_success_manager_services as $service){
+    //              $service_id[] = $service->member_service_id;
+    //           }
+
+    //         $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
+    //        /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
+    //        $total_clients = DB::table('customer')
+    //         ->select(
+    //             'customer.customer_email',
+    //             DB::raw('MAX(customer.customer_id) as customer_id'),
+    //             DB::raw('MAX(customer.customer_number) as customer_number'),
+    //             DB::raw('MAX(customer.customer_name) as customer_name'),
+    //             DB::raw('MAX(customer.status) as status'),
+    //             DB::raw('MAX(customer.type) as type'),
+    //             DB::raw('MAX(services.service_id) as service_id'),
+    //             DB::raw('MAX(customer.msg) as msg'),
+    //             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+    //         )
+    //         ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+    //         ->groupBy('customer.customer_email') 
+    //         ->whereIn('customer.customer_service_id',$service_id) 
+    //         ->whereJsonContains('customer.team_member',"$data->id")
+    //         ->get();
+
+    //         $service_data=DB::table('services')
+    //         ->join('member_service','member_service.member_service_id','=','services.service_id')
+    //         ->where('member_service.member_id',$team_manager_id)
+    //         ->distinct()
+    //         ->get(['name']);
+
+    //         // echo "<pre>";
+    //         // print_r($service_data);
+    //         // die;
+    //     }
+
+
+    // }else if(isset($data->user_type) && $data->user_type == 'admin'){
+    //   $total_clients=CustomerModel::all()->count();
+    //   $total_invoices_data=Invoice::all()->count();
+    //   $total_team_member=CustomerModel::where('team_member','!=','null')->count();
+    // }
 
     return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout]);
 }
