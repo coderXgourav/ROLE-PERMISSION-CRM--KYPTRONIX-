@@ -274,7 +274,7 @@
                      
                      
                     </div>
-						@if($admin_data->user_type=="admin")
+						{{-- @if($admin_data->user_type=="admin")
 
                     <div class="row row-cols-1 row-cols-lg-3">
 						<div class="col d-flex">
@@ -375,9 +375,9 @@
 							</div>
 						</div>
 					</div>
-					@endif
+					@endif --}}
             <!--end page wrapper -->
-            <!--start overlay-->
+            <!--start overlay-->  
             <div class="overlay toggle-icon"></div>
             <!--end overlay-->
             <!--Start Back To Top Button-->
