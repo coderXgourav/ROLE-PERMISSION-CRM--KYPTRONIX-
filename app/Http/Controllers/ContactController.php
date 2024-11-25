@@ -883,7 +883,11 @@ public function export()
           $user_type = $admin_data->user_type;
 
           if($user_type=="admin" || $user_type=="operation_manager"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",$user_type)->where('main_user.user_type',"!=","admin")->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",$user_type)->where('main_user.user_type',"!=","admin")->select('main_user.*','roles.modern_name')->paginate(10);
+
+              // echo "<pre>";
+              // print_r($contact_data);
+              // die;
           }else if($user_type=="team_manager"){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
@@ -1184,6 +1188,9 @@ public function viewTeamMember($team_manager_id){
     $admin_data = self::userDetails($team_id);
     $team_manager_id = Crypt::decrypt($team_manager_id);
     $data = MainUserModel::find($team_manager_id);
+   
+    // $data = DB::table('main_user')->join('roles','roles.role_name')
+
 
     
     $user_type = $data['user_type'];
