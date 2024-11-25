@@ -124,13 +124,23 @@ width: 100% !important;
 												<div><input type="checkbox" id="role".{{$val->id}}  name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
 												<label style="cursor: pointer" for="role".{{$val->id}} >{{$val->role_name}}</label>
 												   @endforeach                                 
-
-
 											</div>
-											
-										
 										</div>
 									</div>
+
+										{{-- <div class="row mb-3" >
+										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
+										<div class="col-sm-9">
+											<div style=" display: flex;align-items: center;gap: 10px;}">
+												     <input type="radio" name="role" value="customer_success_manager" required>                               
+												     <input type="radio" name="role" value="team_manager" required>                               
+												     <input type="radio" name="role" value="admin" required>                               
+												     <input type="radio" name="role" value="bookkeeper" required>                               
+											</div>
+										</div>
+									</div> --}}
+
+
 
  									<div class="row"  id="service_field">
 										<div class="row mb-3" >
