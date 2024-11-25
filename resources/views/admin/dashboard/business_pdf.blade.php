@@ -98,13 +98,11 @@
 <body>
     <div class="header">
         <div><img src="{{url('/assets/images/logo-icon.png')}}"></div>
+       
         @if($reports==1)
-        <h1>Birthday Leads Report</h1>
-        @endif
-        @if($reports==2)
         <h1>Paid Leads Report</h1>
         @endif
-        @if($reports==3)
+        @if($reports==2)
         <h1>UnPaid Leads Report</h1>
         @endif
       
@@ -119,9 +117,7 @@
                 <th>Mobile No.</th>
                 <th>Email</th>
                 <th>Service</th>
-                @if($reports==2 || $reports==3)
                 <th>Price</th>
-                @endif
                 <th>City</th>
                 <th>State</th>
                 <th>Status</th>
@@ -137,9 +133,7 @@
                         <td>{{$value->customer_number}}</td>
                         <td>{{$value->customer_email}}</td>
                         <td>{{$value->service_names}}</td>
-                        @if($reports==2 || $reports==3)
                         <td>{{$value->price}}</td>
-                        @endif
                         <td>{{$value->city}}</td>
                         <td>{{$value->state}}</td>
                         <td>

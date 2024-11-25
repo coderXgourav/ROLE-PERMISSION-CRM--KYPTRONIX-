@@ -2682,8 +2682,8 @@ function loginDetails($userId) {
   public function individualReport(){
        $user_id=session('admin');
        $admin_data = self::userDetails($user_id);
-    // $user_type = self::userType($admin_data->user_type);
-      return view('admin.dashboard.individual_report',['admin_data'=>$admin_data]);
+       $user_type = self::userType($admin_data->user_type);
+      return view('admin.dashboard.individual_report',['admin_data'=>$admin_data,'user_type'=>$user_type]);
   }
   public function downloadPDF(Request $request){
         $reports = $request->reports;
@@ -2697,7 +2697,7 @@ function loginDetails($userId) {
               DB::raw('MAX(customer.customer_name) as customer_name'),
               DB::raw('MAX(customer.status) as status'),
               DB::raw('MAX(customer.city) as city'),
-                  DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.state) as state'),
               DB::raw('MAX(customer.type) as type'),
               DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
           )
@@ -2715,24 +2715,100 @@ function loginDetails($userId) {
               DB::raw('MAX(customer.customer_name) as customer_name'),
               DB::raw('MAX(customer.status) as status'),
               DB::raw('MAX(customer.city) as city'),
-                  DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.state) as state'),
               DB::raw('MAX(customer.type) as type'),
+              DB::raw('MAX(invoices.price) as price'),
               DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
           )
           ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-          ->join('payments','payments.leads_id','=','customer.customer_id')
-          ->where('payments.pay_status',1)
+          ->join('invoices','invoices.customer_id','=','customer.customer_id')
+          ->where('customer.paid_customer',1)
+          ->where('customer.type',1)
+          ->groupBy('customer.customer_email') 
+          ->get();
+        }elseif($reports == 3){
+          $leads_data = DB::table('customer')
+          ->select(
+              'customer.customer_email',
+              DB::raw('MAX(customer.customer_id) as customer_id'),
+              DB::raw('MAX(customer.customer_number) as customer_number'),
+              DB::raw('MAX(customer.customer_name) as customer_name'),
+              DB::raw('MAX(customer.status) as status'),
+              DB::raw('MAX(customer.city) as city'),
+              DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.type) as type'),
+              DB::raw('MAX(invoices.price) as price'),
+              DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+          )
+          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+          ->join('invoices','invoices.customer_id','=','customer.customer_id')
+          ->where('customer.paid_customer',0)
           ->where('customer.type',1)
           ->groupBy('customer.customer_email') 
           ->get();
         }
-       
+       // echo '<pre>';
        // print_r($leads_data);die;
-        $pdf = PDF::loadView('admin.dashboard.show_pdf',['leads_data'=>$leads_data]);
+        $pdf = PDF::loadView('admin.dashboard.show_pdf',['leads_data'=>$leads_data,'reports'=>$reports]);
         return $pdf->stream('show_pdf.pdf');
   }
-    
-
+   
+  public function businessReport(){
+       $user_id=session('admin');
+       $admin_data = self::userDetails($user_id);
+       $user_type = self::userType($admin_data->user_type);
+       return view('admin.dashboard.business_report',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+  } 
+  
+   public function businessReportPdf(Request $request){
+        $reports = $request->reports;
+       if($reports == 1){
+          $leads_data = DB::table('customer')
+          ->select(
+              'customer.customer_email',
+              DB::raw('MAX(customer.customer_id) as customer_id'),
+              DB::raw('MAX(customer.customer_number) as customer_number'),
+              DB::raw('MAX(customer.customer_name) as customer_name'),
+              DB::raw('MAX(customer.status) as status'),
+              DB::raw('MAX(customer.city) as city'),
+              DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.type) as type'),
+              DB::raw('MAX(invoices.price) as price'),
+              DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+          )
+          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+          ->join('invoices','invoices.customer_id','=','customer.customer_id')
+          ->where('customer.paid_customer',1)
+          ->where('customer.type',2)
+          ->groupBy('customer.customer_email') 
+          ->get();
+        }elseif($reports == 2){
+          $leads_data = DB::table('customer')
+          ->select(
+              'customer.customer_email',
+              DB::raw('MAX(customer.customer_id) as customer_id'),
+              DB::raw('MAX(customer.customer_number) as customer_number'),
+              DB::raw('MAX(customer.customer_name) as customer_name'),
+              DB::raw('MAX(customer.status) as status'),
+              DB::raw('MAX(customer.city) as city'),
+              DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.type) as type'),
+              DB::raw('MAX(invoices.price) as price'),
+              DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+          )
+          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+          ->join('invoices','invoices.customer_id','=','customer.customer_id')
+          ->where('customer.paid_customer',0)
+          ->where('customer.type',2)
+          ->groupBy('customer.customer_email') 
+          ->get();
+        }
+       // echo '<pre>';
+       // print_r($leads_data);die;
+        $pdf = PDF::loadView('admin.dashboard.business_pdf',['leads_data'=>$leads_data,'reports'=>$reports]);
+        return $pdf->stream('business_pdf.pdf');
+  }
+ 
 
 
 }
