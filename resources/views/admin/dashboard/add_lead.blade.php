@@ -22,22 +22,24 @@ width: 100% !important;
 
 							<div class="card-body p-4">
 								<h5 class="mb-4">Add New Lead  </h5>
+										    <input id="service" type="hidden" name="customer_service_id[]"  style="width: 25px" > 
+
 								   <div class="row mb-3">
-								   	<label for="input42" class="col-sm-3 col-form-label">Service <span class="text-danger">*</span></label>
+								   	<label for="input42" class="col-sm-3 col-form-label">Service</label>
 								    	<div class="col-sm-9" style="display: flex; flex-wrap: wrap; gap:10px;
 								    	/* justify-content: center; */
 								    	align-items: center;
 								    	gap: 22px;">
 								    	
 										    @foreach ($all_services as $services)
-										    <input id="service" type="checkbox" name="customer_service_id[]" value="{{$services->service_id}}" style="width: 25px" required> 
+										    <input id="service" type="checkbox" name="customer_service_id[]" value="{{$services->service_id}}" style="width: 25px" > 
 										    {{$services->name}}											
 											@endforeach
 													
 										</div>
 								   </div> <br>
 								  <div class="row mb-3">
-								   	<label for="input42" class="col-sm-3 col-form-label">Type <span class="text-danger">*</span></label>
+								   	<label for="input42" class="col-sm-3 col-form-label">Type </label>
 								    	<div class="col-sm-9" style="display: flex; align-items:center; gap:10px;">
 										    <input type="checkbox" name="type" id="user_type" checked  onclick="limitCheckboxes(this)" value="1"   style="width: 25px;"> Individual
 										    <input type="checkbox" name="type" value="2" id="user_type"   onclick="limitCheckboxes(this)" style="width: 25px;"> Business
@@ -45,10 +47,10 @@ width: 100% !important;
 								   </div> <br>
 								  <div class="individual">
 									<div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label"> First Name <span class="text-danger">*</span></label>
+										<label for="input42" class="col-sm-3 col-form-label"> First Name</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type First Name" name="first_name" required>
+												<input type="text" class="form-control" placeholder="Type First Name" name="first_name" >
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
 											</div>
 										</div>
@@ -63,28 +65,28 @@ width: 100% !important;
 										</div>
 									</div> 
 									<div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label"> Last Name <span class="text-danger">*</span></label>
+										<label for="input42" class="col-sm-3 col-form-label"> Last Name </label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Last Name" name="last_name" required>
+												<input type="text" class="form-control" placeholder="Type Last Name" name="last_name" >
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
 											</div>
 										</div>
 									</div> 
 									<div class="row mb-3">
-										<label for="input43" class="col-sm-3 col-form-label">Phone No <span class="text-danger">*</span></label>
+										<label for="input43" class="col-sm-3 col-form-label">Phone No</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												 <input type="tel" id="" class="form-control" name="phone" placeholder="Type Phone Number"  required>
+												 <input type="tel" id="" class="form-control" name="phone" placeholder="Type Phone Number"  >
                                                  <input type="hidden" id="country_code" name="country_code" value="">												
 											</div>
 										</div>
 									</div>
 									<div class="row mb-3">
-										<label for="input44" class="col-sm-3 col-form-label">Email Address <span class="text-danger">*</span></label>
+										<label for="input44" class="col-sm-3 col-form-label">Email Address</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="email" class="form-control"  placeholder="Type Email Address" name="email" required> 
+												<input type="email" class="form-control"  placeholder="Type Email Address" name="email" > 
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-envelope'></i></span>
 											</div>
 										</div>
@@ -152,7 +154,7 @@ width: 100% !important;
 											<label for="input42" class="col-sm-3 col-form-label">Business Name <span class="text-danger">*</span></label>
 											<div class="col-sm-9">
 												<div class="position-relative input-icon">
-													<input type="text" class="form-control" placeholder="Type Business Name" name="business_name" required>
+													<input type="text" class="form-control" placeholder="Type Business Name" name="business_name" >
 													<span class="position-absolute top-50 translate-middle-y"></span>
 												</div>
 											</div>
@@ -170,7 +172,7 @@ width: 100% !important;
 										<label for="input43" class="col-sm-3 col-form-label">Phone No <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												 <input type="tel" id="" class="form-control" name="business_phone_no" placeholder="Type Phone Number" required>
+												 <input type="tel" id="" class="form-control" name="business_phone_no" placeholder="Type Phone Number" >
                                                  <input type="hidden" id="country_code" name="country_code" value="">												
 											</div>
 										</div>
@@ -180,7 +182,7 @@ width: 100% !important;
 										<label for="input44" class="col-sm-3 col-form-label">Email Address <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="email" class="form-control"  placeholder="Type Email Address" name="business_email" required> 
+												<input type="email" class="form-control"  placeholder="Type Email Address" name="business_email" > 
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-envelope'></i></span>
 											</div>
 										</div>

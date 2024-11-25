@@ -46,22 +46,12 @@
                         
                         <div class="md:w-2/3 mt-6 md:mt-0 md:pl-8">
                             <h2 class="text-3xl font-bold text-gray-800">
-                                {{ $data['first_name'] }} {{ $data['last_name'] }}
+                                {{ ucwords($data['first_name']) }} {{ ucwords($data['last_name']) }}
                             </h2>
                             
                             <div class="mt-2">
                                 <span class="badge px-4 py-1 rounded-full text-white text-sm">
-                                    @switch($data->user_type)
-                                        @case("operation_manager")
-                                            Operation Manager
-                                            @break
-                                        @case("team_manager")
-                                            Team Manager
-                                            @break
-                                        @case("customer_success_manager")
-                                            Team Member
-                                            @break
-                                    @endswitch
+                                  {{$user_role['modern_name']}}
                                 </span>
                             </div>
 

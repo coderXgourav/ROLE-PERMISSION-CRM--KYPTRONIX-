@@ -119,7 +119,7 @@ width: 100% !important;
 										<div class="col-sm-9">
 											<div style="    display: flex;align-items: center;gap: 10px;}">
 												       @foreach($roles as $val)
-												<div><input type="checkbox" name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
+												<div><input type="checkbox" name="user_type" onclick="resetCheckboxes(this)" value="{{$val->role_name}}"  style="width: 25px"> </div>
 												<label style="cursor: pointer"  >{{$val->modern_name}}</label>
 												   @endforeach                                 
 											</div>

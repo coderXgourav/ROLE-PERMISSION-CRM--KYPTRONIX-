@@ -51,7 +51,7 @@
                                     @foreach($data as $key => $value)
                                     <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
-										<td>{{$value->first_name}} {{$value->last_name}}</td>
+										<td>{{ucwords($value->first_name)}} {{ucwords($value->last_name)}}</td>
 										<td>{{$value->modern_name}}</td>
 										<td>{{$value->phone_number}}</td>
 										<td>{{$value->email_address}}</td>
