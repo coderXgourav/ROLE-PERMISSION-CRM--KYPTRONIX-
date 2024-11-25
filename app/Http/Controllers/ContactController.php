@@ -1576,11 +1576,13 @@ public function addLead(){
 
       $service_id =$request->customer_service_id;
       if(empty($service_id)){
-        $service_id = 14;
+        $service_id = ['14'];
       }
-      $type=$request->type;
 
-       $phone= $request->phone;
+
+       $type=$request->type;
+
+           $phone= $request->phone;
            $country_code = $request->country_code;
            $customer_number = $country_code.$phone;
            $first_name = $request->first_name;
@@ -1617,31 +1619,180 @@ public function addLead(){
         $point_of_contact=$request->point_of_contact;
         $msg=$request->msg;
 
+        if($phone!="" ){
+          $check = CustomerModel::where('customer_number',$phone)->first();
+               if($check){
+                    return self::toastr(false,"Number already exist","error","Error");
+              }
+        }
+        
+          if($email !="") {
+             $check = CustomerModel::where('customer_email',$email)->first();
+               if($check){
+                    return self::toastr(false,"Email already exist","error","Error");
+              }
+        }
+        //  if(!empty($service_id)){
+        //     foreach ($service_id as $key => $value) {
+        //         $business_details = new CustomerModel;
+        //         $business_details= $request->phone;
+        //         $business_details = $request->country_code;
+        //         $business_details = $country_code.$phone;
+        //         $business_details = $request->first_name;
+        //         $business_details =$request->middle_name;
+        //         $business_details=$request->last_name;
+        //         $business_details = $request->email;
+        //         $business_details = $request->msg;
+        //         $business_details=$request->dob;
+        //         $business_details=$request->address;
+        //         $business_details=$request->city;
+        //         $business_details=$request->state;
+        //         $business_details=$request->zip;
+        //         $business_details=$request->ssn;
+        //         $business_details=$request->msg;
+        //         $business_details->business_name=$business_name;
+        //         $business_details->customer_name=$business_name;
+        //         $business_details->industry=$industry;
+        //         $business_details->customer_number=$customer_number;
+        //         $business_details->customer_email=$customer_email;
+        //         $business_details->customer_service_id = $value;
+        //         $business_details->type=$type;
+        //         $business_details->ein=$ein;
+        //         $business_details->address=$business_address;
+        //         $business_details->city=$business_city;
+        //         $business_details->state=$business_state;
+        //         $business_details->zip=$business_zip;
+        //         $business_details->business_title=$business_title;
+        //         $business_details->point_of_contact=$point_of_contact;
+        //         $business_details->fax=$fax;
+        //         $business_details->contact_number=$contact_number;
+        //         $business_details->contact_email=$email_address;
+        //         $business_details->msg=$msg;
+        //         $save = $business_details->save();
+        //    }
+        //   }
 
-         $check = CustomerModel::where('customer_email',$email)
-              ->orWhere('customer_number',$phone)->first();
 
-              if($check){
-                    return self::toastr(false,"Number or Email already exist","error","Error");
-              }else{
-                  if(!empty($service_id)){
-            foreach ($service_id as $key => $value) {
+        
+        // else{
+        //    $business_details = new CustomerModel;
+        //             $phone= $request->phone;
+        //           $country_code = $request->country_code;
+        //           $customer_number = $country_code.$phone;
+        //           $first_name = $request->first_name;
+        //           $middle_name =$request->middle_name;
+        //           $last_name=$request->last_name;
+        //             $email = $request->email;
+        //             $msg = $request->msg;
+        //             $dob=$request->dob;
+        //             $address=$request->address;
+        //             $city=$request->city;
+        //             $state=$request->state;
+        //             $zip=$request->zip;
+        //             $ssn=$request->ssn;
+        //             $msg=$request->msg;
+        //         $business_details->business_name=$business_name;
+        //         $business_details->customer_name=$business_name;
+        //         $business_details->industry=$industry;
+        //         $business_details->customer_number=$customer_number;
+        //         $business_details->customer_email=$customer_email;
+        //         // $business_details->customer_service_id = $value;
+        //         $business_details->type=$type;
+        //         $business_details->ein=$ein;
+        //         $business_details->address=$business_address;
+        //         $business_details->city=$business_city;
+        //         $business_details->state=$business_state;
+        //         $business_details->zip=$business_zip;
+        //         $business_details->business_title=$business_title;
+        //         $business_details->point_of_contact=$point_of_contact;
+
+        //         $business_details->fax=$fax;
+        //         $business_details->contact_number=$contact_number;
+        //         $business_details->contact_email=$email_address;
+
+        //         $business_details->msg=$msg;
+        //         $save = $business_details->save();
+        // }
+
+        //  return self::toastr(true,"Lead Add Successfull","success","Success");
+
+
+      if($type==1){
+           $phone= $request->phone;
+           $country_code = $request->country_code;
+           $customer_number = $country_code.$phone;
+           $first_name = $request->first_name;
+           $middle_name =$request->middle_name;
+           $last_name=$request->last_name;
+            $email = $request->email;
+            $msg = $request->msg;
+            $dob=$request->dob;
+            $address=$request->address;
+            $city=$request->city;
+            $state=$request->state;
+            $zip=$request->zip;
+            $ssn=$request->ssn;
+            $msg=$request->msg;
+            if(!empty($middle_name)){
+               $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
+             }else{
+               $customer_name=$first_name.' '.$last_name;
+             }
+           
+             
+            
+          if(!empty($service_id)){
+              foreach ($service_id as $key => $value) {
+                $individual_details = new CustomerModel;
+                $individual_details->customer_name = $customer_name;
+                $individual_details->customer_number = $customer_number ;
+                $individual_details->customer_email = $email ;
+                $individual_details->customer_service_id = $value;
+                $individual_details->type=$type;
+                $individual_details->first_name=$first_name;
+                $individual_details->middle_name=$middle_name;
+                $individual_details->last_name=$last_name;
+                $individual_details->dob=$dob;
+                $individual_details->address=$address;
+                $individual_details->city=$city;
+                $individual_details->state=$state;
+                $individual_details->zip=$zip;
+                $individual_details->ssn=$ssn;
+                $individual_details->msg=$msg;
+                $save = $individual_details->save();
+ 
+             }
+          }      
+      }else if($type==2){
+        $email_address = $request->email_address;
+        $fax = $request->fax;
+        $contact_number = $request->contact_number;
+        
+        // $email_address = $request->email_address;
+        $business_name=$request->business_name;
+        $industry=$request->industry;
+        $business_phone_no=$request->business_phone_no;
+        $customer_number = $business_phone_no;
+
+        $business_email=$request->business_email;
+        $customer_email = $business_email;
+        $ein=$request->ein;
+        $business_address=$request->business_address;
+        $business_city=$request->business_city;
+        $business_state=$request->business_state;
+        $business_zip=$request->business_zip;
+        $business_title=$request->business_title;
+        $point_of_contact=$request->point_of_contact;
+        $msg=$request->msg;
+        
+         $check = CustomerModel::where('customer_email',$customer_email)
+        ->orWhere('customer_number',$customer_number)->first();
+        if($check){
+         return self::toastr(false,"Number or Email already exist","error","Error");
+        }
+        if(!empty($service_id)){
+           foreach ($service_id as $key => $value) {
                 $business_details = new CustomerModel;
-                    $phone= $request->phone;
-                  $country_code = $request->country_code;
-                  $customer_number = $country_code.$phone;
-                  $first_name = $request->first_name;
-                  $middle_name =$request->middle_name;
-                  $last_name=$request->last_name;
-                    $email = $request->email;
-                    $msg = $request->msg;
-                    $dob=$request->dob;
-                    $address=$request->address;
-                    $city=$request->city;
-                    $state=$request->state;
-                    $zip=$request->zip;
-                    $ssn=$request->ssn;
-                    $msg=$request->msg;
                 $business_details->business_name=$business_name;
                 $business_details->customer_name=$business_name;
                 $business_details->industry=$industry;
@@ -1663,162 +1814,20 @@ public function addLead(){
 
                 $business_details->msg=$msg;
                 $save = $business_details->save();
+
            }
-        }else{
-           $business_details = new CustomerModel;
-                    $phone= $request->phone;
-                  $country_code = $request->country_code;
-                  $customer_number = $country_code.$phone;
-                  $first_name = $request->first_name;
-                  $middle_name =$request->middle_name;
-                  $last_name=$request->last_name;
-                    $email = $request->email;
-                    $msg = $request->msg;
-                    $dob=$request->dob;
-                    $address=$request->address;
-                    $city=$request->city;
-                    $state=$request->state;
-                    $zip=$request->zip;
-                    $ssn=$request->ssn;
-                    $msg=$request->msg;
-                $business_details->business_name=$business_name;
-                $business_details->customer_name=$business_name;
-                $business_details->industry=$industry;
-                $business_details->customer_number=$customer_number;
-                $business_details->customer_email=$customer_email;
-                // $business_details->customer_service_id = $value;
-                $business_details->type=$type;
-                $business_details->ein=$ein;
-                $business_details->address=$business_address;
-                $business_details->city=$business_city;
-                $business_details->state=$business_state;
-                $business_details->zip=$business_zip;
-                $business_details->business_title=$business_title;
-                $business_details->point_of_contact=$point_of_contact;
-
-                $business_details->fax=$fax;
-                $business_details->contact_number=$contact_number;
-                $business_details->contact_email=$email_address;
-
-                $business_details->msg=$msg;
-                $save = $business_details->save();
         }
-     }
+      }
+      if($save){
          return self::toastr(true,"Lead Add Successfull","success","Success");
-
-
-      // if($type==1){
-      //      $phone= $request->phone;
-      //      $country_code = $request->country_code;
-      //      $customer_number = $country_code.$phone;
-      //      $first_name = $request->first_name;
-      //      $middle_name =$request->middle_name;
-      //      $last_name=$request->last_name;
-      //       $email = $request->email;
-      //       $msg = $request->msg;
-      //       $dob=$request->dob;
-      //       $address=$request->address;
-      //       $city=$request->city;
-      //       $state=$request->state;
-      //       $zip=$request->zip;
-      //       $ssn=$request->ssn;
-      //       $msg=$request->msg;
-      //       if(!empty($middle_name)){
-      //          $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
-      //        }else{
-      //          $customer_name=$first_name.' '.$last_name;
-      //        }
-           
-      //         $check = CustomerModel::where('customer_email',$email)
-      //         ->orWhere('customer_number',$phone)->first();
-      //         if($check){
-      //          return self::toastr(false,"Number or Email already exist","error","Error");
-      //         }
-            
-      //     if(!empty($service_id)){
-      //         foreach ($service_id as $key => $value) {
-      //           $individual_details = new CustomerModel;
-      //           $individual_details->customer_name = $customer_name;
-      //           $individual_details->customer_number = $customer_number ;
-      //           $individual_details->customer_email = $email ;
-      //           $individual_details->customer_service_id = $value;
-      //           $individual_details->type=$type;
-      //           $individual_details->first_name=$first_name;
-      //           $individual_details->middle_name=$middle_name;
-      //           $individual_details->last_name=$last_name;
-      //           $individual_details->dob=$dob;
-      //           $individual_details->address=$address;
-      //           $individual_details->city=$city;
-      //           $individual_details->state=$state;
-      //           $individual_details->zip=$zip;
-      //           $individual_details->ssn=$ssn;
-      //           $individual_details->msg=$msg;
-      //           $save = $individual_details->save();
- 
-      //        }
-      //     }      
-      // }else if($type==2){
-      //   $email_address = $request->email_address;
-      //   $fax = $request->fax;
-      //   $contact_number = $request->contact_number;
-        
-      //   // $email_address = $request->email_address;
-      //   $business_name=$request->business_name;
-      //   $industry=$request->industry;
-      //   $business_phone_no=$request->business_phone_no;
-      //   $customer_number = $business_phone_no;
-
-      //   $business_email=$request->business_email;
-      //   $customer_email = $business_email;
-      //   $ein=$request->ein;
-      //   $business_address=$request->business_address;
-      //   $business_city=$request->business_city;
-      //   $business_state=$request->business_state;
-      //   $business_zip=$request->business_zip;
-      //   $business_title=$request->business_title;
-      //   $point_of_contact=$request->point_of_contact;
-      //   $msg=$request->msg;
-        
-      //    $check = CustomerModel::where('customer_email',$customer_email)
-      //   ->orWhere('customer_number',$customer_number)->first();
-      //   if($check){
-      //    return self::toastr(false,"Number or Email already exist","error","Error");
-      //   }
-      //   if(!empty($service_id)){
-      //      foreach ($service_id as $key => $value) {
-      //           $business_details = new CustomerModel;
-      //           $business_details->business_name=$business_name;
-      //           $business_details->customer_name=$business_name;
-      //           $business_details->industry=$industry;
-      //           $business_details->customer_number=$customer_number;
-      //           $business_details->customer_email=$customer_email;
-      //           $business_details->customer_service_id = $value;
-      //           $business_details->type=$type;
-      //           $business_details->ein=$ein;
-      //           $business_details->address=$business_address;
-      //           $business_details->city=$business_city;
-      //           $business_details->state=$business_state;
-      //           $business_details->zip=$business_zip;
-      //           $business_details->business_title=$business_title;
-      //           $business_details->point_of_contact=$point_of_contact;
-
-      //           $business_details->fax=$fax;
-      //           $business_details->contact_number=$contact_number;
-      //           $business_details->contact_email=$email_address;
-
-      //           $business_details->msg=$msg;
-      //           $save = $business_details->save();
-
-      //      }
-      //   }
-      // }
-      // if($save){
-      //    return self::toastr(true,"Lead Add Successfull","success","Success");
-      // }else{
-      //    return self::toastr(false,"Sorry , Technical Issue..","error","Error");
-      // }
+      }else{
+         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      }
       
     }
+
+
+    
   public function viewLeads(){
       $id = session('admin');
       $admin_data = self::userDetails($id);

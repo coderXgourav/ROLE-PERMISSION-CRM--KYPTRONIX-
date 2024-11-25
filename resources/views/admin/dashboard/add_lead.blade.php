@@ -22,17 +22,15 @@ width: 100% !important;
 
 							<div class="card-body p-4">
 								<h5 class="mb-4">Add New Lead  </h5>
-										    <input id="service" type="hidden" name="customer_service_id[]"  style="width: 25px" > 
-
 								   <div class="row mb-3">
-								   	<label for="input42" class="col-sm-3 col-form-label">Service</label>
+								   	<label for="input42" class="col-sm-3 col-form-label">Service <span class="text-danger">*</span></label>
 								    	<div class="col-sm-9" style="display: flex; flex-wrap: wrap; gap:10px;
 								    	/* justify-content: center; */
 								    	align-items: center;
 								    	gap: 22px;">
 								    	
 										    @foreach ($all_services as $services)
-										    <input id="service" type="checkbox" name="customer_service_id[]" value="{{$services->service_id}}" style="width: 25px" > 
+										    <input id="service" type="checkbox" name="customer_service_id[]" value="{{$services->service_id}}" style="width: 25px" required> 
 										    {{$services->name}}											
 											@endforeach
 													
@@ -83,10 +81,10 @@ width: 100% !important;
 										</div>
 									</div>
 									<div class="row mb-3">
-										<label for="input44" class="col-sm-3 col-form-label">Email Address</label>
+										<label for="input44" class="col-sm-3 col-form-label">Email Address <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="email" class="form-control"  placeholder="Type Email Address" name="email" > 
+												<input type="email" class="form-control"  placeholder="Type Email Address" name="email"  required> 
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-envelope'></i></span>
 											</div>
 										</div>
@@ -151,7 +149,7 @@ width: 100% !important;
 									{{@csrf_field()}}
 									<div class="business">
 										<div class="row mb-3">
-											<label for="input42" class="col-sm-3 col-form-label">Business Name <span class="text-danger">*</span></label>
+											<label for="input42" class="col-sm-3 col-form-label">Business Name </label>
 											<div class="col-sm-9">
 												<div class="position-relative input-icon">
 													<input type="text" class="form-control" placeholder="Type Business Name" name="business_name" >
@@ -169,7 +167,7 @@ width: 100% !important;
 											</div>
 										</div> 
 										<div class="row mb-3">
-										<label for="input43" class="col-sm-3 col-form-label">Phone No <span class="text-danger">*</span></label>
+										<label for="input43" class="col-sm-3 col-form-label">Phone No</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
 												 <input type="tel" id="" class="form-control" name="business_phone_no" placeholder="Type Phone Number" >
@@ -182,7 +180,7 @@ width: 100% !important;
 										<label for="input44" class="col-sm-3 col-form-label">Email Address <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="email" class="form-control"  placeholder="Type Email Address" name="business_email" > 
+												<input type="email" class="form-control"  placeholder="Type Email Address" name="business_email" required > 
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-envelope'></i></span>
 											</div>
 										</div>
@@ -273,7 +271,7 @@ width: 100% !important;
 										</div>
 									</div> 
 										<div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Email Address</label>
+										<label for="input42" class="col-sm-3 col-form-label">Email Address <span class="text-danger">*</span></label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
 												<input type="text" class="form-control" placeholder="Email Address" name="email_address">
