@@ -1269,6 +1269,7 @@ public function viewTeamMember($team_manager_id){
      
                   
     }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
+        $user_role = Role::where('role_name',"customer_success_manager")->first();
           // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
         $user_login_details = DB::table('main_user')
         ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
@@ -1327,12 +1328,13 @@ public function viewTeamMember($team_manager_id){
 
 
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
+        $user_role = Role::where('role_name',"admin")->first();
       $total_clients=CustomerModel::all()->count();
       $total_invoices_data=Invoice::all()->count();
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
     }
 
-    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout]);
+    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout,'user_role'=>$user_role]);
 }
 
 
