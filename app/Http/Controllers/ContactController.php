@@ -85,7 +85,7 @@ class ContactController extends Controller
                   default:
                     break;
                 }
-    } */  
+              }
    
     // THIS IS contactAdd FUNCTION 
     public function contactAdd(Request $request){
@@ -219,41 +219,68 @@ class ContactController extends Controller
 
 
 // THIS IS editUserPage FUNCTION   
+
   public function editUserPage($contact_id){
      $id = session('admin');
      $admin_data = self::userDetails($id);
-    // $user_type = self::userType($admin_data->user_type);
-     $user_details='';
-     $services_he_manage='';
+     $user_type = self::userType($admin_data->user_type);
      $data = MainUserModel::find($contact_id);
-    $roles = Role::orderBy('id','DESC')->get();
      
      $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
-    //  $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
+
+     
+     $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
     //  $team_services_id=''; $s_data='';$customer_service='';
      
+     if($data['user_type'] == 'team_manager'){
+
       $user_details =  DB::table("main_user")
       ->join("permission",'permission.user_id','=','main_user.id')
        ->where('main_user.id',$contact_id)
       ->first();
 
-      $services_he_manage = DB::table('role_services')->where('member_id',$user_details->id)
-      ->join('services','services.service_id','=','role_services.service_id')->get();
+      $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->id)
+      ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
 
-return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'roles'=>$roles]);
+      
+     }else if($data['user_type'] == 'customer_success_manager'){
+
+       $user_details =  DB::table("main_user")
+      ->join("permission",'permission.user_id','=','main_user.id')
+       ->where('main_user.id',$contact_id)
+      ->first();
+
+      $services_he_manage = DB::table('member_service')->where('member_id',$user_details->id)
+      ->join('services','services.service_id','=','member_service.member_service_id')
+      ->get();
+
+      // echo "<pre>";
+      // print_r($user_details); die;
+     }
+     else if($data['user_type'] == 'operation_manager'){
+
+      $user_details =  DB::table("main_user")
+     ->join("permission",'permission.user_id','=','main_user.id')
+      ->where('main_user.id',$contact_id)
+     ->first();
+     $services_he_manage = Service::orderBy("service_id","DESC")->get();
+     // echo "<pre>";
+     // print_r($services_he_manage); die;
+    }
+return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'user_type'=>$user_type]);
    
   }
  
 // THIS IS editUserPage FUNCTION   
 
 // THIS IS updateContact FUNCTION 
+
 public function updateContact(Request $request){
   
       $phone = $request->phone;
       $first_name = $request->first_name;
       $last_name = $request->last_name;
       $email = $request->email;
-      $manage = $request->manage;
       $user_type = $request->user_type;
       $user_id = $request->main_user_id;
       $permissions_id = $request->permissions_id;
@@ -310,7 +337,6 @@ public function updateContact(Request $request){
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
       $permissions->payment_permission = $payment_manage ;
-      $permissions->service_manage_system = $manage ;
       $permissions->customer_permission = $customer_manage ;
       $permissions->email_sms_permission = $email_sms_manage ;
       $permissions->communication_permission = $communication ;
@@ -364,7 +390,6 @@ public function updateContact(Request $request){
     return self::toastr(true,"Updated Successfully","success","Success");
      
 }
-
 
 // THIS IS updateContact FUNCTION 
 
