@@ -24,7 +24,7 @@ Route::get('/mail',function(){
 Route::post('/request',[HomeController::class,'formSubmit']);
 
 Route::get('/all',function(){
-    session()->forget('team');
+    session()->forget('admin');
 });
 
 Route::get('/admin/pay',[ContactController::class,'payment']);
