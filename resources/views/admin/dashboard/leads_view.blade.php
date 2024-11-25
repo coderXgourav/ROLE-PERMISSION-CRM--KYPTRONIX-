@@ -121,7 +121,9 @@
                    <form id="add-service">
                      {{@csrf_field();}}
                     <!-- Service Selection -->
+                   <?php if(!empty($service_data)){ ?>
                     <input type="hidden" name="customer_id" value="{{$service_data[0]->customer_ids}}">
+                  <?php } ?>
                     <input type="hidden" name="customer_name" value="{{$customer->customer_name}}">
                     <input type="hidden" name="customer_number" value="{{$customer->customer_number}}">
                     <input type="hidden" name="customer_email" value="{{$customer->customer_email}}">
@@ -154,14 +156,20 @@
                             <span>Select One Service</span>
                             <hr>
                             <?php 
-                            $s_id=$service_data[0]->service_ids;
-                            $service_idss=explode(',', $s_id);
-                            $sub_s_id=$service_data[0]->customer_sub_service_id;
-                            $sub_service_idss=explode(',', $sub_s_id);
+                              if(!empty($service_data)){
+                                    $s_id=$service_data[0]->service_ids;
+                                    $service_idss=explode(',', $s_id);
+                                    $sub_s_id=$service_data[0]->customer_sub_service_id;
+                                    $sub_service_idss=explode(',', $sub_s_id);
+                                    $customer_p_id=$service_data[0]->customer_package_id;
+                                    $package_idss=explode(',', $customer_p_id);
+                                  
+                              }
                             ?>
+                            <?php if(!empty($service_data)){ ?>
                             <input type="hidden" id="subservices_id" name="subservices_id" value="<?= $sub_s_id; ?>">
-
-
+                            <input type="hidden" name="packagesid" id="packagesid" value="<?= $customer_p_id;?>">
+                           <?php } ?>
                             @foreach ($services as $item)
                             <div class="col-12">
                                 <div class="form-check text-start">
@@ -180,11 +188,19 @@
                          <div class="mt-4">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <hr>
                                     <div class="form-check text-start" id="subservices"></div>
                                 </div>
                             </div>
                         </div>
+                         <!-- Package -->
+                         <div class="mt-4">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="form-check text-start" id="packages"></div>
+                                </div>
+                            </div>
+                        </div>
+                       
                          <button type="submit" class="btn btn-primary" onclick="Update()" id="updateBtn">
                             Update
                         </button>
@@ -434,6 +450,8 @@ function AddMoreService() {
                 $('.service-checkbox:checked').each(function() {
                    selectedServiceIds.push($(this).val());
                    fetchSubServices(selectedServiceIds);
+                   fetchPackages(selectedServiceIds);
+
                 });
 
           }
@@ -442,10 +460,16 @@ function AddMoreService() {
                 $('.service-checkbox:checked').each(function() {
                    selectedServiceIds.push($(this).val());
                    fetchSubServices(selectedServiceIds);
+                   fetchPackages(selectedServiceIds);
+
                 });
 
                 if (selectedServiceIds.length === 0) {
                     $('#subservices').html('');
+                    return;
+                }
+                if (selectedServiceIds.length === 0) {
+                    $('#packages').html('');
                     return;
                 }
              });
@@ -459,7 +483,7 @@ function AddMoreService() {
                     dataType: 'json',
                     success: function(response) {
 
-                        var subserviceHtml = '<p class="text-center">Choose Sub-Services </p>';
+                        var subserviceHtml = '<hr><p class="text-center">Choose Sub-Services </p>';
 
                         if (response.length > 0) {
                             const sub_service = $("#subservices_id").val();
@@ -480,6 +504,36 @@ function AddMoreService() {
                     },
                     error: function() {
                         alert('Error fetching subservices.');
+                    }
+        });
+
+     }
+     function fetchPackages(serviceIds){
+        $.ajax({
+                    url: '/admin/package_details/' + serviceIds.join(','),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+
+                        var packageHtml = '<hr><p class="text-center">Choose Package </p>';
+
+                        if (response.length > 0) {
+                            const packages = $("#packagesid").val();
+                            const packages_array = packages.split(",");
+
+                          response.forEach(function(packages) {
+                             const isChecked = packages_array.includes(packages.package_id.toString());  // Ensure both are compared as strings
+                            // If it matches, mark the checkbox as checked
+                            packageHtml += '<input type="checkbox" class="form-check-input subservice-checkbox" name="packages[]" value="' + packages.package_id + '" ' + (isChecked ? 'checked' : '') + ' />';
+                            packageHtml += '<label class="form-check-label"> ' + packages.title + '</label><br>';
+                        });
+                        } else {
+                            packageHtml = '';
+                        }
+                        $('#packages').html(packageHtml);
+                    },
+                    error: function() {
+                        alert('Error fetching packages.');
                     }
         });
 

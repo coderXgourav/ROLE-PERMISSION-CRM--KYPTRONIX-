@@ -139,6 +139,7 @@ class AdminMiddleware
             'admin.edit-role'=>1,
             'admin.download-pdf'=>1,
             'admin.business-report-pdf'=>1,
+            'admin.package_details'=>1,
             // POST METHODS
             'post37'=>1,
             'post1' => 1,

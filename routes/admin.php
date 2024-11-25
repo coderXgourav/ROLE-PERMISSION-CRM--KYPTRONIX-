@@ -174,6 +174,7 @@ Route::post('/admin/update_role',[RoleController::class,'updateRole'])->name('po
 Route::post('/admin/role_delete',[RoleController::class,'role_delete'])->name('post26');
 Route::get('/admin/download-pdf',[ContactController::class,'downloadPDF'])->name('admin.download-pdf');
 Route::get('/admin/business-report-pdf',[ContactController::class,'businessReportPdf'])->name('admin.business-report-pdf');
+Route::get('/admin/package_details/{serviceIds}', [ServiceController::class, 'getPackagesByServiceId'])->name('admin.package_details');
 
 });
 

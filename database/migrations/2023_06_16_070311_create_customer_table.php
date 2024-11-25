@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('customer_id');
             $table->string('customer_service_id')->nullable();
             $table->string('customer_sub_service_id')->nullable();
+            $table->string('package_id')->nullable();
             $table->string('customer_name')->nullable();
             $table->string('customer_number')->nullable();
 
