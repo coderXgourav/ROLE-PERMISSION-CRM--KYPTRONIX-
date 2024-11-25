@@ -40,7 +40,7 @@
 										<label for="input42" class="col-sm-3 col-form-label">Date</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="date" class="form-control" name="date" id="date" required>
+												<input type="date" class="form-control" name="date" id="date">
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
 											</div>
 										</div>
