@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('lead_assign_permission')->default(0)->nullable();
             // $table->string('email_template_permission')->default(0)->nullable();
             $table->string('login_history_permission')->default(0)->nullable();
+            $table->string('service_manage_system')->default(0)->nullable();
             // $table->string('team_manager_permission')->default(0)->nullable();
             // $table->string('customer_success_manager_permission')->default(0)->nullable();
             $table->string('user_registration_permission')->default(0)->nullable();

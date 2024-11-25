@@ -116,45 +116,23 @@ width: 100% !important;
 											</div>
 										</div>
 									</div>
-                                    
-
-                                    
-									
 									<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">User Type</label>
+										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
 										<div class="col-sm-9">
-											<div style="    display: flex;
-                                                align-items: center;
-                                                      gap: 10px;
-                                                   }">
-												<div><input type="checkbox" @if($user_details->user_type == "operation_manager") {{"checked"}} @endif  name="user_type" onclick="resetCheckboxes(this)" value="operation_manager"  style="width: 25px"> </div>
-												<div><p>Operation Manager</p></div>
-
-
-												<div><input type="checkbox"  @if($user_details->user_type == "team_manager") {{"checked"}} @endif  name="user_type" onclick="resetCheckboxes(this)" value="team_manager"  style="width: 25px"> </div>
-												<div><p>Team Manager</p></div>
-
-													<div><input type="checkbox"  @if($user_details->user_type == "customer_success_manager") {{"checked"}} @endif name="user_type" onclick="resetCheckboxes(this)" value="customer_success_manager"  style="width: 25px"> </div>
-												<div><p>Team Member</p></div>
+											<div style="    display: flex;align-items: center;gap: 10px;}">
+												       @foreach($roles as $val)
+												<div><input type="checkbox" required @if($data->user_type==$val->id) {{"checked"}} @endif id="role".{{$val->id}}  name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
+												<label style="cursor: pointer" for="role".{{$val->id}} >{{$val->role_name}}</label>
+												   @endforeach                                 
 
 
 											</div>
 											
-											{{-- <div class="position-relative input-icon">
-												<select name="user_type" id="" class="form-control" required onchange="checkManager(this.value)">
-													<option value="">Select User Type</option>
-													<option value="operation_manager">Operation Manager</option>
-													<option value="team_manager">Team Manager</option>
-													<option value="customer_success_manager">Customer Success Manager</option>
-												</select>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
-											</div> --}}
+										
 										</div>
 									</div>
-
- 									<div class="row"  id="service_field" @if ($user_details->user_type=="operation_manager")
-										style="display:none"
-									@endif>
+									
+ 									<div class="row"  id="service_field" >
 										<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
 										<div class="col-sm-9">
@@ -175,6 +153,27 @@ width: 100% !important;
 										</div>
 									</div>
 									</div>
+									
+									<div class="row"  id="service_field">
+										<div class="row mb-3" >
+										<label for="input42" class="col-sm-3 col-form-label">Allow Manage System</label>
+										<div class="col-sm-9">
+										
+										<div style="display: flex;align-items: center;gap: 10px;}">
+							<div>
+									
+			<input type="radio" id="manage1" @if($user_details->service_manage_system==0) {{"checked"}} @endif name="manage" class="services-checkbox"value="0"  style="width: 25px"><label for="manage1" style="cursor: pointer">Manage only Assigned Leads</label> 
+							</div>
+							<div>
+									
+								<input type="radio" id="manage2"  @if($user_details->service_manage_system==1) {{"checked"}} @endif  name="manage" class="services-checkbox"value="1"  style="width: 25px"> <label for="manage2" style="cursor: pointer">Manage Total Service Leads</label>
+												</div>
+													</div>
+													
+												
+										</div>
+								</div>
+							 </div>
 
 								
 
