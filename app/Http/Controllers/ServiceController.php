@@ -12,6 +12,7 @@ use App\Models\MemberServiceModel;
 use App\Models\TeamManagersServicesModel;
 use App\Models\MainUserModel;
 use App\Models\Subservice;
+use App\Models\Package;
 use DB;
 use Crypt;
 
@@ -379,6 +380,10 @@ public function subServiceList($service_id){
       $point_of_contact=$request->point_of_contact;
       $paid_customer=$request->paid_customer;
 
+      if(!empty($request->packages)){
+          $packages=implode(',',$request->packages);
+      }else{$packages='';}
+
       if(!empty($request->subservices)){
           $subservices=implode(',',$request->subservices);
       }else{$subservices='';}
@@ -415,6 +420,7 @@ public function subServiceList($service_id){
                 $individual_details->customer_email = $email ;
                 $individual_details->customer_service_id = $value;
                 $individual_details->customer_sub_service_id = $subservices;
+                $individual_details->package_id = $packages;
                 $individual_details->type=$type;
                 $individual_details->first_name=$first_name;
                 $individual_details->middle_name=$middle_name;
@@ -430,6 +436,24 @@ public function subServiceList($service_id){
                 $customer_id=encrypt($individual_details->customer_id);
 
              }
+          }else{
+               $individual_details = new CustomerModel;
+                $individual_details->customer_name = $customer_name;
+                $individual_details->customer_number = $customer_number ;
+                $individual_details->customer_email = $email ;
+                $individual_details->type=$type;
+                $individual_details->first_name=$first_name;
+                $individual_details->middle_name=$middle_name;
+                $individual_details->last_name=$last_name;
+                $individual_details->dob=$dob;
+                $individual_details->address=$address;
+                $individual_details->city=$city;
+                $individual_details->state=$state;
+                $individual_details->zip=$zip;
+                $individual_details->ssn=$ssn;
+                $individual_details->msg=$msg;
+                $save = $individual_details->save();
+                $customer_id=encrypt($individual_details->customer_id);
           }      
       }else if($type==2){
         $email_address = $request->customer_email;
@@ -458,6 +482,8 @@ public function subServiceList($service_id){
                 $business_details->customer_email=$customer_email;
                 $business_details->customer_service_id = $value;
                 $business_details->customer_sub_service_id = $subservices;
+                $business_details->package_id = $packages;
+
                 $business_details->type=$type;
                 $business_details->ein=$ein;
                 $business_details->address=$address;
@@ -477,10 +503,41 @@ public function subServiceList($service_id){
 
 
            }
+        }else{
+                $business_details = new CustomerModel;
+                $business_details->business_name=$business_name;
+                $business_details->customer_name=$business_name;
+                $business_details->industry=$industry;
+                $business_details->customer_number=$contact_number;
+                $business_details->customer_email=$customer_email;
+                $business_details->type=$type;
+                $business_details->ein=$ein;
+                $business_details->address=$address;
+                $business_details->city=$city;
+                $business_details->state=$state;
+                $business_details->zip=$zip;
+                $business_details->business_title=$business_title;
+                $business_details->point_of_contact=$point_of_contact;
+
+                $business_details->fax=$fax;
+                $business_details->contact_number=$contact_number;
+                $business_details->contact_email=$email_address;
+
+                $business_details->msg=$msg;
+                $save = $business_details->save();
+                $customer_id=encrypt($business_details->customer_id);
+
+
         }
       }
        return response()->json($customer_id);
 
+    }
+    public function getPackagesByServiceId($serviceIds)
+    {
+        $sIds = explode(',', $serviceIds);
+        $packages = Package::whereIn('service_id', $sIds)->get();
+        return response()->json($packages);
     }
 
 }
