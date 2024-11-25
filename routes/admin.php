@@ -172,7 +172,7 @@ Route::get('/admin/all-role',[RoleController::class,'allRoles'])->name('admin.al
 Route::get('admin/edit-role/{id}',[RoleController::class,'editRole'])->name('admin.edit-role');
 Route::post('/admin/update_role',[RoleController::class,'updateRole'])->name('post25');
 Route::post('/admin/role_delete',[RoleController::class,'role_delete'])->name('post26');
-
+Route::get('/admin/download-pdf',[ContactController::class,'downloadPDF'])->name('admin.download-pdf');
 });
 
 Route::get('/not-access',function(){

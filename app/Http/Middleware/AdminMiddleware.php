@@ -137,6 +137,7 @@ class AdminMiddleware
             'admin.add-role'=>1,
             'admin.all-role'=>1,
             'admin.edit-role'=>1,
+            'admin.download-pdf'=>1,
             // POST METHODS
             'post37'=>1,
             'post1' => 1,

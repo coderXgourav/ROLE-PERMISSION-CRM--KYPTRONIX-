@@ -26,12 +26,11 @@ use App\Models\LoginHistoryModel;
 use App\Models\RoleService;
 use App\Models\Role;
 use Carbon\Carbon;
-
 use DB;
 use Twilio\Rest\Client;
 use Crypt;
 use Mail;
-
+use PDF;
 
 class ContactController extends Controller
 {
@@ -86,7 +85,7 @@ class ContactController extends Controller
                   default:
                     break;
                 }
-    } 
+              }
    
     // THIS IS contactAdd FUNCTION 
     public function contactAdd(Request $request){
@@ -101,12 +100,12 @@ class ContactController extends Controller
 
       $services_status = 0;
        $services = $request->services;
-      /*if($user_type=="team_manager"){
+      if($user_type=="team_manager"){
         $services_status = 1;
       }
       if($user_type=="customer_success_manager"){
         $services_status = 2;
-      }*/
+      }
       
 
       $service_manage = $request->service_manage;
@@ -194,7 +193,7 @@ class ContactController extends Controller
       $permissions->user_registration_permission = $user_registration_permission ;
       $permissions->save();
 
-   /* if($services_status==1){
+    if($services_status==1){
      foreach ($services as $key => $value) {
       $data = new TeamManagersServicesModel;
       $data->team_manager_id = $user_id;
@@ -210,16 +209,8 @@ class ContactController extends Controller
         $data->member_service_id = $value;
         $data->save();
       }
-    }*/
-    if(!empty($services)){
-       foreach ($services as $key => $value) {
-             $data = new RoleService;
-             $data->member_id = $user_id;
-             $data->service_id = $value;
-             $data->user_type =$user_type;
-             $data->save();
-       }
     }
+   
       return self::toastr(true,"Registration Successfully","success","Success");
       
     }
@@ -228,41 +219,68 @@ class ContactController extends Controller
 
 
 // THIS IS editUserPage FUNCTION   
+
   public function editUserPage($contact_id){
      $id = session('admin');
      $admin_data = self::userDetails($id);
-    // $user_type = self::userType($admin_data->user_type);
-     $user_details='';
-     $services_he_manage='';
+     $user_type = self::userType($admin_data->user_type);
      $data = MainUserModel::find($contact_id);
-    $roles = Role::orderBy('id','DESC')->get();
      
      $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
-    //  $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
+
+     
+     $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
     //  $team_services_id=''; $s_data='';$customer_service='';
      
+     if($data['user_type'] == 'team_manager'){
+
       $user_details =  DB::table("main_user")
       ->join("permission",'permission.user_id','=','main_user.id')
        ->where('main_user.id',$contact_id)
       ->first();
 
-      $services_he_manage = DB::table('role_services')->where('member_id',$user_details->id)
-      ->join('services','services.service_id','=','role_services.service_id')->get();
+      $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->id)
+      ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
 
-return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'roles'=>$roles]);
+      
+     }else if($data['user_type'] == 'customer_success_manager'){
+
+       $user_details =  DB::table("main_user")
+      ->join("permission",'permission.user_id','=','main_user.id')
+       ->where('main_user.id',$contact_id)
+      ->first();
+
+      $services_he_manage = DB::table('member_service')->where('member_id',$user_details->id)
+      ->join('services','services.service_id','=','member_service.member_service_id')
+      ->get();
+
+      // echo "<pre>";
+      // print_r($user_details); die;
+     }
+     else if($data['user_type'] == 'operation_manager'){
+
+      $user_details =  DB::table("main_user")
+     ->join("permission",'permission.user_id','=','main_user.id')
+      ->where('main_user.id',$contact_id)
+     ->first();
+     $services_he_manage = Service::orderBy("service_id","DESC")->get();
+     // echo "<pre>";
+     // print_r($services_he_manage); die;
+    }
+return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'user_type'=>$user_type]);
    
   }
  
 // THIS IS editUserPage FUNCTION   
 
 // THIS IS updateContact FUNCTION 
+
 public function updateContact(Request $request){
   
       $phone = $request->phone;
       $first_name = $request->first_name;
       $last_name = $request->last_name;
       $email = $request->email;
-      $manage = $request->manage;
       $user_type = $request->user_type;
       $user_id = $request->main_user_id;
       $permissions_id = $request->permissions_id;
@@ -319,7 +337,6 @@ public function updateContact(Request $request){
       $permissions->leads_permission = $leads_manage ;
       $permissions->invoice_permission = $invoice_manage ;
       $permissions->payment_permission = $payment_manage ;
-      $permissions->service_manage_system = $manage ;
       $permissions->customer_permission = $customer_manage ;
       $permissions->email_sms_permission = $email_sms_manage ;
       $permissions->communication_permission = $communication ;
@@ -373,7 +390,6 @@ public function updateContact(Request $request){
     return self::toastr(true,"Updated Successfully","success","Success");
      
 }
-
 
 // THIS IS updateContact FUNCTION 
 
@@ -2661,17 +2677,58 @@ function loginDetails($userId) {
   return view('admin.dashboard.login_details',['admin_data'=>$admin_data,'user_type'=>$user_type,'daily_login_times'=>$dailyDurations]);
 
 }
-
-    // echo "<pre>";
-    // print_r($result);
-    // die;
-
-    public function individualReport(){
+  public function individualReport(){
        $user_id=session('admin');
-  $admin_data = self::userDetails($user_id);
-    $user_type = self::userType($admin_data->user_type);
-      return view('admin.dashboard.individual_report',['admin_data'=>$admin_data,'user_type'=>$user_type]);
-    }
+       $admin_data = self::userDetails($user_id);
+    // $user_type = self::userType($admin_data->user_type);
+      return view('admin.dashboard.individual_report',['admin_data'=>$admin_data]);
+  }
+  public function downloadPDF(Request $request){
+        $reports = $request->reports;
+        $date = $request->date;
+        if($reports == 1){
+          $leads_data = DB::table('customer')
+          ->select(
+              'customer.customer_email',
+              DB::raw('MAX(customer.customer_id) as customer_id'),
+              DB::raw('MAX(customer.customer_number) as customer_number'),
+              DB::raw('MAX(customer.customer_name) as customer_name'),
+              DB::raw('MAX(customer.status) as status'),
+              DB::raw('MAX(customer.city) as city'),
+                  DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.type) as type'),
+              DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+          )
+          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+          ->where('customer.dob',$date)
+          ->where('customer.type',1)
+          ->groupBy('customer.customer_email') 
+          ->get();
+        }elseif($reports == 2){
+          $leads_data = DB::table('customer')
+          ->select(
+              'customer.customer_email',
+              DB::raw('MAX(customer.customer_id) as customer_id'),
+              DB::raw('MAX(customer.customer_number) as customer_number'),
+              DB::raw('MAX(customer.customer_name) as customer_name'),
+              DB::raw('MAX(customer.status) as status'),
+              DB::raw('MAX(customer.city) as city'),
+                  DB::raw('MAX(customer.state) as state'),
+              DB::raw('MAX(customer.type) as type'),
+              DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+          )
+          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+          ->join('payments','payments.leads_id','=','customer.customer_id')
+          ->where('payments.pay_status',1)
+          ->where('customer.type',1)
+          ->groupBy('customer.customer_email') 
+          ->get();
+        }
+       
+        print_r($leads_data);die;
+        $pdf = PDF::loadView('admin.dashboard.show_pdf',['leads_data'=>$leads_data]);
+        return $pdf->stream('show_pdf.pdf');
+  }
     
 
 
