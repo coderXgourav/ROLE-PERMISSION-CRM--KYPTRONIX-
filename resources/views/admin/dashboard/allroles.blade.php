@@ -14,7 +14,7 @@
 									<tr>
 										<th>No.</th>
 										<th>Role Name</th>
-										<th>Date</th>
+										<th>Set Role Name</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -27,7 +27,7 @@
                                     <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
 										<td>{{ucwords($value->role_name)}}</td>
-										<td>{{$value->created_at}}</td>
+										<td>{{ucwords($value->modern_name)}}</td>
 										@php
 										$role_id = Crypt::encrypt($value->id);
 									   @endphp
@@ -35,7 +35,7 @@
 										
 											 <div class="d-flex order-actions">
 											    <a href="{{route('admin.edit-role',['id'=>$role_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
-												<a href="javascript:;"  onclick="DeleteRole({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a>
+												{{-- <a href="javascript:;"  onclick="DeleteRole({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a> --}}
 												
 											 </div>
 										</td>

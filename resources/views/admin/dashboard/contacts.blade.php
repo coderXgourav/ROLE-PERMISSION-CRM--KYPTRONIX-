@@ -52,7 +52,7 @@
                                     <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
 										<td>{{$value->first_name}} {{$value->last_name}}</td>
-										<td>{{$value->user_type}}</td>
+										<td>{{$value->modern_name}}</td>
 										<td>{{$value->phone_number}}</td>
 										<td>{{$value->email_address}}</td>
 										

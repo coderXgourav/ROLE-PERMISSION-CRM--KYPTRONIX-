@@ -334,7 +334,6 @@ public function newPassword(Request $request){
 // THIS IS addContactPage FUNCTION  
 public function addContactPage(){
     $id = session('admin');
-    
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
     $services =  Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();

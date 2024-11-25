@@ -60,7 +60,7 @@ class ContactController extends Controller
             ->join('permission','permission.user_id','main_user.id')
             ->where('main_user.id',$id)
             ->first();
-          
+           
             return $user_details;   
     }
     public function userType($type){
@@ -877,16 +877,17 @@ public function export()
       //       break;
       //   }
       // }else{
+      
         $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = $admin_data->user_type;
 
           if($user_type=="admin" || $user_type=="operation_manager"){
-
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->orderBy('id','DESC')->where('main_user.user_type',"!=",$user_type)->where('main_user.user_type',"!=","admin")->paginate(10);
-
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",$user_type)->where('main_user.user_type',"!=","admin")->paginate(10);
           }else if($user_type=="team_manager"){
+
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            
             $team_member=[];
             if(!empty($team_manager_services)){
                     $service_id = [];
@@ -904,18 +905,16 @@ public function export()
                     // echo '<pre>';
                     // print_r($contact_data);die;
              }
-             
-            //  else{
-            //        $contact_data=DB::table('main_user')
-            //         ->select('main_user.id as member_id','main_user.first_name as first_name','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name')
-            //         ->join('member_service','member_service.member_id','=','main_user.id')
-            //         ->join('services','services.service_id','=','member_service.id')
-            //         ->where('main_user','main_user.user_type','=','customer_success_manager')
-            //         ->get();
-            //  }
 
           }
-
+              else{
+                   $contact_data=DB::table('main_user')
+                    ->select('main_user.id as member_id','main_user.first_name as first_name','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name')
+                    ->join('member_service','member_service.member_id','=','main_user.id')
+                    ->join('services','services.service_id','=','member_service.id')
+                    ->where('main_user','main_user.user_type','=','customer_success_manager')
+                    ->get();
+             }
             
           $user_type = self::userType($admin_data->user_type);
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);

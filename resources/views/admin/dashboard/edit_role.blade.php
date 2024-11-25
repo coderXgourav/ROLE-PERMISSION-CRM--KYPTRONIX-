@@ -23,7 +23,16 @@
 										<label for="input42" class="col-sm-3 col-form-label">Role Name</label>	
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Role Name" name="name" id="name" value="{{ucwords($data->role_name)}}" required>
+												<input type="text" class="form-control" placeholder="Type Role Name" value="{{ucwords($data->role_name)}}" required disabled>
+												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
+											</div>
+										</div>
+									</div> 
+										<div class="row mb-3">
+										<label for="input42" class="col-sm-3 col-form-label">Set Role Name</label>	
+										<div class="col-sm-9">
+											<div class="position-relative input-icon">
+												<input type="text" class="form-control" placeholder="Type Role Name" name="name" id="name" value="{{ucwords($data->modern_name)}}" required>
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
 											</div>
 										</div>

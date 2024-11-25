@@ -113,18 +113,14 @@ width: 100% !important;
 										</div>
 									</div>
                                     
-
-									
-
-                                    
 									
 									<div class="row mb-3" >
 										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
 										<div class="col-sm-9">
 											<div style="    display: flex;align-items: center;gap: 10px;}">
 												       @foreach($roles as $val)
-												<div><input type="checkbox" id="role".{{$val->id}}  name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
-												<label style="cursor: pointer" for="role".{{$val->id}} >{{$val->role_name}}</label>
+												<div><input type="checkbox" name="user_type" onclick="resetCheckboxes(this)" value="{{$val->id}}"  style="width: 25px"> </div>
+												<label style="cursor: pointer"  >{{$val->modern_name}}</label>
 												   @endforeach                                 
 											</div>
 										</div>
@@ -166,7 +162,7 @@ width: 100% !important;
 												
 										</div>
 
-										<div class="row"  id="service_field">
+										{{-- <div class="row"  id="service_field">
 											<div class="row mb-3" >
 											<label for="input42" class="col-sm-3 col-form-label">Allow Manage System</label>
 											<div class="col-sm-9">
@@ -185,7 +181,7 @@ width: 100% !important;
 													
 											</div>
 									</div>
-								 </div>
+								 </div> --}}
 								 
 								<!--	<div class="row mb-3" id="sub_services">
 										<label for="input42" class="col-sm-3 col-form-label">Sub Service</label>

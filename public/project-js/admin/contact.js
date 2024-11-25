@@ -861,7 +861,7 @@ $("#invoice_email_send").validate({
     },
 });
 
-function ChangeStatus(customer_id = "",status="") {
+function ChangeStatus(customer_id = "", status = "") {
     Swal.fire({
         title: "Are you sure?",
         text: "You want to change the Lead Status!",
@@ -876,7 +876,7 @@ function ChangeStatus(customer_id = "",status="") {
                 url: "/admin/change_status",
                 data: {
                     customer_id: customer_id,
-                    status:status
+                    status: status,
                 },
                 dataType: "JSON",
                 success: function (data) {
@@ -900,7 +900,6 @@ function ChangeStatus(customer_id = "",status="") {
 }
 
 $("#add-service").validate({
-    
     messages: {},
     submitHandler: function (form, event) {
         event.preventDefault();
@@ -920,13 +919,10 @@ $("#add-service").validate({
                 $("#btn").html("update");
                 var customer_id = data;
 
-                 Command: toastr["success"]("Success", "Updated Successfully");
-                 setTimeout(()=>{
-                    window.location ="/admin/leads-view/" + customer_id;
- 
-                 },1500)
-
-
+                Command: toastr["success"]("Success", "Updated Successfully");
+                setTimeout(() => {
+                    window.location = "/admin/leads-view/" + customer_id;
+                }, 1500);
             },
             error: function () {
                 $("#btn").attr("disabled", false);
@@ -939,7 +935,6 @@ $("#add-service").validate({
 $("#add_role_form").validate({
     rules: {
         name: "required",
-      
     },
 
     messages: {},
@@ -998,7 +993,7 @@ $("#update_role_form").validate({
                 $("#btn").html("Update");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
-                    document.getElementById("name").value = "";
+                    // document.getElementById("name").value = "";
                 }
             },
             error: function () {

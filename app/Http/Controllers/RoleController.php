@@ -104,7 +104,7 @@ class RoleController extends Controller
             return self::toastr(false,"Role Name Already Exist","error","Error");
           }
 	      $role_details = Role::find($role_id);
-	      $role_details->role_name = $name;
+	      $role_details->modern_name = $name;
 	      $role_details->save();
         return self::toastr(true,"Updated Successfull","success","Success");
       } 
