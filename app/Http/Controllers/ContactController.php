@@ -61,14 +61,14 @@ class ContactController extends Controller
             ->where('main_user.id',$id)
             ->first();
           
-            return $user_details;
+            return $user_details;   
     }
     public function userType($type){
       switch ($type) {
                   case 'customer_success_manager':
                return $user_type = "Customer Manager";
                     break;
-                    case "team_manager":
+                    case "team_manager":   
                return $user_type = "Team Manager";
 
                       break;
