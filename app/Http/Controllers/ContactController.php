@@ -1196,9 +1196,10 @@ public function viewTeamMember($team_manager_id){
     $user_login_details=0;
     $user_logout=0;
 
-        $team_manager_services = RoleService::where('member_id',$team_manager_id)->distinct()->get(['member_id']);
-
+    if(isset($data->user_type) && $data->user_type == 'team_manager'){
+        $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
+
         foreach($team_manager_services as $service){
           $service_id[] = $service->managers_services_id;
         }
@@ -1227,7 +1228,6 @@ public function viewTeamMember($team_manager_id){
             ->groupBy('customer.customer_email') 
             ->whereIn('customer.customer_service_id',$service_id) 
             ->get();
-            
        $total_invoices_data = Invoice::whereIn('service_id',$service_id)->count();
     
        $service_data=DB::table('services')
@@ -1254,72 +1254,74 @@ public function viewTeamMember($team_manager_id){
 
      
                   
-    // else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
-    //       // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
-    //     $user_login_details = DB::table('main_user')
-    //     ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
-    //     ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
-    //     ->where('main_user.id', $team_manager_id)
-    //     ->where('login_history.operation','login')
-    //     ->get();     
-    //     $user_logout = DB::table('main_user')
-    //     ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
-    //     ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
-    //     ->where('main_user.id', $team_manager_id)
-    //     ->where('login_history.operation','logout')
-    //     ->get();
+    }else if(isset($data->user_type) && $data->user_type == 'customer_success_manager'){
+          // $customer_success_manager_services=MemberServiceModel::where('member_id',$data->id)->get();
+        $user_login_details = DB::table('main_user')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->where('main_user.id', $team_manager_id)
+        ->where('login_history.operation','login')
+        ->get();     
+        $user_logout = DB::table('main_user')
+        ->select(DB::raw('DISTINCT DATE(login_history.logged_in_at) as date'))
+        ->join('login_history', 'login_history.user_id', '=', 'main_user.id')
+        ->where('main_user.id', $team_manager_id)
+        ->where('login_history.operation','logout')
+        ->get();
 
-    //       $customer_success_manager_services = MemberServiceModel::where('member_id', $data->id)
-    //       ->distinct()
-    //       ->get(['member_service_id']); // Specify the columns you want to be distinct
-
-
-    //       $service_id=[];
-    //     if(!empty($customer_success_manager_services)){
-    //          foreach($customer_success_manager_services as $service){
-    //              $service_id[] = $service->member_service_id;
-    //           }
-
-    //         $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
-    //        /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
-    //        $total_clients = DB::table('customer')
-    //         ->select(
-    //             'customer.customer_email',
-    //             DB::raw('MAX(customer.customer_id) as customer_id'),
-    //             DB::raw('MAX(customer.customer_number) as customer_number'),
-    //             DB::raw('MAX(customer.customer_name) as customer_name'),
-    //             DB::raw('MAX(customer.status) as status'),
-    //             DB::raw('MAX(customer.type) as type'),
-    //             DB::raw('MAX(services.service_id) as service_id'),
-    //             DB::raw('MAX(customer.msg) as msg'),
-    //             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
-    //         )
-    //         ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
-    //         ->groupBy('customer.customer_email') 
-    //         ->whereIn('customer.customer_service_id',$service_id) 
-    //         ->whereJsonContains('customer.team_member',"$data->id")
-    //         ->get();
-
-    //         $service_data=DB::table('services')
-    //         ->join('member_service','member_service.member_service_id','=','services.service_id')
-    //         ->where('member_service.member_id',$team_manager_id)
-    //         ->distinct()
-    //         ->get(['name']);
-
-    //         // echo "<pre>";
-    //         // print_r($service_data);
-    //         // die;
-    //     }
+          $customer_success_manager_services = MemberServiceModel::where('member_id', $data->id)
+          ->distinct()
+          ->get(['member_service_id']); // Specify the columns you want to be distinct
 
 
-    // }else if(isset($data->user_type) && $data->user_type == 'admin'){
-    //   $total_clients=CustomerModel::all()->count();
-    //   $total_invoices_data=Invoice::all()->count();
-    //   $total_team_member=CustomerModel::where('team_member','!=','null')->count();
-    // }
+          $service_id=[];
+        if(!empty($customer_success_manager_services)){
+             foreach($customer_success_manager_services as $service){
+                 $service_id[] = $service->member_service_id;
+              }
+
+            $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
+           /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
+           $total_clients = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(services.service_id) as service_id'),
+                DB::raw('MAX(customer.msg) as msg'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id) 
+            ->whereJsonContains('customer.team_member',"$data->id")
+            ->get();
+
+            $service_data=DB::table('services')
+            ->join('member_service','member_service.member_service_id','=','services.service_id')
+            ->where('member_service.member_id',$team_manager_id)
+            ->distinct()
+            ->get(['name']);
+
+            // echo "<pre>";
+            // print_r($service_data);
+            // die;
+        }
+
+
+    }else if(isset($data->user_type) && $data->user_type == 'admin'){
+      $total_clients=CustomerModel::all()->count();
+      $total_invoices_data=Invoice::all()->count();
+      $total_team_member=CustomerModel::where('team_member','!=','null')->count();
+    }
 
     return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout]);
 }
+
+
 
 
 //viewTeamMember FUNCTION END
@@ -2725,7 +2727,7 @@ function loginDetails($userId) {
           ->get();
         }
        
-        print_r($leads_data);die;
+       // print_r($leads_data);die;
         $pdf = PDF::loadView('admin.dashboard.show_pdf',['leads_data'=>$leads_data]);
         return $pdf->stream('show_pdf.pdf');
   }
