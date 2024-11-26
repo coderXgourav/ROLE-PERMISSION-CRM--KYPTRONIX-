@@ -426,11 +426,18 @@ public function allPackages(){
 }
 
 // loginHistory
-public function loginHistory(){
+public function loginHistory(Request $request ){
+    $staffId = $request->id;
+  
      $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    $data =   DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->orderBy('login_history.id','DESC')->paginate(10);
+      if($staffId!=""){
+    $data =   DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->where('main_user.id',$staffId)->paginate(10);
+    }else{
+      $data = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->paginate(10);
+
+    }
    return view('admin.dashboard.login_history',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
    
 

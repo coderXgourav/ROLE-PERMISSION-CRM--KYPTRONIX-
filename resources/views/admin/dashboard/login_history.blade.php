@@ -14,6 +14,7 @@
 									<tr>
 										<th>No.</th>
 										<th>Name</th>
+										<th>Role</th>
 										<th>Type</th>
 										<th>IP Address</th>
 										<th>Location</th>
@@ -29,8 +30,9 @@
                                     @foreach($data as $key => $value)
                                     <tr>
 										<td>{{$i++}}</td>
-										<td>{{$value->first_name}} {{$value->last_name}}</td>
-										<td>{{$value->user_type}}</td>
+										<td>{{ucwords($value->first_name)}} {{ucwords($value->last_name)}}</td>
+										<td>{{$value->modern_name}}</td>
+										<td>{{ucwords($value->operation)}}</td>
 										<td>{{$value->ip_address}}</td>
 										<td>{{$value->city, $value->country}}</td>
 									<td>{{ $value->logged_in_at ? \Carbon\Carbon::parse($value->logged_in_at)->format('d-m-Y') : 'N/A' }}</td>
