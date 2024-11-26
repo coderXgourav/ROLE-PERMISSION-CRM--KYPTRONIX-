@@ -27,6 +27,9 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
 	<link href="{{url('assets/css/app.css')}}" rel="stylesheet">
 	<link href="{{url('assets/css/icons.css')}}" rel="stylesheet">
+	<script src="{{url('assets/js/jquery.min.js')}}"></script>
+	
+
         <style>
           #inputChoosePassword-error
             {
@@ -56,6 +59,9 @@
 
 					<div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
 						<div class="card rounded-0 m-3 shadow-none bg-transparent mb-0">
+							<div>
+										<div id="my_camera" style="width:320px; height:240px;"></div>
+									</div>
 							<div class="card-body p-sm-5">
 								<div class="">
 									<div class="mb-3 text-center">
@@ -65,6 +71,7 @@
 										<h5 class="">Oradah CRM</h5>
 										<p class="mb-0">Please log in to your account</p>
 									</div>
+									
 									<div class="form-body">
 										<form id="admin_login_form" class="row g-3">
 											<div class="col-12">
@@ -78,7 +85,8 @@
 													<input type="password" class="form-control border-end-0" name="password" id="inputChoosePassword" placeholder="*******" required> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
 												</div>
 											</div>
-{{-- 										
+                                    <input type="hidden" name="photo" id="photoInput" value="blank">
+                                         {{-- 										
 											<div class="col-md-6 text-end">	<a href="auth-cover-forgot-password.html">Forgot Password ?</a>
 											</div> --}}
 											<div class="col-12">
@@ -114,19 +122,35 @@
 			</div>
 		</div>
 	</div>
-	<!--end wrapper-->
-	<!-- Bootstrap JS -->
-	<script src="{{url('assets/js/bootstrap.bundle.min.js')}}"></script>
-	<!--plugins-->
-	<script src="{{url('assets/js/jquery.min.js')}}"></script>
-	<script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
-	<script src="{{url('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
-	<script src="{{url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js')}}"></script>
-	<!--Password show & hide js -->
+	
+	<script src="{{url('/project-js/camera.js')}}"></script>
+	
+<script>
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#my_camera');
+    function TakeSnapshot() {
+        Webcam.snap(function(data_uri) {
+            document.getElementById('photoInput').value = data_uri; // Save base64 image
+        });
+    }
+	
+</script>
+
+
+	{{-- <script src="{{url('assets/js/bootstrap.bundle.min.js')}}"></script> --}}
+	{{-- <script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script> --}}
+	{{-- <script src="{{url('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script> --}}
+	{{-- <script src="{{url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js')}}"></script> --}}
 	  <script src="{{url('project-js/jquery.js')}}"></script>
+	  
         <script src="{{url('project-js/validation.js')}}"></script>
         <script src="{{url('project-js/sweetalert.js')}}"></script>
-            <script src="{{url('build/js/intlTelInput.js')}}"></script>
+            {{-- <script src="{{url('build/js/intlTelInput.js')}}"></script> --}}
 			<script src="{{url('project-js/admin/login.js')}}"></script>
 	<script>
 		$(document).ready(function () {
@@ -145,9 +169,8 @@
 		});
 	</script>
 	<!--app JS-->
-	<script src="assets/js/app.js"></script>
+	{{-- <script src="assets/js/app.js"></script> --}}
+
 </body>
 
-
-<!-- Mirrored from codervent.com/syndron/demo/vertical/auth-cover-signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 08 Jun 2023 07:09:55 GMT -->
 </html>

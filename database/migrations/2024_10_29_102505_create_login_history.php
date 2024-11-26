@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('region')->nullable();
             $table->string('operation')->nullable();
+            $table->string('image')->nullable();
             $table->timestamp('logged_in_at')->useCurrent();
             $table->timestamps();
         });

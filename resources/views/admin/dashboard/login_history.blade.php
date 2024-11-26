@@ -17,6 +17,7 @@
 										<th>Role</th>
 										<th>Type</th>
 										<th>IP Address</th>
+										<th>Image</th>
 										<th>Location</th>
 										<th>Date</th>
 										<th> Time</th>
@@ -34,6 +35,7 @@
 										<td>{{$value->modern_name}}</td>
 										<td>{{ucwords($value->operation)}}</td>
 										<td>{{$value->ip_address}}</td>
+										<td><img src="{{url('/staff_images')}}/{{$value->image}}" alt="" style="width: 175px;"></td>
 										<td>{{$value->city, $value->country}}</td>
 									<td>{{ $value->logged_in_at ? \Carbon\Carbon::parse($value->logged_in_at)->format('d-m-Y') : 'N/A' }}</td>
 

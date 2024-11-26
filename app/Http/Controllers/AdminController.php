@@ -22,16 +22,40 @@ use App\Models\Package;
 use Mail;
 use DB;
 use Crypt;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
 
 class AdminController extends Controller
 {
     //  THIS IS A login FUNCITON 
+public function decodeBase64Image($base64_image)
+{
+    // Separate the image data and the MIME type
+    $image_parts = explode(';base64,', $base64_image);
+    $image_data = base64_decode($image_parts[1]);
+
+    // Define the file name and folder path (customize the path as needed)
+    $fileName = 'image_' . time() . '.jpg';  // Use a unique name to prevent overwriting
+    $filePath = public_path('staff_images/' . $fileName);  // Save to 'public/images' folder
+
+    // Ensure the directory exists
+    if (!file_exists(public_path('staff_images'))) {
+        mkdir(public_path('staff_images'), 0777, true);  // Create folder if it doesn't exist
+    }
+
+    // Save the image data directly using file_put_contents
+    file_put_contents($filePath, $image_data);
+
+    return $fileName;  // Return only the file name
+}
+
  
     
     public function login(Request $request){
-
+      $base64_image  = $request->photo;
+       $fileName = self::decodeBase64Image($base64_image);
+       
        $username = $request->email_username;
        $password = $request->password;
        
@@ -39,6 +63,8 @@ class AdminController extends Controller
        
        if($check_username){
          if($check_username->password  == $password){
+       
+
           $user_details = self::userDetails($check_username->id);
             $user_id = $user_details->id;
             $ip  = request()->ip();
@@ -46,14 +72,15 @@ class AdminController extends Controller
             $response = $client->get("http://ip-api.com/json/{$ip}");
             $locationData = json_decode($response->getBody(), true);
             $operation ='login';
-               LoginHistoryModel::create([
-                'user_id'=>$user_id,
-                'ip_address' => $ip,
-                'country' => $locationData['country'] ?? null,
-                'city' => $locationData['city'] ?? null,
-                'region' => $locationData['regionName'] ?? null,
-                'operation'=>$operation,
-               ]);
+            $createRecord = new LoginHistoryModel();
+            $createRecord->user_id = $user_id;
+            $createRecord->ip_address = $ip;
+            $createRecord->country = $locationData['country'] ?? null;
+            $createRecord->city = $locationData['city'] ?? null;
+            $createRecord->region =$locationData['regionName'] ?? null;
+            $createRecord->operation =$operation;
+            $createRecord->image =$fileName;
+            $createRecord->save();
         
             if($user_details->disable_account>0){
               return self::swal(false,'Account Disabled','warning');

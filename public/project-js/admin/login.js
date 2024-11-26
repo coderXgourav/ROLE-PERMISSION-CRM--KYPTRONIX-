@@ -15,15 +15,20 @@ $("#admin_login_form").validate({
     },
     submitHandler: function (form, event) {
         event.preventDefault();
+
         $("#loginBtn").html(
             "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
         );
         $("#loginBtn").attr("disabled", true);
+
+        // Take snapshot and decode the image
+        const image = TakeSnapshot(); // Assuming this returns a Base64 string
+
         $.ajax({
             url: "/admin-login",
             method: "POST",
             dataType: "JSON",
-            data: new FormData(form),
+            data: new FormData(form, image),
             contentType: false,
             processData: false,
             success: function (data) {
@@ -40,9 +45,9 @@ $("#admin_login_form").validate({
                 }
             },
             error: function () {
-                $("#btn").attr("disabled", false);
-                $("#btn").html("Sign in");
-                Command: toastr["error"]("Error", "Technical Issue");
+                $("#loginBtn").attr("disabled", false);
+                $("#loginBtn").html("Sign in");
+                toastr["error"]("Error", "Technical Issue");
             },
         });
     },

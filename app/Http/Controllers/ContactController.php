@@ -1264,7 +1264,7 @@ public function viewTeamMember($team_manager_id){
       ->where('main_user.id', $team_manager_id)
       ->where('login_history.operation','logout')
       ->get();
-       $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_id)->count();
+       $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_manager_id)->count();
 
 
      
@@ -1326,7 +1326,7 @@ public function viewTeamMember($team_manager_id){
           // print_r($service_data);
           // die;
       }
-        $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_id)->count();
+        $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_manager_id)->count();
 
 
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
