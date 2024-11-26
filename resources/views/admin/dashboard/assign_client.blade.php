@@ -67,7 +67,7 @@
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->service_names}}</td>
 										<td>{{$value->city}}</td>
-										<td>{{$value->State}}</td>
+										<td>{{$value->state}}</td>
 										<td>{{$value->msg}}</td>
 										<td><a href="{{route('admin.view_assign_client',['id'=>$value->customer_id])}}" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                     </td>

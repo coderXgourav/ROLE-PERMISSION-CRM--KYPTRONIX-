@@ -464,6 +464,8 @@ public function assginClientspage(Request $request){
             DB::raw('MAX(customer.type) as type'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
+            DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
         )
         ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
@@ -499,6 +501,8 @@ public function assginClientspage(Request $request){
                   DB::raw('MAX(customer.status) as status'),
                   DB::raw('MAX(customer.type) as type'),
                   DB::raw('MAX(services.service_id) as service_id'),
+                  DB::raw('MAX(customer.city) as city'),
+                  DB::raw('MAX(customer.state) as state'),           
                   DB::raw('MAX(customer.msg) as msg'),
                   DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
               )
@@ -526,6 +530,8 @@ public function assginClientspage(Request $request){
                   DB::raw('MAX(customer.type) as type'),
                   DB::raw('MAX(services.service_id) as service_id'),
                   DB::raw('MAX(customer.msg) as msg'),
+                  DB::raw('MAX(customer.city) as city'),
+                  DB::raw('MAX(customer.state) as state'),
                   DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
               )
               ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
@@ -537,7 +543,7 @@ public function assginClientspage(Request $request){
           }
           
         }
-
+       
   }
 
   //  $team = MainUserModel::where('user_type','customer_success_manager')->get();
@@ -1189,7 +1195,7 @@ public function viewTeamMember($team_manager_id){
     $admin_data = self::userDetails($team_id);
     $team_manager_id = Crypt::decrypt($team_manager_id);
     $data = MainUserModel::find($team_manager_id);
-
+     
   
   $user_type = $data['user_type'];
   $total_team_member=0;
