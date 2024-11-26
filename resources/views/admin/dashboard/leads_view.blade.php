@@ -121,8 +121,11 @@
                    <form id="add-service">
                      {{@csrf_field();}}
                     <!-- Service Selection -->
-                   <?php if(!empty($service_data)){ ?>
+                   <?php if(!empty($service_data[0]->customer_ids)){ ?>
                     <input type="hidden" name="customer_id" value="{{$service_data[0]->customer_ids}}">
+                  <?php }else{ ?>
+                    <input type="hidden" name="customer_id" value="{{$customer->customer_id}}">
+
                   <?php } ?>
                     <input type="hidden" name="customer_name" value="{{$customer->customer_name}}">
                     <input type="hidden" name="customer_number" value="{{$customer->customer_number}}">
@@ -156,20 +159,29 @@
                             <span>Select One Service</span>
                             <hr>
                             <?php 
-                              if(!empty($service_data)){
+                               if(!empty($service_data[0]->service_ids)){
                                     $s_id=$service_data[0]->service_ids;
                                     $service_idss=explode(',', $s_id);
+                              }else{$service_idss=[0];}
+                              if(!empty($service_data[0]->customer_sub_service_id)){
+
                                     $sub_s_id=$service_data[0]->customer_sub_service_id;
+                              }else{$sub_s_id=0;}
+                                  if(!empty($sub_s_id)){
                                     $sub_service_idss=explode(',', $sub_s_id);
+
+                                   }else{$sub_service_idss= 0; }
+                                if(!empty($service_data[0]->customer_package_id)){
                                     $customer_p_id=$service_data[0]->customer_package_id;
+
+                                }else{ $customer_p_id=0;}
                                     $package_idss=explode(',', $customer_p_id);
+                                
                                   
-                              }
+                              
                             ?>
-                            <?php if(!empty($service_data)){ ?>
                             <input type="hidden" id="subservices_id" name="subservices_id" value="<?= $sub_s_id; ?>">
                             <input type="hidden" name="packagesid" id="packagesid" value="<?= $customer_p_id;?>">
-                           <?php } ?>
                             @foreach ($services as $item)
                             <div class="col-12">
                                 <div class="form-check text-start">

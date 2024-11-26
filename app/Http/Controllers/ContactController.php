@@ -1845,7 +1845,7 @@ public function addLead(){
             DB::raw('MAX(customer.type) as type'),
             DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
         )
-        ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+        ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
         ->groupBy('customer.customer_email') 
         ->paginate(10);
         $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
@@ -1873,7 +1873,7 @@ public function addLead(){
                 DB::raw('MAX(customer.type) as type'),
                 DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
             )
-            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
             ->groupBy('customer.customer_email') 
             ->whereIn('customer.customer_service_id',$service_id)
             ->paginate(10);
@@ -1897,7 +1897,7 @@ public function addLead(){
                 DB::raw('MAX(customer.type) as type'),
                 DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
             )
-            ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
             ->groupBy('customer.customer_email') 
             ->whereJsonContains('customer.team_member',"$admin_data->id")
             ->paginate(10);

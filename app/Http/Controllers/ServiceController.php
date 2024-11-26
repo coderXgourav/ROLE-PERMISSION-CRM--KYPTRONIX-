@@ -382,13 +382,19 @@ public function subServiceList($service_id){
 
       if(!empty($request->packages)){
           $packages=implode(',',$request->packages);
-      }else{$packages='';}
+      }else{$packages=0;}
 
       if(!empty($request->subservices)){
           $subservices=implode(',',$request->subservices);
-      }else{$subservices='';}
-      foreach ($c_ids as $key => $value) {
-        $delete=CustomerModel::find($value)->delete();
+      }else{$subservices=0;}
+      if(!empty($c_ids)){
+         foreach ($c_ids as $key => $value) {
+           $delete=CustomerModel::find($value)->delete();
+         }
+     
+      }else{
+           $delete=CustomerModel::find($customer_ids)->delete();
+
       }
       
       if($type==1){
@@ -441,6 +447,9 @@ public function subServiceList($service_id){
                 $individual_details->customer_name = $customer_name;
                 $individual_details->customer_number = $customer_number ;
                 $individual_details->customer_email = $email ;
+                $individual_details->customer_service_id = 0;
+                $individual_details->customer_sub_service_id =$subservices;
+                $individual_details->package_id = $packages;
                 $individual_details->type=$type;
                 $individual_details->first_name=$first_name;
                 $individual_details->middle_name=$middle_name;
@@ -510,6 +519,10 @@ public function subServiceList($service_id){
                 $business_details->industry=$industry;
                 $business_details->customer_number=$contact_number;
                 $business_details->customer_email=$customer_email;
+                $business_details->customer_service_id = 0;
+                $business_details->customer_sub_service_id = $subservices;
+                $business_details->package_id = $packages;
+
                 $business_details->type=$type;
                 $business_details->ein=$ein;
                 $business_details->address=$address;
