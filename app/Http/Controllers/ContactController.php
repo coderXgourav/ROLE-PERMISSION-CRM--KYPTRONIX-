@@ -1209,8 +1209,8 @@ public function viewTeamMember($team_manager_id){
 
       }else{
         $user_role = Role::where('role_name',"team_manager")->first();
-
       }
+
         $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
 
@@ -1264,6 +1264,7 @@ public function viewTeamMember($team_manager_id){
       ->where('main_user.id', $team_manager_id)
       ->where('login_history.operation','logout')
       ->get();
+       $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_id)->count();
 
 
      
@@ -1325,6 +1326,7 @@ public function viewTeamMember($team_manager_id){
           // print_r($service_data);
           // die;
       }
+        $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_id)->count();
 
 
     }else if(isset($data->user_type) && $data->user_type == 'admin'){
@@ -1332,9 +1334,10 @@ public function viewTeamMember($team_manager_id){
       $total_clients=CustomerModel::all()->count();
       $total_invoices_data=Invoice::all()->count();
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
+        $loginLogoutCount = 0;
     }
 
-    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout,'user_role'=>$user_role]);
+    return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout,'user_role'=>$user_role,'loginLogoutCount'=>$loginLogoutCount]);
 }
 
 
@@ -1343,6 +1346,7 @@ public function viewTeamMember($team_manager_id){
 
 //viewTeamMember FUNCTION END
 public function teamMemberList($manager_id){
+  
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);

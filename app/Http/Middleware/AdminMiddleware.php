@@ -115,6 +115,7 @@ class AdminMiddleware
             'admin.staff-report' =>($admin_data->user_type=="admin"  )?1:0 ,
             'admin.business-report' =>($admin_data->user_type=="admin"  )?1:0 ,
             'admin-logout' => 1,
+            'admin.login-times'=>1,
             'not-access'=>1,
             'admin-dashboard'=>1,
             'fallback'=>1,

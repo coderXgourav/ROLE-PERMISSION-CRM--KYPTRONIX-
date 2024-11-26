@@ -92,7 +92,6 @@
                             </div>
                         </div>
                     </div>
-
                     @if($data->user_type != "operation_manager")
                         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             @if(isset($data) && ($data->user_type == 'team_manager'))
@@ -112,7 +111,6 @@
                                     </div>
                                 </a>
                             @endif
-
                             <a href="{{ route('admin.show-clients-list', ['id' => $data->id]) }}" 
                                class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                 <div class="flex items-center justify-between">
@@ -128,7 +126,6 @@
                                     </div>
                                 </div>
                             </a>
-
                             <a href="{{ route('admin.invoice_list', ['id' => $data->id]) }}" 
                                class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                 <div class="flex items-center justify-between">
@@ -149,11 +146,26 @@
                                class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-sm text-gray-500">Logins</p>
+                                        <p class="text-sm text-gray-500">Date wise Workign Hours</p>
                                         <p class="text-2xl font-bold text-gray-800">{{ count($user_login_details) }}</p>
                                     </div>
                                     <div class="bg-yellow-100 p-3 rounded-full">
                                         <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                              <a href="{{ route('admin.login-times', ['id' => $data->id]) }}" 
+                               class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Login, Logout Times</p>
+                                        <p class="text-2xl font-bold text-gray-800">{{ $loginLogoutCount}}</p>
+                                    </div>
+                                    <div class="bg-blue-100 p-3 rounded-full">
+                                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                                   d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                                         </svg>

@@ -140,6 +140,7 @@ Route::get('/admin/individual-reports',[ContactController::class,'individualRepo
 Route::get('/admin/business-reports',[ContactController::class,'businessReport'])->name('admin.business-report');
 Route::get('/admin/staff-reports',[ContactController::class,'staffReport'])->name('admin.staff-report');
 Route::get('/admin/login-history',[AdminController::class,'loginHistory'])->name('admin.loginHistory');
+Route::get('/admin/login-times',[AdminController::class,'loginHistory'])->name('admin.login-times');
 
 
 
