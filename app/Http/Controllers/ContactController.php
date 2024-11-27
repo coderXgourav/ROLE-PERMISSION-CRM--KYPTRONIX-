@@ -891,12 +891,8 @@ public function export()
           $admin_data = self::userDetails($id);
           $user_type = $admin_data->user_type;
 
-          if($user_type=="admin" || $user_type=="operation_manager"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",$user_type)->where('main_user.user_type',"!=","admin")->select('main_user.*','roles.modern_name')->paginate(10);
-
-              // echo "<pre>";
-              // print_r($contact_data);
-              // die;
+          if($user_type=="admin"){
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager"){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
@@ -909,14 +905,36 @@ public function export()
                     }
                     
                     $contact_data = DB::table("member_service")   
-                    ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name')) 
+                    ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name'),DB::raw('MAX(roles.modern_name) as modern_name')) 
                     ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+                    ->join('roles','roles.role_name','=','main_user.user_type')
                     ->join('services','services.service_id','=','member_service.member_service_id')
                     ->whereIn('member_service.member_service_id', $service_id)
                     ->groupBy('member_service.member_id')
                     ->paginate(10);
                     // echo '<pre>';
                     // print_r($contact_data);die;
+             }
+
+          }else if($user_type=="operation_manager"){
+
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                    $service_id = [];
+                    foreach($team_manager_services as $service){
+                      $service_id[] = $service->managers_services_id;
+                    }
+                    
+                    $contact_data = DB::table("member_service")   
+                    ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name'),DB::raw('MAX(roles.modern_name) as modern_name')) 
+                    ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+                    ->join('roles','roles.role_name','=','main_user.user_type')
+                    ->join('services','services.service_id','=','member_service.member_service_id')
+                    ->whereIn('member_service.member_service_id', $service_id)
+                    ->groupBy('member_service.member_id')
+                    ->paginate(10);
              }
 
           }
@@ -1228,7 +1246,6 @@ public function smsShow($id){
   
 }
 //viewTeamMember FUNCTION START
-
 
 
 
@@ -3117,7 +3134,41 @@ function loginDetails($userId) {
         $pdf = PDF::loadView('admin.dashboard.staff_report_pdf',['data'=>$data,'role_details'=>$role_details]);
         return $pdf->stream('staff_report_pdf.pdf');
   }
- 
+  public function teamManagers(Request $request){
+        $id = session('admin');
+          $admin_data = self::userDetails($id);
+          $user_type = $admin_data->user_type;
+
+          if($user_type=="admin"){
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'team_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+          }else if($user_type=="operation_manager"){
+
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                    $service_id = [];
+                    foreach($team_manager_services as $service){
+                      $service_id[] = $service->managers_services_id;
+                    }
+                    
+                    $contact_data = DB::table("team_manager_services")   
+                    ->select('team_manager_services.team_manager_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name'),DB::raw('MAX(roles.modern_name) as modern_name')) 
+                    ->join("main_user", 'main_user.id', '=', 'team_manager_services.team_manager_id')
+                    ->join('roles','roles.role_name','=','main_user.user_type')
+                    ->join('services','services.service_id','=','team_manager_services.managers_services_id')
+                    ->where('main_user.user_type',"team_manager")
+                    ->whereIn('team_manager_services.managers_services_id', $service_id)
+                    ->groupBy('team_manager_services.team_manager_id')
+                    ->paginate(10);
+             }
+
+          } 
+          $user_type = self::userType($admin_data->user_type);
+        return view('admin.dashboard.all_team_managers',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+
+    }
+
 
 
 }

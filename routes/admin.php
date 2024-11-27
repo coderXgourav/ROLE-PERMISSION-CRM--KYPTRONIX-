@@ -180,6 +180,9 @@ Route::get('/admin/download-pdf',[ContactController::class,'downloadPDF'])->name
 Route::get('/admin/business-report-pdf',[ContactController::class,'businessReportPdf'])->name('admin.business-report-pdf');
 Route::get('/admin/package_details/{serviceIds}', [ServiceController::class, 'getPackagesByServiceId'])->name('admin.package_details');
 Route::get('/admin/staff-report-pdf',[ContactController::class,'staffReportPdf'])->name('admin.staff-report-pdf');
+
+Route::get('/admin/team-managers',[ContactController::class,'teamManagers'])->name('admin.team-managers');
+
 });
 
 Route::get('/not-access',function(){
