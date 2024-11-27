@@ -144,6 +144,7 @@ class AdminMiddleware
             'admin.business-report-pdf'=>1,
             'admin.package_details'=>1,
             'admin.staff-report-pdf'=>1,
+            'admin.team-managers'=>1,
             // POST METHODS
             'post37'=>1,
             'post1' => 1,

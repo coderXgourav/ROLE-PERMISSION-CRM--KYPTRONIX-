@@ -175,7 +175,7 @@ public function dashboardPage(){
             ->where('main_user.id',$id)
             ->first();
 
-            if($user_details->user_type=="admin" || $user_details->user_type=="operation_manager"){
+            if($user_details->user_type=="admin"){
               $customer_count = CustomerModel::count();
               $assign_clients_count = CustomerModel::where('team_member','!=',null)->count();
               $none_assign_clients_count = CustomerModel::where('team_member','=',null)->count();
@@ -215,21 +215,47 @@ public function dashboardPage(){
             } else if($user_details->user_type=="customer_success_manager" ){
 
               $customer_success_manager_services = MemberServiceModel::where('member_id', $user_details->id)
-    ->distinct()
-    ->get(['member_service_id']); 
+              ->distinct()
+              ->get(['member_service_id']); 
 
-          $service_id=[];
-        if(!empty($customer_success_manager_services)){
-             foreach($customer_success_manager_services as $service){
-                 $service_id[] = $service->member_service_id;
+                $service_id=[];
+              if(!empty($customer_success_manager_services)){
+                   foreach($customer_success_manager_services as $service){
+                       $service_id[] = $service->member_service_id;
+                    }
+                  $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->id")->count();
               }
-            $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->id")->count();
-        }
-          $email_send_cound = DB::table('main_user')
-     ->join('email_send','email_send.email_admin','=','main_user.id')
-     ->join('customer','customer.customer_id','=','email_send.email_customer')
-     ->where('email_send.email_admin',$user_details->id)
-     ->count();
+                $email_send_cound = DB::table('main_user')
+               ->join('email_send','email_send.email_admin','=','main_user.id')
+               ->join('customer','customer.customer_id','=','email_send.email_customer')
+               ->where('email_send.email_admin',$user_details->id)
+               ->count();
+                        
+            }else if($user_details->user_type=="operation_manager"){
+                $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->distinct()->get(['managers_services_id']);
+             
+                 $service_id = [];
+      
+                foreach($team_manager_services as $service){
+                  $service_id[] = $service->managers_services_id;
+                }
+
+
+                $team_manager = DB::table("team_manager_services")
+                ->join('services','services.service_id','=','team_manager_services.managers_services_id')
+                ->join("main_user", 'main_user.id', '=', 'team_manager_services.team_manager_id')
+                ->where('main_user.user_type',"team_manager")
+                ->whereIn('team_manager_services.managers_services_id', $service_id)
+                ->count();
+
+                $team_member = DB::table("member_service")
+                ->join('services','services.service_id','=','member_service.member_service_id')
+                ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+                ->whereIn('member_service.member_service_id', $service_id)
+                ->count();
+
+                $customer_count = CustomerModel::whereIn('customer_service_id',$service_id)->distinct('customer_email')->count(); 
+
               
             }
 
