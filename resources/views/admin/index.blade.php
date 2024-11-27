@@ -123,9 +123,9 @@
 		</div>
 	</div>
 	
-	<script src="{{url('/project-js/camera.js')}}"></script>
+	<!--<script src="{{url('/project-js/camera.js')}}"></script>
 	
-<script>
+ <script>
     Webcam.set({
         width: 320,
         height: 240,
@@ -140,7 +140,7 @@
     }
 	
 </script>
-
+ -->
 
 	{{-- <script src="{{url('assets/js/bootstrap.bundle.min.js')}}"></script> --}}
 	{{-- <script src="{{url('assets/plugins/simplebar/js/simplebar.min.js')}}"></script> --}}

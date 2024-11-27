@@ -23,7 +23,7 @@
 
 							<div class="card-body p-4">
 								<h5 class="mb-4"> </h5>
-								 	<div class="row mb-3">
+								 	<!--<div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Date</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
@@ -31,8 +31,8 @@
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
 											</div>
 										</div>
-									</div> 
-									<div class="row mb-3">
+									</div> -->
+									<!--<div class="row mb-3">
 								   	<label for="input42" class="col-sm-3 col-form-label"></label>
 								   	<div class="col-sm-9">
 											<div class="position-relative input-icon">
@@ -41,7 +41,7 @@
 										   </div>
                                       </div>
 								   			
-								   </div>
+								   </div>-->
 								
 									<div class="row mb-3 package">
 								   	<label for="input42" class="col-sm-3 col-form-label">Package</label>
@@ -60,7 +60,7 @@
                                       </div>
 								   			
 								   </div>
-								   	<div class="row mb-3 custom_title">
+								   	<div class="row mb-3 custom_title" style="display:none;">
 										<label for="input42" class="col-sm-3 col-form-label">Title</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
@@ -70,7 +70,7 @@
 										</div>
 									</div> 
 								
-									<div class="row mb-3">
+									<div class="row mb-3" style="display:none;">
 										<label for="input42" class="col-sm-3 col-form-label">Price</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
@@ -79,7 +79,7 @@
 											</div>
 										</div>
 									</div> 
-								    <div class="row mb-3">
+								    <div class="row mb-3" style="display:none;">
 										<label for="input42" class="col-sm-3 col-form-label">Description</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
