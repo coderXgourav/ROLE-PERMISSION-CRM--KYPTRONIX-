@@ -76,6 +76,26 @@
                             </div>
                         </div>
                     </a>
+                     <a  href="{{ route('admin.operation-manger-list', ['id' => $data->service_id]) }}"
+                       class="stat-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Operation Manager</p>
+                                <p class="text-2xl font-bold text-gray-900 mt-2">{{ $total_sub_service }}</p>
+                            </div>
+                         <div class="bg-green-100 p-3 rounded-lg">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: {{ ($total_sub_service/max($total_sub_service, 1)) * 100 }}%"></div>
+                            </div>
+                        </div>
+                    </a>
 
                     <!-- Team Manager Card -->
                     <a href="{{ route('admin.team-manager-list', ['id' => $data->service_id]) }}" 

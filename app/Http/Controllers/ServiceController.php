@@ -257,11 +257,13 @@ public function teamManagerList($service_id){
      $id = session('admin');
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
+
      $team_manager_data =DB::table('main_user')
      ->select('main_user.first_name','main_user.last_name','main_user.id','main_user.user_type','main_user.email_address','main_user.phone_number')
      ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
      ->where('team_manager_services.managers_services_id','=',$service_id)
      ->paginate(10);
+     
     /* $team_manager = DB::table('team_manager_services')  
     ->whereJsonContains('managers_services_id', $service_id) // Assumes it's a JSON array
     ->get();

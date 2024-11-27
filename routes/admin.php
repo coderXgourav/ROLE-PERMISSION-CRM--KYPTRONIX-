@@ -75,6 +75,7 @@ Route::post('/admin/update_service',[ServiceController::class,'updateService'])-
 Route::get('/admin/add-team-member',[AdminController::class,'addTeamMember'])->name('admin.add-team-member');
 Route::post('/admin/create_team_members',[ContactController::class,'create_team_members'])->name('post14');
 Route::get('/admin/team-member-lists',[ContactController::class,'teammembersLists'])->name('admin.team-member-lists');
+Route::get('/admin/operation-manager-lists/{id}',[ContactController::class,'operationManagerList'])->name('admin.operation-manger-list');
 Route::get('/admin/team_member_delete',[ContactController::class,'team_member_delete']);
 Route::get('admin/edit-team-member/{id}',[ContactController::class,'editTeamMember'])->name('admin.edit-team-member');
 Route::post('/admin/update_members',[ContactController::class,'updateMembers'])->name('post15');
@@ -85,6 +86,7 @@ Route::get('/admin/invoice/{id}',[ContactController::class,'invoicePerCustomer']
 Route::get('/admin/view_invoice/{id}/{invoice_id}',[ContactController::class,'viewInvoice'])->name('admin.view_invoice');
 Route::get('/admin/contact/{id}',[ContactController::class,'viewTeamMember'])->name('admin.view_team_member');
 Route::get('/admin/show-team-member-list/{id}',[ContactController::class,'teamMemberList'])->name('admin.show-team-member-list');
+Route::get('/admin/show-team-manager-list/{id}',[ContactController::class,'teamManagerList'])->name('admin.show-team-manager-list');
 Route::get('/admin/show-clients-list/{id}',[ContactController::class,'showClientsList'])->name('admin.show-clients-list');
 Route::get('admin/view_member/{id}',[ContactController::class,'viewMember'])->name('admin.view_member');
 Route::get('/admin/member_invoice_list/{id}',[ContactController::class,'memberInvoiceList'])->name('admin.member_invoice_list');
