@@ -21,17 +21,17 @@
 								<h5 class="mb-4">Edit Package </h5>
 								      <div class="row mb-3">
 										<label for="input42" class="col-sm-3 col-form-label">Service</label>
-										<div class="col-sm-9">
+										<div class="col-sm-9" style="display: flex; align-items: center; gap:15px">
 												@foreach($services as $item)
-												<input type="checkbox" class="services-checkbox" name="service_id" value="{{$item->service_id}}" onclick="resetCheckboxes(this)" <?php if($item->service_id == $services_data->service_id){ echo 'checked';}?>>  {{$item->name}}
+												<input style="width:25px" type="checkbox" class="services-checkbox" name="service_id" value="{{$item->service_id}}" onclick="resetCheckboxes(this)" <?php if($item->service_id == $services_data->service_id){ echo 'checked';}  ?>>  {{$item->name}}
 												@endforeach
 										</div>
 									</div>
-                                    <div class="row mb-3">
+                                    <div class="row mb-3" style="display: flex; align-items: center; flex-wrap: wrap; "> 
 										<label for="input42" class="col-sm-3 col-form-label">Sub Service</label>
-										<div class="col-sm-9">
+										<div class="col-sm-9"  style="display: flex; align-items: center; gap:15px"> 
 												@foreach($subservices_data as $items)
-												<input type="checkbox" onclick="resetServiceCheckboxes(this)"class="subservices-checkbox" name="subervice_id" value="{{$items->id}}" <?php if($items->id == $sub_service_data->id){ echo 'checked';}?>> {{$items->service_name}}
+												<input style="width:25px"  type="checkbox" onclick="resetServiceCheckboxes(this)"class="subservices-checkbox" name="subervice_id" value="{{$items->id}}" <?php if($items->id == $sub_service_data->id){ echo 'checked';}?>> {{$items->service_name}}
 												@endforeach
 										</div>
 									</div>
