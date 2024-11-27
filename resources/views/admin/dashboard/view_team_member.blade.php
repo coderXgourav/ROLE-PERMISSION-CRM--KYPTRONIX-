@@ -55,13 +55,7 @@
                                 </span>
                             </div>
 
-                            @if($data->user_type == "operation_manager")
-                                <div class="mt-4 bg-green-100 border-l-4 border-green-500 p-4 rounded">
-                                    <p class="text-green-700">Operation Manager can manage all the services</p>
-                                </div>
-                            @endif
 
-                            @if($data->user_type != "operation_manager")
                                 <div class="mt-4">
                                     <h3 class="text-lg font-semibold text-gray-700">Services</h3>
                                     <div class="flex flex-wrap gap-2 mt-2">
@@ -72,7 +66,6 @@
                                         @endforeach
                                     </div>
                                 </div>
-                            @endif
 
                             <div class="mt-4 space-y-2">
                                 <p class="flex items-center text-gray-600">
@@ -92,9 +85,26 @@
                             </div>
                         </div>
                     </div>
-                    @if($data->user_type != "operation_manager")
+                    {{-- @if($data->user_type != "operation_manager") --}}
                         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            @if(isset($data) && ($data->user_type == 'team_manager'))
+                             @if(isset($data) && ( $data->user_type == 'operation_manager'))
+                                <a href="{{ route('admin.show-team-manager-list', ['id' => $data->id]) }}" 
+                                   class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-sm text-gray-500">Team Managers</p>
+                                            <p class="text-2xl font-bold text-gray-800">{{ $team_manager_count }}</p>
+                                        </div>
+                                        <div class="bg-blue-100 p-3 rounded-full">
+                                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endif
+                            @if(isset($data) && ($data->user_type == 'team_manager' || $data->user_type == 'operation_manager'))
                                 <a href="{{ route('admin.show-team-member-list', ['id' => $data->id]) }}" 
                                    class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                     <div class="flex items-center justify-between">
@@ -173,7 +183,7 @@
                                 </div>
                             </a>
                         </div>
-                    @endif
+                    {{-- @endif --}}
                 </div>
             </div>
 			<br>

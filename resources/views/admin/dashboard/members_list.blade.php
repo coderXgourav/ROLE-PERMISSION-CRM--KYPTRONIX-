@@ -25,7 +25,7 @@
                                         $i=1;
                                     @endphp
                                     @foreach($team_member as $key => $value)
-                                    <tr id="{{$value->member_id }}">
+                                    <tr >
 										<td>{{$i++}}</td>
 										<td>{{$value->first_name}} {{$value->last_name}}</td>
 										<td>{{$value->name}}</td>

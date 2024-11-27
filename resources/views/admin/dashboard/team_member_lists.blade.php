@@ -27,7 +27,7 @@
                                         $i=1;
                                     @endphp
                                     @foreach($data as $key => $value)
-                                    <tr id="{{$value->team_member_id }}">
+                                    <tr>
 										<td>{{$i++}}</td>
 										<td>{{$value->name}}</td>
 										<td>{{$value->service_name}}</td>
