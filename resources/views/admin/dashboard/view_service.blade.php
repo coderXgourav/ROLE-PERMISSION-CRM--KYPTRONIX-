@@ -81,7 +81,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Operation Manager</p>
-                                <p class="text-2xl font-bold text-gray-900 mt-2">{{ $total_sub_service }}</p>
+                                <p class="text-2xl font-bold text-gray-900 mt-2">{{ $operation_manager_count }}</p>
                             </div>
                          <div class="bg-green-100 p-3 rounded-lg">
                                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
