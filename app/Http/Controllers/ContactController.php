@@ -2170,7 +2170,8 @@ public function createInvoice($customer_id){
   $admin_data = self::userDetails($id);
   $user_type = self::userType($admin_data->user_type);
   $data = CustomerModel::find($customer_id);
-  $package_data =Package::all();
+  $package_id=explode(',',$data->package_id);
+  $package_data =Package::whereIn('package_id',$package_id)->get();
  return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'package_data'=>$package_data]);
 }
 //createInvoice Function End
@@ -2226,7 +2227,8 @@ public function invoice2($customer_id,$invoice_id){
   $user_type = self::userType($admin_data->user_type);
   $clients = CustomerModel::find($customer_id);
   $invoice_details = Invoice::find($invoice_id);
-  return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
+  $package_details=DB::table('packages')->select('packages.title')->join('customer','customer.package_id','=','packages.package_id')->where('customer.customer_id',$customer_id)->first();
+  return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type,'package_details'=>$package_details]);
 
 }
 //invoice2 Function End
@@ -3074,6 +3076,39 @@ function loginDetails($userId) {
        // print_r($leads_data);die;
         $pdf = PDF::loadView('admin.dashboard.business_pdf',['leads_data'=>$leads_data,'reports'=>$reports]);
         return $pdf->stream('business_pdf.pdf');
+  }
+  public function staffReport(){
+       $user_id=session('admin');
+       $admin_data = self::userDetails($user_id);
+       $user_type = self::userType($admin_data->user_type);
+       $services = Service::orderBy('service_id','DESC')->get();
+       $staff_type =Role::orderBy('id','DESC')->get();
+       return view('admin.dashboard.staff_report',['admin_data'=>$admin_data,'user_type'=>$user_type,'services_data'=>$services,'staff_type'=>$staff_type]);
+  } 
+  
+  public function staffReportPdf(Request $request){
+        $service = $request->service;
+        $staff_type = $request->staff_type;
+        $role_details =Role::where('role_name',$staff_type)->first();
+        if($staff_type == 'customer_success_manager'){
+           $data = DB::table('main_user')
+          ->select('main_user.id','main_user.first_name','main_user.last_name','main_user.phone_number','main_user.email_address','services.name as service_name','main_user.user_type')
+          ->join('member_service','member_service.member_id','=','main_user.id')
+          ->join('services','services.service_id','=','member_service.member_service_id')
+          ->where('main_user.user_type',$staff_type)
+          ->where('member_service.member_service_id',$service)
+          ->get();
+        }else if($staff_type == 'team_manager' || $staff_type == 'operation_manager'){
+           $data = DB::table('main_user')
+          ->select('main_user.id','main_user.first_name','main_user.last_name','main_user.phone_number','main_user.email_address','services.name as service_name','main_user.user_type')
+          ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
+          ->join('services','services.service_id','=','team_manager_services.managers_services_id')
+          ->where('main_user.user_type',$staff_type)
+          ->where('team_manager_services.managers_services_id',$service)
+          ->get();
+        }
+        $pdf = PDF::loadView('admin.dashboard.staff_report_pdf',['data'=>$data,'role_details'=>$role_details]);
+        return $pdf->stream('staff_report_pdf.pdf');
   }
  
 

@@ -178,7 +178,7 @@ Route::post('/admin/role_delete',[RoleController::class,'role_delete'])->name('p
 Route::get('/admin/download-pdf',[ContactController::class,'downloadPDF'])->name('admin.download-pdf');
 Route::get('/admin/business-report-pdf',[ContactController::class,'businessReportPdf'])->name('admin.business-report-pdf');
 Route::get('/admin/package_details/{serviceIds}', [ServiceController::class, 'getPackagesByServiceId'])->name('admin.package_details');
-
+Route::get('/admin/staff-report-pdf',[ContactController::class,'staffReportPdf'])->name('admin.staff-report-pdf');
 });
 
 Route::get('/not-access',function(){

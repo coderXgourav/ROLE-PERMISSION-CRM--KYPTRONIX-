@@ -16,7 +16,7 @@
 						
 
 						<div class="card">
-							<form id="individual_report" action="{{ route('admin.download-pdf') }}" method="GET">
+							<form id="individual_report" action="{{ route('admin.download-pdf') }}" method="GET" target="_blank">
 								{{@csrf_field()}}
 								<input type="hidden" id="reset">
 							<div class="card-body p-4">

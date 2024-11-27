@@ -125,7 +125,7 @@
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Description</th>
+                <th>Title</th>
                 <th>Price</th>
             </tr> 
         </thead>
@@ -138,7 +138,7 @@
                    
             <tr>
                 <td>{{$date}}</td>
-                <td>{{$invoice_details->description}}</td>
+                <td>{{$package_details->title}}</td>
                 <td>{{$invoice_details->price}}$</td>
             </tr>
           <?php }  ?>
