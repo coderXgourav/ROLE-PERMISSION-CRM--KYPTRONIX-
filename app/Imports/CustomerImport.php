@@ -8,6 +8,8 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\Service;
+use Illuminate\Validation\Rule;
+
 
 class CustomerImport implements ToModel,WithHeadingRow, SkipsEmptyRows, WithValidation
 {
@@ -19,18 +21,28 @@ class CustomerImport implements ToModel,WithHeadingRow, SkipsEmptyRows, WithVali
     */
     public function model(array $row)
     {
-        // echo "<pre>";
-        // print_r($row);
-        // die;
-        $services = Service::pluck('name','service_id')->toArray();
-        $serviceId = array_search(strtolower(trim($row['service_name'])), $services);
+        $existingCustomer = null;
         
+        if (!empty($row['business_email'])) {
+            $existingCustomer = CustomerModel::where('customer_email', $row['business_email'])->first();
+        }
+        
+        if (!$existingCustomer && !empty($row['business_number'])) {
+            $existingCustomer = CustomerModel::where('customer_number', $row['business_number'])->first();
+        }
+        
+        // If duplicate found, return null to skip this row
+        if ($existingCustomer) {
+            return null;
+        }
+   
  
         return new CustomerModel([
              'customer_name' => $row['business_name'],
              'customer_number' => $row['business_number'],
             'customer_email' => $row['business_email'],
-            'customer_service_id' => !empty($serviceId) ? $serviceId : null, // If service is found, assign its ID; else null
+            // 'customer_service_id' => !empty($serviceId) ? $serviceId : null,
+            'customer_service_id' => 14,
             'address' => $row['address'],
             'city' => $row['city'],
             'state' => $row['state'],
@@ -45,11 +57,25 @@ class CustomerImport implements ToModel,WithHeadingRow, SkipsEmptyRows, WithVali
         ]);
     }
 
-      public function rules(): array
+        public function rules(): array
     {
         return [
-            'customer_number' => 'unique:customer',
-            'customer_email' => 'unique:customer', 
+            'business_email' => [
+                'nullable',
+                Rule::unique('customer', 'customer_email')
+            ],
+            'business_number' => [
+                'nullable',
+                Rule::unique('customer', 'customer_number')
+            ]
+        ];
+    }
+
+    public function customValidationMessages()
+    {
+        return [
+            'business_email.unique' => 'The email address already exists in the system.',
+            'business_number.unique' => 'The phone number already exists in the system.'
         ];
     }
 }

@@ -288,16 +288,15 @@
                         </label>
                         <select name="status" class="form-select custom-select custom-input" id="status">
                             <option value="">All Status</option>
-                            <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>
-                                <i class="bi bi-check-circle-fill text-success"></i> Enable
-                            </option>
                             <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>
-                                <i class="bi bi-x-circle-fill text-danger"></i> Disable
+                                <i class="bi bi-check-circle-fill text-success"></i> Active
+                            </option>
+                            <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>
+                                <i class="bi bi-x-circle-fill text-danger"></i> Deactive
                             </option>
                         </select>
                     </div>
                 </div>
-
                 <!-- Submit Button -->
                 <div class="col-md-3 col-sm-6 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100 btn-sm " style="height: 50px" >
@@ -351,7 +350,14 @@
 										{{-- <td></td> --}}
 										 <td>
 											<?php if($value->status == '1'){
-											   echo 'Disable';}else{ echo 'Enable';}?></td>
+                                                ?>
+                                              <span class="badge bg-success">Active</span>
+                                                
+                                                <?php
+											  }else{ ?>
+                                              <span class="badge bg-danger">Deactive</span>
+
+                                              <?php }?></td>
 
 
 										<td colspan="3" style="display: flex; justify-content:center;">
