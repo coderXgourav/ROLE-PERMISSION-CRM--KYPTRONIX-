@@ -75,7 +75,6 @@ Route::post('/admin/update_service',[ServiceController::class,'updateService'])-
 Route::get('/admin/add-team-member',[AdminController::class,'addTeamMember'])->name('admin.add-team-member');
 Route::post('/admin/create_team_members',[ContactController::class,'create_team_members'])->name('post14');
 Route::get('/admin/team-member-lists',[ContactController::class,'teammembersLists'])->name('admin.team-member-lists');
-Route::get('/admin/operation-manager-lists/{id}',[ContactController::class,'operationManagerList'])->name('admin.operation-manger-list');
 Route::get('/admin/team_member_delete',[ContactController::class,'team_member_delete']);
 Route::get('admin/edit-team-member/{id}',[ContactController::class,'editTeamMember'])->name('admin.edit-team-member');
 Route::post('/admin/update_members',[ContactController::class,'updateMembers'])->name('post15');
@@ -135,6 +134,8 @@ Route::post('/admin/update_package',[ContactController::class,'updatePackage'])-
 Route::post('/admin/package_delete',[ContactController::class,'deletePackage'])->name('post22');
 Route::get('/admin/view_assign_client/{id}',[ContactController::class,'viewAssignClient'])->name('admin.view_assign_client');
 Route::get('/admin/team-manager-list/{id}',[ServiceController::class,'teamManagerList'])->name('admin.team-manager-list');
+Route::get('/admin/operation-manager-lists/{id}',[ServiceController::class,'operationManagerList'])->name('admin.operation-manger-list');
+
 Route::get('/admin/leads-view/{id}',[ContactController::class,'leadsView'])->name('admin.leads-view');
 Route::get('/admin/get_package/{package_id}',[ContactController::class,'getPackage'])->name('admin.get_package');
 Route::get('/admin/all-reports',[ContactController::class,'allReports'])->name('admin.all-reports');

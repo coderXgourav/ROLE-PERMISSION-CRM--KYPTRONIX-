@@ -20,8 +20,14 @@ $("#add_package_form").validate({
             success: function (data) {
                 $("#btn").attr("disabled", false);
                 $("#btn").html("Submit");
-                Command: toastr[data.icon](data.title, data.msg);
                 $("#add_package_form").trigger("reset");
+                Command: toastr[data.icon](data.title, data.msg);
+                $("#add_package_form input[type='checkbox']").prop(
+                    "checked",
+                    false
+                );
+
+                $(".form-control").val(""); // Reset custom fields if any
             },
             error: function () {
                 $("#btn").attr("disabled", false);
@@ -54,6 +60,7 @@ $("#update_package_form").validate({
                 $("#btn").attr("disabled", false);
                 $("#btn").html("Update");
                 Command: toastr[data.icon](data.title, data.msg);
+
                 if (data.status) {
                     document.getElementById("title").value = "";
                     document.getElementById("price").value = "";

@@ -32,6 +32,7 @@ use Crypt;
 use Mail;
 use PDF;
 
+
 class ContactController extends Controller
 {
 
@@ -1083,40 +1084,46 @@ public function smsShow($id){
       ->get();
       return view('admin.dashboard.team_member_lists',['admin_data'=>$admin_data,'data'=>$members_data]);
     }
-
-      public function operationManagerList($id){
-          
-      $id = session('admin');
-      $admin_data = MainUserModel::find($id);
-           $user_type = self::userType($admin_data->user_type);
-      
-    $members_data = DB::table('team_manager_services')
-    ->join('services', 'services.service_id', '=', 'team_manager_services.managers_services_id')
-    ->where('services.serivce_id',$id)
-    ->get()
-    ->unique('managers_services_id'); 
-    echo "<pre>";
-    print_r($members_data);
-    die;
-
-    $op_id = [];
-    foreach ($members_data as $key => $value) {
-      $op_id[] = $value->team_manager_id;
-    }
-      $members_data = DB::table('main_user')
-    ->join('team_manager_services', 'team_manager_services.team_manager_id', '=', 'main_user.id')
-    ->orderBy('team_manager_services.team_manager_id', 'DESC')
-
-    ->paginate(10)
-    ->unique('main_user.email_address');
     
-      echo "<pre>";
-      print_r($members_data);
-      die;
-    return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$members_data,'user_type'=>$user_type]);
+    
 
-      // return view('admin.dashboard.members_list',['admin_data'=>$admin_data,'team_member'=>$members_data]);
-    }
+    // public function operationManagerList($id){
+          
+    //   $id = session('admin');
+    //   $admin_data = MainUserModel::find($id);
+    //        $user_type = self::userType($admin_data->user_type);
+      
+    // $members_data = DB::table('team_manager_services')
+    // ->join('services', 'services.service_id', '=', 'team_manager_services.managers_services_id')
+    // ->where('services.serivce_id',$id)
+    // ->get()
+    // ->unique('managers_services_id'); 
+
+    // echo "<pre>";
+    // print_r($members_data);
+    // die;
+
+    // $op_id = [];
+    // foreach ($members_data as $key => $value) {
+    //   $op_id[] = $value->team_manager_id;
+    // }
+    //   $members_data = DB::table('main_user')
+    // ->join('team_manager_services', 'team_manager_services.team_manager_id', '=', 'main_user.id')
+    // ->orderBy('team_manager_services.team_manager_id', 'DESC')
+
+    // ->paginate(10)
+    // ->unique('main_user.email_address');
+    
+    //   echo "<pre>";
+    //   print_r($members_data);
+    //   die;
+    // return view('admin.dashboard.service_team_managers',['admin_data'=>$admin_data,'team_manager'=>$members_data,'user_type'=>$user_type]);
+
+    //   // return view('admin.dashboard.members_list',['admin_data'=>$admin_data,'team_member'=>$members_data]);
+    // }
+
+
+    
     // TeamMembersLists FUNCTION End
     //TeamMember Delete FUNCTION
     public function team_member_delete(Request $request){

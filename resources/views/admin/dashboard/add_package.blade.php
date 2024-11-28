@@ -4,8 +4,8 @@
 @media only screen and (max-width: 1500px) {
 
 }
-
 </style>
+
 @push('title')
     <title>Add Package</title>
 @endpush
