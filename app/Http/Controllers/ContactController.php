@@ -428,7 +428,7 @@ public function assginClientspage(Request $request){
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
 
-  if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
+  if($admin_data->user_type=="admin"){
    $services = Service::orderBy('service_id','DESC')->get();
     if($service_filter !=""){
       /*$customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member','!=',null)
@@ -477,8 +477,8 @@ public function assginClientspage(Request $request){
         ->paginate(10);
 
     }
-  }else if($admin_data->user_type=="team_manager"){
-  $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+  }else if($admin_data->user_type=="team_manager" || $admin_data->user_type=="operation_manager"){
+    $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
         if(!empty($team_manager_services)){
            $service_id = [];
             foreach($team_manager_services as $service){
@@ -487,13 +487,6 @@ public function assginClientspage(Request $request){
             $services = Service::whereIn('service_id',$service_id)->get();
 
      if($service_filter!=""){
-           /* $customers=DB::table('customer')
-                      ->select('customer.*','services.name as name','services.service_id as service_id')
-                      ->join('services','services.service_id','=','customer.customer_service_id')
-                      ->whereIn('customer.customer_service_id',$service_id)
-                      ->where('customer.customer_service_id',$service_filter)
-                      ->where('customer.team_member','!=',null)
-                      ->paginate(10);*/
                $customers = DB::table('customer')
               ->select(
                   'customer.customer_email',
@@ -516,12 +509,6 @@ public function assginClientspage(Request $request){
               ->paginate(10);
 
           }else{
-           /* $customers=DB::table('customer')
-            ->select('customer.*','services.name as name','services.service_id as service_id')
-            ->join('services','services.service_id','=','customer.customer_service_id')
-            ->whereIn('customer.customer_service_id',$service_id)
-            ->where('customer.team_member','!=',null)
-            ->paginate(10);*/
              $customers = DB::table('customer')
               ->select(
                   'customer.customer_email',
@@ -610,7 +597,7 @@ public function noneAssginClientspage(Request $request){
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
 
-    if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
+    if($admin_data->user_type=="admin"){
    $services = Service::orderBy('service_id','DESC')->get();
     if($service_filter !=""){
      /* $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)
@@ -659,7 +646,7 @@ public function noneAssginClientspage(Request $request){
         ->paginate(10);
 
     }
-  }else if($admin_data->user_type=="team_manager"){
+  }else if($admin_data->user_type=="team_manager" || $admin_data->user_type=="operation_manager"){
     
   $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
   if(!empty($team_manager_services)){
@@ -669,13 +656,6 @@ public function noneAssginClientspage(Request $request){
       }
       $services = Service::whereIn('service_id',$service_id)->get();
       if($service_filter!=""){
-      /*$customers=DB::table('customer')
-      ->select('customer.*','services.name as name','services.service_id as service_id')
-      ->join('services','services.service_id','=','customer.customer_service_id')
-      ->whereIn('customer.customer_service_id',$service_id)
-      ->where('customer.customer_service_id',$service_filter)
-      ->where('customer.team_member','=',null)
-      ->paginate(10);*/
         $customers = DB::table('customer')
         ->select(
             'customer.customer_email',
@@ -683,7 +663,7 @@ public function noneAssginClientspage(Request $request){
             DB::raw('MAX(customer.customer_number) as customer_number'),
             DB::raw('MAX(customer.customer_name) as customer_name'),
             DB::raw('MAX(customer.status) as status'),
-             DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.city) as city'),
             DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
@@ -698,18 +678,14 @@ public function noneAssginClientspage(Request $request){
 
 
        }else{
-       /* $customers=DB::table('customer')
-        ->select('customer.*','services.name as name','services.service_id as service_id')
-        ->join('services','services.service_id','=','customer.customer_service_id')
-        ->whereIn('customer.customer_service_id',$service_id)
-        ->where('customer.team_member','=',null)
-        ->paginate(10);*/
         $customers = DB::table('customer')
         ->select(
             'customer.customer_email',
             DB::raw('MAX(customer.customer_id) as customer_id'),
             DB::raw('MAX(customer.customer_number) as customer_number'),
             DB::raw('MAX(customer.customer_name) as customer_name'),
+            DB::raw('MAX(customer.city) as city'),
+            DB::raw('MAX(customer.state) as state'),
             DB::raw('MAX(customer.status) as status'),
             DB::raw('MAX(services.service_id) as service_id'),
             DB::raw('MAX(customer.msg) as msg'),
@@ -1956,7 +1932,7 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
+      if($admin_data->user_type == 'admin'){
         $leads_data = DB::table('customer')
         ->select(
             'customer.customer_email',
@@ -2025,8 +2001,37 @@ public function addLead(){
             ->groupBy('customer.customer_email') 
             ->whereJsonContains('customer.team_member',"$admin_data->id")
             ->paginate(10);
+          $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
+
+
+      }else if($admin_data->user_type == 'operation_manager'){
+
+        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+        if(!empty($team_manager_services)){
+           $service_id = [];
+            foreach($team_manager_services as $service){
+              $service_id[] = $service->managers_services_id;
+            }
+           $leads_data = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id)
+            ->paginate(10);
         $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
 
+
+        }
 
       }
       return view('admin.dashboard.view_leads',['services'=>$service,'admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
@@ -2276,7 +2281,7 @@ public function viewClients(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
+      if($admin_data->user_type == 'admin'){
           /* $client_data = DB::table('customer')
             ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','customer.paid_customer','services.name as services_name','customer.team_member','customer.customer_service_id')
             ->join('services','services.service_id','=','customer.customer_service_id')
@@ -2327,20 +2332,13 @@ public function viewClients(){
             ->whereJsonContains('customer.team_member',"$admin_data->id")
             ->paginate(10);
   
-      }else if($admin_data->user_type == 'team_manager'){
+      }else if($admin_data->user_type == 'team_manager'  || $admin_data->user_type == 'operation_manager'){
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             if(!empty($team_manager_services)){
                $service_id = [];
                 foreach($team_manager_services as $service){
                   $service_id[] = $service->managers_services_id;
                 }
-              /*  $client_data=DB::table('customer')
-                  ->select('customer.customer_id','customer.customer_name','customer.customer_number','customer.customer_email','customer.msg','customer.paid_customer','services.name as services_name','customer.team_member','customer.customer_service_id')
-                  ->join('services','services.service_id','=','customer.customer_service_id')
-                  ->join('invoices','invoices.customer_id','=','customer.customer_id')
-                  ->where('customer.paid_customer',1)
-                  ->whereIn('customer.customer_service_id',$service_id)
-                  ->paginate(10);*/
                   $client_data = DB::table('customer')
                     ->select(
                         'customer.customer_email',
@@ -2392,7 +2390,7 @@ public function viewClients(){
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
 
-     if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager' ){
+     if($admin_data->user_type == 'admin'){
         $invoice_data = DB::table('main_user')
       ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
       ->join('invoices','invoices.user_id','=','main_user.id')

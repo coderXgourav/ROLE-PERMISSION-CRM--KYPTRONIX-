@@ -255,6 +255,8 @@ public function dashboardPage(){
                 ->count();
 
                 $customer_count = CustomerModel::whereIn('customer_service_id',$service_id)->distinct('customer_email')->count(); 
+                $assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'!=',null)->distinct('customer_email')->count();
+                $none_assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'=',null)->distinct('customer_email')->count();
 
               
             }
