@@ -255,8 +255,16 @@ public function dashboardPage(){
                 ->count();
 
                 $customer_count = CustomerModel::whereIn('customer_service_id',$service_id)->distinct('customer_email')->count(); 
+                $assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'!=',null)->distinct('customer_email')->count();
+                $none_assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'=',null)->distinct('customer_email')->count();
+                $import_lead_team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->where('managers_services_id',14)->distinct()->get(['managers_services_id']);
+                 $s_id = [];
+      
+                foreach($import_lead_team_manager_services as $val){
+                  $s_id[] = $val->managers_services_id;
+                }
+                $import_lead = CustomerModel::whereIn('customer_service_id',$s_id)->distinct('customer_email')->count();
 
-              
             }
 
    $user_type = self::userType($user_details->user_type);
