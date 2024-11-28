@@ -478,12 +478,34 @@ public function allPackages(){
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
    // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
-    $all_packages = DB::table('packages')
-    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-    ->join('services','services.service_id','=','packages.service_id')
-    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-    ->orderBy('packages.package_id','DESC')
-    ->paginate(10);
+    if($admin_data->user_type == "operation_manager"){
+      $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            
+            if(!empty($team_manager_services)){
+                    $service_id = [];
+                    foreach($team_manager_services as $service){
+                      $service_id[] = $service->managers_services_id;
+                    }
+                    $all_packages = DB::table('packages')
+                    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+                    ->join('services','services.service_id','=','packages.service_id')
+                    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+                    ->whereIn('packages.service_id',$service_id)
+                    ->orderBy('packages.package_id','DESC')
+                    ->paginate(10);
+                   
+            }
+     
+
+    }else if($admin_data->user_type == "admin"){
+       $all_packages = DB::table('packages')
+      ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+      ->join('services','services.service_id','=','packages.service_id')
+      ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+      ->orderBy('packages.package_id','DESC')
+      ->paginate(10);
+     
+    }
     return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages,'user_type'=>$user_type]);
 }
 
