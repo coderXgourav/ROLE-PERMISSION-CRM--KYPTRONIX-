@@ -217,7 +217,7 @@
                     </li>
                     @endif
 
-            @if($admin_data->leads_permission>0)
+            @if($admin_data->leads_add || $admin_data->leads_view> 0)
                     <li>
                        <a href="javascript:;" class="has-arrow">
                           <div class="parent-icon"><i class='bx bx-cart'></i>
@@ -225,17 +225,20 @@
                            <div class="menu-title">Leads  </div>
                        </a>
                        <ul>
+                     @if($admin_data->leads_add > 0)
                             <li> <a href="{{ route('admin.add-lead')}}"><i
                                 class='bx bx-radio-circle'></i>Add Leads</a>
                            </li>
-                    
+                    @endif
+                     @if($admin_data->leads_view > 0)
                             <li> <a href="{{ route('admin.view-lead')}}"><i class='bx bx-radio-circle'></i>View Leads</a>
                             </li>
+                    @endif
                                                 
                        </ul>
                    </li>
                    @endif
-    @if($admin_data->customer_permission>0)
+    @if($admin_data->clients_view>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -248,7 +251,7 @@
                         </ul>
                     </li>
                     @endif
-    @if($admin_data->user_type!="customer_success_manager" && $admin_data->lead_assign_permission>0)
+    @if($admin_data->user_type!="customer_success_manager" || $admin_data->user_type!="book_keeper" && $admin_data->assign_manage>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -267,7 +270,7 @@
                   </li>
                   @endif
   
-                @if($admin_data->user_type!="customer_success_manager" && $admin_data->invoice_permission>0)
+                @if($admin_data->invoice_view>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-square"></i>
@@ -283,7 +286,7 @@
                 </li>
                 @endif
                     
-                @if($admin_data->email_sms_permission>0)
+                @if($admin_data->email_view || $admin_data->sms_view >0)
                       <li>
                         <a href="javascript:" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-repeat"></i>
@@ -291,21 +294,23 @@
                             <div class="menu-title">Email & SMS</div>
                         </a>
                         <ul>
+                            @if( $admin_data->email_view >0)
                             <li> <a href="{{ route('admin.email') }}"><i
                                 class='bx bx-radio-circle'></i>
                                 Sent Emails</a>
                            </li>
+                           @endif
+                            @if( $admin_data->sms_view >0)
 
                             <li> <a href="{{ route('admin.sms') }}"><i
                                         class='bx bx-radio-circle'></i>
                                         Sent SMS</a>
                             </li>
-                       
-                            
+                            @endif
                         </ul>
                     </li>
                     @endif
-                @if($admin_data->payment_permission>0)
+                @if($admin_data->payments_successful || $admin_data->payments_failed>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -314,21 +319,24 @@
                             <div class="menu-title">Payments</div>
                         </a>
                         <ul>
+                         @if($admin_data->payments_successful>0 )
                             <li> <a href="{{route('admin.success-payments')}}"><i
                                 class='bx bx-radio-circle'></i>
                                 Successfull Payments</a>
                            </li>
+                           @endif
+                         @if($admin_data->payments_failed>0 )
                            <li> <a href="{{route('admin.failed-payments')}}"><i
                             class='bx bx-radio-circle'></i>
                             Failed Payments</a>
                        </li>
+                       @endif
                             
                         </ul>
                     </li>
                     @endif
 
-                       @if($admin_data->user_type=="admin")
-
+                   @if($admin_data->login_history_view>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-category"></i>
@@ -340,8 +348,6 @@
                                 class='bx bx-radio-circle'></i>
                                 View History</a>
                            </li>
-                          
-                            
                         </ul>
                     </li>
                     @endif
@@ -547,7 +553,7 @@
                             <div class="user-info">
                                 <p class="user-name mb-0">{{ $admin_data->first_name }}</p>
                                 <p class="designattion mb-0">
-                                    {{$admin_data->user_type}}
+                                    {{$admin_data->modern_name}}
                                 </p>
                             </div>
                         </a>

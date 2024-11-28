@@ -1,5 +1,6 @@
 @include('admin.dashboard.header')
 {{-- @extends('admin.dashboard.header') --}}
+
 <style>
 @media only screen and (max-width: 1500px) {
   #phone{
@@ -12,402 +13,226 @@ width: 100% !important;
     <title>Add Contact</title>
 @endpush
 <div class="row">
-                    <div class="col-lg-12 mx-auto">
-						
+	<div class="col-md-2 d-none"></div>
+    <div class="col-md-10 m-auto py-4">
+    <div class="card">
+        <div class="card-header bg-dark text-white p-3">
+            <h5 class="mb-0 text-light">
+                <i class="fas fa-user-plus me-2"></i> Staff Registration
+            </h5>
+        </div>
+        <div class="card-body p-4">
+            <form id="add_contact_form">
+                @csrf
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="username" class="form-label">Username <span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" placeholder="Type Username" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email Address<span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" placeholder="Type Email" id="email" name="email" required> 
+                    </div>
+                </div>
 
-						<div class="card">
-							<form id="add_contact_form">
-							<div class="card-body p-4">
-								<h5 class="mb-4">Staff Registration </h5>
-								<div id="message" style="display: none; ">
-									<div class="" style=" background: #16bccfa3; padding: 15px; border-radius: 5px;">
-										<h5 class="text-center"> Please Add at Least One Service</h5>
-									</div>
-									<br><br>
-								</div>
-								    
-									
-									<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">Username</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Account Name" name="account_name" required >
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
-											</div>
-										</div>
-									</div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">Password  <span class="text-danger"> *</span></label>
+                        <input type="password" class="form-control" placeholder="Type Password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="password_hint" class="form-label" >Disable Account <span class="text-danger"> *</span></label>
+                        <select name="disable_account" id="" class="form-control" required >
+							<option value="">Account Status</option>
+							<option value="0">Enable</option>
+							<option value="1">Disable</option>
+						</select>
+                    </div>
+                </div>
 
-                                      <div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Password</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="password" class="form-control" placeholder="Password " name="password" required>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-lock'></i></span>
-											</div>
-										</div>
-									</div> 
-									<div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Password Hint</label>
-										<div class="col-sm-9"> 
-											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Password Hint" name="password_hint" required>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-lock'></i></span>
-											</div> 
-										</div>
-									</div> 
-									<div class="row mb-3">
-										<label class="col-sm-3 col-form-label"></label>
-										<div class="col-sm-4">
-											<div class="form-check">
-												<input type="hidden" name="after_login_setting_change" value="0">
-												<input class="form-check-input" type="checkbox" id="input48" name="after_login_setting_change" value="1"> &nbsp;
-												<label class="form-check-label" for="input48">Change Password upon next login</label>
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-check">
-												<input type="hidden" name="disable_account" value="0">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="first_name" class="form-label">First Name  <span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" required placeholder="Type First Name">
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="last_name" class="form-label">Last Name  <span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="last_name" placeholder="Type Last Name" name="last_name" required>
+                    </div>
+                </div>
 
-												<input class="form-check-input" value="1" type="checkbox" id="input47" name="disable_account"> &nbsp;
-												<label class="form-check-label" for="input47">Disable Account</label>
-											</div>
-										</div>
-									</div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="phone" class="form-label">Phone Number  <span class="text-danger"> *</span></label>
+                        <input type="tel" class="form-control"  name="phone" required placeholder="Type Phone Number"> 
+                        {{-- <input type="tel" class="form-control" id="phone" name="phone" required> --}}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="staff_type" class="form-label">Staff Type  <span class="text-danger"> *</span></label>
+                        <select class="form-select" id="staff_type" name="user_type" required>
+                            <option value="">Select Staff Type</option>
+                       @foreach ($roles as $item)
+					   <option value="{{$item->role_name}}">{{$item->modern_name}}</option>
+					   @endforeach
+                        </select>
+                    </div>
+                </div>
 
-									{{@csrf_field()}}
-									<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">First Name</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type First Name" name="first_name" required>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
-											</div>
-										</div>
-									</div>
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">Choose Services  <span class="text-danger"> *</span></h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                           
+                            
+                            @foreach($services as $service)
+                                <div class="col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check ">
+                                        <input class="form-check-input" type="checkbox" 
+                                               id="{{ $service->service_id }}" 
+                                               name="services[]" 
+                                               value="{{ $service->service_id}}" required> &nbsp;
+                                        <label class="form-check-label" for="{{ $service->service_id }}">
+                                            {{ $service->name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
 
-                                      <div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Last Name</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Type Last Name" name="last_name" required>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-user'></i></span>
-											</div>
-										</div>
-									</div> 
-									<div class="row mb-3">
-										<label for="input43" class="col-sm-3 col-form-label">Phone No</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												 <input type="number" class="form-control" name="phone" placeholder="Type Phone Number"  required>
-												  <input type="hidden" id="country_code" name="country_code" value="">
-											</div>
-										</div>
-									</div>
-									<div class="row mb-3">
-										<label for="input44" class="col-sm-3 col-form-label">Email Address</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="email" class="form-control"  placeholder="Type Email Address" name="email" required> 
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-envelope'></i></span>
-											</div>
-										</div>
-									</div>
-                                    
-									
-									<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
-										<div class="col-sm-9">
-											<div style="    display: flex;align-items: center;gap: 10px;}">
-												       @foreach($roles as $val)
-												<div><input type="checkbox" name="user_type" onclick="resetCheckboxes(this)" value="{{$val->role_name}}"  style="width: 25px"> </div>
-												<label style="cursor: pointer"  >{{$val->modern_name}}</label>
-												   @endforeach                                 
-											</div>
-										</div>
-									</div>
+                <div class="">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 text-light">
+                            <i class="fas fa-shield-alt me-2"></i> Permissions Management
+                        </h6>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="toggleAllPermissions">
+                            <label class="form-check-label text-white" for="toggleAllPermissions">Toggle All Permissions</label>
+                        </div>
+                    </div>
 
-										{{-- <div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">Staff Type</label>
-										<div class="col-sm-9">
-											<div style=" display: flex;align-items: center;gap: 10px;}">
-												     <input type="radio" name="role" value="customer_success_manager" required>                               
-												     <input type="radio" name="role" value="team_manager" required>                               
-												     <input type="radio" name="role" value="admin" required>                               
-												     <input type="radio" name="role" value="bookkeeper" required>                               
-											</div>
-										</div>
-									</div> --}}
+                    <div class="card-body">
+                        @php
+                        $permissionGroups = [
+                            'Service Management' => [
+                                ['name' => 'service_add', 'label' => 'Add Service'],
+                                ['name' => 'service_view', 'label' => 'View Service'],
+                                ['name' => 'service_edit', 'label' => 'Edit Service'],
+                                ['name' => 'service_details_view', 'label' => 'View Service Details']
+                            ],
+                            'Role Management' => [
+                                ['name' => 'role_edit', 'label' => 'Edit Role']
+                            ],
+                            'Staff Management' => [
+                                ['name' => 'staff_registration', 'label' => 'Staff Registration'],
+                                ['name' => 'staff_view', 'label' => 'View Staffs'],
+                                ['name' => 'staff_edit', 'label' => 'Edit Staff'],
+                                ['name' => 'staff_details_view', 'label' => 'View Staff Details']
+                            ],
+                            'Package Management' => [
+                                ['name' => 'package_add', 'label' => 'Add Package'],
+                                ['name' => 'package_view', 'label' => 'View Packages'],
+                                ['name' => 'package_edit', 'label' => 'Edit Packages']
+                            ],
+                            'Reports Management' => [
+                                ['name' => 'report_count', 'label' => 'Count Report'],
+                                ['name' => 'report_staff', 'label' => 'Staff Report'],
+                                ['name' => 'report_individual', 'label' => 'Individual Report'],
+                                ['name' => 'report_business', 'label' => 'Business Report']
+                            ],
+                            'Leads Management' => [
+                                ['name' => 'leads_add', 'label' => 'Add Leads'],
+                                ['name' => 'leads_view', 'label' => 'View Leads'],
+                                ['name' => 'leads_import_individual', 'label' => 'Import Individual Leads'],
+                                ['name' => 'leads_import_business', 'label' => 'Import Business Leads']
+                            ],
+                            'Clients Management' => [
+                                ['name' => 'clients_view', 'label' => 'View Clients']
+                            ],
+                            'Assign Management' => [
+                                ['name' => 'assign_manage', 'label' => 'Assign Manage']
+                            ],
+                            'Invoice Management' => [
+                                ['name' => 'invoice_view', 'label' => 'View Invoice']
+                            ],
+                            'Communication Management' => [
+                                ['name' => 'email_view', 'label' => 'View Email'],
+                                ['name' => 'sms_view', 'label' => 'View SMS']
+                            ],
+                            'Payments Management' => [
+                                ['name' => 'payments_successful', 'label' => 'Successful Payments'],
+                                ['name' => 'payments_failed', 'label' => 'Failed Payments']
+                            ],
+                            'Login History' => [
+                                ['name' => 'login_history_view', 'label' => 'View Login History']
+                            ]
+                        ];
+                        @endphp
 
-
-
- 									<div class="row"  id="service_field">
-										<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">Choose Services</label>
-										<div class="col-sm-9">
-										
-                                    <div style="display: flex;align-items: center;gap: 10px;}">
-													@foreach ($services as $item)
-
-													
-												    <div>
-														
-														<input type="checkbox" id={{$item->service_id}}  name="services[]" class="services-checkbox"value="{{$item->service_id}}"  style="width: 25px"> 
-													</div>
-													<label style="cursor: pointer" for={{$item->service_id}}>{{$item->name}}</label>
-
-											
-													@endforeach
-													</div>
-													
-												
-										</div>
-
-										{{-- <div class="row"  id="service_field">
-											<div class="row mb-3" >
-											<label for="input42" class="col-sm-3 col-form-label">Allow Manage System</label>
-											<div class="col-sm-9">
-											
-										    <div style="display: flex;align-items: center;gap: 10px;}">
-								<div>
-										
-				<input type="radio" id="manage1"  name="manage" class="services-checkbox"value="0"  style="width: 25px"><label for="manage1" style="cursor: pointer">Manage only Assigned Leads</label> 
-								</div>
-								<div>
-										
-									<input type="radio" id="manage2"  name="manage" class="services-checkbox"value="1"  style="width: 25px"> <label for="manage2" style="cursor: pointer">Manage Total Service Leads</label>
-													</div>
-														</div>
-														
-													
-											</div>
-									</div>
-								 </div> --}}
-								 
-								<!--	<div class="row mb-3" id="sub_services">
-										<label for="input42" class="col-sm-3 col-form-label">Sub Service</label>
-										<div class="col-sm-9">
-											<div id="subservices"></div>
-										</div>
-									</div> -->
-								
-                                    
-								
-
-
-										<div class="row mb-3" >
-										<label for="input42" class="col-sm-3 col-form-label">User Privilage</label>
-						          <div class="col-sm-9">
-									<div class="row">
-										{{-- <div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="admin" value="0">
-													<input class="form-check-input" value="1" name="admin" type="checkbox" role="switch" id="flexSwitchCheckDefault122" >
-													<label class="form-check-label" for="flexSwitchCheckDefault122">Admin</label>
-												</div>
-						                    </div>
-										</div> --}}
-											<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch" class="om">
-													<input type="hidden" name="service_manage" value="0">
-													<input class="form-check-input" value="1" name="service_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault1" >
-													<label class="form-check-label" for="flexSwitchCheckDefault1">Service Manage</label>
-												</div>
-						                    </div>
-										</div>
-										<div class="col-sm-3" class="tm">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="leads_manage" value="0">
-													<input class="form-check-input" name="leads_manage" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault2" >
-
-													<label class="form-check-label" for="flexSwitchCheckDefault2">Lead Manage</label>
-												</div>
-						                    </div>
-										</div>
-											<div class="col-sm-3" class="tm">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="invoice_manage" value="0">
-													<input class="form-check-input" name="invoice_manage" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault3" >
-													<label class="form-check-label" for="flexSwitchCheckDefault3">Invoice Manage</label>
-												</div>
-						                    </div>
-										</div>
-											<div class="col-sm-3" class="admin">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="payment_manage" value="0">
-													<input class="form-check-input" value="1" name="payment_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault4" >
-													<label class="form-check-label" for="flexSwitchCheckDefault4">Payment Manage</label>
-												</div>
-						                    </div>
-										</div>
-											
-								</div>
-					     </div>
-						 
-						 <div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
-								
-									<div class="row">
-										
-										<div class="col-sm-3" class="tm"> 
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="customer_manage" value="0">
-													<input class="form-check-input" value="1" name="customer_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault6" >
-													<label class="form-check-label" for="flexSwitchCheckDefault6">Customer Manage</label>
-												</div>
-						                    </div>
-										</div>
-											<div class="col-sm-3" class="tm">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="email_sms_manage" value="0">
-													<input class="form-check-input" value="1"  name="email_sms_manage" type="checkbox" role="switch" id="flexSwitchCheckDefault7" >
-													<label class="form-check-label" for="flexSwitchCheckDefault7">Email & SMS View </label>
-												</div>
-						                    </div>
-										</div>
-										<div class="col-sm-3" class="tm">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="communication" value="0">
-													<input class="form-check-input" name="communication" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault8" >
-													<label class="form-check-label" for="flexSwitchCheckDefault8">Communication </label>
-												</div>
-						                    </div>
-										</div>
-										<div class="col-sm-3" class="admin">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="report" value="0">
-													<input class="form-check-input" value="1" name="report" type="checkbox" role="switch" id="flexSwitchCheckDefault9" >
-													<label class="form-check-label" for="flexSwitchCheckDefault9">Report</label>
-												</div>
-						                    </div>
-										</div>
-								</div>
-					        </div>
-							</div>
-						 </div>
-
-						 	<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
-								
-									<div class="row">
-											
-											<div class="col-sm-3" class="csm">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="document_view" value="0">
-													<input class="form-check-input" name="document_view" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault10" >
-													<label class="form-check-label" for="flexSwitchCheckDefault10">Document View </label>
-												</div>
-						                    </div>
-										</div>
-								</div>
-					        </div>
-							</div>
-							<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
-								
-									<div class="row">
-											
-									
-											<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="document_download" value="0">
-													<input class="form-check-input" name="document_download" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault20" >
-													<label class="form-check-label" for="flexSwitchCheckDefault20">Document Download </label>
-												</div>
-						                    </div>
-										</div>
-										<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="lead_assign" value="0">
-													<input class="form-check-input" name="lead_assign" value="1" type="checkbox" role="switch" id="hello" >
-													<label class="form-check-label" for="hello">Lead Assign</label>
-												</div>
-						                    </div>
-										</div>
-										
-								</div>
-					        </div>
-							</div>
-							<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
-									<div class="row">
-									
-											<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="history_manage" value="0">
-													<input class="form-check-input" name="history_manage" value="1" type="checkbox" role="switch" id="flexSwitchCheckDefault131" >
-													<label class="form-check-label" for="flexSwitchCheckDefault131">History Manage</label>
-												</div>
-						                    </div>
-										</div>
-
-									
-
-										<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="user_registration" value="0">
-													<input class="form-check-input" name="user_registration" value="1" type="checkbox" role="switch" id="1000" >
-													<label class="form-check-label" for="1000"> User/Role Manage</label>
-												</div>
-						                    </div>
-										</div>
-										<div class="col-sm-3">
-												<div class="d-flex align-items-center gap-3">
-												<div class="form-check form-switch">
-													<input type="hidden" name="package" value="0">
-													<input class="form-check-input" name="package" value="1" type="checkbox" role="switch" id="3002" >
-													<label class="form-check-label" for="3002">Package Manage</label>
-												</div>
-						                    </div>
-										</div>
-										
-									
-								</div>
-					        </div>
-							</div>	
-
-						 </div>
-						 	<br>
-
-
-									</div>
-									<div class="row">
-										<label class="col-sm-3 col-form-label"></label>
-										<div class="col-sm-9">
-											<div class="d-md-flex d-grid align-items-center gap-3">
-												<button type="submit" class="btn btn-primary px-4" style="height:46px;" id="btn" onclick="addTeamMember()">Submit</button>
-												<button style="height:46px;" id="btn2" type="reset" class="btn btn-light px-4">Reset</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</form>
-							</div>
-
-
-								 
-					</div>
+                        @foreach($permissionGroups as $groupName => $permissions)
+                            <div class="card mb-3">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <p class="mb-0 text-primary">
+                                        <i class="fas fa-folder-open me-2"></i>{{ $groupName }}
+                                    </p>
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" 
+                                               class="form-check-input group-toggle" 
+                                               id="{{ Str::slug($groupName) }}-toggle"
+                                               data-group="{{ Str::slug($groupName) }}">
+                                        <label class="form-check-label" for="{{ Str::slug($groupName) }}-toggle">
+                                            Toggle Group
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach($permissions as $permission)
+                                            <div class="col-md-3 col-sm-6 mb-2">
+                                                <div class="form-check form-switch">
+                                                    <input type="hidden" 
+                                                           name="{{ $permission['name'] }}" 
+                                                           value="0">
+                                                    <input 
+                                                        type="checkbox" 
+                                                        class="form-check-input permission-checkbox {{ Str::slug($groupName) }}-checkbox"
+                                                        id="{{ $permission['name'] }}" 
+                                                        name="{{ $permission['name'] }}" 
+                                                        value="1"
+                                                        data-group="{{ Str::slug($groupName) }}"
+                                                        {{ old($permission['name'], $currentPermissions[$permission['name']] ?? false) ? 'checked' : '' }}
+                                                    >
+                                                    <label 
+                                                        class="form-check-label" 
+                                                        for="{{ $permission['name'] }}"
+                                                    >
+                                                        {{ $permission['label'] }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+				 <div class="mt-3 text-center ">
+                    <button type="submit" class="btn btn-success">Register Staff</button>
+                    <button type="reset" class="btn btn-danger ms-2">Reset</button>
+                </div>
+            </form> <br> <br><br> <br>
+        </div>
+    </div>
+</div>
 				</div>
 				
 											<?php if(count($services)<1){
@@ -424,51 +249,6 @@ width: 100% !important;
 					
 
 function resetCheckboxes(checkedBox) {
-	/*let user = checkedBox.value;
-	if(user==="operation_manager"){
-		$('#sub_services').hide();
-		document.getElementById("service_field").style.display="none";
-	}else if(user==="team_manager"){
-		$('#sub_services').hide();
-		document.getElementById("service_field").style.display="block";
-	}else if(user==="customer_success_manager"){
-		document.getElementById("service_field").style.display="block";
-            $('.services-checkbox').on('change', function() {
-                var selectedServiceIds = [];
-                $('.services-checkbox:checked').each(function() {
-                    selectedServiceIds.push($(this).val());
-                });
-
-                if (selectedServiceIds.length === 0) {
-                	$('#sub_services').hide();
-                    $('#subservices').html('');
-                    return;
-                }
-
-                $.ajax({
-                    url: '/admin/package_subservices/' + selectedServiceIds.join(','),
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        var subserviceHtml = '';
-                        if (response.length > 0) {
-                            response.forEach(function(subservices) {
-                                subserviceHtml += '<input type="checkbox" class="form-check-input subservice-checkbox" name="subservices[]" value="' + subservices.id + '" />  ' +    subservices.service_name+' ';
-                            });
-                        } else {
-                            subserviceHtml = 'No subservices available for the selected service.';
-                        }
-                     	$('#sub_services').show();                   
-                        $('#subservices').html(subserviceHtml);
-                    },
-                    error: function() {
-                        alert('Error fetching subservices.');
-                    }
-                });
-            });
-
-
-	}*/
 
     const checkboxes = document.querySelectorAll('input[type="checkbox"][name="user_type"]');
     checkboxes.forEach(checkbox => {
@@ -478,6 +258,62 @@ function resetCheckboxes(checkedBox) {
     });
 }
 //$('#sub_services').hide();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle all permissions
+    const toggleAllCheckbox = document.getElementById('toggleAllPermissions');
+    const allPermissionCheckboxes = document.querySelectorAll('.permission-checkbox');
+    const groupToggleCheckboxes = document.querySelectorAll('.group-toggle');
+
+    toggleAllCheckbox.addEventListener('change', function() {
+        allPermissionCheckboxes.forEach(checkbox => {
+            checkbox.checked = toggleAllCheckbox.checked;
+        });
+        
+        groupToggleCheckboxes.forEach(groupToggle => {
+            groupToggle.checked = toggleAllCheckbox.checked;
+        });
+    });
+
+    // Group-level toggling
+    groupToggleCheckboxes.forEach(groupToggle => {
+        groupToggle.addEventListener('change', function() {
+            const group = this.dataset.group;
+            const groupCheckboxes = document.querySelectorAll(`.${group}-checkbox`);
+            
+            groupCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+
+            // Uncheck "Toggle All" if not all groups are selected
+            updateToggleAllState();
+        });
+    });
+
+    // Individual checkbox change handling
+    allPermissionCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const group = this.dataset.group;
+            const groupCheckboxes = document.querySelectorAll(`.${group}-checkbox`);
+            const groupToggle = document.getElementById(`${group}-toggle`);
+
+            // Check if all checkboxes in the group are checked
+            const allChecked = Array.from(groupCheckboxes).every(cb => cb.checked);
+            groupToggle.checked = allChecked;
+
+            // Update "Toggle All" state
+            updateToggleAllState();
+        });
+    });
+
+    // Function to update "Toggle All" checkbox state
+    function updateToggleAllState() {
+        const allChecked = Array.from(allPermissionCheckboxes).every(cb => cb.checked);
+        toggleAllCheckbox.checked = allChecked;
+    }
+});
 </script>
 				
 @include('admin.dashboard.footer')

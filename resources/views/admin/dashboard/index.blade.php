@@ -106,6 +106,7 @@
                               
                         </div>
 						@endif
+                        @if($admin_data->leads_view>0)
 						 
                         <div class="col">
                             <div class="card radius-10">
@@ -137,6 +138,7 @@
                             </div>
                             
                         </div>
+                        @endif
 
 						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager")
 

@@ -63,9 +63,8 @@ public function decodeBase64Image($base64_image)
        $check_username = MainUserModel::where('account_name',$username)->orWhere('email_address',$username)->first();
        
        if($check_username){
+      
          if($check_username->password  == $password){
-       
-
           $user_details = self::userDetails($check_username->id);
             $user_id = $user_details->id;
             $ip  = request()->ip();
@@ -95,14 +94,17 @@ public function decodeBase64Image($base64_image)
        }else{
        return self::swal(false,'Invalid Username or Email','error');
        }
-
-    }
+     }
        public function userDetails($id){
           $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
-          
+
+            // echo "<pre>";
+            // print_r($user_details);
+            // die;
             return $user_details;
     }
     //  THIS IS A login FUNCITON 
@@ -172,6 +174,7 @@ public function dashboardPage(){
   $paid_customer_count = 0;
       $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
 
