@@ -2771,15 +2771,20 @@ public function importsLeadPage(Request $request){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
+    $services = Service::orderBy('service_id','DESC')->where('name','!=','uncategorized')->get();
 
-    if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager"){
-       $services = Service::orderBy('service_id','DESC')->where('name','!=','uncategorized')->get();
+    if($admin_data->user_type=="admin"){
          $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')
         ->where('customer.customer_service_id','=',14)
         ->paginate(25);
-  }else{
+   }else if($admin_data->user_type=="operation_manager"){
+        $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('team_manager_services','team_manager_services.managers_services_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')
+        ->where('team_manager_services.team_manager_id','=',$admin_data->id)
+        ->where('customer.customer_service_id','=',14)
+        ->paginate(25);
+   }else{
     return redirect('/login');
-  }
+   }
 
 
 
