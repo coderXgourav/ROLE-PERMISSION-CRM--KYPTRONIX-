@@ -90,7 +90,7 @@
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.contact')}}" class="text-success">View Users</a>
+                                                ><a href="{{route('admin.contact',['form'=>'staff'])}}" class="text-success">View Users</a>
                                             </p>
                                         </div>
                                         

@@ -32,6 +32,8 @@ use Crypt;
 use Mail;
 use PDF;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class ContactController extends Controller
 {
@@ -800,7 +802,7 @@ public function emailPage(){
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
 
-   if($admin_data->user_type == 'customer_success_manager'){
+   if($admin_data->user_type == 'customer_success_manager'|| $admin_data->user_type == 'team_manager' || $admin_data->user_type == 'operation_manager'){
       $emails = DB::table('main_user')
      ->join('email_send','email_send.email_admin','=','main_user.id')
      ->join('customer','customer.customer_id','=','email_send.email_customer')
@@ -808,34 +810,6 @@ public function emailPage(){
      ->orderBy('email_send.email_id','DESC')
      ->select('email_send.*','customer.customer_name')
      ->paginate(10);
-   }else if($admin_data->user_type == 'team_manager'){
-
-     $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
-        $service_id = [];
-        foreach($team_manager_services as $service){
-          $service_id[] = $service->managers_services_id;
-        }
-
-        $all_members = DB::table("member_service")
-        ->select('member_service.member_id') 
-        ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
-        ->whereIn('member_service.member_service_id', $service_id)
-        ->groupBy('member_service.member_id')
-        ->get();
-
-        $members = [];
-        foreach ($all_members as $key => $value) {
-           $members[] = $value->member_id;
-        }
-
-      $emails = DB::table('main_user')
-     ->join('email_send','email_send.email_admin','=','main_user.id')
-     ->join('customer','customer.customer_id','=','email_send.email_customer')
-     ->whereIn('email_send.email_admin',$members)
-     ->orderBy('email_send.email_id','DESC')
-     ->select('email_send.*','customer.customer_name')
-     ->paginate(10);
-     
    }
    else{
       $emails = DB::table('main_user')
@@ -916,14 +890,39 @@ public function export()
       //       break;
       //   }
       // }else{
-      
         $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = $admin_data->user_type;
 
-          if($user_type=="admin"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->select('main_user.*','roles.modern_name')->paginate(10);
-          }else if($user_type=="team_manager"){
+         if(!empty($request->form)){
+            $form =$request->form;
+          }else{$form='';}
+          if($user_type=="admin" && $form=='staff'){
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+          }else if($user_type=="admin"){
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
+          }else if($user_type=="team_manager" && $form=='staff'){
+
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                    $service_id = [];
+                    foreach($team_manager_services as $service){
+                      $service_id[] = $service->managers_services_id;
+                    }
+                    
+                    $contact_data = DB::table("member_service")   
+                    ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name'),DB::raw('MAX(roles.modern_name) as modern_name')) 
+                    ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+                    ->join('roles','roles.role_name','=','main_user.user_type')
+                    ->join('services','services.service_id','=','member_service.member_service_id')
+                    ->whereIn('member_service.member_service_id', $service_id)
+                    ->groupBy('member_service.member_id')
+                    ->paginate(10);
+                    // echo '<pre>';
+                    // print_r($contact_data);die;
+             }else if($user_type=="team_manager"){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             
@@ -946,7 +945,7 @@ public function export()
                     // print_r($contact_data);die;
              }
 
-          }else if($user_type=="operation_manager"){
+          }else if($user_type=="operation_manager" && $form=='staff'){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             
@@ -965,9 +964,66 @@ public function export()
                     ->whereIn('member_service.member_service_id', $service_id)
                     ->groupBy('member_service.member_id')
                     ->paginate(10);
+
              }
 
+          }else if($user_type=="operation_manager"){
+
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                   $service_id = [];
+                foreach($team_manager_services as $service){
+                    $service_id[] = $service->managers_services_id;
+                }
+
+        $member_contact_data = DB::table("member_service")   
+            ->select('member_service.member_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name'),DB::raw('MAX(roles.modern_name) as modern_name')) 
+            ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('services','services.service_id','=','member_service.member_service_id')
+            ->whereIn('member_service.member_service_id', $service_id)
+            ->groupBy('member_service.member_id')
+            ->get();
+
+        $manager_contact_data = DB::table("team_manager_services")   
+            ->select('team_manager_services.team_manager_id', DB::raw('MAX(main_user.first_name) as first_name'),DB::raw('MAX(main_user.id) as id'),DB::raw('MAX(main_user.user_type) as user_type'),DB::raw('MAX(main_user.last_name) as last_name'),DB::raw('MAX(main_user.phone_number) as phone_number'),DB::raw('MAX(main_user.email_address) as email_address'),DB::raw('MAX(services.name) as name'),DB::raw('MAX(roles.modern_name) as modern_name')) 
+            ->join("main_user", 'main_user.id', '=', 'team_manager_services.team_manager_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('services','services.service_id','=','team_manager_services.managers_services_id')
+            ->where('main_user.user_type',"team_manager")
+            ->whereIn('team_manager_services.managers_services_id', $service_id)
+            ->groupBy('team_manager_services.team_manager_id')
+            ->get();
+
+          $contact_data = $member_contact_data->merge($manager_contact_data);
+          // Merge the member and manager contact data
+          $merged_contact_data = $member_contact_data->merge($manager_contact_data);
+
+          // Get the current page from the request, default to 1 if not set
+          $currentPage = Paginator::resolveCurrentPage();
+
+          // Define how many items per page
+          $perPage = 10;
+
+          // Slice the collection to get the items for the current page
+          $currentItems = $merged_contact_data->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+          // Create a LengthAwarePaginator instance
+          $contact_data = new LengthAwarePaginator(
+              $currentItems,
+              $merged_contact_data->count(),
+              $perPage,
+              $currentPage,
+              ['path' => Paginator::resolveCurrentPath()]
+          );
+
+          // Now you can use $contact_data for pagination in your view
+                         }
+
           }
+           
               else{
                    $contact_data=DB::table('main_user')
                     ->select('main_user.id as member_id','main_user.first_name as first_name','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name')
@@ -1045,7 +1101,7 @@ public function smsPage(){
    //$admin_data = AdminModel::find($id);
    $admin_data = self::userDetails($id);
    $user_type = self::userType($admin_data->user_type);
-   if($admin_data->user_type=="customer_success_manager"){
+   if($admin_data->user_type=="customer_success_manager" || $admin_data->user_type == 'team_manager' || $admin_data->user_type == 'operation_manager'){
           $sms = DB::table('main_user')
          ->join('messages','messages.team_member_id','=','main_user.id')
          ->join('customer','customer.customer_id','=','messages.customer_msg_id')
@@ -2773,11 +2829,50 @@ public function emailSend(Request $request){
    $user_id=session('admin');
    $admin_data = self::userDetails($user_id);
    $user_type = self::userType($admin_data->user_type);
-   $data = DB::table('payments')
-   ->join('customer','customer.customer_id','=','payments.leads_id')
-   ->where('payments.pay_status',1)
-   ->orderBy('payments.payment_id','DESC')
-   ->paginate(10);
+   if($admin_data->user_type == 'admin'){
+       $data = DB::table('payments')
+       ->join('customer','customer.customer_id','=','payments.leads_id')
+       ->where('payments.pay_status',1)
+       ->orderBy('payments.payment_id','DESC')
+       ->paginate(10);
+     
+   }else if($admin_data->user_type == "operation_manager" || $admin_data->user_type =="team_manager"){
+       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
+       $service_id = [];
+      
+       foreach($operation_manager_services as $service){
+        $service_id[] = $service->managers_services_id;
+      }
+       $data = DB::table('payments')
+       ->join('customer','customer.customer_id','=','payments.leads_id')
+       ->whereIn('customer.customer_service_id',$service_id)
+       ->where('payments.pay_status',1)
+       ->orderBy('payments.payment_id','DESC')
+       ->paginate(10);
+     
+      
+   }else if($admin_data->user_type == "customer_success_manager"){
+       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->id)
+              ->distinct()
+              ->get(['member_service_id']); 
+
+        $service_id=[];
+        if(!empty($customer_success_manager_services)){
+                foreach($customer_success_manager_services as $service){
+                    $service_id[] = $service->member_service_id;
+                }  
+                $data = DB::table('payments')
+               ->join('customer','customer.customer_id','=','payments.leads_id')
+               ->whereIn('customer.customer_service_id',$service_id)
+               ->where('payments.pay_status',1)
+               ->orderBy('payments.payment_id','DESC')
+               ->paginate(10);
+                 
+
+        }
+
+      
+   }
   return view('admin.dashboard.successfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
   }
 
@@ -2794,12 +2889,51 @@ public function emailSend(Request $request){
         $user_id=session('admin');
    $admin_data = self::userDetails($user_id);
    $user_type = self::userType($admin_data->user_type);
-   $data = DB::table('payments')
+   if($admin_data->user_type == "admin"){
+     $data = DB::table('payments')
    ->join('customer','customer.customer_id','=','payments.leads_id')
    ->where('payments.pay_status',0)
    ->orderBy('payments.payment_id','DESC')
    ->paginate(10);
-  return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+ 
+   }else if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
+       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
+       $service_id = [];
+      
+       foreach($operation_manager_services as $service){
+        $service_id[] = $service->managers_services_id;
+      }
+       $data = DB::table('payments')
+       ->join('customer','customer.customer_id','=','payments.leads_id')
+       ->whereIn('customer.customer_service_id',$service_id)
+       ->where('payments.pay_status',0)
+       ->orderBy('payments.payment_id','DESC')
+       ->paginate(10);
+     
+
+   }else if($admin_data->user_type == "customer_success_manager"){
+       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->id)
+              ->distinct()
+              ->get(['member_service_id']); 
+
+        $service_id=[];
+        if(!empty($customer_success_manager_services)){
+                foreach($customer_success_manager_services as $service){
+                    $service_id[] = $service->member_service_id;
+                }  
+                $data = DB::table('payments')
+               ->join('customer','customer.customer_id','=','payments.leads_id')
+               ->whereIn('customer.customer_service_id',$service_id)
+               ->where('payments.pay_status',0)
+               ->orderBy('payments.payment_id','DESC')
+               ->paginate(10);
+                 
+
+        }
+
+      
+   }
+    return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
     
   }
   public function documentPage($customers_id){
