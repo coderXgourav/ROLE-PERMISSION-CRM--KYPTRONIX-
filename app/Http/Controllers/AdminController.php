@@ -102,9 +102,6 @@ public function decodeBase64Image($base64_image)
             ->where('main_user.id',$id)
             ->first();
 
-            // echo "<pre>";
-            // print_r($user_details);
-            // die;
             return $user_details;
     }
     //  THIS IS A login FUNCITON 

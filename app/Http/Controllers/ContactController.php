@@ -1035,7 +1035,7 @@ public function export()
             
           $user_type = self::userType($admin_data->user_type);
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-      // }
+      }
 
     }
 
@@ -1043,8 +1043,7 @@ public function export()
 // THIS IS EXPORT FUNCTION 
 
 // THIS IS IMPORT FUNCTION 
-  public function import(Request $request) 
-    {
+  public function import(Request $request){ 
        $file_ex = $request->csv->getClientOriginalExtension();
     if($file_ex=="csv"|| $file_ex=="xls"|| $file_ex=="xlsx"){
         Excel::import(new CustomerImport,
