@@ -10,80 +10,109 @@
     <title>Add Package</title>
 @endpush
 <div class="row">
-                    <div class="col-lg-8 mx-auto">
-						
+                <div class="container-fluid">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm border-0 p-4">
+            <form id="add_package_form"  method="POST">
+                @csrf
+                <input type="hidden" id="reset">
+                <input type="hidden" name="user_type" >
+                
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <h5 class="mb-0 me-3">
+                            <i class='bx bx-package text-primary me-2'></i>Add New Package
+                        </h5>
+                        <hr class="flex-grow-1 ms-3">
+                    </div>
 
-						<div class="card">
-							<form id="add_package_form">
-								{{@csrf_field()}}
-								<input type="hidden" id="reset">
-								<input type="hidden" name="user_type" value="{{$admin_data->user_type}}">
-							<div class="card-body p-4">
-								<h5 class="mb-4">Add Package </h5>
-								   <div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Service</label>
-										<div class="col-sm-9" style="display: flex;  align-items:center; flex-wrap:wrap">
-												@foreach($services as $item)
-												<div style="display:flex; align-items:center;">
-													<input type="checkbox" class="services-checkbox" name="service_id" value="{{$item->service_id}}" onclick="resetCheckboxes(this)" required   style="width: 25px">  &nbsp; <span>{{$item->name}}</span>
-												 &nbsp;&nbsp;</div>
-												
-												@endforeach
-										</div>
-									</div>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">
+                            <span class="fw-bold text-muted">Services</span>
+                        </label>
+                        <div class="col-sm-9" style="display: flex; align-items:center; flex-wrap:wrap">
+                            @foreach($services as $item)
+                                <div class="me-3 mb-2 d-flex align-items-center">
+                                    <input type="checkbox" 
+                                           class="form-check-input services-checkbox me-2" 
+                                           name="service_id" 
+                                           value="{{ $item->service_id }}" 
+                                           onclick="resetCheckboxes(this)" 
+                                           required>
+                                    <span class="text-muted">{{ $item->name }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
 
-									<div class="row mb-3" id="sub_services">
-										<label for="input42" class="col-sm-3 col-form-label">Sub Service</label>
-										<div class="col-sm-9">
-											<div id="subservices"></div>
-										</div>
-									</div> 
-								
-									<div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Package Title</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="text" class="form-control" placeholder="Package Title" name="title" id="title" required>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
-											</div>
-										</div>
-									</div> 
-								    <div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Price</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-												<input type="number" class="form-control" placeholder="Package Price" name="price" id="price" required>
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
-											</div>
-										</div>
-									</div> 
-								   <!--  <div class="row mb-3">
-										<label for="input42" class="col-sm-3 col-form-label">Short Description</label>
-										<div class="col-sm-9">
-											<div class="position-relative input-icon">
-											    <input type="text" class="form-control" placeholder="Package Short Description" name="desc" id="desc">
-												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
-											</div>
-										</div>
-									</div> -->
-								   
-									<div class="row">
-										<label class="col-sm-3 col-form-label"></label>
-										<div class="col-sm-9">
-											<div class="d-md-flex d-grid align-items-center gap-3">
-												<button type="submit" class="btn btn-primary px-4" style="height:46px;" id="btn">Submit</button>
+                    <div class="row mb-3" id="sub_services" style="display:none; color: red">
+                        <label class="col-sm-3 col-form-label">
+                            <span class="fw-bold text-muted">Sub Services</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <div id="subservices" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">
+                            <span class="fw-bold text-muted">Package Title</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class='bx bx-detail text-muted'></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control @error('title') is-invalid @enderror" 
+                                       placeholder="Enter Package Title" 
+                                       name="title" 
+                                       id="title" 
+                                       required>
+                                @error('title')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
 
-										   </div>
-										</div>
-									</div>
-								</div>
-							</form>
-							</div>
-
-
-								 
-					</div>
-				</div><!--end row-->
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">
+                            <span class="fw-bold text-muted">Price</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class='bx bx-dollar text-muted'></i>
+                                </span>
+                                <input type="number" 
+                                       class="form-control @error('price') is-invalid @enderror" 
+                                       placeholder="Enter Package Price" 
+                                       name="price" 
+                                       id="price" 
+                                       step="0.01" 
+                                       required>
+                                @error('price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                   <br>
+                    <div class="row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" 
+                                    class="btn btn-primary" 
+                                    id="btn">
+                             Submit Package
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 				
 <script type="text/javascript">
 	$('#sub_services').hide();

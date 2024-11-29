@@ -74,7 +74,7 @@ width: 100% !important;
                     
                     <div class="col-md-6 mb-3">
                         <label for="staff_type" class="form-label">Staff Type  <span class="text-danger"> *</span></label>
-                        <select class="form-select" id="staff_type" name="user_type" required>
+                        <select class="form-select" id="staff_type" name="user_type" required onchange="StaffType(this.value)">
                             <option value="">Select Staff Type</option>
                        @foreach ($roles as $item)
 					   <option value="{{$item->role_name}}">{{$item->modern_name}}</option>
@@ -260,7 +260,23 @@ function resetCheckboxes(checkedBox) {
 //$('#sub_services').hide();
 </script>
 
+
 <script>
+    function StaffType(staff){
+        
+     if(staff=="operation_manager"){
+
+     }else if(staff == "team_manager"){
+
+     }else if(staff == "customer_success_manager"){
+
+     }else{
+        // book keeper 
+     }
+
+    }
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Toggle all permissions
     const toggleAllCheckbox = document.getElementById('toggleAllPermissions');
