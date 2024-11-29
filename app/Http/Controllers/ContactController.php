@@ -858,9 +858,7 @@ public function export()
     {
         return Excel::download(new CustomerExport(), 'clients.xlsx');
     }
-
-    // filterUsers
-    public function filterUsers(Request $request){
+   public function filterUsers(Request $request){
       $filter = $request->filter;
       // if($filter != ""){
       //   switch($filter){
@@ -893,12 +891,13 @@ public function export()
         $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = $admin_data->user_type;
-
-         if(!empty($request->form)){
+          if(!empty($request->form)){
             $form =$request->form;
           }else{$form='';}
           if($user_type=="admin" && $form=='staff'){
               $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+          }else if($user_type=="admin" && $form=='staff1'){
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin"){
               $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager" && $form=='staff'){
@@ -922,7 +921,9 @@ public function export()
                     ->paginate(10);
                     // echo '<pre>';
                     // print_r($contact_data);die;
-             }else if($user_type=="team_manager"){
+             }
+
+          }else if($user_type=="team_manager"){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             
@@ -1035,10 +1036,12 @@ public function export()
             
           $user_type = self::userType($admin_data->user_type);
          return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-      }
+      // }
 
     }
 
+
+   
 
 // THIS IS EXPORT FUNCTION 
 
