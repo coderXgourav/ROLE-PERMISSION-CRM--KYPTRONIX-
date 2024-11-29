@@ -23,7 +23,7 @@
                                                 <i
                                                     class="bx bxs-up-arrow align-middle"
                                                 ></i
-                                                ><a href="{{route('admin.contact')}}" class="text-success">View Users</a>
+                                                ><a href="{{route('admin.contact',['form'=>'staff1'])}}" class="text-success">View Users</a>
                                             </p>
                                         </div>
                                         
@@ -106,7 +106,6 @@
                               
                         </div>
 						@endif
-                        @if($admin_data->leads_view>0)
 						 
                         <div class="col">
                             <div class="card radius-10">
@@ -138,7 +137,6 @@
                             </div>
                             
                         </div>
-                        @endif
 
 						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager")
 
