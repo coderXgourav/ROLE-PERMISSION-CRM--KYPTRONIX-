@@ -902,7 +902,7 @@ public function export()
               $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager" && $form=='staff'){
 
-            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             
             $team_member=[];
             if(!empty($team_manager_services)){
@@ -925,7 +925,7 @@ public function export()
 
           }else if($user_type=="team_manager"){
 
-            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             
             $team_member=[];
             if(!empty($team_manager_services)){
@@ -948,7 +948,7 @@ public function export()
 
           }else if($user_type=="operation_manager" && $form=='staff'){
 
-            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             
             $team_member=[];
             if(!empty($team_manager_services)){
@@ -970,7 +970,7 @@ public function export()
 
           }else if($user_type=="operation_manager"){
 
-            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             
             $team_member=[];
             if(!empty($team_manager_services)){
@@ -2533,7 +2533,9 @@ public function viewClients(){
     $user_type = self::userType($admin_data->user_type);
     $clients = CustomerModel::find($customer_id);
     $invoice_details = Invoice::find($invoice_id);
-    return view('admin.dashboard.show_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type]);
+    $package_details=DB::table('packages')->select('packages.title')->join('customer','customer.package_id','=','packages.package_id')->where('customer.customer_id',$customer_id)->first();
+
+    return view('admin.dashboard.show_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type,'package_details'=>$package_details]);
 }
  //showInvoice Function End
 //emailTemplate FUNCTION START

@@ -114,7 +114,7 @@
             P: {{$clients->customer_number}}</p>
         </div>
         <div class="col">
-            <p><strong>Number:</strong> INV0001<br>
+            <p><strong>Number:</strong>{{$invoice_details->invoice_unique_id}}<br>
             <strong>Date:</strong> 04 May 2018<br>
             <strong>Terms:</strong> Next Day<br>
             <strong>Due:</strong> 05 May 2018</p>
