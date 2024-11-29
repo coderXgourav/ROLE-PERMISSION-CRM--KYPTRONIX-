@@ -42,6 +42,7 @@ class ServiceController extends Controller
     public function userDetails($id){
           $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
           
