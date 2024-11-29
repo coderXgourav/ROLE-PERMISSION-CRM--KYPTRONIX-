@@ -806,7 +806,7 @@ public function emailPage(){
       $emails = DB::table('main_user')
      ->join('email_send','email_send.email_admin','=','main_user.id')
      ->join('customer','customer.customer_id','=','email_send.email_customer')
-     ->where('email_send.email_admin',$admin_data->id)
+     ->where('email_send.email_admin',$admin_data->user_id)
      ->orderBy('email_send.email_id','DESC')
      ->select('email_send.*','customer.customer_name')
      ->paginate(10);
@@ -1107,7 +1107,7 @@ public function smsPage(){
           $sms = DB::table('main_user')
          ->join('messages','messages.team_member_id','=','main_user.id')
          ->join('customer','customer.customer_id','=','messages.customer_msg_id')
-         ->where('messages.team_member_id','=',$admin_data->id)
+         ->where('messages.team_member_id','=',$admin_data->user_id)
          ->orderBy('messages.messages_id','DESC')
          ->paginate(10);
    }else{
@@ -2074,7 +2074,7 @@ public function addLead(){
      // print_r($leads_data);die;
       }else if($admin_data->user_type == 'team_manager'){
 
-        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
         if(!empty($team_manager_services)){
            $service_id = [];
             foreach($team_manager_services as $service){
@@ -2103,7 +2103,7 @@ public function addLead(){
 
       }else if($admin_data->user_type == 'customer_success_manager'){
 
-          $customer_service=MemberServiceModel::where('member_id',$admin_data->id)->first();
+          $customer_service=MemberServiceModel::where('member_id',$admin_data->user_id)->first();
           $leads_data = DB::table('customer')
             ->select(
                 'customer.customer_email',
@@ -2125,7 +2125,7 @@ public function addLead(){
 
       }else if($admin_data->user_type == 'operation_manager'){
 
-        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+        $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
         if(!empty($team_manager_services)){
            $service_id = [];
             foreach($team_manager_services as $service){
@@ -2452,7 +2452,7 @@ public function viewClients(){
             ->paginate(10);
   
       }else if($admin_data->user_type == 'team_manager'  || $admin_data->user_type == 'operation_manager'){
-            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             if(!empty($team_manager_services)){
                $service_id = [];
                 foreach($team_manager_services as $service){
@@ -2520,7 +2520,7 @@ public function viewClients(){
         ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
         ->join('invoices','invoices.user_id','=','main_user.id')
         ->join('customer','customer.customer_id','=','invoices.customer_id')
-        ->where('main_user.id',$admin_data->id)
+        ->where('main_user.id',$admin_data->user_id)
         ->paginate(10);
      }
     return view('admin.dashboard.view_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
@@ -2841,7 +2841,7 @@ public function emailSend(Request $request){
        ->paginate(10);
      
    }else if($admin_data->user_type == "operation_manager" || $admin_data->user_type =="team_manager"){
-       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
+       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
        $service_id = [];
       
        foreach($operation_manager_services as $service){
@@ -2856,7 +2856,7 @@ public function emailSend(Request $request){
      
       
    }else if($admin_data->user_type == "customer_success_manager"){
-       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->id)
+       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
               ->distinct()
               ->get(['member_service_id']); 
 
@@ -2901,7 +2901,7 @@ public function emailSend(Request $request){
    ->paginate(10);
  
    }else if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
-       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
+       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
        $service_id = [];
       
        foreach($operation_manager_services as $service){
@@ -2916,7 +2916,7 @@ public function emailSend(Request $request){
      
 
    }else if($admin_data->user_type == "customer_success_manager"){
-       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->id)
+       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
               ->distinct()
               ->get(['member_service_id']); 
 
