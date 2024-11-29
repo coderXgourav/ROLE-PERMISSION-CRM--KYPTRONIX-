@@ -356,6 +356,7 @@
                             
                         </ul>
                     </li>
+                    
                     @endif
 
                    @if($admin_data->login_history_view>0)
