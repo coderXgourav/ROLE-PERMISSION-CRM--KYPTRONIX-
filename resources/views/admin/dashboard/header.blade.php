@@ -173,7 +173,7 @@
                                     class='bx bx-radio-circle'></i>Add New Package</a>
                         </li>
                         @endif
-                          @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager") && $admin_data->package_view>0)
+                          @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager" || $admin_data->user_type=="customer_success_manager") && $admin_data->package_view>0)
 
                         <li> <a href="{{ route('admin.all-package')}}"><i
                                     class='bx bx-radio-circle'></i>Packages</a>
@@ -359,7 +359,7 @@
                     
                     @endif
 
-                   @if($admin_data->login_history_view>0)
+                   @if(($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager") && $admin_data->login_history_view>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-category"></i>
