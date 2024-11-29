@@ -224,7 +224,7 @@ public function dashboardPage(){
                    foreach($customer_success_manager_services as $service){
                        $service_id[] = $service->member_service_id;
                     }
-                  $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->user_id")->count();
+                  $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->count();
               }
                 $email_send_cound = DB::table('main_user')
                ->join('email_send','email_send.email_admin','=','main_user.id')
