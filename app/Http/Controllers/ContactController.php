@@ -2118,7 +2118,7 @@ public function addLead(){
             )
             ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
             ->groupBy('customer.customer_email') 
-            ->whereJsonContains('customer.team_member',"$admin_data->id")
+            ->whereJsonContains('customer.team_member',"$admin_data->user_id")
             ->paginate(10);
           $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
 
@@ -3340,7 +3340,7 @@ function loginDetails($userId) {
               $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'team_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="operation_manager"){
 
-            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+            $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             
             $team_member=[];
             if(!empty($team_manager_services)){

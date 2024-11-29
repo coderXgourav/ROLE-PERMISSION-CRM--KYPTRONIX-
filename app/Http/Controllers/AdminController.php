@@ -191,7 +191,7 @@ public function dashboardPage(){
               $paid_customer_count =DB::table('payments')->join('customer','customer.customer_id','=','payments.leads_id')->where('payments.pay_status',1)->count();
             }else if($user_details->user_type=="team_manager"){
 
-              $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->distinct()->get(['managers_services_id']);
+              $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->user_id)->distinct()->get(['managers_services_id']);
              
               $service_id = [];
       
@@ -215,7 +215,7 @@ public function dashboardPage(){
             
             } else if($user_details->user_type=="customer_success_manager" ){
 
-              $customer_success_manager_services = MemberServiceModel::where('member_id', $user_details->id)
+              $customer_success_manager_services = MemberServiceModel::where('member_id', $user_details->user_id)
               ->distinct()
               ->get(['member_service_id']); 
 
@@ -224,7 +224,7 @@ public function dashboardPage(){
                    foreach($customer_success_manager_services as $service){
                        $service_id[] = $service->member_service_id;
                     }
-                  $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->id")->count();
+                  $customer_count= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$user_details->user_id")->count();
               }
                 $email_send_cound = DB::table('main_user')
                ->join('email_send','email_send.email_admin','=','main_user.id')
@@ -233,7 +233,7 @@ public function dashboardPage(){
                ->count();
                         
             }else if($user_details->user_type=="operation_manager"){
-                $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->distinct()->get(['managers_services_id']);
+                $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->user_id)->distinct()->get(['managers_services_id']);
              
                  $service_id = [];
       
@@ -258,7 +258,7 @@ public function dashboardPage(){
                 $customer_count = CustomerModel::whereIn('customer_service_id',$service_id)->distinct('customer_email')->count(); 
                 $assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'!=',null)->distinct('customer_email')->count();
                 $none_assign_clients_count = CustomerModel::whereIn('customer_service_id',$service_id)->where("team_member",'=',null)->distinct('customer_email')->count();
-                $import_lead_team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->id)->where('managers_services_id',14)->distinct()->get(['managers_services_id']);
+                $import_lead_team_manager_services = TeamManagersServicesModel::where('team_manager_id',$user_details->user_id)->where('managers_services_id',14)->distinct()->get(['managers_services_id']);
                  $s_id = [];
       
                 foreach($import_lead_team_manager_services as $val){
@@ -488,6 +488,27 @@ public function allPackages(){
                       $service_id[] = $service->managers_services_id;
                     }
                     $all_packages = DB::table('packages')
+                    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+                    ->join('services','services.service_id','=','packages.service_id')
+                    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+                    ->whereIn('packages.service_id',$service_id)
+                    ->orderBy('packages.package_id','DESC')
+                    ->paginate(10);
+                   
+            }
+     
+
+    }else if($admin_data->user_type == "customer_success_manager"){
+      $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
+              ->distinct()
+              ->get(['member_service_id']); 
+
+                $service_id=[];
+              if(!empty($customer_success_manager_services)){
+                   foreach($customer_success_manager_services as $service){
+                       $service_id[] = $service->member_service_id;
+                    }
+                   $all_packages = DB::table('packages')
                     ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
                     ->join('services','services.service_id','=','packages.service_id')
                     ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
