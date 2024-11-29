@@ -114,7 +114,7 @@ class ServiceController extends Controller
 	  // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    if($admin_data->user_type =="operation_manager"){
+    if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
        $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->distinct()->get(['managers_services_id']);
        $service_id = [];
       

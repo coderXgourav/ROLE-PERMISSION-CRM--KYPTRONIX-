@@ -69,7 +69,7 @@ class AdminMiddleware
             'admin.sms' => $admin_data->sms_view,
             'admin.smsShow' => $admin_data->sms_view,
             'admin.add-service' => $admin_data->service_add,
-            'admin.all-service' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" && $admin_data->service_view>0)?1:0, 
+            'admin.all-service' => ($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager" && $admin_data->service_view>0)?1:0, 
             'admin.edit-service' => $admin_data->service_edit,
             'admin.edit' => $admin_data->staff_registration,
             'admin.invoice_list' => $admin_data->invoice_view,
