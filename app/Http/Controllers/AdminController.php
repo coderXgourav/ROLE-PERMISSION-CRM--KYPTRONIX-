@@ -55,8 +55,8 @@ public function decodeBase64Image($base64_image)
  
     
     public function login(Request $request){
-      // $base64_image  = $request->photo;
-       // $fileName = self::decodeBase64Image($base64_image);
+      $base64_image  = $request->photo;
+       $fileName = self::decodeBase64Image($base64_image);
       $fileName = "";
        
        $username = $request->email_username;

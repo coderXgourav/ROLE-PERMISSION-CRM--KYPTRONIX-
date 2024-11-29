@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email_address')->nullable();
-           $table->enum('user_type',['customer_success_manager','team_manager','operation_manager','admin',"bookkeeper"]);
+           $table->enum('user_type',['customer_success_manager','team_manager','operation_manager','admin',"book_keeper"]);
             // $table->string('user_type')->nullable();
             $table->integer('change_password_upon_login')->default(0);
             $table->integer('disable_account')->default(0);

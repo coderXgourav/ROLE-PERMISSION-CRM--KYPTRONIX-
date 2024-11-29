@@ -213,7 +213,7 @@
                             </div>
                         </div>
                        
-                         <button type="submit" class="btn btn-primary" onclick="Update()" id="updateBtn">
+                         <button type="submit" class="btn btn-primary" onclick="Update()" id="btn">
                             Update
                         </button>
 

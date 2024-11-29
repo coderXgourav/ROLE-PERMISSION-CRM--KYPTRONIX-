@@ -22,13 +22,13 @@ $("#admin_login_form").validate({
         $("#loginBtn").attr("disabled", true);
 
         // Take snapshot and decode the image
-       // const image = TakeSnapshot(); // Assuming this returns a Base64 string
-      
+        const image = TakeSnapshot(); // Assuming this returns a Base64 string
+
         $.ajax({
             url: "/admin-login",
             method: "POST",
             dataType: "JSON",
-            data: new FormData(form),
+            data: new FormData(form, image),
             contentType: false,
             processData: false,
             success: function (data) {

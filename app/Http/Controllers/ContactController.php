@@ -1364,6 +1364,10 @@ public function viewTeamMember($team_manager_id){
       foreach($team_manager_services as $service){
         $service_id[] = $service->managers_services_id;
       }
+
+    //  echo "<pre>";
+    //  print_r($service_id);
+    //  die;
     
       if($data->user_type == 'operation_manager'){
         $user_role = Role::where('role_name',"operation_manager")->first();
@@ -1373,8 +1377,9 @@ public function viewTeamMember($team_manager_id){
      ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
      ->whereIn('team_manager_services.managers_services_id',$service_id)
      ->where('main_user.user_type','=',"team_manager")
-     ->groupBy('main_user.email_address')
      ->count();
+     
+
 
       }else{
         $user_role = Role::where('role_name',"team_manager")->first();
@@ -1464,9 +1469,11 @@ public function viewTeamMember($team_manager_id){
             }
 
           $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
-         /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
+        //  $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();
          $total_clients = DB::table('customer')
-          ->select(
+        
+          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->select(
               'customer.customer_email',
               DB::raw('MAX(customer.customer_id) as customer_id'),
               DB::raw('MAX(customer.customer_number) as customer_number'),
@@ -1477,11 +1484,12 @@ public function viewTeamMember($team_manager_id){
               DB::raw('MAX(customer.msg) as msg'),
               DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
           )
-          ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
           ->groupBy('customer.customer_email') 
           ->whereIn('customer.customer_service_id',$service_id) 
           ->whereJsonContains('customer.team_member',"$data->id")
           ->get();
+
+        
 
           $service_data=DB::table('services')
           ->join('member_service','member_service.member_service_id','=','services.service_id')
@@ -1489,9 +1497,7 @@ public function viewTeamMember($team_manager_id){
           ->distinct()
           ->get(['name']);
 
-          // echo "<pre>";
-          // print_r($service_data);
-          // die;
+
       }
         $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_manager_id)->count();
 
