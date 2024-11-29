@@ -478,7 +478,7 @@ public function allPackages(){
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
    // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
-    if($admin_data->user_type == "operation_manager"){
+    if($admin_data->user_type == "operation_manager" || $admin_data->user_type == "team_manager"){
       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
             
             if(!empty($team_manager_services)){
