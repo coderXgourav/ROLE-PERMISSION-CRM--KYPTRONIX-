@@ -102,7 +102,7 @@
             P: {{$clients->customer_number}}</p>
         </div>
         <div class="col">
-            <p><strong>Number:</strong> INV0001<br>
+            <p><strong>Number:</strong>{{$invoice_details->invoice_unique_id}}<br>
             <strong>Date:</strong> 04 May 2018<br>
             <strong>Terms:</strong> Next Day<br>
             <strong>Due:</strong> 05 May 2018</p>
@@ -113,7 +113,7 @@
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Description</th>
+                <th>Title</th>
                 <th>Price</th>
             </tr> 
         </thead>
@@ -126,7 +126,7 @@
                    
             <tr>
                 <td>{{$date}}</td>
-                <td>{{$invoice_details->description}}</td>
+                <td>{{$package_details->title}}</td>
                 <td>{{$invoice_details->price}}$</td>
             </tr>
           <?php }  ?>

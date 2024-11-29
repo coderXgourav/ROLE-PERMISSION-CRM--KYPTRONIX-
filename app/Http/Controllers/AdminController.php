@@ -24,6 +24,8 @@ use DB;
 use Crypt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 
 class AdminController extends Controller
@@ -61,12 +63,11 @@ public function decodeBase64Image($base64_image)
        $password = $request->password;
        
        $check_username = MainUserModel::where('account_name',$username)->orWhere('email_address',$username)->first();
-       
        if($check_username){
       
          if($check_username->password  == $password){
           $user_details = self::userDetails($check_username->id);
-            $user_id = $user_details->id;
+            $user_id = $user_details->user_id;
             $ip  = request()->ip();
             $client = new Client();
             $response = $client->get("http://ip-api.com/json/{$ip}");
@@ -479,7 +480,7 @@ public function allPackages(){
     $user_type = self::userType($admin_data->user_type);
    // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
     if($admin_data->user_type == "operation_manager" || $admin_data->user_type == "team_manager"){
-      $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->id)->get();
+      $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
             
             if(!empty($team_manager_services)){
                     $service_id = [];
@@ -513,14 +514,115 @@ public function allPackages(){
 public function loginHistory(Request $request ){
     $staffId = $request->id;
   
-     $id = session('admin');
+    $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-      if($staffId!=""){
-    $data =   DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->where('main_user.id',$staffId)->paginate(10);
-    }else{
-      $data = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->paginate(10);
+    if($admin_data->user_type == "admin"){
 
+      if($staffId!=""){
+          $data =   DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->where('main_user.id',$staffId)->paginate(10);
+        }else{
+           $data = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->paginate(10);
+       }
+    }else if($admin_data->user_type == "team_manager"){
+       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
+            
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                   $service_id = [];
+                foreach($team_manager_services as $service){
+                    $service_id[] = $service->managers_services_id;
+                }
+
+        $member_contact_data = DB::table("member_service")   
+            ->select('member_service.member_id','main_user.first_name as first_name','main_user.id as id','main_user.user_type as user_type','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name','roles.modern_name as modern_name','login_history.operation as operation','login_history.ip_address as ip_address','login_history.image as image','login_history.city as city','login_history.country as country','login_history.logged_in_at as logged_in_at') 
+            ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('login_history','login_history.user_id','=','main_user.id')
+            ->join('services','services.service_id','=','member_service.member_service_id')
+            ->whereIn('member_service.member_service_id', $service_id)
+            ->get();
+        $manager_contact_data = DB::table("team_manager_services")   
+            ->select('team_manager_services.team_manager_id','main_user.first_name as first_name','main_user.id as id','main_user.user_type as user_type','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name','roles.modern_name as modern_name','login_history.operation as operation','login_history.ip_address as ip_address','login_history.image as image','login_history.city as city','login_history.country as country','login_history.logged_in_at as logged_in_at') 
+            ->join("main_user", 'main_user.id', '=', 'team_manager_services.team_manager_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('login_history','login_history.user_id','=','main_user.id')
+            ->join('services','services.service_id','=','team_manager_services.managers_services_id')
+            ->where('main_user.user_type',"team_manager")
+            ->whereIn('team_manager_services.managers_services_id', $service_id)
+            ->get();
+          $contact_data = $member_contact_data->merge($manager_contact_data);
+          // Merge the member and manager contact data
+          $merged_contact_data = $member_contact_data->merge($manager_contact_data);
+
+          // Get the current page from the request, default to 1 if not set
+          $currentPage = Paginator::resolveCurrentPage();
+
+          // Define how many items per page
+          $perPage = 10;
+
+          // Slice the collection to get the items for the current page
+          $currentItems = $merged_contact_data->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+          // Create a LengthAwarePaginator instance
+          $data = new LengthAwarePaginator(
+              $currentItems,
+              $merged_contact_data->count(),
+              $perPage,
+              $currentPage,
+              ['path' => Paginator::resolveCurrentPath()]
+          );
+       }
+    }else if($admin_data->user_type == "operation_manager"){
+       $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
+            
+            $team_member=[];
+            if(!empty($team_manager_services)){
+                   $service_id = [];
+                foreach($team_manager_services as $service){
+                    $service_id[] = $service->managers_services_id;
+                }
+
+        $member_contact_data = DB::table("member_service")   
+            ->select('member_service.member_id','main_user.first_name as first_name','main_user.id as id','main_user.user_type as user_type','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name','roles.modern_name as modern_name','login_history.operation as operation','login_history.ip_address as ip_address','login_history.image as image','login_history.city as city','login_history.country as country','login_history.logged_in_at as logged_in_at') 
+            ->join("main_user", 'main_user.id', '=', 'member_service.member_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('login_history','login_history.user_id','=','main_user.id')
+            ->join('services','services.service_id','=','member_service.member_service_id')
+            ->whereIn('member_service.member_service_id', $service_id)
+            ->get();
+        $manager_contact_data = DB::table("team_manager_services")   
+            ->select('team_manager_services.team_manager_id','main_user.first_name as first_name','main_user.id as id','main_user.user_type as user_type','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name','roles.modern_name as modern_name','login_history.operation as operation','login_history.ip_address as ip_address','login_history.image as image','login_history.city as city','login_history.country as country','login_history.logged_in_at as logged_in_at') 
+            ->join("main_user", 'main_user.id', '=', 'team_manager_services.team_manager_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('login_history','login_history.user_id','=','main_user.id')
+            ->join('services','services.service_id','=','team_manager_services.managers_services_id')
+            ->where('main_user.user_type',"operation_manager")
+            ->whereIn('team_manager_services.managers_services_id',$service_id)
+            ->get();
+
+          $contact_data = $member_contact_data->merge($manager_contact_data);
+          // Merge the member and manager contact data
+          $merged_contact_data = $member_contact_data->merge($manager_contact_data);
+
+          // Get the current page from the request, default to 1 if not set
+          $currentPage = Paginator::resolveCurrentPage();
+
+          // Define how many items per page
+          $perPage = 10;
+
+          // Slice the collection to get the items for the current page
+          $currentItems = $merged_contact_data->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+          // Create a LengthAwarePaginator instance
+          $data = new LengthAwarePaginator(
+              $currentItems,
+              $merged_contact_data->count(),
+              $perPage,
+              $currentPage,
+              ['path' => Paginator::resolveCurrentPath()]
+          );
+       }
     }
    return view('admin.dashboard.login_history',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
    
