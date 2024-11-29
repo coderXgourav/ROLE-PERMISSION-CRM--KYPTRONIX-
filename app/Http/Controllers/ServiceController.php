@@ -213,6 +213,7 @@ class ServiceController extends Controller
     ->join("permission",'permission.user_id','=','main_user.id')
     ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
     ->where('team_manager_services.managers_services_id','=',$s_id)
+    ->where('main_user.user_type','team_manager')
     ->count();
     
     
@@ -283,6 +284,7 @@ public function teamManagerList($service_id){
      ->select('main_user.first_name','main_user.last_name','main_user.id','main_user.user_type','main_user.email_address','main_user.phone_number')
      ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
      ->where('team_manager_services.managers_services_id','=',$service_id)
+     ->where('main_user.user_type','team_manager')
      ->paginate(10);
      
     /* $team_manager = DB::table('team_manager_services')  

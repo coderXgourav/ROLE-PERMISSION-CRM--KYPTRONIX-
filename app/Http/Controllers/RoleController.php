@@ -86,7 +86,7 @@ class RoleController extends Controller
 	    $id = session('admin');
 	    $admin_data = self::userDetails($id);
 	    $user_type = self::userType($admin_data->user_type);
-	    $roles = Role::orderBy('id','DESC')->paginate(10);   
+	    $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->paginate(10);   
 	    return view('admin.dashboard.allroles',['admin_data'=>$admin_data,'data'=>$roles,'user_type'=>$user_type]);
      }
       public function editRole($role_id){
