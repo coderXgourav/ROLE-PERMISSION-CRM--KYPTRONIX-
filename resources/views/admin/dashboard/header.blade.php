@@ -99,7 +99,7 @@
                         <div class="menu-title">Service </div>
                     </a>
                     <ul>
-                         @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager") &&  $admin_data->service_add>0)
+                         @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager") &&  $admin_data->service_add>0)
                         <li> <a href="{{ route('admin.add-service')}}"><i
                                     class='bx bx-radio-circle'></i>Add New Service</a>
                         </li>
@@ -168,7 +168,7 @@
                         <div class="menu-title">Package </div>
                     </a>
                     <ul>
-                          @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager") && $admin_data->package_add>0)
+                          @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager") && $admin_data->package_add>0)
                         <li> <a href="{{ route('admin.add-package')}}"><i
                                     class='bx bx-radio-circle'></i>Add New Package</a>
                         </li>
