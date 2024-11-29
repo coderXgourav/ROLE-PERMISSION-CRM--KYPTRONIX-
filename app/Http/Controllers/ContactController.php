@@ -282,7 +282,8 @@ $permissions->login_history_view = $request->login_history_view;
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
      $data = MainUserModel::find($contact_id);
-     
+     $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->get();
+
      $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
 
      
@@ -296,10 +297,8 @@ $permissions->login_history_view = $request->login_history_view;
        ->where('main_user.id',$contact_id)
       ->first();
 
-      $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->id)
+      $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->user_id)
       ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
-
-      
      }else if($data['user_type'] == 'customer_success_manager'){
 
        $user_details =  DB::table("main_user")
@@ -307,7 +306,7 @@ $permissions->login_history_view = $request->login_history_view;
        ->where('main_user.id',$contact_id)
       ->first();
 
-      $services_he_manage = DB::table('member_service')->where('member_id',$user_details->id)
+      $services_he_manage = DB::table('member_service')->where('member_id',$user_details->user_id)
       ->join('services','services.service_id','=','member_service.member_service_id')
       ->get();
 
@@ -321,12 +320,12 @@ $permissions->login_history_view = $request->login_history_view;
       ->where('main_user.id',$contact_id)
      ->first();
     //  $services_he_manage = Service::orderBy("service_id","DESC")->get();
-       $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->id)
+       $services_he_manage = DB::table('team_manager_services')->where('team_manager_id',$user_details->user_id)
       ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
      // echo "<pre>";
      // print_r($services_he_manage); die;
     }
-return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'user_type'=>$user_type]);
+return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'user_type'=>$user_type,'roles'=>$roles]);
    
   }
  
@@ -1462,7 +1461,6 @@ public function viewTeamMember($team_manager_id){
            foreach($customer_success_manager_services as $service){
                $service_id[] = $service->member_service_id;
             }
-
           $total_invoices_data= Invoice::where('user_id',$team_manager_id)->count();
          /* $total_clients= CustomerModel::whereIn('customer_service_id',$service_id)->whereJsonContains('team_member',"$data->id")->count();*/
          $total_clients = DB::table('customer')
@@ -1480,9 +1478,9 @@ public function viewTeamMember($team_manager_id){
           ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
           ->groupBy('customer.customer_email') 
           ->whereIn('customer.customer_service_id',$service_id) 
-          ->whereJsonContains('customer.team_member',"$data->id")
+         // ->whereJsonContains('customer.team_member',"$data->id")
           ->get();
-
+ 
           $service_data=DB::table('services')
           ->join('member_service','member_service.member_service_id','=','services.service_id')
           ->where('member_service.member_id',$team_manager_id)
@@ -1634,7 +1632,7 @@ public function showClientsList($manager_id){
             ->join('services', 'services.service_id', '=', 'customer.customer_service_id')
             ->groupBy('customer.customer_email') 
             ->whereIn('customer.customer_service_id',$service_id)
-            ->whereJsonContains('customer.team_member',$manager_id)
+           // ->whereJsonContains('customer.team_member',$manager_id)
             ->paginate(10);
 
          
@@ -2103,7 +2101,16 @@ public function addLead(){
 
       }else if($admin_data->user_type == 'customer_success_manager'){
 
-          $customer_service=MemberServiceModel::where('member_id',$admin_data->user_id)->first();
+           $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
+              ->distinct()
+              ->get(['member_service_id']); 
+
+                $service_id=[];
+              if(!empty($customer_success_manager_services)){
+                   foreach($customer_success_manager_services as $service){
+                       $service_id[] = $service->member_service_id;
+                    }
+              
           $leads_data = DB::table('customer')
             ->select(
                 'customer.customer_email',
@@ -2118,10 +2125,11 @@ public function addLead(){
             )
             ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
             ->groupBy('customer.customer_email') 
-            ->whereJsonContains('customer.team_member',"$admin_data->user_id")
+            ->whereIn('customer_service_id',$service_id)
+           // ->whereJsonContains('customer.team_member',"$admin_data->user_id")
             ->paginate(10);
           $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
-
+        }
 
       }else if($admin_data->user_type == 'operation_manager'){
 
