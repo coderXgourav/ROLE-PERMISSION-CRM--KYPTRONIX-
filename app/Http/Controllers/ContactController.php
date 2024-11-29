@@ -2503,6 +2503,7 @@ public function viewClients(){
 //       return view('admin.dashboard.view_clients',['admin_data'=>$admin_data,'data'=>$client_data,'user_type'=>$user_type]);
 //  }
  //viewClients Function End
+ 
  //viewInvoiceList Function Start
   public function viewInvoiceList(){
      $id = session('admin');
