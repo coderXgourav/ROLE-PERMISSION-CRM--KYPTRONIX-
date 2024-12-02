@@ -24,7 +24,10 @@ width: 100% !important;
         <div class="card-body p-4">
             <form id="update_contact_form">
                 @csrf
-                
+               
+                <input type="hidden" name="main_user_id" value="{{$user_details->user_id}}">
+                <input type="hidden" name="user_type" value="{{$user_details->user_type}}">
+                <input type="hidden" name="permissions_id" value="{{$user_details->permission_id}}">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="username" class="form-label">Username <span class="text-danger"> *</span></label>
@@ -114,7 +117,11 @@ width: 100% !important;
                             <i class="fas fa-shield-alt me-2"></i> Permissions Management
                         </h6>
                         <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input" id="toggleAllPermissions">
+                            <?php 
+                             $allCheck='';
+                             if(($user_details->service_add == '1') && ($user_details->service_view == '1') && ($user_details->service_edit == '1') && ($user_details->service_details_view == '1') && ($user_details->role_edit == '1') && ($user_details->staff_registration == '1') && ($user_details->staff_view == '1') && ($user_details->staff_edit == '1') && ($user_details->staff_details_view == '1') && ($user_details->package_add == '1') && ($user_details->package_view == '1') && ($user_details->package_edit == '1') && ($user_details->report_count == '1') && ($user_details->report_staff == '1') && ($user_details->report_individual == '1') && ($user_details->report_business == '1') && ($user_details->leads_add == '1') && ($user_details->leads_view == '1') && ($user_details->leads_import_individual == '1') && ($user_details->leads_import_business == '1') && ($user_details->clients_view == '1') && ($user_details->assign_manage == '1') && ($user_details->invoice_view == '1') && ($user_details->email_view == '1') && ($user_details->sms_view == '1') && ($user_details->payments_successful == '1') && ($user_details->payments_failed == '1') && ($user_details->login_history_view == '1')){ $allCheck='checked';}
+                            ?>
+                            <input type="checkbox" {{$allCheck;}} class="form-check-input" id="toggleAllPermissions">
                             <label class="form-check-label text-white" for="toggleAllPermissions">Toggle All Permissions</label>
                         </div>
                     </div>
@@ -184,7 +191,35 @@ width: 100% !important;
                                         <i class="fas fa-folder-open me-2"></i>{{ $groupName }}
                                     </p>
                                     <div class="form-check form-switch">
-                                        <input type="checkbox" 
+                                        <?php
+                                           $groupCheck='';
+                                            if(($groupName =='Service Management') && ($user_details->service_add == '1') && ($user_details->service_view == '1') && ($user_details->service_edit == '1') && ($user_details->service_details_view == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Role Management') && ($user_details->role_edit == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Staff Management') && ($user_details->staff_registration == '1') && ($user_details->staff_view == '1') && ($user_details->staff_edit == '1') && ($user_details->staff_details_view == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Package Management') && ($user_details->package_add == '1') && ($user_details->package_view == '1') && ($user_details->package_edit == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Reports Management') && ($user_details->report_count == '1') && ($user_details->report_staff == '1') && ($user_details->report_individual == '1') && ($user_details->report_business == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Leads Management') && ($user_details->leads_add == '1') && ($user_details->leads_view == '1') && ($user_details->leads_import_individual == '1') && ($user_details->leads_import_business == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Clients Management') && ($user_details->clients_view == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Assign Management') && ($user_details->assign_manage == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Invoice Management') && ($user_details->invoice_view == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Communication Management') && ($user_details->email_view == '1') && ($user_details->sms_view == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Payments Management') && ($user_details->payments_successful == '1') && ($user_details->payments_failed == '1')){
+                                                $groupCheck='checked';
+                                            }else if(($groupName =='Login History') && ($user_details->login_history_view == '1')){
+                                                $groupCheck='checked';
+                                            }
+                                       ?>  
+                                        <input type="checkbox" {{$groupCheck}}
                                                class="form-check-input group-toggle" 
                                                id="{{ Str::slug($groupName) }}-toggle"
                                                data-group="{{ Str::slug($groupName) }}">
@@ -197,11 +232,71 @@ width: 100% !important;
                                     <div class="row">
                                         @foreach($permissions as $permission)
                                             <div class="col-md-3 col-sm-6 mb-2">
+                                              <?php
+                                                $check='';
+                                                if(($permission['name'] == 'service_add') && ($user_details->service_add == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'service_view') && ($user_details->service_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'service_edit') && ($user_details->service_edit == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'service_details_view') && ($user_details->service_details_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'role_edit') && ($user_details->role_edit == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'staff_registration') && ($user_details->staff_registration == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'staff_view') && ($user_details->staff_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'staff_edit') && ($user_details->staff_edit == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'staff_details_view') && ($user_details->staff_details_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'package_add') && ($user_details->package_add == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'package_view') && ($user_details->package_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'package_edit') && ($user_details->package_edit == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'report_count') && ($user_details->report_count == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'report_staff') && ($user_details->report_staff == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'report_individual') && ($user_details->report_individual == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'report_business') && ($user_details->report_business == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'leads_add') && ($user_details->leads_add == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'leads_view') && ($user_details->leads_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'leads_import_individual') && ($user_details->leads_import_individual == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'leads_import_business') && ($user_details->leads_import_business == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'clients_view') && ($user_details->clients_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'assign_manage') && ($user_details->assign_manage == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'invoice_view') && ($user_details->invoice_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'email_view') && ($user_details->email_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'sms_view') && ($user_details->sms_view == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'payments_successful') && ($user_details->payments_successful == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'payments_failed') && ($user_details->payments_failed == '1')){
+                                                    $check='checked';
+                                                }else if(($permission['name'] == 'login_history_view') && ($user_details->login_history_view == '1')){
+                                                    $check='checked';
+                                                }
+                                               ?>  
                                                 <div class="form-check form-switch">
                                                     <input type="hidden" 
                                                            name="{{ $permission['name'] }}" 
                                                            value="0">
-                                                    <input 
+                                                   <!-- <input 
                                                         type="checkbox" 
                                                         class="form-check-input permission-checkbox {{ Str::slug($groupName) }}-checkbox"
                                                         id="{{ $permission['name'] }}" 
@@ -209,7 +304,17 @@ width: 100% !important;
                                                         value="1"
                                                         data-group="{{ Str::slug($groupName) }}"
                                                         {{ old($permission['name'], $currentPermissions[$permission['name']] ?? false) ? 'checked' : '' }}
+                                                    >-->
+                                                     <input 
+                                                        type="checkbox" 
+                                                        class="form-check-input permission-checkbox {{ Str::slug($groupName) }}-checkbox"
+                                                        id="{{ $permission['name'] }}" 
+                                                        name="{{ $permission['name'] }}" 
+                                                        value="1" {{$check}}
+                                                        data-group="{{ Str::slug($groupName) }}" 
+                                                       
                                                     >
+
                                                     <label 
                                                         class="form-check-label" 
                                                         for="{{ $permission['name'] }}"

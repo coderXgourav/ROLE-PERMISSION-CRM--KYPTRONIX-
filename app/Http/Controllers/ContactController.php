@@ -334,7 +334,6 @@ return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$d
 // THIS IS updateContact FUNCTION 
 
 public function updateContact(Request $request){
-  
       $phone = $request->phone;
       $first_name = $request->first_name;
       $last_name = $request->last_name;
@@ -342,8 +341,42 @@ public function updateContact(Request $request){
       $user_type = $request->user_type;
       $user_id = $request->main_user_id;
       $permissions_id = $request->permissions_id;
+      $account_name = $request->username;
+      $disable_account = $request->disable_account;
+      $password = $request->password;
+      $password_hint = $request->password_hint;
+     
+      $service_add = $request->service_add;
+      $service_view = $request->service_view;
+      $service_edit = $request->service_edit;
+      $service_details_view = $request->service_details_view;
+      $role_edit = $request->role_edit;
+      $staff_registration = $request->staff_registration;
+      $staff_view = $request->staff_view;
+      $staff_edit = $request->staff_edit;
+      $staff_details_view = $request->staff_details_view;
+      $package_add = $request->package_add;
+      $package_view = $request->package_view;
+      $package_edit = $request->package_edit;
+      $report_count = $request->report_count;
+      $report_staff = $request->report_staff;
+      $report_individual = $request->report_individual;
+      $report_business = $request->report_business;
+      $leads_add = $request->leads_add;
+      $leads_view = $request->leads_view;
+      $leads_import_individual = $request->leads_import_individual;
+      $leads_import_business = $request->leads_import_business;
+      $clients_view = $request->clients_view;
+      $assign_manage = $request->assign_manage;
+      $invoice_view = $request->invoice_view;
+      $email_view = $request->email_view;
+      $sms_view = $request->sms_view;
+      $payments_successful = $request->payments_successful;
+      $payments_failed = $request->payments_failed;
+      $login_history_view = $request->login_history_view;
 
-      $service_manage = $request->service_manage;
+
+     /* $service_manage = $request->service_manage;
       $leads_manage = $request->leads_manage;
       $invoice_manage = $request->invoice_manage;
       $payment_manage = $request->payment_manage;
@@ -365,15 +398,12 @@ public function updateContact(Request $request){
       // $email_template = $request->email_template;
       
       $history_manage = $request->history_manage;
-      $account_name = $request->account_name;
-      $password = $request->password;
-      $password_hint = $request->password_hint;
       // $change_password_upon_login = $request->after_login_setting_change;
       $disable_account = $request->disable_account;
       // $team_manager_permission = $request->manager_manage;
       // $customer_success_manager_permission = $request->member_manage;
       $user_registration_permission = $request->user_registration;
-      $package = $request->package;
+      $package = $request->package;*/
       
       $contact_details = MainUserModel::find($user_id);
       $contact_details->account_name = $account_name;
@@ -384,12 +414,12 @@ public function updateContact(Request $request){
       $contact_details->last_name  = $last_name ;
       $contact_details->phone_number = $phone ;
       $contact_details->email_address = $email ;
-      $contact_details->change_password_upon_login = $change_password_upon_login ;
+      //$contact_details->change_password_upon_login = $change_password_upon_login ;
       $contact_details->disable_account = $disable_account ;
       $contact_details->save();
       
       $permissions = PermissionModel::find($permissions_id);
-      $permissions->service_permission = $service_manage ;
+     /* $permissions->service_permission = $service_manage ;
       // $permissions->team_manager_permission = $team_manager_permission ;
       // $permissions->customer_success_manager_permission = $customer_success_manager_permission ;
       $permissions->leads_permission = $leads_manage ;
@@ -410,7 +440,36 @@ public function updateContact(Request $request){
       // $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
       $permissions->user_registration_permission = $user_registration_permission ;
-      $permissions->package_permission = $package;
+      $permissions->package_permission = $package;*/
+      $permissions->service_add = $request->service_add;
+      $permissions->service_view = $request->service_view;
+      $permissions->service_edit = $request->service_edit;
+      $permissions->service_details_view = $request->service_details_view;
+      $permissions->role_edit = $request->role_edit;
+      $permissions->staff_registration = $request->staff_registration;
+      $permissions->staff_view = $request->staff_view;
+      $permissions->staff_edit = $request->staff_edit;
+      $permissions->staff_details_view = $request->staff_details_view;
+      $permissions->package_add = $request->package_add;
+      $permissions->package_view = $request->package_view;
+      $permissions->package_edit = $request->package_edit;
+      $permissions->report_count = $request->report_count;
+      $permissions->report_staff = $request->report_staff;
+      $permissions->report_individual = $request->report_individual;
+      $permissions->report_business = $request->report_business;
+      $permissions->leads_add = $request->leads_add;
+      $permissions->leads_view = $request->leads_view;
+      $permissions->leads_import_individual = $request->leads_import_individual;
+      $permissions->leads_import_business = $request->leads_import_business;
+      $permissions->clients_view = $request->clients_view;
+      $permissions->assign_manage = $request->assign_manage;
+      $permissions->invoice_view = $request->invoice_view;
+      $permissions->email_view = $request->email_view;
+      $permissions->sms_view = $request->sms_view;
+      $permissions->payments_successful = $request->payments_successful;
+      $permissions->payments_failed = $request->payments_failed;
+      $permissions->login_history_view = $request->login_history_view;
+
       $permissions->user_type = $user_type;
       $permissions->save();
       
