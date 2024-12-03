@@ -491,7 +491,7 @@ public function updateContact(Request $request){
       }else if($user_type=="customer_success_manager"){
 
         $user_id =$request->main_user_id;
-        $member_services = MemberServiceModel::where('member_service_id',$user_id)->get();
+        $member_services = MemberServiceModel::where('member_id',$user_id)->get();
         foreach($member_services as $service){
           $delete = MemberServiceModel::find($service->id)->delete();
       }
