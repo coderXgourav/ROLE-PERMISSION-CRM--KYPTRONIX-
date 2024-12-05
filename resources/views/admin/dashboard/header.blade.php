@@ -126,7 +126,7 @@
                                     class='bx bx-radio-circle'></i>Add Role</a>
                         </li> 
                         <li> <a href="{{ route('admin.all-role')}}"><i
-                                    class='bx bx-radio-circle'></i> Set Role Name</a>
+                                    class='bx bx-radio-circle'></i> View Roles</a>
                         </li>
                       
                     </ul>
@@ -409,6 +409,7 @@
         <header>
             <div class="topbar d-flex align-items-center">
                 <nav class="navbar navbar-expand gap-3">
+                    <a href="{{ url()->previous() }}" class="btn btn-danger">Back</a>
                     <div class="mobile-toggle-menu">
                         <i class="bx bx-menu"></i>
                     </div>
