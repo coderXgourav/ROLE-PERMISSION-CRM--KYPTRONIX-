@@ -2711,7 +2711,6 @@ public function viewClients(){
     $clients = CustomerModel::find($customer_id);
     $invoice_details = Invoice::find($invoice_id);
     $package_details=DB::table('packages')->select('packages.title')->join('customer','customer.package_id','=','packages.package_id')->where('customer.customer_id',$customer_id)->first();
-
     return view('admin.dashboard.show_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type,'package_details'=>$package_details]);
 }
  //showInvoice Function End
@@ -3485,8 +3484,8 @@ function loginDetails($userId) {
   public function staffReportPdf(Request $request){
         $service = $request->service;
         $staff_type = $request->staff_type;
-        $role_details =Role::where('role_name',$staff_type)->first();
-        if($staff_type == 'customer_success_manager'){
+        $role_details =Role::where('id',$staff_type)->first();
+        /*if($staff_type == 'customer_success_manager'){
            $data = DB::table('main_user')
           ->select('main_user.id','main_user.first_name','main_user.last_name','main_user.phone_number','main_user.email_address','services.name as service_name','main_user.user_type')
           ->join('member_service','member_service.member_id','=','main_user.id')
@@ -3502,7 +3501,14 @@ function loginDetails($userId) {
           ->where('main_user.user_type',$staff_type)
           ->where('team_manager_services.managers_services_id',$service)
           ->get();
-        }
+        }*/
+         $data = DB::table('main_user')
+          ->select('main_user.id','main_user.first_name','main_user.last_name','main_user.phone_number','main_user.email_address','services.name as service_name','main_user.user_type')
+          ->join('role_services','role_services.member_id','=','main_user.id')
+          ->join('services','services.service_id','=','role_services.service_id')
+          ->where('main_user.user_type',$staff_type)
+          ->where('role_services.service_id',$service)
+          ->get();
         $pdf = PDF::loadView('admin.dashboard.staff_report_pdf',['data'=>$data,'role_details'=>$role_details]);
         return $pdf->stream('staff_report_pdf.pdf');
   }
