@@ -104,12 +104,12 @@ class ContactController extends Controller
 
       $services_status = 0;
        $services = $request->services;
-      if($user_type=="team_manager" || $user_type=="operation_manager"){
+      /*if($user_type=="team_manager" || $user_type=="operation_manager"){
         $services_status = 1;
       }
       if($user_type=="customer_success_manager"){
         $services_status = 2;
-      }
+      }*/
       
       // NEW 
       $service_add = $request->service_add;
@@ -250,7 +250,7 @@ $permissions->login_history_view = $request->login_history_view;
 
       // OLD 
       
-    if($services_status==1){
+   /* if($services_status==1){
      foreach ($services as $key => $value) {
       $data = new TeamManagersServicesModel;
       $data->team_manager_id = $user_id;
@@ -266,8 +266,17 @@ $permissions->login_history_view = $request->login_history_view;
         $data->member_service_id = $value;
         $data->save();
       }
+    }*/
+    if(!empty($services)){
+     foreach ($services as $key => $value) {
+        $data = new RoleService;
+        $data->member_id = $user_id;
+        $data->service_id = $value;
+        $data->user_type=$user_type;
+        $data->save();
+      } 
     }
-   
+
       return self::toastr(true,"Registration Successfully","success","Success");
       
     }
@@ -284,13 +293,18 @@ $permissions->login_history_view = $request->login_history_view;
      $data = MainUserModel::find($contact_id);
      $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->get();
 
-     $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
-
-     
+     $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();     
      $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
+     $user_details =  DB::table("main_user")
+      ->join("permission",'permission.user_id','=','main_user.id')
+       ->where('main_user.id',$contact_id)
+      ->first();
+     $services_he_manage = DB::table('role_services')->where('member_id',$user_details->user_id)
+      ->join('services','services.service_id','=','role_services.service_id')->get();
+    
     //  $team_services_id=''; $s_data='';$customer_service='';
      
-     if($data['user_type'] == 'team_manager'){
+    /* if($data['user_type'] == 'team_manager'){
 
       $user_details =  DB::table("main_user")
       ->join("permission",'permission.user_id','=','main_user.id')
@@ -324,7 +338,7 @@ $permissions->login_history_view = $request->login_history_view;
       ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
      // echo "<pre>";
      // print_r($services_he_manage); die;
-    }
+    }*/
 return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'user_type'=>$user_type,'roles'=>$roles]);
    
   }
@@ -476,7 +490,7 @@ public function updateContact(Request $request){
       $services = $request->services;
       $services_status = 0;
       
-      if($user_type=="team_manager" || $user_type=="operation_manager"){
+      /*if($user_type=="team_manager" || $user_type=="operation_manager"){
         
         $manager_services = TeamManagersServicesModel::where('team_manager_id',$user_id)->get();
         foreach($manager_services as $service){
@@ -503,7 +517,18 @@ public function updateContact(Request $request){
         $services_data->save();
         }
       }
-      }
+      }*/
+       $role_services = RoleService::where('member_id',$user_id)->get();
+        foreach($role_services as $service){
+            $delete = RoleService::find($service->role_services_id)->delete();
+        }
+           foreach($services as $service){
+            $add = new RoleService();
+            $add->member_id = $user_id ;
+            $add->service_id = $service;
+            $add->user_type = $user_type;
+            $add->save();
+        }
     return self::toastr(true,"Updated Successfully","success","Success");
      
 }
@@ -918,6 +943,7 @@ public function export()
     }
    public function filterUsers(Request $request){
       $filter = $request->filter;
+      $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->get();
       // if($filter != ""){
       //   switch($filter){
       //     case "Operation Managers":
@@ -953,11 +979,11 @@ public function export()
             $form =$request->form;
           }else{$form='';}
           if($user_type=="admin" && $form=='staff'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin" && $form=='staff1'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager" && $form=='staff'){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
@@ -1093,7 +1119,7 @@ public function export()
              }
             
           $user_type = self::userType($admin_data->user_type);
-         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type,'roles'=>$roles]);
       // }
 
     }
@@ -1401,21 +1427,34 @@ public function viewTeamMember($team_manager_id){
     $admin_data = self::userDetails($team_id);
     $team_manager_id = Crypt::decrypt($team_manager_id);
     $data = MainUserModel::find($team_manager_id);
-     
-  
-  $user_type = $data['user_type'];
-  $total_team_member=0;
-  $total_invoices_data=0;
-  $convert_to_clients=0;
-  $total_clients=0;
-  $service_data='';
-  $user_login_details=0;
-  $user_logout=0;
+    $user_type = $data['user_type'];
+    $total_team_member=0;
+    $total_invoices_data=0;
+    $convert_to_clients=0;
+    $total_clients=0;
+    $service_data='';
+    $user_login_details=0;
+    $user_logout=0;
+    $team_manager_count = 0;
+    $user_role = '';
+
+    $role_services = RoleService::where('member_id',$team_manager_id)->distinct()->get(['service_id']);
+        $service_id = [];
+
+      foreach($role_services as $service){
+        $service_id[] = $service->service_id;
+      }
+
+     $team_manager_count =DB::table('main_user')
+     ->join('role_services','role_services.member_id','=','main_user.id')
+     ->whereIn('role_services.service_id',$service_id)
+     ->count();
+
+     $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_manager_id)->count();
 
 
-  
    
-    if( $data->user_type == 'team_manager' || $data->user_type == 'operation_manager'){
+    /*if( $data->user_type == 'team_manager' || $data->user_type == 'operation_manager'){
        $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
 
@@ -1423,10 +1462,7 @@ public function viewTeamMember($team_manager_id){
         $service_id[] = $service->managers_services_id;
       }
 
-    //  echo "<pre>";
-    //  print_r($service_id);
-    //  die;
-    
+  
       if($data->user_type == 'operation_manager'){
         $user_role = Role::where('role_name',"operation_manager")->first();
 
@@ -1565,7 +1601,7 @@ public function viewTeamMember($team_manager_id){
       $total_invoices_data=Invoice::all()->count();
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
         $loginLogoutCount = 0;
-    }
+    }*/
 
     return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout,'user_role'=>$user_role,'loginLogoutCount'=>$loginLogoutCount,'team_manager_count'=>$team_manager_count]);
 }

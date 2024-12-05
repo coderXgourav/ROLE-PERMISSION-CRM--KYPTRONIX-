@@ -80,7 +80,7 @@ width: 100% !important;
                         <select class="form-select" id="staff_type" name="user_type" required onchange="StaffType(this.value)">
                             <option value="">Select Staff Type</option>
                        @foreach ($roles as $item)
-                       <option value="{{$item->role_name}}" <?php if($user_details->user_type == $item->role_name ){ echo 'selected';} ?>>{{$item->modern_name}}</option>
+                       <option value="{{$item->id}}" <?php if($user_details->user_type == $item->id ){ echo 'selected';} ?>>{{$item->modern_name}}</option>
                        @endforeach
                         </select>
                     </div>
