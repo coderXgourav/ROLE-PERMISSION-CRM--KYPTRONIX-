@@ -17,6 +17,7 @@ use App\Models\LoginHistoryModel;
 use GuzzleHttp\Client;
 use App\Models\Subservice;
 use App\Models\Role;
+use App\Models\RoleService;
 
 use App\Models\Package;
 use Mail;
@@ -538,7 +539,23 @@ public function loginHistory(Request $request ){
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    if($admin_data->user_type == "admin"){
+
+    $role_services = RoleService::where('member_id',$admin_data->user_id)->distinct()->get(['service_id']);
+        $service_id = [];
+
+      foreach($role_services as $service){
+        $service_id[] = $service->service_id;
+      }
+        $data = DB::table("role_services")   
+            ->select('role_services.member_id','main_user.first_name as first_name','main_user.id as id','main_user.user_type as user_type','main_user.last_name as last_name','main_user.phone_number as phone_number','main_user.email_address as email_address','services.name as name','roles.modern_name as modern_name','login_history.operation as operation','login_history.ip_address as ip_address','login_history.image as image','login_history.city as city','login_history.country as country','login_history.logged_in_at as logged_in_at') 
+            ->join("main_user", 'main_user.id', '=', 'role_services.member_id')
+            ->join('roles','roles.role_name','=','main_user.user_type')
+            ->join('login_history','login_history.user_id','=','main_user.id')
+            ->join('services','services.service_id','=','role_services.service_id')
+            ->whereIn('role_services.service_id', $service_id)
+            ->paginate(10);
+
+   /* if($admin_data->user_type == "admin"){
 
       if($staffId!=""){
           $data =   DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->where('main_user.id',$staffId)->paginate(10);
@@ -644,7 +661,7 @@ public function loginHistory(Request $request ){
               ['path' => Paginator::resolveCurrentPath()]
           );
        }
-    }
+    }*/
    return view('admin.dashboard.login_history',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
    
 
