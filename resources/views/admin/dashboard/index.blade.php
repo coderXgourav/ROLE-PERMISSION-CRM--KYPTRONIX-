@@ -154,7 +154,6 @@
                                     @php
                                       $total_sub_service=0;
                                       $total_sub_service = DB::table('subservices')->where('service_id',$value->service_id)->count();
-
                                     @endphp
                               
                                     <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">{{$value->name}}
