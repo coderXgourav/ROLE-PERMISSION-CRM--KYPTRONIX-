@@ -104,12 +104,12 @@ class ContactController extends Controller
 
       $services_status = 0;
        $services = $request->services;
-      if($user_type=="team_manager" || $user_type=="operation_manager"){
+      /*if($user_type=="team_manager" || $user_type=="operation_manager"){
         $services_status = 1;
       }
       if($user_type=="customer_success_manager"){
         $services_status = 2;
-      }
+      }*/
       
       // NEW 
       $service_add = $request->service_add;
@@ -250,7 +250,7 @@ $permissions->login_history_view = $request->login_history_view;
 
       // OLD 
       
-    if($services_status==1){
+   /* if($services_status==1){
      foreach ($services as $key => $value) {
       $data = new TeamManagersServicesModel;
       $data->team_manager_id = $user_id;
@@ -266,8 +266,17 @@ $permissions->login_history_view = $request->login_history_view;
         $data->member_service_id = $value;
         $data->save();
       }
+    }*/
+    if(!empty($services)){
+     foreach ($services as $key => $value) {
+        $data = new RoleService;
+        $data->member_id = $user_id;
+        $data->service_id = $value;
+        $data->user_type=$user_type;
+        $data->save();
+      } 
     }
-   
+
       return self::toastr(true,"Registration Successfully","success","Success");
       
     }
@@ -284,13 +293,18 @@ $permissions->login_history_view = $request->login_history_view;
      $data = MainUserModel::find($contact_id);
      $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->get();
 
-     $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();
-
-     
+     $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->get();     
      $permissions_data = PermissionModel::where('user_id',$contact_id)->first();
+     $user_details =  DB::table("main_user")
+      ->join("permission",'permission.user_id','=','main_user.id')
+       ->where('main_user.id',$contact_id)
+      ->first();
+     $services_he_manage = DB::table('role_services')->where('member_id',$user_details->user_id)
+      ->join('services','services.service_id','=','role_services.service_id')->get();
+    
     //  $team_services_id=''; $s_data='';$customer_service='';
      
-     if($data['user_type'] == 'team_manager'){
+    /* if($data['user_type'] == 'team_manager'){
 
       $user_details =  DB::table("main_user")
       ->join("permission",'permission.user_id','=','main_user.id')
@@ -324,7 +338,7 @@ $permissions->login_history_view = $request->login_history_view;
       ->join('services','services.service_id','=','team_manager_services.managers_services_id')->get();
      // echo "<pre>";
      // print_r($services_he_manage); die;
-    }
+    }*/
 return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$data,'services'=>$services,'user_details'=>$user_details,'services_he_manage'=>$services_he_manage,'user_type'=>$user_type,'roles'=>$roles]);
    
   }
@@ -334,7 +348,6 @@ return view('admin.dashboard.edit_contact',['admin_data'=>$admin_data,'data'=>$d
 // THIS IS updateContact FUNCTION 
 
 public function updateContact(Request $request){
-  
       $phone = $request->phone;
       $first_name = $request->first_name;
       $last_name = $request->last_name;
@@ -342,8 +355,42 @@ public function updateContact(Request $request){
       $user_type = $request->user_type;
       $user_id = $request->main_user_id;
       $permissions_id = $request->permissions_id;
+      $account_name = $request->username;
+      $disable_account = $request->disable_account;
+      $password = $request->password;
+      $password_hint = $request->password_hint;
+     
+      $service_add = $request->service_add;
+      $service_view = $request->service_view;
+      $service_edit = $request->service_edit;
+      $service_details_view = $request->service_details_view;
+      $role_edit = $request->role_edit;
+      $staff_registration = $request->staff_registration;
+      $staff_view = $request->staff_view;
+      $staff_edit = $request->staff_edit;
+      $staff_details_view = $request->staff_details_view;
+      $package_add = $request->package_add;
+      $package_view = $request->package_view;
+      $package_edit = $request->package_edit;
+      $report_count = $request->report_count;
+      $report_staff = $request->report_staff;
+      $report_individual = $request->report_individual;
+      $report_business = $request->report_business;
+      $leads_add = $request->leads_add;
+      $leads_view = $request->leads_view;
+      $leads_import_individual = $request->leads_import_individual;
+      $leads_import_business = $request->leads_import_business;
+      $clients_view = $request->clients_view;
+      $assign_manage = $request->assign_manage;
+      $invoice_view = $request->invoice_view;
+      $email_view = $request->email_view;
+      $sms_view = $request->sms_view;
+      $payments_successful = $request->payments_successful;
+      $payments_failed = $request->payments_failed;
+      $login_history_view = $request->login_history_view;
 
-      $service_manage = $request->service_manage;
+
+     /* $service_manage = $request->service_manage;
       $leads_manage = $request->leads_manage;
       $invoice_manage = $request->invoice_manage;
       $payment_manage = $request->payment_manage;
@@ -365,15 +412,12 @@ public function updateContact(Request $request){
       // $email_template = $request->email_template;
       
       $history_manage = $request->history_manage;
-      $account_name = $request->account_name;
-      $password = $request->password;
-      $password_hint = $request->password_hint;
       // $change_password_upon_login = $request->after_login_setting_change;
       $disable_account = $request->disable_account;
       // $team_manager_permission = $request->manager_manage;
       // $customer_success_manager_permission = $request->member_manage;
       $user_registration_permission = $request->user_registration;
-      $package = $request->package;
+      $package = $request->package;*/
       
       $contact_details = MainUserModel::find($user_id);
       $contact_details->account_name = $account_name;
@@ -384,12 +428,12 @@ public function updateContact(Request $request){
       $contact_details->last_name  = $last_name ;
       $contact_details->phone_number = $phone ;
       $contact_details->email_address = $email ;
-      $contact_details->change_password_upon_login = $change_password_upon_login ;
+      //$contact_details->change_password_upon_login = $change_password_upon_login ;
       $contact_details->disable_account = $disable_account ;
       $contact_details->save();
       
       $permissions = PermissionModel::find($permissions_id);
-      $permissions->service_permission = $service_manage ;
+     /* $permissions->service_permission = $service_manage ;
       // $permissions->team_manager_permission = $team_manager_permission ;
       // $permissions->customer_success_manager_permission = $customer_success_manager_permission ;
       $permissions->leads_permission = $leads_manage ;
@@ -410,14 +454,43 @@ public function updateContact(Request $request){
       // $permissions->email_template_permission = $email_template ;
       $permissions->login_history_permission = $history_manage ;
       $permissions->user_registration_permission = $user_registration_permission ;
-      $permissions->package_permission = $package;
+      $permissions->package_permission = $package;*/
+      $permissions->service_add = $request->service_add;
+      $permissions->service_view = $request->service_view;
+      $permissions->service_edit = $request->service_edit;
+      $permissions->service_details_view = $request->service_details_view;
+      $permissions->role_edit = $request->role_edit;
+      $permissions->staff_registration = $request->staff_registration;
+      $permissions->staff_view = $request->staff_view;
+      $permissions->staff_edit = $request->staff_edit;
+      $permissions->staff_details_view = $request->staff_details_view;
+      $permissions->package_add = $request->package_add;
+      $permissions->package_view = $request->package_view;
+      $permissions->package_edit = $request->package_edit;
+      $permissions->report_count = $request->report_count;
+      $permissions->report_staff = $request->report_staff;
+      $permissions->report_individual = $request->report_individual;
+      $permissions->report_business = $request->report_business;
+      $permissions->leads_add = $request->leads_add;
+      $permissions->leads_view = $request->leads_view;
+      $permissions->leads_import_individual = $request->leads_import_individual;
+      $permissions->leads_import_business = $request->leads_import_business;
+      $permissions->clients_view = $request->clients_view;
+      $permissions->assign_manage = $request->assign_manage;
+      $permissions->invoice_view = $request->invoice_view;
+      $permissions->email_view = $request->email_view;
+      $permissions->sms_view = $request->sms_view;
+      $permissions->payments_successful = $request->payments_successful;
+      $permissions->payments_failed = $request->payments_failed;
+      $permissions->login_history_view = $request->login_history_view;
+
       $permissions->user_type = $user_type;
       $permissions->save();
       
       $services = $request->services;
       $services_status = 0;
       
-      if($user_type=="team_manager" || $user_type=="operation_manager"){
+      /*if($user_type=="team_manager" || $user_type=="operation_manager"){
         
         $manager_services = TeamManagersServicesModel::where('team_manager_id',$user_id)->get();
         foreach($manager_services as $service){
@@ -432,7 +505,7 @@ public function updateContact(Request $request){
       }else if($user_type=="customer_success_manager"){
 
         $user_id =$request->main_user_id;
-        $member_services = MemberServiceModel::where('member_service_id',$user_id)->get();
+        $member_services = MemberServiceModel::where('member_id',$user_id)->get();
         foreach($member_services as $service){
           $delete = MemberServiceModel::find($service->id)->delete();
       }
@@ -444,7 +517,18 @@ public function updateContact(Request $request){
         $services_data->save();
         }
       }
-      }
+      }*/
+       $role_services = RoleService::where('member_id',$user_id)->get();
+        foreach($role_services as $service){
+            $delete = RoleService::find($service->role_services_id)->delete();
+        }
+           foreach($services as $service){
+            $add = new RoleService();
+            $add->member_id = $user_id ;
+            $add->service_id = $service;
+            $add->user_type = $user_type;
+            $add->save();
+        }
     return self::toastr(true,"Updated Successfully","success","Success");
      
 }
@@ -859,6 +943,7 @@ public function export()
     }
    public function filterUsers(Request $request){
       $filter = $request->filter;
+      $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->get();
       // if($filter != ""){
       //   switch($filter){
       //     case "Operation Managers":
@@ -894,11 +979,11 @@ public function export()
             $form =$request->form;
           }else{$form='';}
           if($user_type=="admin" && $form=='staff'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin" && $form=='staff1'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.role_name','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager" && $form=='staff'){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
@@ -1034,7 +1119,7 @@ public function export()
              }
             
           $user_type = self::userType($admin_data->user_type);
-         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
+         return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type,'roles'=>$roles]);
       // }
 
     }
@@ -1342,21 +1427,34 @@ public function viewTeamMember($team_manager_id){
     $admin_data = self::userDetails($team_id);
     $team_manager_id = Crypt::decrypt($team_manager_id);
     $data = MainUserModel::find($team_manager_id);
-     
-  
-  $user_type = $data['user_type'];
-  $total_team_member=0;
-  $total_invoices_data=0;
-  $convert_to_clients=0;
-  $total_clients=0;
-  $service_data='';
-  $user_login_details=0;
-  $user_logout=0;
+    $user_type = $data['user_type'];
+    $total_team_member=0;
+    $total_invoices_data=0;
+    $convert_to_clients=0;
+    $total_clients=0;
+    $service_data='';
+    $user_login_details=0;
+    $user_logout=0;
+    $team_manager_count = 0;
+    $user_role = '';
+
+    $role_services = RoleService::where('member_id',$team_manager_id)->distinct()->get(['service_id']);
+        $service_id = [];
+
+      foreach($role_services as $service){
+        $service_id[] = $service->service_id;
+      }
+
+     $team_manager_count =DB::table('main_user')
+     ->join('role_services','role_services.member_id','=','main_user.id')
+     ->whereIn('role_services.service_id',$service_id)
+     ->count();
+
+     $loginLogoutCount = DB::table('main_user')->join('login_history','login_history.user_id','=','main_user.id')->where('main_user.id',$team_manager_id)->count();
 
 
-  
    
-    if( $data->user_type == 'team_manager' || $data->user_type == 'operation_manager'){
+    /*if( $data->user_type == 'team_manager' || $data->user_type == 'operation_manager'){
        $team_manager_services = TeamManagersServicesModel::where('team_manager_id',$team_manager_id)->distinct()->get(['managers_services_id']);
         $service_id = [];
 
@@ -1364,10 +1462,7 @@ public function viewTeamMember($team_manager_id){
         $service_id[] = $service->managers_services_id;
       }
 
-    //  echo "<pre>";
-    //  print_r($service_id);
-    //  die;
-    
+  
       if($data->user_type == 'operation_manager'){
         $user_role = Role::where('role_name',"operation_manager")->first();
 
@@ -1506,7 +1601,7 @@ public function viewTeamMember($team_manager_id){
       $total_invoices_data=Invoice::all()->count();
       $total_team_member=CustomerModel::where('team_member','!=','null')->count();
         $loginLogoutCount = 0;
-    }
+    }*/
 
     return view('admin.dashboard.view_team_member',['admin_data'=>$admin_data,'user_type'=>$user_type,'data'=>$data,'total_team_member'=>$total_team_member,'clients'=>$total_clients, 'convert_to_clients'=>20,'invoice_data'=>$total_invoices_data,'service_data'=>$service_data,'user_login_details'=>$user_login_details,'user_logout'=>$user_logout,'user_role'=>$user_role,'loginLogoutCount'=>$loginLogoutCount,'team_manager_count'=>$team_manager_count]);
 }

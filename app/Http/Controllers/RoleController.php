@@ -78,6 +78,7 @@ class RoleController extends Controller
      }
        $role_details = new Role;
        $role_details->role_name=$name;
+       $role_details->modern_name=$name;
        $role_details->save();
           
        return self::toastr(true," Add Successfully","success","Success");
@@ -106,6 +107,8 @@ class RoleController extends Controller
           }
 	      $role_details = Role::find($role_id);
 	      $role_details->modern_name = $name;
+        $role_details->role_name=$name;
+   
 	      $role_details->save();
         return self::toastr(true,"Updated Successfull","success","Success");
       } 

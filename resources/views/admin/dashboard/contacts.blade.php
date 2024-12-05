@@ -17,12 +17,19 @@
 										<div class="row">
 										<div class="col-md-4">
 												
-								<select name="filter"  class="form-control" id="" >
+								<!-- <select name="filter"  class="form-control" id="" >
 									<option value="">Filter Users</option>
 									<option value="Operation Managers"  {{ request('filter') == 'Operation Managers' ? 'selected' : '' }}>Operation Managers</option>
 									<option value="Team Managers"  {{ request('filter') == 'Team Managers' ? 'selected' : '' }}>Team Managers</option>
 									<option value="Customer Success Manager"  {{ request('filter') == 'Customer Success Manager' ? 'selected' : '' }}>Customer Success Manager</option>
 								</select>
+                                 --> 
+                                  <select class="form-select" id="" name="filter" required onchange="StaffType(this.value)">
+			                            <option value="">Filter Users</option>
+			                       @foreach ($roles as $item)
+			                       <option value="{{$item->id}}" {{ request('filter') == '$item->id' ? 'selected' : '' }}>{{$item->modern_name}}</option>
+			                       @endforeach
+			                        </select>
 
 										</div>
 										<div class="col-md-2"><button type="submit" class="btn btn-success">Search</button></div>
@@ -52,7 +59,7 @@
                                     <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
 										<td>{{ucwords($value->first_name)}} {{ucwords($value->last_name)}}</td>
-										<td>{{$value->modern_name}}</td>
+										<td>{{ucwords($value->modern_name)}}</td>
 										<td>{{$value->phone_number}}</td>
 										<td>{{$value->email_address}}</td>
 										
