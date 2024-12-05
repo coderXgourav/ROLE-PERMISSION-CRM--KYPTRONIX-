@@ -38,9 +38,9 @@
                                 <img src="{{ url('assets/images/team.png') }}" 
                                      alt="Profile Picture" 
                                      class="w-32 h-32 rounded-full border-4 border-blue-500 mx-auto md:mx-0">
-                                @if($data->user_type == "operation_manager")
+                              {{--  @if($data->user_type == "operation_manager") --}}
                                     <span class="absolute bottom-0 right-0 bg-green-500 p-1.5 rounded-full border-2 border-white"></span>
-                                @endif
+                              {{--  @endif --}}
                             </div>
                         </div>
                         
@@ -87,8 +87,8 @@
                     </div>
                     {{-- @if($data->user_type != "operation_manager") --}}
                         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                             @if(isset($data) && ( $data->user_type == 'operation_manager'))
-                                <a href="{{ route('admin.show-team-manager-list', ['id' => $data->id]) }}" 
+                          {{--   @if(isset($data) && ( $data->user_type == 'operation_manager')) --}}
+                               <!-- <a href="{{ route('admin.show-team-manager-list', ['id' => $data->id]) }}" 
                                    class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                     <div class="flex items-center justify-between">
                                         <div>
@@ -102,15 +102,15 @@
                                             </svg>
                                         </div>
                                     </div>
-                                </a>
-                            @endif
-                            @if(isset($data) && ($data->user_type == 'team_manager' || $data->user_type == 'operation_manager'))
-                                <a href="{{ route('admin.show-team-member-list', ['id' => $data->id]) }}" 
+                                </a>-->
+                           {{-- @endif
+                            @if(isset($data) && ($data->user_type == 'team_manager' || $data->user_type == 'operation_manager')) --}}
+                               <!-- <a href="{{ route('admin.show-team-member-list', ['id' => $data->id]) }}" 
                                    class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                     <div class="flex items-center justify-between">
                                         <div>
                                             <p class="text-sm text-gray-500">Team Members</p>
-                                            <p class="text-2xl font-bold text-gray-800">{{ count($total_team_member) }}</p>
+                                            <p class="text-2xl font-bold text-gray-800">{{ $total_team_member }}</p>
                                         </div>
                                         <div class="bg-blue-100 p-3 rounded-full">
                                             <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,8 +119,8 @@
                                             </svg>
                                         </div>
                                     </div>
-                                </a>
-                            @endif
+                                </a>-->
+                          {{--  @endif --}}
                             <a href="{{ route('admin.show-clients-list', ['id' => $data->id]) }}" 
                                class="profile-stats bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                 <div class="flex items-center justify-between">
