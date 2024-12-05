@@ -44,7 +44,7 @@
 											  <select name="staff_type" class="form-select" id="staff_type" required>
 					                        	<option value="">Select</option>
 					                        	@foreach($staff_type as $value)
-					                        	 <option value="{{$value->role_name}}">{{$value->modern_name}}</option>
+					                        	 <option value="{{$value->id}}">{{$value->modern_name}}</option>
 					                        	@endforeach
 					                          </select>
 				                            </div>

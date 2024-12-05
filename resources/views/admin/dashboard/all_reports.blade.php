@@ -14,8 +14,8 @@
 									<tr>
 										<th>No.</th>
 										<th>Service Name</th>
-										<th>Team Manager</th>
-										<th>Team Member</th>
+										<!-- <th>Team Manager</th>
+										<th>Team Member</th>-->
 										<th>Leads</th>
 										<th>Invoice</th>
 									</tr>
@@ -51,10 +51,11 @@
                                     <tr id="{{$value->service_id}}">
 										<td>{{$i++}}</td>
 										<td>{{$value->name}}</td>
-										<td><a href="{{route('admin.team-manager-list',['id'=>$value->service_id])}}" style="text-decoration:none;">{{$team_manager_service}}</a></td>
+										<!-- <td><a href="{{route('admin.team-manager-list',['id'=>$value->service_id])}}" style="text-decoration:none;">{{$team_manager_service}}</a></td>
 										<td><a href="{{route('admin.team-member',['id'=>$value->service_id])}}" style="text-decoration:none;">
                                         {{$team_member}}</a></td>
-										<td><a href="{{route('admin.show-leads-list',['id'=>$value->service_id])}}" style="text-decoration:none;">{{$leads}}</a></td>
+										 -->
+										 <td><a href="{{route('admin.show-leads-list',['id'=>$value->service_id])}}" style="text-decoration:none;">{{$leads}}</a></td>
                                    	    <td><a href="{{route('admin.service_invoices',['id'=>$value->service_id])}}" style="text-decoration: none;">{{$invoice}}</a></td>
 									</tr>
                                     @endforeach

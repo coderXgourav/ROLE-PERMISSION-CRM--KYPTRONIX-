@@ -76,7 +76,7 @@
                             </div>
                         </div>
                     </a>
-                     <a  href="{{ route('admin.operation-manger-list', ['id' => $data->service_id]) }}"
+                     <!--<a  href="{{ route('admin.operation-manger-list', ['id' => $data->service_id]) }}"
                        class="stat-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>
@@ -95,10 +95,10 @@
                                 <div class="bg-blue-600 h-2 rounded-full" style="width: {{ ($total_sub_service/max($total_sub_service, 1)) * 100 }}%"></div>
                             </div>
                         </div>
-                    </a>
+                    </a>-->
 
                     <!-- Team Manager Card -->
-                    <a href="{{ route('admin.team-manager-list', ['id' => $data->service_id]) }}" 
+                    <!--<a href="{{ route('admin.team-manager-list', ['id' => $data->service_id]) }}" 
                        class="stat-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>
@@ -117,10 +117,10 @@
                                 <div class="bg-purple-600 h-2 rounded-full" style="width: {{ ($team_manager/max($team_manager, 1)) * 100 }}%"></div>
                             </div>
                         </div>
-                    </a>
+                    </a>-->
 
                     <!-- Team Members Card -->
-                    <a href="{{ route('admin.team-member', ['id' => $data->service_id]) }}" 
+                   <!-- <a href="{{ route('admin.team-member', ['id' => $data->service_id]) }}" 
                        class="stat-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>
@@ -139,7 +139,7 @@
                                 <div class="bg-green-600 h-2 rounded-full" style="width: {{ ($total_team_member/max($total_team_member, 1)) * 100 }}%"></div>
                             </div>
                         </div>
-                    </a>
+                    </a>-->
 
                     <!-- Leads Card -->
                     <a href="{{ route('admin.show-leads-list', ['id' => $data->service_id]) }}" 

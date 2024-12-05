@@ -126,7 +126,7 @@
                    
             <tr>
                 <td>{{$date}}</td>
-                <td>{{$package_details->title}}</td>
+                <td>@if(!empty($package_details->title)){{$package_details->title}} @endif</td>
                 <td>{{$invoice_details->price}}$</td>
             </tr>
           <?php }  ?>
