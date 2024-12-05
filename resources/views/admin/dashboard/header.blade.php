@@ -396,7 +396,7 @@
                            
                             <li> <a href="{{ route('admin-logout') }}"><i
                                         class='bx bx-radio-circle'></i>Logout</a>
-                            </li>
+                            </li>  
                             
                         </ul>
                     </li>
