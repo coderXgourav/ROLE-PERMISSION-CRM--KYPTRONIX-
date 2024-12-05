@@ -14,7 +14,6 @@
 									<tr>
 										<th>No.</th>
 										<th>Role Name</th>
-										<th>Set Role Name</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -27,7 +26,6 @@
                                     <tr id="{{$value->id}}">
 										<td>{{$i++}}</td>
 										<td>{{ucwords($value->role_name)}}</td>
-										<td>{{ucwords($value->modern_name)}}</td>
 										@php
 										$role_id = Crypt::encrypt($value->id);
 									   @endphp
