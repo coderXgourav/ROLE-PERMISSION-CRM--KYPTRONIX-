@@ -84,6 +84,11 @@
                                 </p>
                             </div>
                         </div>
+                         
+									
+
+                          <div style="position: absolute; right:125px;"> <a href="{{route('admin.edit',['id'=>$data['id']])}}"  class="btn btn-primary">Edit Profile</a></div>
+
                     </div>
                     {{-- @if($data->user_type != "operation_manager") --}}
                         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
