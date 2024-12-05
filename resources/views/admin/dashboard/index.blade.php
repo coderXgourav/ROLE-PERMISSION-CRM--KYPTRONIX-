@@ -6,107 +6,6 @@
       <title>Dashboard</title>
   @endpush
                     <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
-						@if($admin_data->user_type=="admin")
-                      <div class="col">
-
-                            <div class="card radius-10">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <p class="mb-0 text-secondary">
-                                                Total Operation Managers
-                                            </p>
-                                            <h4 class="my-1">{{$operation_manager}}</h4>
-                                            <p
-                                                class="mb-0 font-13 text-success"
-                                            >
-                                                <i
-                                                    class="bx bxs-up-arrow align-middle"
-                                                ></i
-                                                ><a href="{{route('admin.contact',['form'=>'staff1'])}}" class="text-success">View Users</a>
-                                            </p>
-                                        </div>
-                                        
-                                         <div
-                                            class="widgets-icons bg-light-success text-success ms-auto"
-                                        >
-                                             <i class="bx bxs-group"></i>
-                                        </div>
-                                    </div>
-                                    <div id="chart2"></div>
-                                </div>
-                            </div>
-                            
-                        </div>
-						@endif
-
-						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" )
-
-						<div class="col">
-                            <div class="card radius-10">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <p class="mb-0 text-secondary">
-                                                Total Team Manager
-                                            </p>
-                                            <h4 class="my-1">{{$team_manager}}</h4>
-                                            <p
-                                                class="mb-0 font-13 text-success"
-                                            >
-                                                <i
-                                                    class="bx bxs-up-arrow align-middle"
-                                                ></i
-                                                ><a href="{{route('admin.team-managers')}}" class="text-success">View Users</a>
-                                            </p>
-                                        </div>
-                                        
-                                         <div
-                                            class="widgets-icons bg-light-success text-success ms-auto"
-                                        >
-                                             <i class="bx bxs-group"></i>
-                                        </div>
-                                    </div>
-                                    <div id="chart6"></div>
-                                </div>
-                            </div>
-                            
-                        </div>
-						@endif
-
-						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager"  )
-						<div class="col">
-                            <div class="card radius-10">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <p class="mb-0 text-secondary">
-                                                Total Customer Success Manager
-                                            </p>
-                                            <h4 class="my-1">{{$team_member}}</h4>
-                                            <p
-                                                class="mb-0 font-13 text-success"
-                                            >
-                                                <i
-                                                    class="bx bxs-up-arrow align-middle"
-                                                ></i
-                                                ><a href="{{route('admin.contact',['form'=>'staff'])}}" class="text-success">View Users</a>
-                                            </p>
-                                        </div>
-                                        
-                                         <div
-                                            class="widgets-icons bg-light-success text-success ms-auto"
-                                        >
-                                             <i class="bx bxs-group"></i>
-                                        </div>
-                                    </div>
-                                    <div id="chart7"></div>
-                                </div>
-                            </div>
-                              
-                        </div>
-						@endif
-						 
                         <div class="col">
                             <div class="card radius-10">
                                 <div class="card-body">
@@ -138,74 +37,7 @@
                             
                         </div>
 
-						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager")
 
-                          
-                           <div class="col">
-                            <div class="card radius-10">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <p class="mb-0 text-secondary">
-                                               Assign Leads
-                                            </p>
-                                            <h4 class="my-1">{{$assign_customer}}</h4>
-                                            <p
-                                                class="mb-0 font-13 text-success"
-                                            >
-                                                <i
-                                                    class="bx bxs-up-arrow align-middle"
-                                                ></i
-                                                ><a href="{{route('admin.assign')}}" class="text-success">View Assigned Leads</a>
-                                            </p>
-                                        </div>
-                                        
-                                          <div
-                                            class="widgets-icons bg-light-success text-success ms-auto"
-                                        >
-                                             <i class="bx bxs-group"></i>
-                                        </div>
-                                    </div>
-                                    <div id="chart3"></div>
-                                </div>
-                            </div>
-                            
-                        </div>
-						@endif
-
-						@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" ||$admin_data->user_type=="team_manager")
-						
-                           <div class="col">
-                            <div class="card radius-10">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <p class="mb-0 text-secondary">
-                                               None Assign Leads
-                                            </p>
-                                            <h4 class="my-1">{{$none_assign_customer}}</h4>
-                                            <p
-                                                class="mb-0 font-13 text-success"
-                                            >
-                                                <i
-                                                    class="bx bxs-up-arrow align-middle"
-                                                ></i
-                                                ><a href="{{route('admin.noneassign')}}" class="text-success">None Assign Leads</a>
-                                            </p>
-                                        </div>
-                                        
-                                         <div
-                                            class="widgets-icons bg-light-success text-success ms-auto"
-                                        >
-                                             <i class="bx bxs-group"></i>
-                                        </div>
-                                    </div>
-                                    <div id="chart5"></div>
-                                </div>
-                            </div>
-                            
-                        </div>
-						@endif
                         	@if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" )
 						
                            <div class="col">
@@ -240,7 +72,6 @@
                         </div>
 						@endif
 
-						@if($admin_data->user_type=="customer_success_manager")
 
                            <div class="col">
                             <div class="card radius-10">
@@ -271,8 +102,6 @@
                             </div>
                             
                         </div>
-						@endif
-						@if($admin_data->user_type=="customer_success_manager")
 
                            <div class="col">
                             <div class="card radius-10">
@@ -302,7 +131,6 @@
                                 </div>
                             </div>
                         </div>
-						@endif
                      
                      
                     </div>
