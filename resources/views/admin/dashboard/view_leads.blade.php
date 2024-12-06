@@ -217,7 +217,7 @@
                             <option value="">All Services</option>
                             @foreach ($services as $item)
                                 <option value="{{ $item->service_id }}" 
-                                    {{ request('service') == $item->service_id ? 'selected' : '' }}>
+                                {{ request('service') == $item->service_id ? 'selected' : '' }}>
                                     {{ $item->name }}
                                 </option>
                             @endforeach

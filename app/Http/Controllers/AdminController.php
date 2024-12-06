@@ -98,14 +98,39 @@ public function decodeBase64Image($base64_image)
        }
      }
      
-       public function userDetails($id){
-          $user_details = DB::table('main_user')
+         public function userDetails($id){
+        $user_details = MainUserModel::where('id',$id)->first();
+        if($user_details->user_type=="admin"){
+              $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
-            return $user_details;
-    }
+            }else{
+            $user_details = DB::table('main_user')
+            ->join('permission', 'permission.user_id', '=', 'main_user.id')
+            ->join('roles', 'roles.id', '=', 'main_user.user_type')
+            ->where('main_user.id', $id)
+            ->select(
+            'main_user.id',
+            'main_user.account_name',
+            'main_user.password',
+            'main_user.password_hint',
+            'main_user.first_name',
+            'main_user.last_name',
+            'main_user.phone_number',
+            'main_user.email_address',
+            'main_user.change_password_upon_login',
+            'main_user.disable_account',
+            'main_user.created_at',
+            'main_user.updated_at',
+            'permission.*', // Include all columns from the permission table
+            'roles.role_name as user_type' // Replace main_user.user_type with roles.role_name
+            )
+            ->first();
+            }
+         return $user_details;
+      }
     //  THIS IS A login FUNCITON 
 
 
@@ -171,11 +196,32 @@ public function dashboardPage(){
   $team_member = 0;
   $service_data = '';
   $paid_customer_count = 0;
-      $user_details = DB::table('main_user')
-            ->join('permission','permission.user_id','main_user.id')
-            ->join('roles','roles.role_name','=','main_user.user_type')
-            ->where('main_user.id',$id)
-            ->first();
+
+
+    // public function userDetails($id){
+    //     $user_details = MainUserModel::where('id',$id)->first();
+    //     if($user_details->user_type=="admin"){
+    //           $user_details = DB::table('main_user')
+    //         ->join('permission','permission.user_id','main_user.id')
+    //         ->join('roles','roles.role_name','=','main_user.user_type')
+    //         ->where('main_user.id',$id)
+    //         ->first();
+    //     }else{
+    //           $user_details = DB::table('main_user')
+    //         ->join('permission','permission.user_id','main_user.id')
+    //         ->join('roles','roles.id','=','main_user.user_type')
+    //         ->where('main_user.id',$id)
+    //         ->first();
+    //     }
+    //         return $user_details;
+    //   }
+  
+     $user_details = MainUserModel::where('id',$id)->first();
+
+        $user_details = self::userDetails($id);
+
+
+
 
             if($user_details->user_type=="admin"){
               $customer_count = CustomerModel::count();
@@ -475,70 +521,22 @@ public function addPackagePage(){
   return view('admin.dashboard.add_package',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services]);
 }
 // THIS IS addPackagePage FUNCTION  
+  
 public function allPackages(){
-    $id = session('admin');
-    $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
-    $all_packages = DB::table('packages')
-      ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-      ->join('services','services.service_id','=','packages.service_id')
-      ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-      ->whereNull('packages.deleted_at')
-      ->orderBy('packages.package_id','DESC')
-      ->paginate(10);
-     
-   // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
-    /*if($admin_data->user_type == "operation_manager" || $admin_data->user_type == "team_manager"){
-      $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
-            
-            if(!empty($team_manager_services)){
-                    $service_id = [];
-                    foreach($team_manager_services as $service){
-                      $service_id[] = $service->managers_services_id;
-                    }
-                    $all_packages = DB::table('packages')
-                    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-                    ->join('services','services.service_id','=','packages.service_id')
-                    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-                    ->whereIn('packages.service_id',$service_id)
-                    ->orderBy('packages.package_id','DESC')
-                    ->paginate(10);
-                   
-            }
-     
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+ // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
 
-    }else if($admin_data->user_type == "customer_success_manager"){
-      $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
-              ->distinct()
-              ->get(['member_service_id']); 
+     $all_packages = DB::table('packages')
+    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+    ->join('services','services.service_id','=','packages.service_id')
+    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+    ->orderBy('packages.package_id','DESC')
+    ->paginate(10);
 
-                $service_id=[];
-              if(!empty($customer_success_manager_services)){
-                   foreach($customer_success_manager_services as $service){
-                       $service_id[] = $service->member_service_id;
-                    }
-                   $all_packages = DB::table('packages')
-                    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-                    ->join('services','services.service_id','=','packages.service_id')
-                    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-                    ->whereIn('packages.service_id',$service_id)
-                    ->orderBy('packages.package_id','DESC')
-                    ->paginate(10);
-                   
-            }
-     
-
-    }else if($admin_data->user_type == "admin"){
-       $all_packages = DB::table('packages')
-      ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-      ->join('services','services.service_id','=','packages.service_id')
-      ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-      ->orderBy('packages.package_id','DESC')
-      ->paginate(10);
-     
-    }*/
-    return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages,'user_type'=>$user_type]);
+  return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages]);
 }
+
 
 // loginHistory
 public function loginHistory(Request $request ){

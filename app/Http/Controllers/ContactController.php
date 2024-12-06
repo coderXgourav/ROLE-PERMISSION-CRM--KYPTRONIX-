@@ -58,15 +58,39 @@ class ContactController extends Controller
         ]);
     }
 //   THIS IS A  SWAL FUNCTION 
-    public function userDetails($id){
-          $user_details = DB::table('main_user')
+   public function userDetails($id){
+        $user_details = MainUserModel::where('id',$id)->first();
+        if($user_details->user_type=="admin"){
+              $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
-           
-            return $user_details;   
-    }
+            }else{
+            $user_details = DB::table('main_user')
+            ->join('permission', 'permission.user_id', '=', 'main_user.id')
+            ->join('roles', 'roles.id', '=', 'main_user.user_type')
+            ->where('main_user.id', $id)
+            ->select(
+            'main_user.id',
+            'main_user.account_name',
+            'main_user.password',
+            'main_user.password_hint',
+            'main_user.first_name',
+            'main_user.last_name',
+            'main_user.phone_number',
+            'main_user.email_address',
+            'main_user.change_password_upon_login',
+            'main_user.disable_account',
+            'main_user.created_at',
+            'main_user.updated_at',
+            'permission.*', // Include all columns from the permission table
+            'roles.role_name as user_type' // Replace main_user.user_type with roles.role_name
+            )
+            ->first();
+            }
+         return $user_details;
+      }
     public function userType($type){
       switch ($type) {
                   case 'customer_success_manager':
@@ -944,34 +968,6 @@ public function export()
    public function filterUsers(Request $request){
       $filter = $request->filter;
       $roles = Role::where('role_name','!=','admin')->orderBy('id','DESC')->get();
-      // if($filter != ""){
-      //   switch($filter){
-      //     case "Operation Managers":
-      //         $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"operation_manager")->orderBy('id','DESC')->paginate(10);
-      //       $id = session('admin');
-      //     $admin_data = self::userDetails($id);
-      //     $user_type = self::userType($admin_data->user_type);
-      //    return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-      //       break;
-      //       case "Team Managers":
-      //           $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"team_manager")->orderBy('id','DESC')->paginate(10);
-      //       $id = session('admin');
-      //     $admin_data = self::userDetails($id);
-      //     $user_type = self::userType($admin_data->user_type);
-      //    return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-      //       break;
-      //            case "Customer Success Manager":
-      //               $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->where('main_user.user_type',"customer_success_manager")->orderBy('id','DESC')->paginate(10);
-      //       $id = session('admin');
-      //     $admin_data = self::userDetails($id);
-      //     $user_type = self::userType($admin_data->user_type);
-      //    return view('admin.dashboard.contacts',['admin_data'=>$admin_data,'data'=>$contact_data,'user_type'=>$user_type]);
-            
-      //       break;
-      //       default:
-      //       break;
-      //   }
-      // }else{
         $id = session('admin');
           $admin_data = self::userDetails($id);
           $user_type = $admin_data->user_type;
@@ -979,11 +975,11 @@ public function export()
             $form =$request->form;
           }else{$form='';}
           if($user_type=="admin" && $form=='staff'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->whereNull('main_user.deleted_at')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin" && $form=='staff1'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->whereNull('main_user.deleted_at')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->whereNull('main_user.deleted_at')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager" && $form=='staff'){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();
@@ -2215,11 +2211,11 @@ public function addLead(){
   public function viewLeads(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
-      $user_type = self::userType($admin_data->user_type);
-      $service = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
+      $service = Service::orderBy('service_id','DESC')->get();
+  
+
 
       if($admin_data->user_type == 'admin'){
-
           $leads_data = DB::table('customer')
           ->select(
               'customer.customer_email',
@@ -2239,8 +2235,8 @@ public function addLead(){
             $role_services=RoleService::where('member_id',$admin_data->user_id)->get();
             if(!empty($role_services)){
                $service_id = [];
-                foreach($role_services as $service){
-                  $service_id[] = $service->service_id;
+                foreach($role_services as $services){
+                  $service_id[] = $services->service_id;
                 }
                 $leads_data = DB::table('customer')
                 ->select(
@@ -2375,7 +2371,8 @@ public function addLead(){
         }
 
       }*/
-      return view('admin.dashboard.view_leads',['services'=>$service,'admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
+
+      return view('admin.dashboard.view_leads',['services'=>$service,'admin_data'=>$admin_data,'data'=>$leads_data]);
  }
  //chatShow FUNCTION START
   public function chatShow($customer_id){
@@ -3092,7 +3089,6 @@ public function emailSend(Request $request){
   public function showSuccessfullPayments(){
    $user_id=session('admin');
    $admin_data = self::userDetails($user_id);
-   $user_type = self::userType($admin_data->user_type);
    if($admin_data->user_type == 'admin'){
        $data = DB::table('payments')
        ->join('customer','customer.customer_id','=','payments.leads_id')
@@ -3100,51 +3096,58 @@ public function emailSend(Request $request){
        ->orderBy('payments.payment_id','DESC')
        ->paginate(10);
      
-   }else if($admin_data->user_type == "operation_manager" || $admin_data->user_type =="team_manager"){
-       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
-       $service_id = [];
-      
-       foreach($operation_manager_services as $service){
-        $service_id[] = $service->managers_services_id;
-      }
-       $data = DB::table('payments')
+   }else{
+     $data = DB::table('payments')
        ->join('customer','customer.customer_id','=','payments.leads_id')
-       ->whereIn('customer.customer_service_id',$service_id)
        ->where('payments.pay_status',1)
        ->orderBy('payments.payment_id','DESC')
        ->paginate(10);
+   }
+
+  //  else if($admin_data->user_type == "operation_manager" || $admin_data->user_type =="team_manager"){
+  //      $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
+  //      $service_id = [];
+      
+  //      foreach($operation_manager_services as $service){
+  //       $service_id[] = $service->managers_services_id;
+  //     }
+  //      $data = DB::table('payments')
+  //      ->join('customer','customer.customer_id','=','payments.leads_id')
+  //      ->whereIn('customer.customer_service_id',$service_id)
+  //      ->where('payments.pay_status',1)
+  //      ->orderBy('payments.payment_id','DESC')
+  //      ->paginate(10);
      
       
-   }else if($admin_data->user_type == "customer_success_manager"){
-       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
-              ->distinct()
-              ->get(['member_service_id']); 
+  //  }else if($admin_data->user_type == "customer_success_manager"){
+  //      $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
+  //             ->distinct()
+  //             ->get(['member_service_id']); 
 
-        $service_id=[];
-        if(!empty($customer_success_manager_services)){
-                foreach($customer_success_manager_services as $service){
-                    $service_id[] = $service->member_service_id;
-                }  
-                $data = DB::table('payments')
-               ->join('customer','customer.customer_id','=','payments.leads_id')
-               ->whereIn('customer.customer_service_id',$service_id)
-               ->where('payments.pay_status',1)
-               ->orderBy('payments.payment_id','DESC')
-               ->paginate(10);
+  //       $service_id=[];
+  //       if(!empty($customer_success_manager_services)){
+  //               foreach($customer_success_manager_services as $service){
+  //                   $service_id[] = $service->member_service_id;
+  //               }  
+  //               $data = DB::table('payments')
+  //              ->join('customer','customer.customer_id','=','payments.leads_id')
+  //              ->whereIn('customer.customer_service_id',$service_id)
+  //              ->where('payments.pay_status',1)
+  //              ->orderBy('payments.payment_id','DESC')
+  //              ->paginate(10);
                  
 
-        }
+  //       }
 
       
-   }
-  return view('admin.dashboard.successfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+  //  }
+  return view('admin.dashboard.successfull_payments',['admin_data'=>$admin_data,'data'=>$data]);
   }
 
   public function fileShow($filename){
     $user_id=session('admin');
     $admin_data = self::userDetails($user_id);
-    $user_type = self::userType($admin_data->user_type);
-    return view('admin.dashboard.file_view',['admin_data'=>$admin_data,'user_type'=>$user_type,'filename'=>$filename]);
+    return view('admin.dashboard.file_view',['admin_data'=>$admin_data,'filename'=>$filename]);
 
   }
   
@@ -3152,52 +3155,59 @@ public function emailSend(Request $request){
     public function showFailedPayments(){
         $user_id=session('admin');
    $admin_data = self::userDetails($user_id);
-   $user_type = self::userType($admin_data->user_type);
    if($admin_data->user_type == "admin"){
      $data = DB::table('payments')
    ->join('customer','customer.customer_id','=','payments.leads_id')
    ->where('payments.pay_status',0)
    ->orderBy('payments.payment_id','DESC')
    ->paginate(10);
- 
-   }else if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
-       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
-       $service_id = [];
-      
-       foreach($operation_manager_services as $service){
-        $service_id[] = $service->managers_services_id;
-      }
+   }else{
        $data = DB::table('payments')
-       ->join('customer','customer.customer_id','=','payments.leads_id')
-       ->whereIn('customer.customer_service_id',$service_id)
-       ->where('payments.pay_status',0)
-       ->orderBy('payments.payment_id','DESC')
-       ->paginate(10);
+   ->join('customer','customer.customer_id','=','payments.leads_id')
+   ->where('payments.pay_status',0)
+   ->orderBy('payments.payment_id','DESC')
+   ->paginate(10);
+   }
+ 
+  //  }
+  //  else if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
+  //      $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
+  //      $service_id = [];
+      
+  //      foreach($operation_manager_services as $service){
+  //       $service_id[] = $service->managers_services_id;
+  //     }
+  //      $data = DB::table('payments')
+  //      ->join('customer','customer.customer_id','=','payments.leads_id')
+  //      ->whereIn('customer.customer_service_id',$service_id)
+  //      ->where('payments.pay_status',0)
+  //      ->orderBy('payments.payment_id','DESC')
+  //      ->paginate(10);
      
 
-   }else if($admin_data->user_type == "customer_success_manager"){
-       $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
-              ->distinct()
-              ->get(['member_service_id']); 
+  //  }else if($admin_data->user_type == "customer_success_manager"){
+  //      $customer_success_manager_services = MemberServiceModel::where('member_id', $admin_data->user_id)
+  //             ->distinct()
+  //             ->get(['member_service_id']); 
 
-        $service_id=[];
-        if(!empty($customer_success_manager_services)){
-                foreach($customer_success_manager_services as $service){
-                    $service_id[] = $service->member_service_id;
-                }  
-                $data = DB::table('payments')
-               ->join('customer','customer.customer_id','=','payments.leads_id')
-               ->whereIn('customer.customer_service_id',$service_id)
-               ->where('payments.pay_status',0)
-               ->orderBy('payments.payment_id','DESC')
-               ->paginate(10);
+  //       $service_id=[];
+  //       if(!empty($customer_success_manager_services)){
+  //               foreach($customer_success_manager_services as $service){
+  //                   $service_id[] = $service->member_service_id;
+  //               }  
+  //               $data = DB::table('payments')
+  //              ->join('customer','customer.customer_id','=','payments.leads_id')
+  //              ->whereIn('customer.customer_service_id',$service_id)
+  //              ->where('payments.pay_status',0)
+  //              ->orderBy('payments.payment_id','DESC')
+  //              ->paginate(10);
                  
 
-        }
+  //       }
 
       
-   }
-    return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type]);
+  //  }
+    return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data]);
     
   }
   public function documentPage($customers_id){
