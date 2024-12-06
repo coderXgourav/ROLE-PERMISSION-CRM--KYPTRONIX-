@@ -523,18 +523,17 @@ public function addPackagePage(){
 // THIS IS addPackagePage FUNCTION  
   
 public function allPackages(){
-  $id = session('admin');
-  $admin_data = self::userDetails($id);
- // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
-
-     $all_packages = DB::table('packages')
-    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-    ->join('services','services.service_id','=','packages.service_id')
-    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-    ->orderBy('packages.package_id','DESC')
-    ->paginate(10);
-
-  return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages]);
+     $id = session('admin');
+    $admin_data = self::userDetails($id);
+   // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
+       $all_packages = DB::table('packages')
+      ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+      ->join('services','services.service_id','=','packages.service_id')
+      ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+      ->orderBy('packages.package_id','DESC')
+      ->paginate(10);
+ 
+    return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages]);
 }
 
 
@@ -676,7 +675,6 @@ public function loginHistory(Request $request ){
 public function editPackage($package_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
     $services =Service::orderBy('service_id','DESC')->get();
     $p_id =   Crypt::decrypt($package_id);
     $data = Package::find($p_id);
@@ -684,9 +682,9 @@ public function editPackage($package_id){
     $subservices_data = Subservice::where('service_id',$data->service_id)->get();
 
     $sub_service_data =Subservice::find($data->subservice_id);
-   return view('admin.dashboard.edit_package',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'services_data'=>$services_data,'services'=>$services,'sub_service_data'=>$sub_service_data,'subservices_data'=>$subservices_data]);
-   
+   return view('admin.dashboard.edit_package',['admin_data'=>$admin_data,'data'=>$data,'services_data'=>$services_data,'services'=>$services,'sub_service_data'=>$sub_service_data,'subservices_data'=>$subservices_data]);
   }
+  
 public function addRolePage(){
   $id = session('admin');
   $admin_data = self::userDetails($id);
