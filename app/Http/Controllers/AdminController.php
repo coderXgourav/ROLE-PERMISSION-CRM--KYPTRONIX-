@@ -98,14 +98,39 @@ public function decodeBase64Image($base64_image)
        }
      }
      
-       public function userDetails($id){
-          $user_details = DB::table('main_user')
+         public function userDetails($id){
+        $user_details = MainUserModel::where('id',$id)->first();
+        if($user_details->user_type=="admin"){
+              $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
-            return $user_details;
-    }
+            }else{
+            $user_details = DB::table('main_user')
+            ->join('permission', 'permission.user_id', '=', 'main_user.id')
+            ->join('roles', 'roles.id', '=', 'main_user.user_type')
+            ->where('main_user.id', $id)
+            ->select(
+            'main_user.id',
+            'main_user.account_name',
+            'main_user.password',
+            'main_user.password_hint',
+            'main_user.first_name',
+            'main_user.last_name',
+            'main_user.phone_number',
+            'main_user.email_address',
+            'main_user.change_password_upon_login',
+            'main_user.disable_account',
+            'main_user.created_at',
+            'main_user.updated_at',
+            'permission.*', // Include all columns from the permission table
+            'roles.role_name as user_type' // Replace main_user.user_type with roles.role_name
+            )
+            ->first();
+            }
+         return $user_details;
+      }
     //  THIS IS A login FUNCITON 
 
 
@@ -171,11 +196,45 @@ public function dashboardPage(){
   $team_member = 0;
   $service_data = '';
   $paid_customer_count = 0;
-      $user_details = DB::table('main_user')
+
+
+    // public function userDetails($id){
+    //     $user_details = MainUserModel::where('id',$id)->first();
+    //     if($user_details->user_type=="admin"){
+    //           $user_details = DB::table('main_user')
+    //         ->join('permission','permission.user_id','main_user.id')
+    //         ->join('roles','roles.role_name','=','main_user.user_type')
+    //         ->where('main_user.id',$id)
+    //         ->first();
+    //     }else{
+    //           $user_details = DB::table('main_user')
+    //         ->join('permission','permission.user_id','main_user.id')
+    //         ->join('roles','roles.id','=','main_user.user_type')
+    //         ->where('main_user.id',$id)
+    //         ->first();
+    //     }
+    //         return $user_details;
+    //   }
+  
+     $user_details = MainUserModel::where('id',$id)->first();
+
+     if($user_details->user_type=="admin"){
+            $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
+     }else{
+      
+           $user_details = DB::table('main_user')
+            ->join('permission','permission.user_id','main_user.id')
+            ->join('roles','roles.id','=','main_user.user_type')
+            ->where('main_user.id',$id)
+            ->first();
+     }
+
+
+
 
             if($user_details->user_type=="admin"){
               $customer_count = CustomerModel::count();

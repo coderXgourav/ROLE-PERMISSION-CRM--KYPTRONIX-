@@ -574,7 +574,7 @@
                             <div class="user-info">
                                 <p class="user-name mb-0">{{ $admin_data->first_name }}</p>
                                 <p class="designattion mb-0">
-                                    {{$admin_data->modern_name}}
+                                    {{$admin_data->user_type}}
                                 </p>
                             </div>
                         </a>

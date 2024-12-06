@@ -39,38 +39,51 @@ class ServiceController extends Controller
         ]);
     }
   //   THIS IS A  SWAL FUNCTION 
+  
     public function userDetails($id){
-          $user_details = DB::table('main_user')
+        $user_details = MainUserModel::where('id',$id)->first();
+        if($user_details->user_type=="admin"){
+              $user_details = DB::table('main_user')
             ->join('permission','permission.user_id','main_user.id')
             ->join('roles','roles.role_name','=','main_user.user_type')
             ->where('main_user.id',$id)
             ->first();
-          
-            return $user_details;
-    }
-    public function userType($type){
-      switch ($type) {
-                  case 'customer_success_manager':
-               return $user_type = "Customer Manager";
-                    break;
-                    case "team_manager":
-               return $user_type = "Team Manager";
+            }else{
+            $user_details = DB::table('main_user')
+            ->join('permission', 'permission.user_id', '=', 'main_user.id')
+            ->join('roles', 'roles.id', '=', 'main_user.user_type')
+            ->where('main_user.id', $id)
+            ->select(
+            'main_user.id',
+            'main_user.account_name',
+            'main_user.password',
+            'main_user.password_hint',
+            'main_user.first_name',
+            'main_user.last_name',
+            'main_user.phone_number',
+            'main_user.email_address',
+            'main_user.change_password_upon_login',
+            'main_user.disable_account',
+            'main_user.created_at',
+            'main_user.updated_at',
+            'permission.*', // Include all columns from the permission table
+            'roles.role_name as user_type' // Replace main_user.user_type with roles.role_name
+            )
+            ->first();
+            }
+         return $user_details;
+      }
 
-                      break;
-                      case "operation_manager":
-               return $user_type = "Operation Manager";
+      
 
-                        break;
-                        case "admin":
-               return $user_type = "Admin";
-                          break;
-                          case "bookkeeper":
-               return $user_type = "Bookkeeper";
-                            break;
-                  default:
-                    break;
-                }
-    }
+
+    // public function userType(){
+    //     $user_type = self::userDetails();
+    //     echo "<pre>";
+    //     print_r($user_type);
+    //     die;
+     
+    // }
 
    
     // THIS IS serviceAdd FUNCTION 
@@ -109,23 +122,26 @@ class ServiceController extends Controller
     }
     // THIS IS serviceAdd FUNCTION 
     //AllService Start
+    
     public function allServices(){
 	  $id = session('admin');
-	  // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
-    if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
-       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
-       $service_id = [];
-       foreach($operation_manager_services as $service){
-        $service_id[] = $service->managers_services_id;
-      }
-      $services = Service::whereIn('service_id',$service_id)->paginate(10);   
-    }else if($admin_data->user_type =="admin"){
+
+    // if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
+    //    $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
+    //    $service_id = [];
+    //    foreach($operation_manager_services as $service){
+    //     $service_id[] = $service->managers_services_id;
+    //   }
+    //   $services = Service::whereIn('service_id',$service_id)->paginate(10);   
+    // }else if($admin_data->user_type =="admin"){
+    //     $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->paginate(10);   
+
+    // }
         $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->paginate(10);   
 
-    }
-	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
+
+	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services]);
   }
   //AllService End
   //ServiceDelete Start
