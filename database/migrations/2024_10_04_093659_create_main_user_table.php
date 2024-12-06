@@ -26,6 +26,8 @@ return new class extends Migration
             $table->integer('disable_account')->default(0);
             // $table->integer('delete_account')->default(0);
             $table->timestamps();
+            $table->softDeletes(); // Adds the 'deleted_at' column
+
         });
     }
 

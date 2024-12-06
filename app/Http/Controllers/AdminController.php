@@ -521,20 +521,22 @@ public function addPackagePage(){
   return view('admin.dashboard.add_package',['admin_data'=>$admin_data,'user_type'=>$user_type,'services'=>$services]);
 }
 // THIS IS addPackagePage FUNCTION  
+  
 public function allPackages(){
-    $id = session('admin');
-    $admin_data = self::userDetails($id);
-   // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
+  $id = session('admin');
+  $admin_data = self::userDetails($id);
+ // $all_packages = Package::orderBy('package_id','DESC')->paginate(10);
 
-       $all_packages = DB::table('packages')
-      ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
-      ->join('services','services.service_id','=','packages.service_id')
-      ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
-      ->orderBy('packages.package_id','DESC')
-      ->paginate(10);
- 
-    return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages]);
+     $all_packages = DB::table('packages')
+    ->select('packages.package_id','packages.title','packages.price','services.name as service_name','subservices.service_name as subservice_name')
+    ->join('services','services.service_id','=','packages.service_id')
+    ->leftjoin('subservices','subservices.id','=','packages.subservice_id')
+    ->orderBy('packages.package_id','DESC')
+    ->paginate(10);
+
+  return view('admin.dashboard.all_packages',['admin_data'=>$admin_data,'data'=>$all_packages]);
 }
+
 
 // loginHistory
 public function loginHistory(Request $request ){

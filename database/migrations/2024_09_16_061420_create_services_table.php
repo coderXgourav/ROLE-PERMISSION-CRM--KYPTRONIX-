@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->enum('user_type',['customer_success_manager','team_manager','operation_manager','admin',"bookkeeper"]);
             $table->timestamps();
+            $table->softDeletes(); // Adds the 'deleted_at' column
+
         });
     }
 
@@ -25,5 +27,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('services');
+
     }
 };
