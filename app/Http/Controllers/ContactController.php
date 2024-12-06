@@ -979,11 +979,11 @@ public function export()
             $form =$request->form;
           }else{$form='';}
           if($user_type=="admin" && $form=='staff'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'customer_success_manager')->whereNull('main_user.deleted_at')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin" && $form=='staff1'){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"=",'operation_manager')->whereNull('main_user.deleted_at')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="admin"){
-              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->select('main_user.*','roles.modern_name')->paginate(10);
+              $contact_data = DB::table('main_user')->join('permission','permission.user_id','=','main_user.id')->join('roles','roles.id','=','main_user.user_type')->orderBy('main_user.id','DESC')->where('main_user.user_type',"!=",'admin')->whereNull('main_user.deleted_at')->select('main_user.*','roles.modern_name')->paginate(10);
           }else if($user_type=="team_manager" && $form=='staff'){
 
             $team_manager_services=TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->get();

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('service_id')->nullable();
             $table->string('subservice_id')->nullable();
             $table->timestamps();
+            $table->softDeletes(); // Adds the 'deleted_at' column
+
         });
     }
 

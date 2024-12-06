@@ -114,7 +114,7 @@ class ServiceController extends Controller
 	  // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
     $user_type = self::userType($admin_data->user_type);
-    if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
+   /* if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
        $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
        $service_id = [];
        foreach($operation_manager_services as $service){
@@ -124,7 +124,9 @@ class ServiceController extends Controller
     }else if($admin_data->user_type =="admin"){
         $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->paginate(10);   
 
-    }
+    }*/
+    $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->paginate(10);   
+
 	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
   }
   //AllService End
