@@ -91,7 +91,7 @@
                         <div class="menu-title">Dashboard</div>
                     </a>
                 </li>
-                @if(($admin_data->user_type=="operation_manager" || $admin_data->user_type=="admin" || $admin_data->user_type=="team_manager") && ($admin_data->service_add || $admin_data->service_view>0))
+                @if( $admin_data->service_add>0 || $admin_data->service_view>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -99,12 +99,12 @@
                         <div class="menu-title">Service </div>
                     </a>
                     <ul>
-                         @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager") &&  $admin_data->service_add>0)
+                         @if($admin_data->service_add>0)
                         <li> <a href="{{ route('admin.add-service')}}"><i
                                     class='bx bx-radio-circle'></i>Add New Service</a>
                         </li>
                         @endif
-                           @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager") &&  $admin_data->service_view>0)
+                           @if($admin_data->service_view>0)
                         <li> <a href="{{ route('admin.all-service')}}"><i
                                     class='bx bx-radio-circle'></i>Services</a>
                         </li>
@@ -114,7 +114,7 @@
                 </li>
                 @endif
                 
-                 @if($admin_data->user_type=="operation_manager" && $admin_data->role_edit>0 || $admin_data->user_type=="admin")
+                 @if($admin_data->user_type=="admin")
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -135,7 +135,7 @@
     
                 
                
-            @if(($admin_data->user_type=="operation_manager" || $admin_data->user_type=="admin" ||  $admin_data->user_type=="team_manager") && ($admin_data->staff_registration || $admin_data->staff_view>0) )
+            @if($admin_data->staff_registration>0 || $admin_data->staff_view>0)
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -143,12 +143,12 @@
                         <div class="menu-title">Staff</div>
                     </a>
                     <ul>
-                           @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager") && $admin_data->staff_registration>0)
+                           @if($admin_data->staff_registration>0)
                         <li> <a href="{{ route('admin.add-contact') }}"><i
                                     class='bx bx-radio-circle'></i>Registration</a>
                         </li>
                         @endif
-                           @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" ||  $admin_data->user_type=="team_manager") && $admin_data->staff_view>0)
+                           @if($admin_data->staff_view>0)
 
                         <li> <a href="{{ route('admin.contact') }}"><i
                                     class='bx bx-radio-circle'></i>View Staffs</a>
@@ -158,7 +158,7 @@
                     </ul>
                 </li>
                 @endif
-            @if(($admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager" || $admin_data->user_type=="admin") && $admin_data->package_add || $admin_data->package_view >0)
+            @if($admin_data->package_add>0 || $admin_data->package_view >0)
 
 
                  <li>
@@ -168,12 +168,12 @@
                         <div class="menu-title">Package </div>
                     </a>
                     <ul>
-                          @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager") && $admin_data->package_add>0)
+                          @if($admin_data->package_add>0)
                         <li> <a href="{{ route('admin.add-package')}}"><i
                                     class='bx bx-radio-circle'></i>Add New Package</a>
                         </li>
                         @endif
-                          @if(($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager" || $admin_data->user_type=="customer_success_manager") && $admin_data->package_view>0)
+                          @if($admin_data->package_view>0)
 
                         <li> <a href="{{ route('admin.all-package')}}"><i
                                     class='bx bx-radio-circle'></i>Packages</a>
@@ -183,10 +183,8 @@
                     </ul>
                 </li>
                 @endif
-                        @if($admin_data->user_type=="admin")
-                    @endif
-
-            @if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
+                        
+                 @if($admin_data->report_count>0 || $admin_data->report_staff>0 || $admin_data->report_individual>0 || $admin_data->report_business>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-book"></i>
@@ -194,24 +192,24 @@
                             <div class="menu-title">Reports</div>
                         </a>
                         <ul>
-                         @if($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" && $admin_data->report_count>0)
+                         @if($admin_data->report_count>0)
                             <li> <a href="{{route('admin.all-reports')}}"><i
                                 class='bx bx-radio-circle'></i>Count Report</a>
                             </li>
                         @endif
-                         @if($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" && $admin_data->report_staff>0)
+                         @if($admin_data->report_staff>0)
 
                            <li> <a href="{{route('admin.staff-report')}}"><i
                                 class='bx bx-radio-circle'></i>Staff Report</a>
                             </li>
                         @endif
-                         @if($admin_data->user_type=="admin"  || $admin_data->user_type=="operation_manager" && $admin_data->report_individual>0)
+                         @if($admin_data->report_individual>0)
 
                              <li> <a href="{{route('admin.individual-report')}}"><i
                                 class='bx bx-radio-circle'></i>Individual Report</a>
                             </li>
                         @endif
-                         @if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" && $admin_data->report_business>0)
+                         @if($admin_data->report_business>0)
 
                               <li> <a href="{{route('admin.business-report')}}"><i
                                 class='bx bx-radio-circle'></i>Business Report</a>
@@ -220,7 +218,8 @@
                         </ul>
                     </li>
                     @endif
-                    @if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager")
+
+                    @if($admin_data->leads_import_individual>0 || $admin_data->leads_import_business>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -229,7 +228,7 @@
                             <div class="menu-title">Import Leads</div>
                         </a>
                         <ul>
-                      @if($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" && $admin_data->leads_import_individual || $admin_data->leads_import_business>0)
+                      @if($admin_data->leads_import_individual>0 || $admin_data->leads_import_business>0)
                             <li> <a href="{{route('admin.import-leads')}}"><i
                                 class='bx bx-radio-circle'></i>
                                 Show Import Leads</a>
@@ -239,7 +238,7 @@
                     </li>
                     @endif
 
-            @if($admin_data->leads_add || $admin_data->leads_view> 0)
+                   @if($admin_data->leads_add>0 || $admin_data->leads_view> 0)
                     <li>
                        <a href="javascript:;" class="has-arrow">
                           <div class="parent-icon"><i class='bx bx-cart'></i>
@@ -247,20 +246,20 @@
                            <div class="menu-title">Leads  </div>
                        </a>
                        <ul>
-                     @if($admin_data->leads_add > 0)
+                      @if($admin_data->leads_add > 0)
                             <li> <a href="{{ route('admin.add-lead')}}"><i
                                 class='bx bx-radio-circle'></i>Add Leads</a>
                            </li>
-                    @endif
-                     @if($admin_data->leads_view > 0)
+                      @endif
+                      @if($admin_data->leads_view > 0)
                             <li> <a href="{{ route('admin.view-lead')}}"><i class='bx bx-radio-circle'></i>View Leads</a>
                             </li>
-                    @endif
+                      @endif
                                                 
                        </ul>
                    </li>
                    @endif
-    @if($admin_data->clients_view>0)
+                  @if($admin_data->clients_view>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -273,7 +272,7 @@
                         </ul>
                     </li>
                     @endif
-    @if($admin_data->user_type!="customer_success_manager" || $admin_data->user_type!="book_keeper" && $admin_data->assign_manage>0)
+                    @if($admin_data->assign_manage>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -308,7 +307,7 @@
                 </li>
                 @endif
                     
-                @if($admin_data->email_view || $admin_data->sms_view >0)
+                @if($admin_data->email_view>0 || $admin_data->sms_view>0)
                       <li>
                         <a href="javascript:" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-repeat"></i>
@@ -324,15 +323,13 @@
                            @endif
                             @if( $admin_data->sms_view >0)
 
-                            <li> <a href="{{ route('admin.sms') }}"><i
-                                        class='bx bx-radio-circle'></i>
-                                        Sent SMS</a>
+                            <li> <a href="{{ route('admin.sms') }}"><i class='bx bx-radio-circle'></i> Sent SMS</a>
                             </li>
                             @endif
                         </ul>
                     </li>
                     @endif
-                @if($admin_data->payments_successful || $admin_data->payments_failed>0)
+                @if($admin_data->payments_successful>0 || $admin_data->payments_failed>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -359,7 +356,7 @@
                     
                     @endif
 
-                   @if(($admin_data->user_type=="admin" || $admin_data->user_type=="operation_manager" || $admin_data->user_type=="team_manager") && $admin_data->login_history_view>0)
+                   @if($admin_data->login_history_view>0)
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bx bx-category"></i>

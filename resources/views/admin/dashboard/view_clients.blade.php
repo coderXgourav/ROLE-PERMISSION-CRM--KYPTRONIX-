@@ -18,8 +18,8 @@
 										<th>Mobile No.</th>
 										<th>Email</th>
 										<th>Service</th>
-										<th>Assigned to Manager</th>
-										<th>Assigned to Team member</th>
+										<!--<th>Assigned to Manager</th>
+										<th>Assigned to Team member</th>-->
 										<th>Document</th>
 										<th style="text-align: center">Action</th>
 									</tr>
@@ -53,7 +53,7 @@
 										<td>{{$value->customer_number}}</td>
 										<td>{{$value->customer_email}}</td>
 										<td>{{$value->service_names}}</td>
-										<td><?php if(!empty($team_manager)){ 
+										<!--<td><?php if(!empty($team_manager)){ 
                                                   foreach($team_manager as $val){
                                                       echo $val->first_name .' ' . $val->last_name.'<br>';
 
@@ -68,7 +68,7 @@
 
 
                                               } } ?>
-										</td>
+										</td>-->
 										 @php
 										  $id = encrypt($value->customer_id);
 									    @endphp								     
