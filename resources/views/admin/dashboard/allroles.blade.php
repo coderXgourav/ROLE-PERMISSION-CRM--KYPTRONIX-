@@ -31,8 +31,9 @@
 									   @endphp
 										<td>
 										
-											 <div class="d-flex order-actions">
-											    <a href="{{route('admin.edit-role',['id'=>$role_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a>
+											  <div class="d-flex order-actions">
+											    <a href="{{route('admin.edit-role',['id'=>$role_id])}}" class="bg-primary" style="color:white"><i class='bx bxs-edit'></i></a> &nbsp;
+												 <a href="javascript:" onclick="DeleteRole({{$value->id}})" class="bg-danger" style="color:white"><i class='bx bxs-trash'></i></a>
 												{{-- <a href="javascript:;"  onclick="DeleteRole({{$value->id}})"  class="ms-3 bg-danger" style="color: white"><i class='bx bxs-trash'></i></a> --}}
 												
 											 </div>

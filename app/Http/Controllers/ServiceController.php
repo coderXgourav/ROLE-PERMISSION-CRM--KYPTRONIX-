@@ -93,7 +93,6 @@ class ServiceController extends Controller
 
       $name = strtolower(trim($request->name));
       $sub_service_name =$request->subcategory;
-      $user_type = $request->user_type;
      if(Service::where('name',$name)->first()){
          return self::toastr(false,"Service Already Exist","error","Error");
      }
@@ -101,7 +100,6 @@ class ServiceController extends Controller
 
             $service_details = new Service;
             $service_details->name = $name;
-            $service_details->user_type = $user_type;
             $service_details->save();
             $service_id =$service_details->service_id;
             // print_r($service_id);die;
@@ -128,19 +126,8 @@ class ServiceController extends Controller
     public function allServices(){
 	  $id = session('admin');
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
-    if($admin_data->user_type =="operation_manager" || $admin_data->user_type =="team_manager"){
-       $operation_manager_services = TeamManagersServicesModel::where('team_manager_id',$admin_data->user_id)->distinct()->get(['managers_services_id']);
-       $service_id = [];
-       foreach($operation_manager_services as $service){
-        $service_id[] = $service->managers_services_id;
-      }
-      $services = Service::whereIn('service_id',$service_id)->paginate(10);   
-    }else if($admin_data->user_type =="admin"){
-        $services = Service::orderBy('service_id','DESC')->where('name','!=','Uncategorized')->paginate(10);   
-
-    }
-	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services,'user_type'=>$user_type]);
+        $services = Service::orderBy('service_id','DESC')->paginate(10);   
+	  return view('admin.dashboard.allservices',['admin_data'=>$admin_data,'data'=>$services]);
   }
   //AllService End
   //ServiceDelete Start
@@ -160,11 +147,10 @@ class ServiceController extends Controller
     $id = session('admin');
     //$admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
     $sub_service_details =Subservice::where('service_id',$s_id)->get();
-   return view('admin.dashboard.edit_service',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'sub_service_details'=>$sub_service_details]);
+   return view('admin.dashboard.edit_service',['admin_data'=>$admin_data,'data'=>$data,'sub_service_details'=>$sub_service_details]);
    
   }
   //editService End

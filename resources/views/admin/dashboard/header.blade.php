@@ -114,7 +114,7 @@
                 </li>
                 @endif
                 
-                 @if($admin_data->user_type=="admin")
+              
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -131,7 +131,7 @@
                       
                     </ul>
                 </li>
-                @endif
+             
     
                 
                
@@ -158,6 +158,7 @@
                     </ul>
                 </li>
                 @endif
+                
             @if($admin_data->package_add>0 || $admin_data->package_view >0)
 
 
