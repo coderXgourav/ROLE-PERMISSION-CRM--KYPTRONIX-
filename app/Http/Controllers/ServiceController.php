@@ -93,7 +93,6 @@ class ServiceController extends Controller
 
       $name = strtolower(trim($request->name));
       $sub_service_name =$request->subcategory;
-      $user_type = $request->user_type;
      if(Service::where('name',$name)->first()){
          return self::toastr(false,"Service Already Exist","error","Error");
      }
@@ -101,7 +100,6 @@ class ServiceController extends Controller
 
             $service_details = new Service;
             $service_details->name = $name;
-            $service_details->user_type = $user_type;
             $service_details->save();
             $service_id =$service_details->service_id;
             // print_r($service_id);die;
