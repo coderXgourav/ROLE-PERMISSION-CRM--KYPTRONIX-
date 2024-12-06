@@ -941,10 +941,11 @@ $("#add_role_form").validate({
     submitHandler: function (form, event) {
         event.preventDefault();
 
-        $("#btn").html(
-            "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
-        );
+        // $("#btn").html(
+        //     "<button class='btn btn-primary' type='button' disabled> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span><span class='visually-hidden'>Loading...</span></button>"
+        // );
         $("#btn").attr("disabled", true);
+        $("#btn").html("Please Wait..");
         $.ajax({
             url: "/admin/add-role",
             method: "POST",
@@ -954,7 +955,7 @@ $("#add_role_form").validate({
             processData: false,
             success: function (data) {
                 $("#btn").attr("disabled", false);
-                $("#btn").html("Submit");
+                $("#btn").html("Create Role");
                 Command: toastr[data.icon](data.title, data.msg);
                 if (data.status) {
                     $("#add_role_form").trigger("reset");
@@ -963,7 +964,7 @@ $("#add_role_form").validate({
             },
             error: function () {
                 $("#btn").attr("disabled", false);
-                $("#btn").html("Submit");
+                $("#btn").html("Create Role");
                 Command: toastr["error"]("Error", "Technical Issue");
             },
         });

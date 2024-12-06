@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3" id="sub_services" style="display:none; color: red">
+                    <div class="row mb-3" id="sub_services" style="display:none;">
                         <label class="col-sm-3 col-form-label">
                             <span class="fw-bold text-muted">Sub Services</span>
                         </label>
