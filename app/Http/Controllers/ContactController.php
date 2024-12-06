@@ -3060,8 +3060,6 @@ public function emailSend(Request $request){
                  
 
   //       }
-
-      
   //  }
     return view('admin.dashboard.unsuccessfull_payments',['admin_data'=>$admin_data,'data'=>$data]);
     

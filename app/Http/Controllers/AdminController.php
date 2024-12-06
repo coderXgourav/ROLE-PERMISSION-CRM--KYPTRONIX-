@@ -688,8 +688,7 @@ public function editPackage($package_id){
 public function addRolePage(){
   $id = session('admin');
   $admin_data = self::userDetails($id);
-  $user_type = self::userType($admin_data->user_type);
-  return view('admin.dashboard.add_role',['admin_data'=>$admin_data,'user_type'=>$user_type]);
+  return view('admin.dashboard.add_role',['admin_data'=>$admin_data]);
 }
 
 // THIS IS END OF CLASS 
