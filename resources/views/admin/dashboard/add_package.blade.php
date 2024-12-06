@@ -3,13 +3,13 @@
 <style>
 @media only screen and (max-width: 1500px) {
 
-}
+}  
 </style>
 
 @push('title')
     <title>Add Package</title>
 @endpush
-<div class="row">
+<div class="row"> 
                 <div class="container-fluid">
     <div class="col-lg-8 mx-auto">
         <div class="card shadow-sm border-0 p-4">
