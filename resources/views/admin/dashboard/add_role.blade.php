@@ -10,13 +10,8 @@
         body {
             background-color: #f4f7fa;
         }
-        .card-custom {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card-custom:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
+     
+       
         .card-header-custom {
             background: linear-gradient(135deg, rgb(37, 117, 252), rgb(37, 117, 252) 100%);
         }
@@ -62,6 +57,20 @@
                             </h4>
                         </div>
                         <div class="card-body p-4 p-md-5">
+                            <div class="mb-4">
+                              <label for="name" class="form-label fw-bold mb-3">
+                                 Services
+                                    <span class="text-danger">*</span>
+                                </label>
+                               <div style="display: flex; align-items: center; gap:10px; flex-wrap: wrap"> 
+                                @foreach ($service as $item)
+                                   <input type="checkbox" id="{{$item->name}}" name="service" value="{{$item->service_id}}" style="width: 25px;"> <label style=" cursor: pointer;" for="{{$item->name}}">{{$item->name}}</label>
+                                @endforeach
+
+                             
+                            
+                            </div>
+                            </div>
                             <div class="mb-4">
                                 <label for="name" class="form-label fw-bold mb-3">
                                     Role Name 
