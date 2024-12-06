@@ -272,7 +272,7 @@
                         </ul>
                     </li>
                     @endif
-                    @if($admin_data->assign_manage>0)
+                    {{-- @if($admin_data->assign_manage>0)
 
                     <li>
                         <a href="javascript:;" class="has-arrow">
@@ -289,7 +289,7 @@
                       
                     </ul>
                   </li>
-                  @endif
+                  @endif --}}
   
                 @if($admin_data->invoice_view>0)
                 <li>

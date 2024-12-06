@@ -13,6 +13,8 @@ use App\Models\TeamManagersServicesModel;
 use App\Models\MainUserModel;
 use App\Models\Subservice;
 use App\Models\Package;
+use App\Models\RoleService;
+
 use DB;
 use Crypt;
 
@@ -210,7 +212,6 @@ class ServiceController extends Controller
     $id = session('admin');
    // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
     $s_id =   Crypt::decrypt($service_id);
     $data = Service::find($s_id);
 
@@ -242,7 +243,7 @@ class ServiceController extends Controller
     
     $total_sub_service = Subservice::where('service_id',$s_id)->count();
     
-   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'user_type'=>$user_type,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count]);
+   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count]);
    
   }
 
@@ -267,26 +268,24 @@ class ServiceController extends Controller
 public function showLeadsList($service_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
     $clients = DB::table('customer')
     ->join('services','services.service_id','=','customer.customer_service_id')
     ->select('customer.*','services.name as service_name')
     ->where('customer.customer_service_id',$service_id)
     ->paginate(10);
-   return view('admin.dashboard.show_leads_lists',['admin_data'=>$admin_data,'clients'=>$clients,'user_type'=>$user_type]);
+   return view('admin.dashboard.show_leads_lists',['admin_data'=>$admin_data,'clients'=>$clients]);
 }
 //showLeadsList End
 //serviceInvoices Start
 public function serviceInvoices($service_id){
     $id = session('admin');
     $admin_data = self::userDetails($id);
-    $user_type = self::userType($admin_data->user_type);
     $invoice = DB::table('invoices')
      ->select('customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.service_id','invoices.price')
      ->join('customer','customer.customer_id','=','invoices.customer_id')
      ->where('invoices.service_id',$service_id)
      ->paginate(10);
-   return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice,'user_type'=>$user_type]);
+   return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice]);
 }
 //serviceInvoices End
 
@@ -360,12 +359,11 @@ public function subServiceList($service_id){
   
      $id = session('admin');
      $admin_data = self::userDetails($id);
-     $user_type = self::userType($admin_data->user_type);
      $data =DB::table('subservices')
      ->select('subservices.service_name','subservices.id','subservices.service_id')
      ->where('subservices.service_id','=',$service_id)
      ->paginate(10);
-    return view('admin.dashboard.sub_service_list',['admin_data'=>$admin_data,'sub_service'=>$data,'user_type'=>$user_type]);
+    return view('admin.dashboard.sub_service_list',['admin_data'=>$admin_data,'sub_service'=>$data]);
 }
 
     public function getSubservicesByServiceId($serviceIds)
@@ -384,8 +382,7 @@ public function subServiceList($service_id){
     {
         $id = session('admin');
         $admin_data = self::userDetails($id);
-        $user_type = self::userType($admin_data->user_type);
-        $service_details = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
+        $service_details = Service::orderBy('service_id','DESC')->get();
 
         $lead_name=$request->lead_name;
         if($admin_data->user_type == 'admin'){
@@ -609,7 +606,7 @@ public function subServiceList($service_id){
 
         }*/
 
-    return view('admin.dashboard.view_leads',['services'=>$service_details,'admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
+    return view('admin.dashboard.view_leads',['services'=>$service_details,'admin_data'=>$admin_data,'data'=>$leads_data,]);
 
     }
     public function updateServiceData(Request $request){
