@@ -372,7 +372,97 @@ public function subServiceList($service_id){
         $service_details = Service::where('name','!=','uncategorized')->orderBy('service_id','DESC')->get();
 
         $lead_name=$request->lead_name;
-       if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
+        if($admin_data->user_type == 'admin'){
+          // Base query
+          $query = DB::table('customer')
+              ->select(
+                  'customer.customer_email',
+                  DB::raw('MAX(customer.customer_id) as customer_id'),
+                  DB::raw('MAX(customer.customer_number) as customer_number'),
+                  DB::raw('MAX(customer.customer_name) as customer_name'),
+                  DB::raw('MAX(customer.status) as status'),
+                  DB::raw('MAX(customer.city) as city'),
+                  DB::raw('MAX(customer.state) as state'),
+                  DB::raw('MAX(customer.type) as type'),
+                  DB::raw('MAX(customer.customer_service_id) as customer_service_id'),
+                  DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names')
+              )
+              ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
+              ->groupBy('customer.customer_email');
+
+
+          // Apply filters based on available parameters
+
+          if (!empty($request->service)) {
+              $query->where('customer.customer_service_id', $request->service);
+          } if (!empty($request->lead_name)) {
+              $query->whereRaw('LOWER(customer.customer_name) LIKE ?', ['%' . strtolower($request->lead_name) . '%']);
+          } if (!empty($request->lead_email)) {
+              $query->where('customer.customer_email', 'like', '%' . $request->lead_email . '%');
+          } if (!empty($request->lead_ph_number)) {
+              $query->where('customer.customer_number', 'like', '%' . $request->lead_ph_number . '%');
+          } if (!empty($request->lead_city)) {
+              $query->where('customer.city', 'like', '%' . $request->lead_city . '%');
+          } if (!empty($request->lead_state)) {
+              $query->where('customer.state', 'like', '%' . $request->lead_state . '%');
+          } if (isset($request->status) && $request->status==0) {
+              $query->where('customer.status',0);
+          }if (isset($request->status) && $request->status==1) {
+              $query->where('customer.status',1);
+          }
+          // Get the filtered data
+             
+          $leads_data = $query->paginate(10);
+          
+      
+      }else{
+          $role_services=RoleService::where('member_id',$admin_data->user_id)->get();
+            if(!empty($role_services)){
+               $service_id = [];
+                foreach($role_services as $service){
+                  $service_id[] = $service->service_id;
+                }
+                 $query = DB::table('customer')
+            ->select(
+                'customer.customer_email',
+                DB::raw('MAX(customer.customer_id) as customer_id'),
+                DB::raw('MAX(customer.customer_number) as customer_number'),
+                DB::raw('MAX(customer.customer_name) as customer_name'),
+                DB::raw('MAX(customer.status) as status'),
+                DB::raw('MAX(customer.city) as city'),
+                DB::raw('MAX(customer.state) as state'),
+                DB::raw('MAX(customer.type) as type'),
+                DB::raw('MAX(customer.customer_service_id) as customer_service_id'),
+                DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
+            )
+            ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
+            ->groupBy('customer.customer_email') 
+            ->whereIn('customer.customer_service_id',$service_id);
+              if (!empty($request->service)) {
+              $query->where('customer.customer_service_id', $request->service);
+              } if (!empty($request->lead_name)) {
+                  $query->whereRaw('LOWER(customer.customer_name) LIKE ?', ['%' . strtolower($request->lead_name) . '%']);
+              } if (!empty($request->lead_email)) {
+                  $query->where('customer.customer_email', 'like', '%' . $request->lead_email . '%');
+              } if (!empty($request->lead_ph_number)) {
+                  $query->where('customer.customer_number', 'like', '%' . $request->lead_ph_number . '%');
+              } if (!empty($request->lead_city)) {
+                  $query->where('customer.city', 'like', '%' . $request->lead_city . '%');
+              } if (!empty($request->lead_state)) {
+                  $query->where('customer.state', 'like', '%' . $request->lead_state . '%');
+              } if (isset($request->status) && $request->status==0) {
+                  $query->where('customer.status',0);
+              }if (isset($request->status) && $request->status==1) {
+                  $query->where('customer.status',1);
+              }
+              // Get the filtered data
+                 
+              $leads_data = $query->paginate(10);
+          
+            }
+            
+      }
+      /* if($admin_data->user_type == 'admin' || $admin_data->user_type == 'operation_manager'){
           // Base query
           $query = DB::table('customer')
               ->select(
@@ -501,7 +591,7 @@ public function subServiceList($service_id){
               $leads_data = $query->paginate(10);
 
 
-        }
+        }*/
 
     return view('admin.dashboard.view_leads',['services'=>$service_details,'admin_data'=>$admin_data,'data'=>$leads_data,'user_type'=>$user_type]);
 
