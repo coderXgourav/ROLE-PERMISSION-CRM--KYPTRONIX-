@@ -91,6 +91,8 @@ Route::get('admin/view_member/{id}',[ContactController::class,'viewMember'])->na
 Route::get('/admin/member_invoice_list/{id}',[ContactController::class,'memberInvoiceList'])->name('admin.member_invoice_list');
 Route::get('/admin/view-service/{id}',[ServiceController::class,'viewService'])->name('admin.view-service');
 Route::get('/admin/team-member/{id}',[ServiceController::class,'teamMember'])->name('admin.team-member');
+Route::post('/get-roles', [ServiceController::class, 'getRoles'])->name('admin.roles');
+
 
 Route::get('/admin/show-leads-list/{id}',[ServiceController::class,'showLeadsList'])->name('admin.show-leads-list');
 Route::get('/admin/service_invoices/{id}',[ServiceController::class,'serviceInvoices'])->name('admin.service_invoices');
@@ -173,6 +175,7 @@ Route::post('/admin/update_service_data',[ServiceController::class,'updateServic
 Route::get('/admin/add-role',[AdminController::class,'addRolePage'])->name('admin.add-role');
 Route::post('/admin/add-role',[RoleController::class,'RoleAdd'])->name('post24');
 Route::get('/admin/all-role',[RoleController::class,'allRoles'])->name('admin.all-role');
+Route::get('/admin/service-roles/{id}',[RoleController::class,'viewServiceBaseRole'])->name('admin.service_roles');
 Route::get('admin/edit-role/{id}',[RoleController::class,'editRole'])->name('admin.edit-role');
 Route::post('/admin/update_role',[RoleController::class,'updateRole'])->name('post25');
 Route::post('/admin/role_delete',[RoleController::class,'role_delete'])->name('post26');

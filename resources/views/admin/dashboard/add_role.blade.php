@@ -10,8 +10,6 @@
         body {
             background-color: #f4f7fa;
         }
-     
-       
         .card-header-custom {
             background: linear-gradient(135deg, rgb(37, 117, 252), rgb(37, 117, 252) 100%);
         }
@@ -64,7 +62,7 @@
                                 </label>
                                <div style="display: flex; align-items: center; gap:10px; flex-wrap: wrap"> 
                                 @foreach ($service as $item)
-                                   <input type="checkbox" id="{{$item->name}}" name="service" value="{{$item->service_id}}" style="width: 25px;"> <label style=" cursor: pointer;" for="{{$item->name}}">{{$item->name}}</label>
+                                   <input type="checkbox" id="{{$item->name}}" name="service[]" value="{{$item->service_id}}" style="width: 25px;" required> <label style=" cursor: pointer;" for="{{$item->name}}">{{$item->name}}</label>
                                 @endforeach
 
                              
@@ -90,7 +88,7 @@
                                         pattern="[A-Za-z\s]+" 
                                         minlength="3" 
                                         maxlength="50"
-                                    >
+                                    >   
                                     <div class="invalid-feedback">
                                         Please provide a valid role name (3-50 characters, letters only).
                                     </div>

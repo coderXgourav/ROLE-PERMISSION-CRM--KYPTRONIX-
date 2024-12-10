@@ -50,9 +50,9 @@ class AdminMiddleware
         // print_r($routeName);
         // die;
         // Define your permission logic based on route names
-
-
         $permissions = [
+            "admin.roles"=>1,
+            'admin.service_roles'=>1,
             'admin-dashboard' => 1, // Example permission key
             'change-password' => 1,
             'admin.add-contact' =>($admin_data->staff_registration)?1:0,

@@ -14,6 +14,7 @@ use App\Models\MainUserModel;
 use App\Models\Subservice;
 use App\Models\Package;
 use App\Models\RoleService;
+use App\Models\Role;
 
 use DB;
 use Crypt;
@@ -195,7 +196,7 @@ class ServiceController extends Controller
     $id = session('admin');
    // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
-    $s_id =   Crypt::decrypt($service_id);
+    $s_id = Crypt::decrypt($service_id);
     $data = Service::find($s_id);
 
     $team_member=DB::table('main_user')
@@ -208,6 +209,7 @@ class ServiceController extends Controller
 
     $leads=CustomerModel::where('customer_service_id',$s_id)->count();
     $invoice =Invoice::where('service_id',$s_id)->count();
+    $roles = Role::where('main_service_id',$s_id)->count();
 
     $team_manager_service = DB::table('main_user')
     ->join("permission",'permission.user_id','=','main_user.id')
@@ -226,9 +228,22 @@ class ServiceController extends Controller
     
     $total_sub_service = Subservice::where('service_id',$s_id)->count();
     
-   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count]);
+   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count,'roles'=>$roles]);
    
   }
+
+   public function getRoles(Request $request)
+    {
+        $request->validate([
+            'service_ids' => 'required|array',
+        ]);
+        $serviceIds = $request->input('service_ids');
+
+$roles = DB::table("roles")
+    ->whereIn("roles.main_service_id", $serviceIds)
+    ->get();
+        return response()->json($roles);
+    }
 
 
   //viewService End

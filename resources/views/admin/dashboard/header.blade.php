@@ -114,7 +114,7 @@
                 </li>
                 @endif
                 
-              
+                 @if($admin_data->user_type=='admin')
                 <li>
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
@@ -125,12 +125,11 @@
                         <li> <a href="{{ route('admin.add-role')}}"><i
                                     class='bx bx-radio-circle'></i>Add Role</a>
                         </li> 
-                        <li> <a href="{{ route('admin.all-role')}}"><i
-                                    class='bx bx-radio-circle'></i> View Roles</a>
-                        </li>
+                       
                       
                     </ul>
                 </li>
+                @endif
              
     
                 

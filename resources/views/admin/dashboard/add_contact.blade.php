@@ -72,7 +72,7 @@ width: 100% !important;
                         {{-- <input type="tel" class="form-control" id="phone" name="phone" required> --}}
                     </div>
                     
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label for="staff_type" class="form-label">Staff Type  <span class="text-danger"> *</span></label>
                         <select class="form-select" id="staff_type" name="user_type" required onchange="StaffType(this.value)">
                             <option value="">Select Staff Type</option>
@@ -80,7 +80,7 @@ width: 100% !important;
 					   <option value="{{$item->id}}">{{$item->modern_name}}</option>
 					   @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="card mb-3">
@@ -89,24 +89,40 @@ width: 100% !important;
                     </div>
                     <div class="card-body">
                         <div class="row">
-                           
-                            
                             @foreach($services as $service)
                                 <div class="col-md-4 col-sm-6 mb-2">
                                     <div class="form-check ">
                                         <input class="form-check-input" type="checkbox" 
                                                id="{{ $service->service_id }}" 
-                                               name="services[]" 
+                                               name="services[]" onchange="getRoles(this.value)"
                                                value="{{ $service->service_id}}" required> &nbsp;
                                         <label class="form-check-label" for="{{ $service->service_id }}">
                                             {{ $service->name }}
                                         </label>
                                     </div>
                                 </div>
-                            @endforeach
+                            @endforeach 
+                          
                         </div>
                     </div>
                 </div>
+                 <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">Choose Role  <span class="text-danger"> *</span></h6>
+                    </div>
+                    <div class="card-body">
+                    <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <select class="form-select" id="staff_type" name="user_type" required >
+                            <option value="">Select Staff Type</option>
+                        </select>
+                    </div>
+                </div>
+                        </div>
+                </div>
+
+                    
+                
 
                 <div class="">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
@@ -246,7 +262,40 @@ width: 100% !important;
 												<?php
 											} ?>
 <script>
-					
+   
+ function getRoles(serviceId) {
+        // Step 1: Get all checked checkboxes
+        let selectedServiceIds = [];
+        document.querySelectorAll('input[name="services[]"]:checked').forEach((checkbox) => {
+            selectedServiceIds.push(checkbox.value);
+        });
+
+        // Step 2: Send data to the server via AJAX
+        fetch('/get-roles', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRF token for Laravel
+            },
+            body: JSON.stringify({ service_ids: selectedServiceIds })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Step 3: Update the <select> dropdown
+            const staffTypeSelect = document.getElementById('staff_type');
+            staffTypeSelect.innerHTML = '<option value="">Select Staff Type</option>'; // Clear old options
+            
+            // Loop through the data and append new options
+            data.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.id; // Set option value
+                option.textContent = role.role_name; // Set option display text
+                staffTypeSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
 
 function resetCheckboxes(checkedBox) {
 
@@ -262,20 +311,6 @@ function resetCheckboxes(checkedBox) {
 
 
 <script>
-    function StaffType(staff){
-        
-     if(staff=="operation_manager"){
-
-     }else if(staff == "team_manager"){
-
-     }else if(staff == "customer_success_manager"){
-
-     }else{
-        // book keeper 
-     }
-
-    }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     // Toggle all permissions
