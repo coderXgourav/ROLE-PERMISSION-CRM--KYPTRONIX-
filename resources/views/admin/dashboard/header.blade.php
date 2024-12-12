@@ -24,11 +24,11 @@
     <!--favicon-->
     <link rel="icon" href="{{ url('assets/images/favicon-32x32.png') }}" type="image/png" />
     <!--plugins-->
-    <link href="{{ url('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ url('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet" /> --}}
+    {{-- <link href="{{ url('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" /> --}}
+    {{-- <link href="{{ url('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" /> --}}
     <link href="{{ url('assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ url('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" /> --}}
     
     <!-- loader-->
 
@@ -38,25 +38,25 @@
     <!-- Bootstrap CSS -->
     <link href="{{ url('assets/css/bootstrap.min.css') }}" rel="stylesheet" />
     <link href="{{ url('assets/css/bootstrap-extended.css') }}" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet" />
-    <link href="{{ url('assets/css/app.css') }}" rel="stylesheet" />
+    {{-- <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet" /> --}}
+    <link href="{{ url('assets/css/app.css') }}" rel="stylesheet" />    
     <link href="{{ url('assets/css/icons.css') }}" rel="stylesheet" />
 
     <!-- Theme Style CSS -->
 
     <link rel="stylesheet" href="{{ url('assets/css/dark-theme.css') }}" />
-    <link rel="stylesheet" href="{{ url('assets/css/semi-dark.css') }}" />
-    <link rel="stylesheet" href="{{ url('assets/css/header-colors.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ url('assets/css/semi-dark.css') }}" /> --}}
+    {{-- <link rel="stylesheet" href="{{ url('assets/css/header-colors.css') }}" /> --}}
     {{-- NUMBER  --}}
-    <link rel="stylesheet" href="{{ url('build/css/intlTelInput.css') }}" />
-    <link rel="stylesheet" href="{{ url('build/css/demo.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ url('build/css/intlTelInput.css') }}" /> --}}
+    {{-- <link rel="stylesheet" href="{{ url('build/css/demo.css') }}" /> --}}
     {{-- NUMBER  --}}
 
     {{-- TOASTR  --}}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{url('/project-js/toastr/toastr1.js')}}"></script>
     <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        href="{{url('/project-js/toastr/toastr2.css')}}">
+    <script src="{{url('/project-js/toastr/toastr3.js')}}"></script>
     <script src="{{ url('project-js/alert_show.js') }}"></script>
 
     {{-- TOASTR  --}}

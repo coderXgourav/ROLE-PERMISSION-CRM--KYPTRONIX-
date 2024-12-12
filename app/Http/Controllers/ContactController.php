@@ -26,10 +26,11 @@ use App\Models\LoginHistoryModel;
 use App\Models\RoleService;
 use App\Models\Role;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use DB;
 use Twilio\Rest\Client;
 use Crypt;
-use Mail;
+// use Mail;
 use PDF;
 
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -2897,49 +2898,100 @@ $invoice_id = Crypt::decrypt($invoice);
    
     return view('admin.pay',['price'=>$price,'invoice'=>$invoice_detials]);
 }
-public function emailSend(Request $request){
-   $id = $request->customer_id;
-   $invoice_id =$request->invoice_id;
-    $user_id = session('admin');
-    $admin_data = self::userDetails($user_id);
-    $user_type = self::userType($admin_data->user_type);
+// public function emailSend(Request $request){
+//    $id = $request->customer_id;
+//    $invoice_id =$request->invoice_id;
+//     $user_id = session('admin');
+//     $admin_data = self::userDetails($user_id);
+
+ 
   
-    $customer_data = CustomerModel::find($id);
-    $email =$customer_data->customer_email;
-    $msg=$customer_data->msg;
-    $user['to'] = $email;
+//     $customer_data = CustomerModel::find($id);
+    
 
-    $invoice_details = Invoice::find($invoice_id);
-    // dd($customer_data);
+//     $email =$customer_data->customer_email;
+//     $msg=$customer_data->msg;
+//     $user['to'] = $email;
 
-    $data = ['invoice_details'=>$invoice_details,'admin_data'=>$admin_data,' '=>$user_type,'clients'=>$customer_data];
-    $send =   Mail::send('admin.dashboard.invoice_mail',$data,function($messages)use($user)
-    {$messages->to($user['to']);
-      $messages->subject('Business Email');
-    });
+//     $invoice_details = Invoice::find($invoice_id);
+    
+//     // dd($customer_data);
 
-  if($send){
-    $save = new EmailModel;
-    $save->email_admin = session('admin');
-    $save->email_customer = $id;
-    $save->email_text = $msg;
-    $save->save();
-   return self::toastr(true,'Email Send Successfully','success','Success');
-  }else{
-   return self::toastr(false,'Please Try again Later','error','Error');
-  }
+//     $data = ['invoice_details'=>$invoice_details,'admin_data'=>$admin_data,'clients'=>$customer_data];
+//     $send =   Mail::send('admin.dashboard.invoice_mail',$data,function($messages)use($user)
+//     {$messages->to($user['to']);
+//       $messages->subject('Business Email');
+//     });
+
+//   if($send){
+//     $save = new EmailModel;
+//     $save->email_admin = session('admin');
+//     $save->email_customer = $id;
+//     $save->email_text = $msg;
+//     $save->save();
+//    return self::toastr(true,'Email Send Successfully','success','Success');
+//   }else{
+//    return self::toastr(false,'Please Try again Later','error','Error');
+//   }
   
+// }
+
+public function emailSend(Request $request)
+{
+    try {
+        // Retrieve input data
+        $customerId = $request->customer_id;
+        $invoiceId = $request->invoice_id;
+        $adminId = session('admin');
+
+        // Fetch required data
+        $adminData = self::userDetails($adminId);
+        $customerData = CustomerModel::findOrFail($customerId);
+        $invoiceDetails = Invoice::findOrFail($invoiceId);
+
+        // Prepare email data
+        $email = $customerData->customer_email;
+        $messageText = $customerData->msg;
+
+        $emailData = [
+            'invoice_details' => $invoiceDetails,
+            'admin_data'      => $adminData,
+            'clients'         => $customerData
+        ];
+
+        // Send email
+        Mail::send('admin.dashboard.invoice_mail', $emailData, function ($message) use ($email) {
+            $message->to($email)
+                    ->subject('Business Email');
+        });
+
+        // Save email details in the database
+        EmailModel::create([
+            'email_admin'    => $adminId,
+            'email_customer' => $customerId,
+            'email_text'     => $messageText,
+        ]);
+
+        return self::toastr(true, 'Email Sent Successfully', 'success', 'Success');
+
+    } catch (\Exception $e) {
+        // Handle errors gracefully
+        \Log::error('Email Sending Error: ' . $e->getMessage());
+        return self::toastr(false, 'Email could not be sent. Please try again later.', 'error', 'Error');
+    }
 }
  public function showInvoiceList($id){
    $user_id=session('admin');
    $admin_data = self::userDetails($user_id);
-   $user_type = self::userType($admin_data->user_type);
+  //  $user_type = self::userType($admin_data->user_type);
+
    $invoice_data = DB::table('invoices')
        ->select('invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.role')
        ->join('customer','customer.customer_id','=','invoices.customer_id')
+        ->join('services','services.service_id','=','invoices.service_id')
        ->where('invoices.customer_id',$id)
        ->paginate(10);   
-  return view('admin.dashboard.leads_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
+  return view('admin.dashboard.leads_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data]);
 
   }
 

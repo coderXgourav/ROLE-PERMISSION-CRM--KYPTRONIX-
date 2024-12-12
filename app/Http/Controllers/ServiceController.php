@@ -237,11 +237,22 @@ class ServiceController extends Controller
         $request->validate([
             'service_ids' => 'required|array',
         ]);
-        $serviceIds = $request->input('service_ids');
 
-$roles = DB::table("roles")
-    ->whereIn("roles.main_service_id", $serviceIds)
-    ->get();
+        $serviceIds = $request->input('service_ids');
+           if(count($serviceIds)>1){
+           $roles = DB::table("roles")
+            ->whereIn("roles.main_service_id", $serviceIds)
+            ->get();
+
+
+
+           }else{
+            $roles = DB::table("roles")
+            ->whereIn("roles.main_service_id", $serviceIds)
+            ->get();
+           }
+
+
         return response()->json($roles);
     }
 
