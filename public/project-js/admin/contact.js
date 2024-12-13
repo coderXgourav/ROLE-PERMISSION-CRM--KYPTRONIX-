@@ -920,9 +920,9 @@ $("#add-service").validate({
                 var customer_id = data;
 
                 Command: toastr["success"]("Success", "Updated Successfully");
-                setTimeout(() => {
-                    window.location = "/admin/leads-view/" + customer_id;
-                }, 1500);
+                // setTimeout(() => {
+                //     window.location = "/admin/leads-view/" + customer_id;
+                // }, 1500);
             },
             error: function () {
                 $("#btn").attr("disabled", false);

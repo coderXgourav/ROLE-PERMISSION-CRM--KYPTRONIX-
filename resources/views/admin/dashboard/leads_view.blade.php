@@ -119,7 +119,7 @@
                         </a>
                     </div>
                    <form id="add-service">
-                     {{@csrf_field();}}
+                     {{@csrf_field()}}
                     <!-- Service Selection -->
                    <?php if(!empty($service_data[0]->customer_ids)){ ?>
                     <input type="hidden" name="customer_id" value="{{$service_data[0]->customer_ids}}">
