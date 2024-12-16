@@ -2174,17 +2174,28 @@ public function sendSms(Request $request){
 // THIS IS A SEND_SMS FUNCTION  
 //createInvoice Function Start
 public function createInvoice($customer_id){
+
   $id = session('admin');
   $admin_data = self::userDetails($id);
-  $user_type = self::userType($admin_data->user_type);
   $data = CustomerModel::find($customer_id);
-  $package_id=explode(',',$data->package_id);
-  $package_data =Package::whereIn('package_id',$package_id)->get();
- return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'user_type'=>$user_type,'package_data'=>$package_data]);
+  // $package_id=explode(',',$data->package_id);
+  // $package_data =Package::whereIn('package_id',$package_id)->get();
+
+  $package_data=DB::table("packages")
+  ->join("customer_package","customer_package.customer_package_id","=","packages.package_id")
+  ->where("customer_package.customer_main_id",$data->customer_id)
+  ->get();
+
+
+  
+ return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'package_data'=>$package_data]);
 }
 //createInvoice Function End
 //invoiceAdd Function Start
 public function invoiceAdd(Request $request){
+  echo "<pre>";
+  print_r($_POST);
+  die;
       $date = $request->date;
       $price = $request->price;
       $description=$request->description;
@@ -2592,51 +2603,85 @@ foreach ($managers as $key => $value) {
   }
 
 
-  public function leadsView($customer_id){
-     $id = session('admin');
-     $admin_data = self::userDetails($id);
-    //  $user_type = self::userType($admin_data->user_type);
-     $customer_id =   Crypt::decrypt($customer_id);
-    //  $clients = CustomerModel::find($customer_id);
+ public function leadsView($customer_id)
+{
+    $id = session('admin');
+    $admin_data = self::userDetails($id);
+    $customer_id = Crypt::decrypt($customer_id);
 
-  $clients = DB::table("customer")
-    ->join("customer_service", "customer_service.customer_main_id", "=", "customer.customer_id")
-    ->join("services", "services.service_id", "=", "customer_service.customer_service_id")
-    ->where("customer.customer_id", $customer_id)
-    ->select("customer.*", "customer_service.customer_main_id", "services.*") // Adjust the columns as needed
-    ->distinct("customer_service.customer_main_id") // Use distinct to get unique rows
-    ->get();
+    // Fetch customer details
+    $clients = DB::table("customer")
+        ->join("customer_service", "customer_service.customer_main_id", "=", "customer.customer_id")
+        ->join("services", "services.service_id", "=", "customer_service.customer_service_id")
+        ->where("customer.customer_id", $customer_id)
+        ->select("customer.*", "customer_service.customer_main_id", "services.*")
+        ->distinct("customer_service.customer_main_id")
+        ->first();
+
+    if (!$clients) {
+        abort(404, "Customer not found");
+    }
+
+    // Fetch remarks and customer data
+    $customers = DB::table('customer')
+        ->join('remark', 'remark.customer_id', '=', 'customer.customer_id')
+        ->join('main_user', 'main_user.id', '=', 'remark.user_id')
+        ->where('customer.customer_id', '=', $customer_id)
+        ->get([
+            'remark.*',
+            'customer.customer_id',
+            'customer.customer_service_id',
+            'customer.customer_name',
+            'main_user.user_type',
+            'main_user.first_name',
+            'main_user.last_name'
+        ]);
+
+        $subservices = DB::table("customer_subservice")
+        ->join("customer","customer.customer_id",'=',"customer_subservice.customer_main_id")
+        ->join("subservices","subservices.id","=","customer_subservice.customer_subservice_id")
+        ->where("customer.customer_id",$customer_id)
+        ->get();
+        
+           $packages = DB::table("customer_package")
+        ->join("customer","customer.customer_id",'=',"customer_package.customer_main_id")
+        ->join("packages","packages.package_id",'=','customer_package.customer_package_id')
+        ->where("customer.customer_id",$customer_id)
+        ->get();
 
 
-    
-    //  $services = $clients->customer_service_id;
-   
 
-     $service_data = DB::table('services');
+    // Fetch services
+    $services = Service::orderBy('service_id', "DESC")->get();
 
-     $customers = DB::table('customer')   
-     ->join('remark','remark.customer_id','=','customer.customer_id')
-     ->join('main_user','main_user.id','=','remark.user_id')
-     ->where('customer.customer_id','=',$customer_id)
-     ->get(['remark.*','customer.customer_id','customer.customer_service_id','customer.customer_name','main_user.user_type','main_user.first_name','main_user.last_name']);
+    // Fetch package details
+    $package_details = DB::table('customer')
+        ->select('packages.title', 'packages.price as package_price', 'invoices.price as invoice_price', 'packages.package_id', 'invoices.title as custom_title')
+        ->join('invoices', 'invoices.customer_id', '=', 'customer.customer_id')
+        ->leftJoin('packages', 'packages.package_id', '=', 'invoices.package_id')
+        ->where('customer.customer_id', '=', $customer_id)
+        ->get();
 
-     $services = Service::where('name','!=','uncategorized')->get();
+        $service_data = DB::table('services')
+        ->join("customer_service","customer_service.customer_service_id",'=','services.service_id')
+        ->where("customer_service.customer_main_id",$customer_id)
+        ->get();
+
      
 
-       $package_details =DB::table('customer')
-     ->select('packages.title','packages.price as package_price','invoices.price as invoice_price','packages.package_id','invoices.title as custom_title' )
-     ->join('invoices','invoices.customer_id','=','customer.customer_id')
-     ->leftjoin('packages','packages.package_id','=','invoices.package_id')
-     ->where('customer.customer_id','=',$customer_id)
-     ->get();
+    // Pass data to the view
+    return view('admin.dashboard.leads_view', [
+        'admin_data' => $admin_data,
+        'customer' => $clients,
+        'service_data' => $service_data,
+        'data' => $customers,
+        // 'package_details' => $package_details,
+        'services' => $services,
+        'packages' => $packages,
+        'subservices' => $subservices
+    ]);
+}
 
-    //  echo "<pre>";
-    //  print_r($clients[0]);
-    //  die();
- 
- 
-     return view('admin.dashboard.leads_view',['admin_data'=>$admin_data,'customer'=>$clients[0],'service_data'=>$service_data,'data'=>$customers,'package_details'=>$package_details,'services'=>$services]);
-  }
 
 
 
@@ -2789,6 +2834,11 @@ public function emailSend(Request $request)
         ->join('services','services.service_id','=','invoices.service_id')
        ->where('invoices.customer_id',$id)
        ->paginate(10);   
+
+     
+  echo "<pre>";
+  print_r($package_id);
+  die;
   return view('admin.dashboard.leads_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data]);
 
   }

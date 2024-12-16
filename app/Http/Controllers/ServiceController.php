@@ -15,6 +15,10 @@ use App\Models\Subservice;
 use App\Models\Package;
 use App\Models\RoleService;
 use App\Models\Role;
+use App\Models\CustomerServiceModel;
+use App\Models\CustomerPackageModel;
+use App\Models\CustomerSubServiceModel;
+
 
 use DB;
 use Crypt;
@@ -619,185 +623,40 @@ public function subServiceList($service_id){
 
     }
     public function updateServiceData(Request $request){
-      $customer_ids=$request->customer_id;
-      $c_ids=explode(',', $customer_ids);
+      $customer_id=$request->customer_id;
       $services=$request->service_id;
-      $type=$request->type;
+      $packages=$request->packages;
+      $subservices=$request->subservices;
 
-      $business_name=$request->business_name;
-      $industry=$request->industry;
-      $fax=$request->fax;
-      $contact_number=$request->contact_number;
-      $contact_email=$request->contact_email;
-      $ein=$request->ein;
-      $business_title=$request->business_title;
-      $msg=$request->msg;
-      $point_of_contact=$request->point_of_contact;
-      $paid_customer=$request->paid_customer;
-
-      if(!empty($request->packages)){
-          $packages=implode(',',$request->packages);
-      }else{$packages=0;}
-
-      if(!empty($request->subservices)){
-          $subservices=implode(',',$request->subservices);
-      }else{$subservices=0;}
-      if(!empty($c_ids)){
-         foreach ($c_ids as $key => $value) {
-           $delete=CustomerModel::find($value)->delete();
-         }
-     
-      }else{
-           $delete=CustomerModel::find($customer_ids)->delete();
-
-      }
-      
-      if($type==1){
-           $phone= $request->customer_number;
-           //$country_code = $request->country_code;
-           $customer_number = $phone;
-           $first_name = $request->first_name;
-           $middle_name =$request->middle_name;
-           $last_name=$request->last_name;
-            $email = $request->customer_email;
-            $msg = $request->msg;
-            $dob=$request->dob;
-            $address=$request->address;
-            $city=$request->city;
-            $state=$request->state;
-            $zip=$request->zip;
-            $ssn=$request->ssn;
-            $msg=$request->msg;
-            if(!empty($middle_name)){
-               $customer_name=$first_name.' ' .$middle_name.' '.$last_name;
-             }else{
-               $customer_name=$first_name.' '.$last_name;
-             }            
-          if(!empty($services)){
-              foreach ($services as $key => $value) {
-                $individual_details = new CustomerModel;
-                $individual_details->customer_name = $customer_name;
-                $individual_details->customer_number = $customer_number ;
-                $individual_details->customer_email = $email ;
-                $individual_details->customer_service_id = $value;
-                $individual_details->customer_sub_service_id = $subservices;
-                $individual_details->package_id = $packages;
-                $individual_details->type=$type;
-                $individual_details->first_name=$first_name;
-                $individual_details->middle_name=$middle_name;
-                $individual_details->last_name=$last_name;
-                $individual_details->dob=$dob;
-                $individual_details->address=$address;
-                $individual_details->city=$city;
-                $individual_details->state=$state;
-                $individual_details->zip=$zip;
-                $individual_details->ssn=$ssn;
-                $individual_details->msg=$msg;
-                $save = $individual_details->save();
-                $customer_id=encrypt($individual_details->customer_id);
-
-             }
-          }else{
-               $individual_details = new CustomerModel;
-                $individual_details->customer_name = $customer_name;
-                $individual_details->customer_number = $customer_number ;
-                $individual_details->customer_email = $email ;
-                $individual_details->customer_service_id = 0;
-                $individual_details->customer_sub_service_id =$subservices;
-                $individual_details->package_id = $packages;
-                $individual_details->type=$type;
-                $individual_details->first_name=$first_name;
-                $individual_details->middle_name=$middle_name;
-                $individual_details->last_name=$last_name;
-                $individual_details->dob=$dob;
-                $individual_details->address=$address;
-                $individual_details->city=$city;
-                $individual_details->state=$state;
-                $individual_details->zip=$zip;
-                $individual_details->ssn=$ssn;
-                $individual_details->msg=$msg;
-                $save = $individual_details->save();
-                $customer_id=encrypt($individual_details->customer_id);
-          }      
-      }else if($type==2){
-        $email_address = $request->customer_email;
-        $fax = $request->fax;
-        $contact_number = $request->customer_number;
-        $business_name=$request->business_name;
-        $industry=$request->industry;
-        $address=$request->address;
-        $city=$request->city;
-        $state=$request->state;
-        $zip=$request->zip;
-          
-        $customer_email = $email_address;
-        $ein=$request->ein;
-        $business_title=$request->business_title;
-        $point_of_contact=$request->point_of_contact;
-        $msg=$request->msg;
-        
-        if(!empty($services)){
-           foreach ($services as $key => $value) {
-                $business_details = new CustomerModel;
-                $business_details->business_name=$business_name;
-                $business_details->customer_name=$business_name;
-                $business_details->industry=$industry;
-                $business_details->customer_number=$contact_number;
-                $business_details->customer_email=$customer_email;
-                $business_details->customer_service_id = $value;
-                $business_details->customer_sub_service_id = $subservices;
-                $business_details->package_id = $packages;
-
-                $business_details->type=$type;
-                $business_details->ein=$ein;
-                $business_details->address=$address;
-                $business_details->city=$city;
-                $business_details->state=$state;
-                $business_details->zip=$zip;
-                $business_details->business_title=$business_title;
-                $business_details->point_of_contact=$point_of_contact;
-
-                $business_details->fax=$fax;
-                $business_details->contact_number=$contact_number;
-                $business_details->contact_email=$email_address;
-
-                $business_details->msg=$msg;
-                $save = $business_details->save();
-                $customer_id=encrypt($business_details->customer_id);
-
-
-           }
-        }else{
-                $business_details = new CustomerModel;
-                $business_details->business_name=$business_name;
-                $business_details->customer_name=$business_name;
-                $business_details->industry=$industry;
-                $business_details->customer_number=$contact_number;
-                $business_details->customer_email=$customer_email;
-                $business_details->customer_service_id = 0;
-                $business_details->customer_sub_service_id = $subservices;
-                $business_details->package_id = $packages;
-
-                $business_details->type=$type;
-                $business_details->ein=$ein;
-                $business_details->address=$address;
-                $business_details->city=$city;
-                $business_details->state=$state;
-                $business_details->zip=$zip;
-                $business_details->business_title=$business_title;
-                $business_details->point_of_contact=$point_of_contact;
-
-                $business_details->fax=$fax;
-                $business_details->contact_number=$contact_number;
-                $business_details->contact_email=$email_address;
-
-                $business_details->msg=$msg;
-                $save = $business_details->save();
-                $customer_id=encrypt($business_details->customer_id);
-
-
+  
+           $delete = CustomerServiceModel::where("customer_main_id",$customer_id)->delete();
+          foreach ($services as $key => $value) {
+           $create = new CustomerServiceModel();
+           $create->customer_main_id = $customer_id;
+           $create->customer_service_id = $value;
+           $create->save();
         }
-      }
+
+        if(!empty($packages)){
+          $delete = CustomerPackageModel::where("customer_main_id",$customer_id)->delete();
+           foreach ($packages as $key => $value) {
+           $create = new CustomerPackageModel();
+           $create->customer_main_id = $customer_id;
+           $create->customer_package_id = $value;
+           $create->save();
+        }
+          if(!empty($subservices)){
+          $delete = CustomerSubServiceModel::where("customer_main_id",$customer_id)->delete();
+           foreach ($subservices as $key => $value) {
+           $create = new CustomerSubServiceModel();
+           $create->customer_main_id = $customer_id;
+           $create->customer_subservice_id = $value;
+           $create->save();
+        }
+        
+        }
+    }
+    
        return response()->json($customer_id);
 
     }

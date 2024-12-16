@@ -127,7 +127,7 @@
                     <input type="hidden" name="customer_id" value="{{$customer->customer_id}}">
 
                   <?php } ?>
-                    <input type="hidden" name="customer_name" value="{{$customer->customer_name}}">
+                    {{-- <input type="hidden" name="customer_name" value="{{$customer->customer_name}}">
                     <input type="hidden" name="customer_number" value="{{$customer->customer_number}}">
                     <input type="hidden" name="customer_email" value="{{$customer->customer_email}}">
                     <input type="hidden" name="task" value="{{$customer->task}}">
@@ -151,8 +151,7 @@
                     <input type="hidden" name="business_title" value="{{$customer->business_title}}">
                     <input type="hidden" name="msg" value="{{$customer->msg}}">
                     <input type="hidden" name="point_of_contact" value="{{$customer->point_of_contact}}">
-                    <input type="hidden" name="paid_customer" value="{{$customer->paid_customer}}">
-
+                    <input type="hidden" name="paid_customer" value="{{$customer->paid_customer}}"> --}}
 
                     <div id="categoryTable" class="mt-4" style="display: none;">
                         <div class="row g-2">
@@ -176,10 +175,8 @@
 
                                 }else{ $customer_p_id=0;}
                                     $package_idss=explode(',', $customer_p_id);
-                                
-                                  
-                              
                             ?>
+
                             <input type="hidden" id="subservices_id" name="subservices_id" value="<?= $sub_s_id; ?>">
                             <input type="hidden" name="packagesid" id="packagesid" value="<?= $customer_p_id;?>">
                             @foreach ($services as $item)
@@ -220,6 +217,7 @@
                     </div>
                     
                    </form>
+
                   <!-- Communication Buttons -->
                     <div class="d-flex justify-content-center gap-2 mt-4">
                         <a href="{{ route('admin.call', ['id' => encrypt($customer->customer_id)]) }}" 
@@ -264,10 +262,23 @@
                 </div>
                 <div class="card-body">
                     <table class="table table-hover info-table">
+                           @php
+                            $no = 1;
+                       @endphp
                         @foreach ($service_data as $item)
+                       
                         <tr>
-                            <th>Service Name</th>
-                            <td>{{$item->service_names}}</td>
+                            <th>Service {{$no++}}</th>
+                            <td>{{$item->name}}</td>
+                        </tr>
+                        @endforeach
+                       @php
+                            $no = 1;
+                       @endphp
+                          @foreach ($subservices as $item)
+                        <tr>
+                            <th>Sub Service {{$no++}} </th>
+                            <td>{{$item->service_name}}</td>
                         </tr>
                         @endforeach
                         
@@ -341,11 +352,13 @@
                                 <td>{{$customer->contact_email}}</td>
                             </tr>
                         @endif
-
-                        @if(!empty($package_details))
-                            @foreach ($package_details as $value)
+                        @if(!empty($packages))
+                            @php
+                            $no = 1;
+                       @endphp
+                            @foreach ($packages as $value)
                             <tr>
-                                <th>Package Title</th>
+                                <th>Package {{$no++}}</th>
                                 <td>
                                     @if($value->package_id != '')
                                         {{$value->title}}
