@@ -25,10 +25,9 @@ use App\Models\Package;
 use App\Models\LoginHistoryModel;
 use App\Models\RoleService;
 use App\Models\CustomerServiceModel;
-
+use App\Models\CustomerPackageModel;
 use App\Models\Role;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\Mail;
 use DB;
 use Twilio\Rest\Client;
@@ -2186,6 +2185,12 @@ public function createInvoice($customer_id){
   ->where("customer_package.customer_main_id",$data->customer_id)
   ->get();
 
+  
+  
+
+
+
+
 
   
  return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'package_data'=>$package_data]);
@@ -2193,62 +2198,80 @@ public function createInvoice($customer_id){
 //createInvoice Function End
 //invoiceAdd Function Start
 public function invoiceAdd(Request $request){
-  echo "<pre>";
-  print_r($_POST);
-  die;
-      $date = $request->date;
-      $price = $request->price;
-      $description=$request->description;
-      $customer_id=$request->customer_id;
-      $user_id=$request->user_id;
-      $role=$request->role;
-      $service_id=$request->service_id;
-      $custom=$request->custom;
-      $package_id=$request->package;
-      $custom_title=$request->title;
-      $invoice_id="INV-".rand(4, 9999);
+  $customer_package_tem_id = $request->customer_package_tem_id;
+ 
+
+   $invoiceExist  = Invoice::where("customer_package_main_id",$customer_package_tem_id)->first();
+   if($invoiceExist){
+    return self::toastr(false,'This Package Already Exist','error','Error');
+    }else{
+      $save = new Invoice; 
+      $save->customer_package_main_id = $customer_package_tem_id;
+      $save->save();
+      return self::toastr(true,$save->invoice_id,'success','Success');
+      }
+    
+
+  
+
+      // $date = $request->date;
+      // $price = $request->price;
+      // $description=$request->description;
+      // $customer_id=$request->customer_id;
+      // $user_id=$request->user_id;
+      // $role=$request->role;
+      // $service_id=$request->service_id;
+      // $custom=$request->custom;
+      // $package_id=$request->package;
+      // $custom_title=$request->title;
+      // $invoice_id="INV-".rand(4, 9999);
 
       
-      $invoice_details = new Invoice;
-      $invoice_details->price = $price;
-      $invoice_details->date = $date;
-      $invoice_details->customer_id = $customer_id;
-      $invoice_details->description = $description;
-      $invoice_details->user_id = $user_id;
-      $invoice_details->role = $role;
-      $invoice_details->service_id=$service_id;
-      $invoice_details->title=$custom_title;
-      if($package_id !=''){
-       $invoice_details->package_id=$package_id;
-      }else{
-       $invoice_details->package_id=$custom;
+      // $invoice_details = new Invoice;
+      // $invoice_details->price = $price;
+      // $invoice_details->date = $date;
+      // $invoice_details->customer_id = $customer_id;
+      // $invoice_details->description = $description;
+      // $invoice_details->user_id = $user_id;
+      // $invoice_details->role = $role;
+      // $invoice_details->service_id=$service_id;
+      // $invoice_details->title=$custom_title;
+      // if($package_id !=''){
+      //  $invoice_details->package_id=$package_id;
+      // }else{
+      //  $invoice_details->package_id=$custom;
 
-      }
-      $invoice_details->invoice_unique_id=$invoice_id;
-      $save = $invoice_details->save();
+      // }
+      // $invoice_details->invoice_unique_id=$invoice_id;
+      // $save = $invoice_details->save();
 
-      $invoice_id=$invoice_details->invoice_id;
+      // $invoice_id=$invoice_details->invoice_id;
 
 
-      if($save){
-         return self::toastr(true,$invoice_id,"success","Success");
+      // if($save){
+      //    return self::toastr(true,$invoice_id,"success","Success");
 
-      }else{
-         return self::toastr(false,"Sorry , Technical Issue..","error","Error");
-      }
+      // }else{
+      //    return self::toastr(false,"Sorry , Technical Issue..","error","Error");
+      // }
       
 }
+
 //invoiceAdd Function End
 //invoice2 Function Start
-public function invoice2($customer_id,$invoice_id){
+public function invoice2($customer_package_tem_id){
   $id = session('admin');
   $admin_data = self::userDetails($id);
-  $user_type = self::userType($admin_data->user_type);
-  $clients = CustomerModel::find($customer_id);
-  $invoice_details = Invoice::find($invoice_id);
-  $package_details=DB::table('packages')->select('packages.title')->join('customer','customer.package_id','=','packages.package_id')->where('customer.customer_id',$customer_id)->first();
-  return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type,'package_details'=>$package_details]);
 
+  $invoice_details = DB::table("invoices")
+  ->join("customer_package","customer_package.customer_package_tem_id",'=','invoices.customer_package_main_id')
+  ->join("packages","packages.package_id","=","customer_package.customer_package_id")
+  ->join("customer","customer.customer_id","=","customer_package.customer_main_id")
+  ->where('customer_package.customer_package_tem_id',$customer_package_tem_id)
+  ->first();
+
+
+return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'invoice_details'=>$invoice_details]);
 }
 //invoice2 Function End
 //convertToClient Function Start
@@ -2264,6 +2287,7 @@ public function convertToClient(Request $request){
       $customer_details = CustomerModel::find($customer_id);
       $customer_details->status = 0;
       $save_status=$customer_details->save();
+
       if($save){
          return self::toastr(true,"Converted To Client ","success","Success");
 
@@ -2692,19 +2716,19 @@ foreach ($managers as $key => $value) {
   return response()->json($package_details);
 }
 
-public function invoicePerCustomer($id){
-  $user_id=session('admin');
-  $admin_data = self::userDetails($user_id);
- $user_type = self::userType($admin_data->user_type);
+// public function invoicePerCustomer($id){
+//   $user_id=session('admin');
+//   $admin_data = self::userDetails($user_id);
 
-  $invoice_data = DB::table('invoices')
-  ->join('main_user','main_user.id','=','invoices.user_id')
-  ->join('permission','permission.user_id','=','main_user.id')
-  ->join('customer','customer.customer_id','=','invoices.customer_id')
-  ->where('invoices.customer_id',$id)
-  ->get();  
-  return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
-}
+//   $invoice_data = DB::table('packages')
+//   ->join("customer_package","customer_package.customer_package_id","=","packages.package_id")
+//   ->join('invoices','invoices.customer_package_main_id','=','customer_package.customer_package_tem_id')
+//   ->join("customer","customer.customer_id","=","customer_package.customer_main_id")
+//   ->where('customer_package.customer_package_tem_id',$id)
+//   ->paginate(10); 
+//   return view('admin.dashboard.service_invoices',['admin_data'=>$admin_data,'data'=>$invoice_data]);
+// }
+
 public function allReports(){
     $id = session('admin');
     $admin_data = self::userDetails($id);
@@ -2826,19 +2850,17 @@ public function emailSend(Request $request)
  public function showInvoiceList($id){
    $user_id=session('admin');
    $admin_data = self::userDetails($user_id);
-  //  $user_type = self::userType($admin_data->user_type);
 
    $invoice_data = DB::table('invoices')
-       ->select('invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id','invoices.role')
-       ->join('customer','customer.customer_id','=','invoices.customer_id')
-        ->join('services','services.service_id','=','invoices.service_id')
-       ->where('invoices.customer_id',$id)
-       ->paginate(10);   
-
      
-  echo "<pre>";
-  print_r($package_id);
-  die;
+   ->join("customer_package","customer_package.customer_package_tem_id","=","invoices.customer_package_main_id")
+   ->join("customer","customer.customer_id","=","customer_package.customer_main_id")
+   ->join("packages","packages.package_id","=","customer_package.customer_package_id")
+       ->paginate(10);   
+     
+  // echo "<pre>";
+  // print_r($invoice_data);
+  // die;
   return view('admin.dashboard.leads_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data]);
 
   }

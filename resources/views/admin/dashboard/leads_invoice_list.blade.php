@@ -70,9 +70,9 @@
                                            <td>{{$item->customer_number}}</td>
                                          
                                           
-                                           <td class="text-danger"><b> {{$item->invoices_price}}$</b></td>
+                                           <td class="text-danger"><b> {{$item->price}}$</b></td>
                                            <td><?php echo date('d-M-Y',strtotime($item->created_at)) ?></td>
-                                           <td><a href="{{route('admin.view_invoice',['id'=>$item->customer_id,'invoice_id'=>$item->invoice_id])}}" class="btn btn-success btn-sm">View </a>
+                                           <td><a href="{{route('admin.invoice2',['id'=>$item->customer_package_main_id])}}" class="btn btn-success btn-sm">View </a>
                                            </td>
 
                                        </tr>

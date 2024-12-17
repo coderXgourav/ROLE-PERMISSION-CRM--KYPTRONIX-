@@ -16,11 +16,7 @@
 						<div class="card">
 							<form id="create_invoice_form">
 								{{@csrf_field()}}
-								<input type="hidden" id="customer_id"  name="customer_id" value="{{$data->customer_id}}">
-								<input type="hidden" id="user_id"  name="user_id" value="{{$admin_data->user_id}}">
-								<input type="hidden" id="role"  name="role" value="{{$admin_data->user_type}}">
-								<input type="hidden" id="service_id" name="service_id" value="{{$data->customer_service_id}}">
-
+						
 							<div class="card-body p-4">
 								<h5 class="mb-4"> </h5>
 								 	<!--<div class="row mb-3">
@@ -47,12 +43,12 @@
 								   	<label for="input42" class="col-sm-3 col-form-label">Package</label>
 								   	<div class="col-sm-9">
 											<div class="position-relative input-icon">
-												<select  name="package" id="package" class="form-control" onchange="check_package(this.value)" required >
+												<select  name="customer_package_tem_id" id="customer_package_tem_id" class="form-control" onchange="check_package(this.value)" required >
 													<option value="">Select Package </option>
 											        @if(count($package_data)>0)
 
 													@foreach ($package_data as $item)
-													<option value="{{$item->package_id}}">{{$item->title}}</option>
+													<option value="{{$item->customer_package_tem_id}}">{{$item->title}}</option>
 													@endforeach
 													@endif
 												</select>
@@ -60,7 +56,7 @@
                                       </div>
 								   			
 								   </div>
-								   	<div class="row mb-3 custom_title" style="display:none;">
+								   	{{-- <div class="row mb-3 custom_title" style="display:none;">
 										<label for="input42" class="col-sm-3 col-form-label">Title</label>
 										<div class="col-sm-9">
 											<div class="position-relative input-icon">
@@ -87,7 +83,7 @@
 												<span class="position-absolute top-50 translate-middle-y"><i class='bx bx-detail'></i></span>
 											</div>
 										</div>
-									</div> 
+									</div>  --}}
 								    
 									<div class="row">
 										<label class="col-sm-3 col-form-label"></label>

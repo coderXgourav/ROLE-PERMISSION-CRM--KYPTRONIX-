@@ -81,7 +81,7 @@ Route::post('/admin/update_members',[ContactController::class,'updateMembers'])-
 
 
 Route::get('/admin/invoice_list/{id}',[ContactController::class,'invoiceList'])->name('admin.invoice_list');
-Route::get('/admin/invoice/{id}',[ContactController::class,'invoicePerCustomer'])->name('admin.view_invoice_per_customer');
+// Route::get('/admin/invoice/{id}',[ContactController::class,'invoicePerCustomer'])->name('admin.view_invoice_per_customer');
 Route::get('/admin/view_invoice/{id}/{invoice_id}',[ContactController::class,'viewInvoice'])->name('admin.view_invoice');
 Route::get('/admin/contact/{id}',[ContactController::class,'viewTeamMember'])->name('admin.view_team_member');
 Route::get('/admin/show-team-member-list/{id}',[ContactController::class,'teamMemberList'])->name('admin.show-team-member-list');
@@ -116,7 +116,7 @@ Route::get('/admin/send-message/{id}',[ContactController::class,'messageText'])-
 Route::post('/admin/send-message',[ContactController::class,'sendSms']);
 Route::get('/admin/create-invoice/{id}',[ContactController::class,'createInvoice'])->name('admin.create-invoice');
 Route::post('/admin/save_invoice',[ContactController::class,'invoiceAdd'])->name('post18');
-Route::get('/admin/invoice2/{id}/{invoice_id}',[ContactController::class,'invoice2'])->name('admin.invoice2');
+Route::get('/admin/invoice/{id}/',[ContactController::class,'invoice2'])->name('admin.invoice2');
 Route::get('/admin/convert_to_client',[ContactController::class,'convertToClient']);
 Route::get('/admin/view_clients',[ContactController::class,'viewClients'])->name('admin.view_clients');
 Route::get('/admin/view-invoice',[ContactController::class,'viewInvoiceList'])->name('admin.view-invoice');

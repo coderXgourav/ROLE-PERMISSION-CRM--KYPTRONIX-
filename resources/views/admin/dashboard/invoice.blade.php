@@ -95,36 +95,33 @@
     </div>
   <form id="invoice_email_send">
      {{@csrf_field()}}
-    <input type="hidden" name="customer_id" value="{{$clients->customer_id}}">
-    <input type="hidden" name="invoice_id" value="{{$invoice_details->invoice_id}}">
+    {{-- <input type="hidden" name="customer_id" value="{{$clients->customer_id}}">
+    <input type="hidden" name="invoice_id" value="{{$invoice_details->invoice_id}}"> --}}
 
     <div class="invoice-details"> 
         <div class="col">
             <h3>From</h3>
             <p>{{$admin_data->first_name}} {{$admin_data->last_name}}<br>
             {{$admin_data->email_address}}<br>
-            Your address<br>
-            P: {{$admin_data->phone_number}}</p>
+ 
+            Ph: {{$admin_data->phone_number}}</p>
         </div>
         <div class="col">
-            <h3>For</h3>
-            <p>{{$clients->customer_name}}<br>
-            {{$clients->customer_email}}<br>
-            Client address<br>
-            P: {{$clients->customer_number}}</p>
+            <h3>To</h3>
+            <p>{{$invoice_details->customer_name}}<br>
+            {{$invoice_details->customer_email}}<br>
+            Ph: {{$invoice_details->customer_number}}</p>
         </div>
-        <div class="col">
+        {{-- <div class="col">
             <p><strong>Number:</strong>{{$invoice_details->invoice_unique_id}}<br>
-            <strong>Date:</strong> 04 May 2018<br>
-            <strong>Terms:</strong> Next Day<br>
-            <strong>Due:</strong> 05 May 2018</p>
-        </div>
+          
+        </div> --}}
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>Date</th>
+                {{-- <th>Date</th> --}}
                 <th>Title</th>
                 <th>Price</th>
             </tr> 
@@ -137,20 +134,16 @@
             ?>
                    
             <tr>
-                <td>{{$date}}</td>
-                <td>{{$package_details->title}}</td>
+                <td>{{$invoice_details->title}}</td>
                 <td>{{$invoice_details->price}}$</td>
-            </tr>
+          </tr>
           <?php }  ?>
         </tbody>
     </table>
 
-    <div class="amount-due">
+    {{-- <div class="amount-due">
         <p>Subtotal: <b>{{$invoice_details->price}}$</b><br>
-      <!--  Tax (7%): $6.93<br>
-        Total: $105.93</p>
-        <h3>Balance Due: $105.93</h3>-->
-    </div>
+    </div> --}}
      <div style="display: flex; justify-content:center; margin-top:15px;">
         <button type="submit" id="btn" style="height:46px;" class="m-auto btn btn-primary">Send Invoice </button>
      </div>

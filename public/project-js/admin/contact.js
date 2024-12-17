@@ -740,8 +740,7 @@ $("#create_invoice_form").validate({
                 Command: toastr[data.icon](data.title, data.msg);
                 var invoice_id = data.title;
                 if (data.status) {
-                    window.location =
-                        "/admin/invoice2/" + customer_id + "/" + invoice_id;
+                    window.location = "/admin/invoice/" + invoice_id;
                 }
             },
             error: function () {
