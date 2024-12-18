@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->id('package_id');
+            $table->string('type')->nullable();
+             $table->string('service_id')->nullable();
+            $table->string('subservice_id')->nullable();
+            $table->string('sub_subservice_id')->nullable();
             $table->string('title')->nullable();
             $table->string('price')->nullable();
             $table->string('desc')->nullable();
-            $table->string('service_id')->nullable();
-            $table->string('subservice_id')->nullable();
+            $table->string('duration')->nullable();
+            $table->string('free_trial')->nullable();
             $table->timestamps();
             $table->softDeletes(); // Adds the 'deleted_at' column
 

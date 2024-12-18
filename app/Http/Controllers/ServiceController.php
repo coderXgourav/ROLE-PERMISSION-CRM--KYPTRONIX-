@@ -17,6 +17,7 @@ use App\Models\RoleService;
 use App\Models\Role;
 use App\Models\CustomerServiceModel;
 use App\Models\CustomerPackageModel;
+use App\Models\Sub_Subservice;
 use App\Models\CustomerSubServiceModel;
 
 
@@ -94,37 +95,148 @@ class ServiceController extends Controller
 
    
     // THIS IS serviceAdd FUNCTION 
-    public function serviceAdd(Request $request){
 
-      $name = strtolower(trim($request->name));
-      $sub_service_name =$request->subcategory;
-     if(Service::where('name',$name)->first()){
-         return self::toastr(false,"Service Already Exist","error","Error");
-     }
-     if(!empty($sub_service_name)){
+public function serviceAdd(Request $request)
+{
 
-            $service_details = new Service;
-            $service_details->name = $name;
-            $service_details->save();
-            $service_id =$service_details->service_id;
-            // print_r($service_id);die;
-            foreach ($sub_service_name as $key => $value) {
-              $sub_service_details = new Subservice;
-              if($value!=""){
-              $sub_service_details->service_id = $service_id;
-              $sub_service_details->service_name = $value;
-              $sub_service_details->save();
-              }
-            
+    // Retrieve Main Service Data
+    $mainServiceName = trim($request['main_service']['name']);
+    $packages = $request['main_service']['packages'] ?? [];
+
+    // Check for Existing Main Service
+    
+    if (Service::where('name', $mainServiceName)->exists()) {
+        return self::toastr(false, "This Main Service Already Exists", "error", "Error");
+    }
+
+    // Save Main Service
+    $service_details = new Service;
+    $service_details->name = $mainServiceName;
+    $service_details->save();
+    $service_id = $service_details->service_id;
+
+    if (!empty($packages)) {
+    $formattedPackages = [];
+    $temp = []; 
+    foreach ($packages as $package) {
+        $temp = array_merge($temp, $package); 
+        if (count($temp) === 3) {
+            $formattedPackages[] = $temp; 
+            $temp = []; 
+        }
+    }
+}
+
+    if (!empty($formattedPackages)) {
+        foreach ($formattedPackages as $package) {
+            $this->savePackage($service_id, $package, 'main');
+        }
+    }
+  
+
+    // Process Services and Sub-Services
+    $services = $request['main_service']['services'] ?? [];
+    foreach ($services as $service) {
+        // Save Service
+        $serviceName = $service['name'];
+        $sub_service_details = new Subservice;
+        $sub_service_details->service_id = $service_id;
+        $sub_service_details->service_name = $serviceName;
+        $sub_service_details->save();
+        $sub_service_id = $sub_service_details->id;
+
+        // Save Packages for Service
+        // if (isset($service['packages'])) {
+        //     foreach ($service['packages'] as $package) {
+        //         $this->savePackage($sub_service_id, $package, 'service');
+        //     }
+        // }
+        
+
+        if (!empty($packages)) {
+            $formattedPackages = [];
+            $temp = []; 
+            foreach ($packages as $package) {
+                $temp = array_merge($temp, $package); 
+                if (count($temp) === 3) {
+                    $formattedPackages[] = $temp; 
+                    $temp = []; 
+                }
             }
+        }
 
-       return self::toastr(true,"Service Add Successfull","success","Success");
-    }else{
-      
+        if (!empty($formattedPackages)) {
+            foreach ($formattedPackages as $package) {
+                $this->savePackage($service_id, $package, 'service');
+            }
+        }
+
+        // Process Sub-Services
+        $sub_services = $service['sub_services'] ?? [];
+        foreach ($sub_services as $sub_service) {
+            $subServiceName = $sub_service['name'];
+            $sub_sub_service_details = new Sub_Subservice;
+            $sub_sub_service_details->sub_service_main_id = $sub_service_id;
+            $sub_sub_service_details->sub_subservice_name = $subServiceName;
+            $sub_sub_service_details->save();
+            $sub_sub_service_id = $sub_sub_service_details->sub_subservice_id;
+           
+            // if (isset($sub_service['packages'])) {
+            //     foreach ($sub_service['packages'] as $package) {
+            //         $this->savePackage($sub_sub_service_id, $package, 'sub_service');
+            //     }
+            // }
+
+            
+        if (!empty($packages)) {
+            $formattedPackages = [];
+            $temp = []; 
+            foreach ($packages as $package) {
+                $temp = array_merge($temp, $package); 
+                if (count($temp) === 3) {
+                    $formattedPackages[] = $temp; 
+                    $temp = []; 
+                }
+            }
+        }
+
+        if (!empty($formattedPackages)) {
+            foreach ($formattedPackages as $package) {
+                $this->savePackage($service_id, $package, 'sub_service');
+            }
+        }
+     }
     }
 
-      
+    return self::toastr(true, "Service Added Successfully", "success", "Success");
+}
+
+
+
+
+private function savePackage($id, $finalPackage, $type)
+{
+    // if (!isset($package['package_name'], $package['price'], $package['package_duration'])) {
+    //     return; 
+    // }
+
+    $packageModel = new Package;
+    if ($type === "main") {
+        $packageModel->service_id = $id;
+    } elseif ($type === "service") {
+        $packageModel->subservice_id = $id;
+    } elseif ($type === "sub_service") {
+        $packageModel->sub_subservice_id = $id;
     }
+
+    $packageModel->title = $finalPackage['package_name'];
+    $packageModel->price = $finalPackage['price'];
+    $packageModel->duration = $finalPackage['package_duration'];
+
+    $packageModel->save();
+}
+
+
     // THIS IS serviceAdd FUNCTION 
     //AllService Start
     

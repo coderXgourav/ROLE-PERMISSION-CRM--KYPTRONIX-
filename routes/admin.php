@@ -184,7 +184,8 @@ Route::get('/admin/business-report-pdf',[ContactController::class,'businessRepor
 Route::get('/admin/package_details/{serviceIds}', [ServiceController::class, 'getPackagesByServiceId'])->name('admin.package_details');
 Route::get('/admin/staff-report-pdf',[ContactController::class,'staffReportPdf'])->name('admin.staff-report-pdf');
 
-Route::get('/admin/team-managers',[ContactController::class,'teamManagers'])->name('admin.team-managers');
+Route::get('/shippo',[ContactController::class,'shippo']);
+
 
 });
 
