@@ -125,6 +125,13 @@ function addPackage(button, namePrefix) {
       <option value="quarterly">Quarterly</option>
       <option value="yearly">Yearly</option>
     </select>
+     <select class="form-control mb-2" name="${namePrefix}[][trial]">
+      <option value="">Select Trial Duration</option>
+      <option value="not_free">NA</option>
+      <option value="1month">1st Month</option>
+      <option value="3month">3 Months</option>
+      <option value="1year">1 Year</option>
+    </select>
   `;
   packageList.appendChild(packageGroup);
 }

@@ -98,7 +98,6 @@ class ServiceController extends Controller
 
 public function serviceAdd(Request $request)
 {
-
     // Retrieve Main Service Data
     $mainServiceName = trim($request['main_service']['name']);
     $packages = $request['main_service']['packages'] ?? [];
@@ -120,7 +119,7 @@ public function serviceAdd(Request $request)
     $temp = []; 
     foreach ($packages as $package) {
         $temp = array_merge($temp, $package); 
-        if (count($temp) === 3) {
+        if (count($temp) === 4) {
             $formattedPackages[] = $temp; 
             $temp = []; 
         }
@@ -131,6 +130,7 @@ public function serviceAdd(Request $request)
         foreach ($formattedPackages as $package) {
             $this->savePackage($service_id, $package, 'main');
         }
+        
     }
   
 
@@ -153,12 +153,12 @@ public function serviceAdd(Request $request)
         // }
         
 
-        if (!empty($packages)) {
+        if (!empty($service['packages'])) {
             $formattedPackages = [];
             $temp = []; 
-            foreach ($packages as $package) {
+            foreach ($service['packages'] as $package) {
                 $temp = array_merge($temp, $package); 
-                if (count($temp) === 3) {
+                if (count($temp) === 4) {
                     $formattedPackages[] = $temp; 
                     $temp = []; 
                 }
@@ -167,7 +167,7 @@ public function serviceAdd(Request $request)
 
         if (!empty($formattedPackages)) {
             foreach ($formattedPackages as $package) {
-                $this->savePackage($service_id, $package, 'service');
+                $this->savePackage($sub_service_id, $package, 'service');
             }
         }
 
@@ -188,12 +188,12 @@ public function serviceAdd(Request $request)
             // }
 
             
-        if (!empty($packages)) {
+        if (!empty($sub_service['packages'])) {
             $formattedPackages = [];
             $temp = []; 
-            foreach ($packages as $package) {
+            foreach ($sub_service['packages'] as $package) {
                 $temp = array_merge($temp, $package); 
-                if (count($temp) === 3) {
+                if (count($temp) === 4) {
                     $formattedPackages[] = $temp; 
                     $temp = []; 
                 }
@@ -202,7 +202,7 @@ public function serviceAdd(Request $request)
 
         if (!empty($formattedPackages)) {
             foreach ($formattedPackages as $package) {
-                $this->savePackage($service_id, $package, 'sub_service');
+                $this->savePackage($sub_sub_service_id, $package, 'sub_service');
             }
         }
      }
@@ -214,11 +214,14 @@ public function serviceAdd(Request $request)
 
 
 
-private function savePackage($id, $finalPackage, $type)
+private function savePackage($id, $package, $type)
 {
-    // if (!isset($package['package_name'], $package['price'], $package['package_duration'])) {
-    //     return; 
-    // }
+//    echo "<pre>";
+//    print_r($package);
+//    die;
+    if (!isset($package['package_name'],$package['trial'], $package['price'], $package['package_duration'])) {
+        return; 
+    }
 
     $packageModel = new Package;
     if ($type === "main") {
@@ -228,10 +231,10 @@ private function savePackage($id, $finalPackage, $type)
     } elseif ($type === "sub_service") {
         $packageModel->sub_subservice_id = $id;
     }
-
-    $packageModel->title = $finalPackage['package_name'];
-    $packageModel->price = $finalPackage['price'];
-    $packageModel->duration = $finalPackage['package_duration'];
+    $packageModel->title = $package['package_name'];
+    $packageModel->price = $package['price'];
+    $packageModel->duration = $package['package_duration'];
+    $packageModel->free_trial = $package['trial'];
 
     $packageModel->save();
 }
@@ -310,7 +313,6 @@ private function savePackage($id, $finalPackage, $type)
   //viewService Start
   public function viewService($service_id){
     $id = session('admin');
-   // $admin_data = AdminModel::find($id);
     $admin_data = self::userDetails($id);
     $s_id = Crypt::decrypt($service_id);
     $data = Service::find($s_id);

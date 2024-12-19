@@ -96,17 +96,17 @@
                     <a href="javascript:;" class="has-arrow">
                         <div class="parent-icon"><i class="bx bx-category"></i>
                         </div>
-                        <div class="menu-title">Service </div>
+                        <div class="menu-title">Main Service </div>
                     </a>
                     <ul>
                          @if($admin_data->service_add>0)
                         <li> <a href="{{ route('admin.add-service')}}"><i
-                                    class='bx bx-radio-circle'></i>Add New Service</a>
+                                    class='bx bx-radio-circle'></i>Add Main Service </a>
                         </li>
                         @endif
                            @if($admin_data->service_view>0)
                         <li> <a href="{{ route('admin.all-service')}}"><i
-                                    class='bx bx-radio-circle'></i>Services</a>
+                                    class='bx bx-radio-circle'></i>Main Services</a>
                         </li>
                         @endif
                       

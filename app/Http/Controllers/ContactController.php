@@ -2629,6 +2629,7 @@ foreach ($managers as $key => $value) {
 
  public function leadsView($customer_id)
 {
+  
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $customer_id = Crypt::decrypt($customer_id);
@@ -2644,7 +2645,7 @@ foreach ($managers as $key => $value) {
 
     if (!$clients) {
         abort(404, "Customer not found");
-    }
+    } 
 
     // Fetch remarks and customer data
     $customers = DB::table('customer')
