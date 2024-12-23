@@ -736,14 +736,24 @@ public function subServiceList($service_id){
     return view('admin.dashboard.view_leads',['services'=>$service_details,'admin_data'=>$admin_data,'data'=>$leads_data,]);
 
     }
+
+    
     public function updateServiceData(Request $request){
       $customer_id=$request->customer_id;
-      $services=$request->service_id;
-      $packages=$request->packages;
-      $subservices=$request->subservices;
+      $services=$request->main_service_id;
+      $subservices=$request->service_id;
+      $sub_sunservices=$request->sub_service_id;
+      $packages=$request->package_id;
+      
+        echo "<pre>";
+        print_r($customer_id);
+        print_r($services);
+        print_r($subservices);
+        print_r($packages);
+        die;
 
   
-           $delete = CustomerServiceModel::where("customer_main_id",$customer_id)->delete();
+        $delete = CustomerServiceModel::where("customer_main_id",$customer_id)->delete();
           foreach ($services as $key => $value) {
            $create = new CustomerServiceModel();
            $create->customer_main_id = $customer_id;
@@ -770,10 +780,11 @@ public function subServiceList($service_id){
         
         }
     }
-    
        return response()->json($customer_id);
-
     }
+
+
+    
     public function getPackagesByServiceId($serviceIds)
     {
         $sIds = explode(',', $serviceIds);

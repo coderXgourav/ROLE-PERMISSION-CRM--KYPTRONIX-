@@ -64,6 +64,108 @@
             width: 150px;
             background-color: #f8f9fa;
         }
+
+        /* .service-tree {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+} */
+
+.tree-item {
+    position: relative;
+    margin: 0.5rem 0;
+}
+
+.tree-content {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+}
+
+.tree-content:hover {
+    background-color: #f0f7ff;
+}
+
+.tree-toggle {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.tree-toggle:hover {
+    background-color: #e1effe;
+}
+
+.tree-toggle i {
+    transition: transform 0.2s;
+}
+
+.tree-toggle.expanded i {
+    transform: rotate(90deg);
+}
+
+.tree-children {
+    margin-left: 2.5rem;
+    position: relative;
+    display: none;
+}
+
+.tree-children::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #e5e7eb;
+}
+
+.tree-children.show {
+    display: block;
+}
+
+.tree-item-label {
+    /* display: flex; */
+    /* align-items: center;
+    flex: 1;
+    cursor: pointer;
+    font-size: 0.95rem; */
+}
+
+.tree-checkbox {
+    margin-right: 0.75rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 0.25rem;
+    border: 2px solid #d1d5db;
+    transition: all 0.2s;
+}
+
+.tree-checkbox:checked {
+    border-color: #2563eb;
+    background-color: #2563eb;
+}
+
+.package-info {
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.main-service {
+    background-color: #f9fafb;
+    font-weight: 600;
+}
     </style>
 
 <div>
@@ -98,128 +200,19 @@
                     </span>
                 </div>
                 
+                
                 <div class="card-body text-center">
                     <img src="{{url('assets/images/team.png')}}" 
                          class="rounded-circle profile-image mb-4" 
-                         alt="{{$customer->customer_name}}"> 
+                         alt="{{ucwords($customer->customer_name)}}"> 
                     
-                    <h4 class="mb-3">{{$customer->customer_name}}</h4>
+                    <h4 class="mb-3">{{ucwords($customer->customer_name)}}</h4>
                     <p class="text-muted">
                         {{ $customer->type == 1 ? 'Individual Account' : 'Business Account' }}
                     </p>
 
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="AddMoreService()" id="addmorebtn">
-                            <i class="lni lni-circle-plus"></i> Add Service
-                        </button>
-                        <a href="#" onclick="ChangeStatus('{{$customer->customer_id}}','{{$customer->status}}')" class="btn {{ $customer->status == '0' ? 'btn-success' : 'btn-danger' }}">
-                            <i class="lni lni-warning"></i> 
-                            {{ $customer->status == '0' ? 'Enable' : 'Disable' }}
-                        </a>
-                    </div>
-                   <form id="add-service">
-                     {{@csrf_field()}}
-                    <!-- Service Selection -->
-                   <?php if(!empty($service_data[0]->customer_ids)){ ?>
-                    <input type="hidden" name="customer_id" value="{{$service_data[0]->customer_ids}}">
-                  <?php }else{ ?>
-                    <input type="hidden" name="customer_id" value="{{$customer->customer_id}}">
 
-                  <?php } ?>
-                    {{-- <input type="hidden" name="customer_name" value="{{$customer->customer_name}}">
-                    <input type="hidden" name="customer_number" value="{{$customer->customer_number}}">
-                    <input type="hidden" name="customer_email" value="{{$customer->customer_email}}">
-                    <input type="hidden" name="task" value="{{$customer->task}}">
-                    <input type="hidden" name="team_member" value="{{$customer->team_member}}">
-                    <input type="hidden" name="status" value="{{$customer->status}}">
-                    <input type="hidden" name="type" value="{{$customer->type}}">
-                    <input type="hidden" name="first_name" value="{{$customer->first_name}}">
-                    <input type="hidden" name="middle_name" value="{{$customer->middle_name}}">
-                    <input type="hidden" name="last_name" value="{{$customer->last_name}}">
-                    <input type="hidden" name="dob" value="{{$customer->dob}}">
-                    <input type="hidden" name="address" value="{{$customer->address}}">
-                    <input type="hidden" name="city" value="{{$customer->city}}">
-                    <input type="hidden" name="state" value="{{$customer->state}}">
-                    <input type="hidden" name="ssn" value="{{$customer->ssn}}">
-                    <input type="hidden" name="business_name" value="{{$customer->business_name}}">
-                    <input type="hidden" name="industry" value="{{$customer->industry}}">
-                    <input type="hidden" name="fax" value="{{$customer->fax}}">
-                    <input type="hidden" name="contact_number" value="{{$customer->contact_number}}">
-                    <input type="hidden" name="contact_email" value="{{$customer->contact_email}}">
-                    <input type="hidden" name="ein" value="{{$customer->ein}}">
-                    <input type="hidden" name="business_title" value="{{$customer->business_title}}">
-                    <input type="hidden" name="msg" value="{{$customer->msg}}">
-                    <input type="hidden" name="point_of_contact" value="{{$customer->point_of_contact}}">
-                    <input type="hidden" name="paid_customer" value="{{$customer->paid_customer}}"> --}}
-
-                    <div id="categoryTable" class="mt-4" style="display: none;">
-                        <div class="row g-2">
-                            <span>Select One Service</span>
-                            <hr>
-                            <?php 
-                               if(!empty($service_data[0]->service_ids)){
-                                    $s_id=$service_data[0]->service_ids;
-                                    $service_idss=explode(',', $s_id);
-                              }else{$service_idss=[0];}
-                              if(!empty($service_data[0]->customer_sub_service_id)){
-
-                                    $sub_s_id=$service_data[0]->customer_sub_service_id;
-                              }else{$sub_s_id=0;}
-                                  if(!empty($sub_s_id)){
-                                    $sub_service_idss=explode(',', $sub_s_id);
-
-                                   }else{$sub_service_idss= 0; }
-                                if(!empty($service_data[0]->customer_package_id)){
-                                    $customer_p_id=$service_data[0]->customer_package_id;
-
-                                }else{ $customer_p_id=0;}
-                                    $package_idss=explode(',', $customer_p_id);
-                            ?>
-
-                            <input type="hidden" id="subservices_id" name="subservices_id" value="<?= $sub_s_id; ?>">
-                            <input type="hidden" name="packagesid" id="packagesid" value="<?= $customer_p_id;?>">
-                            @foreach ($services as $item)
-                            <div class="col-12">
-                                <div class="form-check text-start">
-                                    <input type="checkbox" 
-                                           class="form-check-input service-checkbox"  
-                                           name="service_id[]" 
-                                           value="{{$item->service_id}}" <?php if(in_array($item->service_id,$service_idss)){ echo 'checked';} ?>>
-                                    <label class="form-check-label">{{$item->name}}</label>
-                                </div>
-
-                            </div>
-
-                            @endforeach
-                        </div>
-                        <!-- Sub Service -->
-                         <div class="mt-4">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="form-check text-start" id="subservices"></div>
-                                </div>
-                            </div>
-                        </div>
-                         <!-- Package -->
-                         <div class="mt-4">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="form-check text-start" id="packages"></div>
-                                </div>
-                            </div>
-                        </div>
-                       
-                         <button type="submit" class="btn btn-primary" onclick="Update()" id="btn">
-                            Update
-                        </button>
-
-                    </div>
-                    
-                   </form>
-
-                  <!-- Communication Buttons -->
-                    <div class="d-flex justify-content-center gap-2 mt-4">
+                      <div class="d-flex justify-content-center gap-2">
                         <a href="{{ route('admin.call', ['id' => encrypt($customer->customer_id)]) }}" 
                            class="btn btn-outline-success {{ $customer->status == '0' ? 'disabled' : '' }}">
                           <i class="fa fa-phone" aria-hidden="true"></i>
@@ -237,7 +230,217 @@
                            class="btn btn-outline-success {{ $customer->status == '0' ? 'disabled' : '' }}">
                             <i class="lni lni-whatsapp"></i>
                         </a>
+                    </div> <br>
+
+          
+                 
+                    
+                   <form id="add-service">
+                     {{@csrf_field()}}
+                    <!-- Service Selection -->
+                   <?php if(!empty($service_data[0]->customer_ids)){ ?>
+                    <input type="hidden" name="customer_id" value="{{$service_data[0]->customer_ids}}">
+                  <?php }else{ ?>
+                    <input type="hidden" name="customer_id" value="{{$customer->customer_id}}">
+
+                  <?php } ?>
+
+                  
+
+
+
+{{-- <div id="categoryTable" class="service-tree">
+    @foreach ($data as $mainService)
+    <div class="tree-item">
+        <!-- Main Service -->
+        <div class="tree-content main-service">
+            <button type="button" class="tree-toggle" onclick="toggleTreeItem(this)">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+            <label class="tree-item-label">
+                <input type="checkbox" class="tree-checkbox" name="main_service_id[]" value="{{ $mainService->service_id }}">
+                {{ $mainService->name }}
+            </label>
+        </div>
+
+        <!-- Services under Main Service -->
+        <div class="tree-children">
+            @foreach ($mainService->services as $service)
+            <div class="tree-item">
+                <div class="tree-content">
+                    <button type="button" class="tree-toggle" onclick="toggleTreeItem(this)">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                    <label class="tree-item-label">
+                        <input type="checkbox" class="tree-checkbox" name="service_id[]" value="{{ $service->id }}">
+                        {{ $service->service_name }}
+                    </label>
+                </div>
+
+                <!-- Sub-Services under Service -->
+                <div class="tree-children">
+                    @foreach ($service->subServices as $subService)
+                    <div class="tree-item">
+                        <div class="tree-content">
+                            <button type="button" class="tree-toggle" onclick="toggleTreeItem(this)">
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                            <label class="tree-item-label">
+                                <input type="checkbox" class="tree-checkbox" name="sub_service_id[]" value="{{ $subService->sub_subservice_id }}">
+                                {{ $subService->sub_subservice_name }}
+                            </label>
+                        </div>
+
+                        <!-- Packages under Sub-Service -->
+                        <div class="tree-children">
+                            @foreach ($subService->packages as $package)
+                            <div class="tree-item">
+                                <div class="tree-content">
+                                    <label class="tree-item-label">
+                                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                                        {{ $package->title }}
+                                        <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
+                                    </label>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+
+            <!-- Packages under Service -->
+            @foreach ($service->packages as $package)
+            <div class="tree-item">
+                <div class="tree-content">
+                    <label class="tree-item-label">
+                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                        {{ $package->title }}
+                        <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
+                    </label>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endforeach
+</div> --}}
+<div id="categoryTable" class="service-tree">
+    @foreach ($data as $mainService)
+    <div class="tree-item">
+        <!-- Main Service -->
+        <div class="tree-content main-service">
+            <button type="button" class="tree-toggle" onclick="toggleTreeItem(this)">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+            <label class="tree-item-label">
+                <input type="checkbox" class="tree-checkbox" name="main_service_id[]" value="{{ $mainService->service_id }}">
+                {{ $mainService->name }}
+            </label>
+        </div>
+
+        <!-- Packages under Main Service -->
+        <div class="tree-children">
+            @foreach ($mainService->packages as $package)
+            <div class="tree-item">
+                <div class="tree-content">
+                    <label class="tree-item-label">
+                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                        {{ $package->title }}
+                        <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
+                    </label>
+                </div>
+            </div>
+            @endforeach
+
+            <!-- Services under Main Service -->
+            @foreach ($mainService->services as $service)
+            <div class="tree-item">
+                <div class="tree-content">
+                    <button type="button" class="tree-toggle" onclick="toggleTreeItem(this)">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                    <label class="tree-item-label">
+                        <input type="checkbox" class="tree-checkbox" name="service_id[]" value="{{ $service->id }}">
+                        {{ $service->service_name }}
+                    </label>
+                </div>
+
+                <!-- Packages under Service -->
+                <div class="tree-children">
+                    @foreach ($service->packages as $package)
+                    <div class="tree-item">
+                        <div class="tree-content">
+                            <label class="tree-item-label">
+                                <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                                {{ $package->title }}
+                                <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
+                            </label>
+                        </div>
+                    </div>
+                    @endforeach
+
+                    <!-- Sub-Services under Service -->
+                    @foreach ($service->subServices as $subService)
+                    <div class="tree-item">
+                        <div class="tree-content">
+                            <button type="button" class="tree-toggle" onclick="toggleTreeItem(this)">
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                            <label class="tree-item-label">
+                                <input type="checkbox" class="tree-checkbox" name="sub_service_id[]" value="{{ $subService->sub_subservice_id }}">
+                                {{ $subService->sub_subservice_name }}
+                            </label>
+                        </div>
+
+                        <!-- Packages under Sub-Service -->
+                        <div class="tree-children">
+                            @foreach ($subService->packages as $package)
+                            <div class="tree-item">
+                                <div class="tree-content">
+                                    <label class="tree-item-label">
+                                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                                        {{ $package->title }}
+                                        <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
+                                    </label>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endforeach
+</div>
+
+
+
+<br>
+   <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="AddMoreService()" id="addmorebtn">
+                            <i class="lni lni-circle-plus"></i> Update
+                        </button>
+                        <a href="#" onclick="ChangeStatus('{{$customer->customer_id}}','{{$customer->status}}')" class="btn {{ $customer->status == '0' ? 'btn-success' : 'btn-danger' }}">
+                            <i class="lni lni-warning"></i> 
+                            {{ $customer->status == '0' ? 'Enable' : 'Disable' }}
+                        </a>
+                    </div>
+
+
+
+
+ 
+                    
+                   </form>
+
+                  <!-- Communication Buttons -->
+                  
 
                     <!-- Invoice Buttons -->
                     <div class="mt-4">
@@ -384,8 +587,8 @@
                                 <h5 class="mb-0"> Customer Remarks</h5>
                             </div>
                             <div class="card-body">
-                                @if(!empty($data))
-                                    @foreach($data as $value)
+                                @if(!empty($remark))
+                                    @foreach($remark as $value)
                                     <div class="remark-card p-3 {{ $loop->odd ? 'bg-light' : 'bg-white' }}">
                                         <div class="d-flex align-items-start">
                                             <img src="/assets/images/user.png" 
@@ -432,12 +635,70 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
       </div>
     </div>
+    
+    
 <script>
+function toggleTreeItem(button) {
+    const treeContent = button.closest('.tree-content');
+    const treeChildren = treeContent.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    // Toggle the expanded class on the button
+    button.classList.toggle('expanded');
+    
+    // Toggle the show class on the children container
+    if (treeChildren) {
+        treeChildren.classList.toggle('show');
+    }
+    
+    // Rotate the chevron icon
+    if (button.classList.contains('expanded')) {
+        icon.style.transform = 'rotate(90deg)';
+    } else {
+        icon.style.transform = 'rotate(0)';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.tree-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const treeItem = this.closest('.tree-item');
+            const childCheckboxes = treeItem.querySelectorAll('.tree-children .tree-checkbox');
+            
+            // Check/uncheck all child checkboxes
+            childCheckboxes.forEach(childBox => {
+                childBox.checked = this.checked;
+            });
+            
+            // Update parent checkboxes
+            updateParentCheckboxes(this);
+        });
+    });
+});
+
+function updateParentCheckboxes(checkbox) {
+    let parent = checkbox.closest('.tree-children');
+    
+    while (parent) {
+        const parentCheckbox = parent.previousElementSibling.querySelector('.tree-checkbox');
+        const siblings = parent.querySelectorAll(':scope > .tree-item > .tree-content > .tree-item-label > .tree-checkbox');
+        const allChecked = Array.from(siblings).every(sibling => sibling.checked);
+        const someChecked = Array.from(siblings).some(sibling => sibling.checked);
+        
+        parentCheckbox.checked = allChecked;
+        parentCheckbox.indeterminate = !allChecked && someChecked;
+        
+        parent = parent.parentElement.closest('.tree-children');
+    }
+}
 function toggleRemarks() {
     const remarksSection = document.getElementById('show_remarks');
     remarksSection.style.display = remarksSection.style.display === 'none' ? 'block' : 'none';

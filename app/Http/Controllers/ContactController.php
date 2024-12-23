@@ -2648,7 +2648,7 @@ foreach ($managers as $key => $value) {
     } 
 
     // Fetch remarks and customer data
-    $customers = DB::table('customer')
+    $remark = DB::table('customer')
         ->join('remark', 'remark.customer_id', '=', 'customer.customer_id')
         ->join('main_user', 'main_user.id', '=', 'remark.user_id')
         ->where('customer.customer_id', '=', $customer_id)
@@ -2692,6 +2692,38 @@ foreach ($managers as $key => $value) {
         ->where("customer_service.customer_main_id",$customer_id)
         ->get();
 
+$mainServices = DB::table('services')->select('service_id', 'name')->get();
+$services = DB::table('subservices')->select('id', 'service_name', 'service_id')->get();
+$subServices = DB::table('sub_subservice')->select('sub_subservice_id', 'sub_subservice_name', 'sub_service_main_id')->get();
+$packages = DB::table('packages')->select('package_id', 'title', 'price', 'duration', 'subservice_id', 'service_id', 'sub_subservice_id')->get();
+
+$data = $mainServices->map(function ($mainService) use ($services, $subServices, $packages) {
+    // Attach packages to Main Service
+    $mainService->packages = $packages->where('service_id', $mainService->service_id)
+                                      ->whereNull('subservice_id')
+                                      ->whereNull('sub_subservice_id');
+
+    // Attach services to Main Service
+    $mainService->services = $services->where('service_id', $mainService->service_id)->map(function ($service) use ($subServices, $packages) {
+        // Attach packages to Service
+        $service->packages = $packages->where('subservice_id', $service->id)
+                                      ->whereNull('sub_subservice_id');
+
+        // Attach sub-services to Service
+        $service->subServices = $subServices->where('sub_service_main_id', $service->id)->map(function ($subService) use ($packages) {
+            // Attach packages to Sub-Service
+            $subService->packages = $packages->where('sub_subservice_id', $subService->sub_subservice_id);
+            return $subService;
+        });
+
+        return $service;
+    });
+
+    return $mainService;
+});
+
+
+
      
 
     // Pass data to the view
@@ -2699,7 +2731,8 @@ foreach ($managers as $key => $value) {
         'admin_data' => $admin_data,
         'customer' => $clients,
         'service_data' => $service_data,
-        'data' => $customers,
+        'remark' => $remark,
+        'data' => $data,
         // 'package_details' => $package_details,
         'services' => $services,
         'packages' => $packages,
