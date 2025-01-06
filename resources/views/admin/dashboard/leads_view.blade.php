@@ -231,10 +231,6 @@
                             <i class="lni lni-whatsapp"></i>
                         </a>
                     </div> <br>
-
-          
-                 
-                    
                    <form id="add-service">
                      {{@csrf_field()}}
                     <!-- Service Selection -->
@@ -244,10 +240,6 @@
                     <input type="hidden" name="customer_id" value="{{$customer->customer_id}}">
 
                   <?php } ?>
-
-                  
-
-
 
 {{-- <div id="categoryTable" class="service-tree">
     @foreach ($data as $mainService)
@@ -327,6 +319,8 @@
     </div>
     @endforeach
 </div> --}}
+
+
 <div id="categoryTable" class="service-tree">
     @foreach ($data as $mainService)
     <div class="tree-item">
@@ -336,7 +330,8 @@
                 <i class="fa fa-chevron-right"></i>
             </button>
             <label class="tree-item-label">
-                <input type="checkbox" class="tree-checkbox" name="main_service_id[]" value="{{ $mainService->service_id }}">
+                <input type="checkbox" class="tree-checkbox" name="main_service_id[]" value="{{ $mainService->service_id }}" 
+                @if($mainService->packages->pluck('package_id')->intersect($customer_packages->pluck('package_id'))->isNotEmpty() || $mainService->services->pluck('id')->intersect($customer_packages->pluck('service_id'))->isNotEmpty()) checked @endif>
                 {{ $mainService->name }}
             </label>
         </div>
@@ -347,7 +342,8 @@
             <div class="tree-item">
                 <div class="tree-content">
                     <label class="tree-item-label">
-                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}" 
+                        @if(in_array($package->package_id, $customer_packages->pluck('package_id')->toArray())) checked @endif>
                         {{ $package->title }}
                         <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
                     </label>
@@ -363,7 +359,8 @@
                         <i class="fa fa-chevron-right"></i>
                     </button>
                     <label class="tree-item-label">
-                        <input type="checkbox" class="tree-checkbox" name="service_id[]" value="{{ $service->id }}">
+                        <input type="checkbox" class="tree-checkbox" name="service_id[]" value="{{ $service->id }}" 
+                        @if($service->packages->pluck('package_id')->intersect($customer_packages->pluck('package_id'))->isNotEmpty() || $service->subServices->pluck('sub_subservice_id')->intersect($customer_packages->pluck('sub_service_id'))->isNotEmpty()) checked @endif>
                         {{ $service->service_name }}
                     </label>
                 </div>
@@ -374,7 +371,8 @@
                     <div class="tree-item">
                         <div class="tree-content">
                             <label class="tree-item-label">
-                                <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                                <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}" 
+                                @if(in_array($package->package_id, $customer_packages->pluck('package_id')->toArray())) checked @endif>
                                 {{ $package->title }}
                                 <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
                             </label>
@@ -390,7 +388,8 @@
                                 <i class="fa fa-chevron-right"></i>
                             </button>
                             <label class="tree-item-label">
-                                <input type="checkbox" class="tree-checkbox" name="sub_service_id[]" value="{{ $subService->sub_subservice_id }}">
+                                <input type="checkbox" class="tree-checkbox" name="sub_service_id[]" value="{{ $subService->sub_subservice_id }}" 
+                                @if($subService->packages->pluck('package_id')->intersect($customer_packages->pluck('package_id'))->isNotEmpty()) checked @endif>
                                 {{ $subService->sub_subservice_name }}
                             </label>
                         </div>
@@ -401,7 +400,8 @@
                             <div class="tree-item">
                                 <div class="tree-content">
                                     <label class="tree-item-label">
-                                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}">
+                                        <input type="checkbox" class="tree-checkbox" name="package_id[]" value="{{ $package->package_id }}" 
+                                        @if(in_array($package->package_id, $customer_packages->pluck('package_id')->toArray())) checked @endif>
                                         {{ $package->title }}
                                         <span class="package-info">Price: ${{ $package->price }}, Duration: {{ $package->duration }} Days</span>
                                     </label>
@@ -555,11 +555,11 @@
                                 <td>{{$customer->contact_email}}</td>
                             </tr>
                         @endif
-                        @if(!empty($packages))
+                        @if(!empty($customer_packages))
                             @php
                             $no = 1;
                        @endphp
-                            @foreach ($packages as $value)
+                            @foreach ($customer_packages as $value)
                             <tr>
                                 <th>Package {{$no++}}</th>
                                 <td>

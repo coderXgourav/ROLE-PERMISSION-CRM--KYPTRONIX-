@@ -739,18 +739,23 @@ public function subServiceList($service_id){
 
     
     public function updateServiceData(Request $request){
+
+        if (empty($request->customer_id) || empty($request->package_id)) {
+            return self::toastr(false, "Please Choose Packages", "error", "Error");
+        }
+      
       $customer_id=$request->customer_id;
       $services=$request->main_service_id;
       $subservices=$request->service_id;
       $sub_sunservices=$request->sub_service_id;
       $packages=$request->package_id;
       
-        echo "<pre>";
-        print_r($customer_id);
-        print_r($services);
-        print_r($subservices);
-        print_r($packages);
-        die;
+        // echo "<pre>";
+        // print_r($customer_id);
+        // print_r($services);
+        // print_r($subservices);
+        // print_r($packages);
+        // die;
 
   
         $delete = CustomerServiceModel::where("customer_main_id",$customer_id)->delete();
@@ -760,7 +765,6 @@ public function subServiceList($service_id){
            $create->customer_service_id = $value;
            $create->save();
         }
-
         if(!empty($packages)){
           $delete = CustomerPackageModel::where("customer_main_id",$customer_id)->delete();
            foreach ($packages as $key => $value) {
@@ -777,8 +781,7 @@ public function subServiceList($service_id){
            $create->customer_subservice_id = $value;
            $create->save();
         }
-        
-        }
+      }
     }
        return response()->json($customer_id);
     }

@@ -917,8 +917,15 @@ $("#add-service").validate({
                 $("#btn").attr("disabled", false);
                 $("#btn").html("update");
                 var customer_id = data;
+                if (data.status == false) {
+                    Command: toastr["error"]("Error", data.title);
+                } else {
+                    Command: toastr["success"](
+                        "Success",
+                        "Updated Successfully"
+                    );
+                }
 
-                Command: toastr["success"]("Success", "Updated Successfully");
                 // setTimeout(() => {
                 //     window.location = "/admin/leads-view/" + customer_id;
                 // }, 1500);

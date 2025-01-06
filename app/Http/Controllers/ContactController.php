@@ -1955,23 +1955,8 @@ public function addLead(){
       $service = Service::orderBy('service_id','DESC')->get();
 
       if($admin_data->user_type == 'admin'){
-          // $leads_data = DB::table('customer')
-          // ->select(
-          //     'customer.customer_email',
-          //     DB::raw('MAX(customer.customer_id) as customer_id'),
-          //     DB::raw('MAX(customer.customer_number) as customer_number'),
-          //     DB::raw('MAX(customer.customer_name) as customer_name'),
-          //     DB::raw('MAX(customer.status) as status'),
-          //     DB::raw('MAX(customer.city) as city'),
-          //         DB::raw('MAX(customer.state) as state'),
-          //     DB::raw('MAX(customer.type) as type'),
-          //     DB::raw('GROUP_CONCAT(services.name ORDER BY services.name ASC SEPARATOR ", ") as service_names') 
-          // )
-          // ->leftjoin('services', 'services.service_id', '=', 'customer.customer_service_id')
-          // ->groupBy('customer.customer_email') 
-          // ->paginate(10);
-
-          $leads_data = DB::table("customer")
+       
+     $leads_data = DB::table("customer")
     ->join("customer_service", 'customer_service.customer_main_id', '=', 'customer.customer_id')
     ->join("services", 'services.service_id', '=', 'customer_service.customer_service_id')
     ->select(
@@ -2014,7 +1999,6 @@ public function addLead(){
                 ->groupBy('customer.customer_email') 
                 ->whereIn('customer.customer_service_id',$service_id)
                 ->paginate(10);
-
             }
          
         }
@@ -2628,8 +2612,7 @@ foreach ($managers as $key => $value) {
 
 
  public function leadsView($customer_id)
-{
-  
+  {
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $customer_id = Crypt::decrypt($customer_id);
@@ -2697,6 +2680,12 @@ $services = DB::table('subservices')->select('id', 'service_name', 'service_id')
 $subServices = DB::table('sub_subservice')->select('sub_subservice_id', 'sub_subservice_name', 'sub_service_main_id')->get();
 $packages = DB::table('packages')->select('package_id', 'title', 'price', 'duration', 'subservice_id', 'service_id', 'sub_subservice_id')->get();
 
+$customerPackages = DB::table('packages')
+->join("customer_package","customer_package.customer_package_id","=","packages.package_id")
+->select('package_id', 'title', 'price', 'duration', 'subservice_id', 'service_id', 'sub_subservice_id')
+->where("customer_package.customer_main_id",$customer_id)
+->get();
+
 $data = $mainServices->map(function ($mainService) use ($services, $subServices, $packages) {
     // Attach packages to Main Service
     $mainService->packages = $packages->where('service_id', $mainService->service_id)
@@ -2733,7 +2722,7 @@ $data = $mainServices->map(function ($mainService) use ($services, $subServices,
         'service_data' => $service_data,
         'remark' => $remark,
         'data' => $data,
-        // 'package_details' => $package_details,
+        'customer_packages' => $customerPackages,
         'services' => $services,
         'packages' => $packages,
         'subservices' => $subservices
