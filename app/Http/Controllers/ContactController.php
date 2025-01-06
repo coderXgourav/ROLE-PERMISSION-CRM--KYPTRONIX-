@@ -2254,7 +2254,6 @@ public function invoice2($customer_package_tem_id){
   ->where('customer_package.customer_package_tem_id',$customer_package_tem_id)
   ->first();
 
-
 return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'invoice_details'=>$invoice_details]);
 }
 //invoice2 Function End
