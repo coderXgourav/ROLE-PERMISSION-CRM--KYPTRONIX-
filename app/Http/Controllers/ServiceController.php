@@ -212,6 +212,56 @@ public function serviceAdd(Request $request)
 }
 
 
+public function getServiceData($id)
+{
+      $adminId = session('admin');
+  //$admin_data = AdminModel::find($id);
+  $admin_data = self::userDetails($adminId);
+  
+    $serviceId =   Crypt::decrypt($id);
+   
+    // Fetch Main Service
+    $service = Service::where('service_id', $serviceId)->first();
+    if (!$service) {
+        return self::toastr(false, "Service Not Found", "error", "Error");
+    }
+
+    $serviceData = [
+        'main_service' => [
+            'name' => $service->name,
+            'packages' => $this->getPackagesByService($serviceId, 'main'),
+            'services' => []
+        ]
+    ];
+
+    // Fetch Services
+    $services = Subservice::where('service_id', $serviceId)->get();
+    foreach ($services as $serviceItem) {
+        $serviceData['main_service']['services'][] = [
+            'name' => $serviceItem->service_name,
+            'packages' => $this->getPackagesByService($serviceItem->id, 'service'),
+            'sub_services' => []
+        ];
+
+        // Fetch Sub-Services
+        $subServices = Sub_Subservice::where('sub_service_main_id', $serviceItem->id)->get();
+        foreach ($subServices as $subServiceItem) {
+            $serviceData['main_service']['services'][count($serviceData['main_service']['services']) - 1]['sub_services'][] = [
+                'name' => $subServiceItem->sub_subservice_name,
+                'packages' => $this->getPackagesByService($subServiceItem->sub_subservice_id, 'sub_service')
+            ];
+        }
+    }
+    return view('admin.dashboard.edit',['serviceData'=>$serviceData,'admin_data'=>$admin_data]);
+    return $serviceData;
+}
+
+private function getPackagesByService($serviceId, $type)
+{
+    return Package::where('service_id', $serviceId)->where('type', $type)->get();
+}
+
+
 
 
 private function savePackage($id, $package, $type)
@@ -757,14 +807,16 @@ public function subServiceList($service_id){
         // print_r($packages);
         // die;
 
-  
-        $delete = CustomerServiceModel::where("customer_main_id",$customer_id)->delete();
+        if(!empty($services)){
+         $delete = CustomerServiceModel::where("customer_main_id",$customer_id)->delete();
           foreach ($services as $key => $value) {
            $create = new CustomerServiceModel();
            $create->customer_main_id = $customer_id;
            $create->customer_service_id = $value;
            $create->save();
         }
+      }
+      
         if(!empty($packages)){
           $delete = CustomerPackageModel::where("customer_main_id",$customer_id)->delete();
            foreach ($packages as $key => $value) {
