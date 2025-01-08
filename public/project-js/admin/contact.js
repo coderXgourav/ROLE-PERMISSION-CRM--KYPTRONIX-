@@ -738,9 +738,10 @@ $("#create_invoice_form").validate({
                 $("#btn").attr("disabled", false);
                 $("#btn").html("Submit");
                 Command: toastr[data.icon](data.title, data.msg);
-                var invoice_id = data.title;
+                var customer_package_tem_id = data.title;
                 if (data.status) {
-                    window.location = "/admin/invoice/" + invoice_id;
+                    window.location =
+                        "/admin/invoice/" + customer_package_tem_id;
                 }
             },
             error: function () {

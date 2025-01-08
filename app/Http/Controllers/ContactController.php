@@ -2161,6 +2161,7 @@ public function createInvoice($customer_id){
   $id = session('admin');
   $admin_data = self::userDetails($id);
   $data = CustomerModel::find($customer_id);
+  
   // $package_id=explode(',',$data->package_id);
   // $package_data =Package::whereIn('package_id',$package_id)->get();
 
@@ -2170,21 +2171,12 @@ public function createInvoice($customer_id){
   ->get();
 
   
-  
-
-
-
-
-
-  
  return view('admin.dashboard.create_invoice',['admin_data'=>$admin_data,'data'=>$data,'package_data'=>$package_data]);
 }
 //createInvoice Function End
 //invoiceAdd Function Start
 public function invoiceAdd(Request $request){
   $customer_package_tem_id = $request->customer_package_tem_id;
- 
-
    $invoiceExist  = Invoice::where("customer_package_main_id",$customer_package_tem_id)->first();
    if($invoiceExist){
     return self::toastr(false,'This Package Already Exist','error','Error');
@@ -2192,7 +2184,8 @@ public function invoiceAdd(Request $request){
       $save = new Invoice; 
       $save->customer_package_main_id = $customer_package_tem_id;
       $save->save();
-      return self::toastr(true,$save->invoice_id,'success','Success');
+
+      return self::toastr(true,$save->customer_package_main_id,'success','Success');
       }
     
 
@@ -2244,6 +2237,7 @@ public function invoiceAdd(Request $request){
 //invoiceAdd Function End
 //invoice2 Function Start
 public function invoice2($customer_package_tem_id){
+  // die;
   $id = session('admin');
   $admin_data = self::userDetails($id);
 
@@ -2874,11 +2868,11 @@ public function emailSend(Request $request)
    $admin_data = self::userDetails($user_id);
 
    $invoice_data = DB::table('invoices')
-     
    ->join("customer_package","customer_package.customer_package_tem_id","=","invoices.customer_package_main_id")
    ->join("customer","customer.customer_id","=","customer_package.customer_main_id")
    ->join("packages","packages.package_id","=","customer_package.customer_package_id")
-       ->paginate(10);   
+   ->where("customer.customer_id",$id)
+   ->paginate(10);   
      
   // echo "<pre>";
   // print_r($invoice_data);
