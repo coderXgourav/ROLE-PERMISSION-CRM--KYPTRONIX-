@@ -362,10 +362,22 @@ private function savePackage($id, $package, $type)
   //updateService End
   //viewService Start
   public function viewService($service_id){
+    
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $s_id = Crypt::decrypt($service_id);
     $data = Service::find($s_id);
+
+    $service = DB::table("subservices")
+    ->join("services","services.service_id","=","subservices.service_id")
+    ->where("services.service_id",$s_id)
+    ->count();
+
+    $total_sub_service = Subservice::where('service_id',$s_id)->count();
+    
+
+
+
 
     $team_member=DB::table('main_user')
     ->join("permission",'permission.user_id','=','main_user.id')
@@ -394,7 +406,6 @@ private function savePackage($id, $package, $type)
      ->count();
 
     
-    $total_sub_service = Subservice::where('service_id',$s_id)->count();
     
    return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count,'roles'=>$roles]);
    

@@ -157,7 +157,7 @@
                     </ul>
                 </li>
                 @endif
-                
+{{--                 
             @if($admin_data->package_add>0 || $admin_data->package_view >0)
 
 
@@ -182,7 +182,7 @@
                       
                     </ul>
                 </li>
-                @endif
+                @endif --}}
                         
                  @if($admin_data->report_count>0 || $admin_data->report_staff>0 || $admin_data->report_individual>0 || $admin_data->report_business>0)
                     <li>
