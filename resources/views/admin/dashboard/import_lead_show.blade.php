@@ -39,7 +39,7 @@
                                     @foreach($data as $key => $value)
 
                                     <tr>
-										<td style="display:flex; justify-content:center;"><input type="checkbox" service_id={{$value->service_id}}  value="{{$value->customer_id}}" name="customer[]" required style="width:22px;" onclick="getLeads(this.value,{{$value->service_id}})"> </td>
+										<td style="display:flex; justify-content:center;"><input type="checkbox"  value="{{$value->customer_id}}" name="customer[]" required style="width:22px;" onclick="getLeads(this.value)"> </td>
 										{{@csrf_field()}}
 										<td>{{$i++}}</td>
 										<td>{{$value->customer_name}}</td>
@@ -52,7 +52,7 @@
                                     @endforeach
                                     @else 
                                     <tr>
-										<td colspan="7" style="text-align: center; color:red;"><b>Imports Leads Record Not Found..!</b></td>
+										<td colspan="8" style="text-align: center; color:red;"><b>Imports Leads Record Not Found..!</b></td>
 										
 									</tr>
                                     @endif

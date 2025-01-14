@@ -3033,9 +3033,19 @@ public function importsLeadPage(Request $request){
     $services = Service::orderBy('service_id','DESC')->where('name','!=','uncategorized')->get();
 
     if($admin_data->user_type=="admin"){
-         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')
-        ->where('customer.customer_service_id','=',14)
-        ->paginate(25);
+
+         $customers = DB::table('customer')
+    // ->join('services', 'services.service_id', '!=', 'customer.customer_service_id')
+    ->where('customer_service_id', '=', 14)
+    ->orderBy('customer_id', 'DESC')
+    ->paginate(25);
+
+    //   $customers = DB::table('customer')
+    // ->join('services', 'services.service_id', '!=', 'customer.customer_service_id')
+    // ->where('customer.customer_service_id', '=', 14)
+    // ->orderBy('customer.customer_id', 'DESC')
+    // ->paginate(25);
+
    }else if($admin_data->user_type=="operation_manager"){
         $customers =DB::table('customer')->join('services','services.service_id','=','customer.customer_service_id')->join('team_manager_services','team_manager_services.managers_services_id','=','customer.customer_service_id')->where('customer.team_member',null)->orderBy('customer_id','DESC')
         ->where('team_manager_services.team_manager_id','=',$admin_data->id)
