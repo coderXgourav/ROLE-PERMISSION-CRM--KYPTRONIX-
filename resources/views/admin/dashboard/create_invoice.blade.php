@@ -16,7 +16,8 @@
 						<div class="card">
 							<form id="create_invoice_form">
 								{{@csrf_field()}}
-						
+
+								<input type="hidden" name="customerId" value="{{$data->customer_id}}">
 							<div class="card-body p-4">
 								<h5 class="mb-4"> </h5>
 								 	<!--<div class="row mb-3">

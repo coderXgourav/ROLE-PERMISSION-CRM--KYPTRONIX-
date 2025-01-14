@@ -224,7 +224,12 @@ public function dashboardPage(){
 
 
             if($user_details->user_type=="admin"){
-              $customer_count = CustomerModel::count();
+
+              // $customer_count = CustomerModel::count();
+              $customer_count = DB::table("customer")
+              ->join("customer_service","customer_service.customer_main_id","=","customer.customer_id")
+              ->count();
+
               $assign_clients_count = CustomerModel::where('team_member','!=',null)->count();
               $none_assign_clients_count = CustomerModel::where('team_member','=',null)->count();
               $email_send_cound = EmailModel::count();

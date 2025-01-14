@@ -2177,12 +2177,17 @@ public function createInvoice($customer_id){
 //invoiceAdd Function Start
 public function invoiceAdd(Request $request){
   $customer_package_tem_id = $request->customer_package_tem_id;
+  $customerId = $request->customerId;
+  $id = session("admin");
+ 
    $invoiceExist  = Invoice::where("customer_package_main_id",$customer_package_tem_id)->first();
    if($invoiceExist){
     return self::toastr(false,'This Package Already Exist','error','Error');
     }else{
       $save = new Invoice; 
       $save->customer_package_main_id = $customer_package_tem_id;
+      $save->user_id = $id;
+      $save->customer_id = $customerId;
       $save->save();
 
       return self::toastr(true,$save->customer_package_main_id,'success','Success');
@@ -2392,11 +2397,7 @@ public function viewClients(){
                     ->where('customer.paid_customer',1)
                     ->whereIn('customer.customer_service_id',$service_id)
                     ->paginate(10);
-          
-              
             }
-
-           
       }*/
      // echo '<pre>';
      // print_r($client_data);die;
@@ -2420,15 +2421,16 @@ public function viewClients(){
 //  }
  //viewClients Function End
  
- 
  //viewInvoiceList Function Start
+ 
   public function viewInvoiceList(){
      $id = session('admin');
      $admin_data = self::userDetails($id);
      $user_type = self::userType($admin_data->user_type);
 
      if($admin_data->user_type == 'admin'){
-        $invoice_data = DB::table('main_user')
+
+      $invoice_data = DB::table('main_user')
       ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
       ->join('invoices','invoices.user_id','=','main_user.id')
       ->join('customer','customer.customer_id','=','invoices.customer_id')
@@ -2443,6 +2445,8 @@ public function viewClients(){
      }
     return view('admin.dashboard.view_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
  } 
+
+ 
  //viewInvoiceList Function End
  //showInvoice Function Start
  public function showInvoice($customer_id,$invoice_id){
