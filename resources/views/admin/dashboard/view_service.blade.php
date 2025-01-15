@@ -48,7 +48,7 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-light">{{ ucwords($data['name']) }}</h1>
-                            <p class="text-blue-100 mt-2">Service Dashboard</p>
+                            <p class="text-blue-100 mt-2">Main Service Dashboard</p>
                         </div>
                     </div>
                 </div>
@@ -56,11 +56,12 @@
                 <!-- Stats Grid -->
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                     <!-- Sub Services Card -->
+                    
                     <a href="{{ route('admin.sub-service-list', ['id' => $data->service_id]) }}" 
                        class="stat-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-500">Sub Services</p>
+                                <p class="text-sm font-medium text-gray-500"> Services</p>
                                 <p class="text-2xl font-bold text-gray-900 mt-2">{{ $total_sub_service }}</p>
                             </div>
                             <div class="bg-blue-100 p-3 rounded-lg">
@@ -76,6 +77,8 @@
                             </div>
                         </div>
                     </a>
+
+                    
                      <!--<a  href="{{ route('admin.operation-manger-list', ['id' => $data->service_id]) }}"
                        class="stat-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">

@@ -346,23 +346,25 @@ private function savePackage($id, $package, $type)
           }
 
       }if(!empty($add_sub_service)){
-           foreach ($add_sub_service as $key => $value) {
-              $s_details = new Subservice;
-              if($value!=""){
-              $s_details->service_id = $service_id;
-              $s_details->service_name = $value;
-              $s_details->save();
-              }
-            
-           }
+        foreach ($add_sub_service as $key => $value) {
+            $s_details = new Subservice;
+            if($value!=""){
+            $s_details->service_id = $service_id;
+            $s_details->service_name = $value;
+            $s_details->save();
+            }
+        }
       }
-      return self::toastr(true,"Service Details Updated Successfull","success","Success");
+      
+     return self::toastr(true,"Service Details Updated Successfull","success","Success");
 
   } 
   //updateService End
+  
   //viewService Start
+
   public function viewService($service_id){
-    
+
     $id = session('admin');
     $admin_data = self::userDetails($id);
     $s_id = Crypt::decrypt($service_id);
@@ -373,11 +375,12 @@ private function savePackage($id, $package, $type)
     ->where("services.service_id",$s_id)
     ->count();
 
+    // $sub_subService = DB::table("subservices")
+    // ->join("services","services.service_id","=","subservices.service_id")
+    // ->where("services.service_id",$s_id)
+    // ->count();
+
     $total_sub_service = Subservice::where('service_id',$s_id)->count();
-    
-
-
-
 
     $team_member=DB::table('main_user')
     ->join("permission",'permission.user_id','=','main_user.id')
@@ -398,18 +401,15 @@ private function savePackage($id, $package, $type)
     ->where('main_user.user_type','team_manager')
     ->count();
     
-    
      $operation_manager_count =DB::table('main_user')
      ->join('team_manager_services','team_manager_services.team_manager_id','=','main_user.id')
      ->where('team_manager_services.managers_services_id','=',$s_id)
      ->where('main_user.user_type','=',"operation_manager")
      ->count();
 
-    
-    
-   return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count,'roles'=>$roles]);
-   
-  }
+     return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count,'roles'=>$roles]);
+
+    }
 
    public function getRoles(Request $request)
     {
