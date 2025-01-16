@@ -99,7 +99,7 @@ class RoleController extends Controller
       $name = strtolower(trim($request->name));
       $service = $request->service;
       $user_type = $request->user_type;
-     if(Role::where('role_name',$name)->first()){
+     if(Role::where('role_name',$name)->where("main_service_id",$service)->first()){
          return self::toastr(false,"Role Name Already Exist","error","Error");
      }
      foreach ($service as $key => $value) {

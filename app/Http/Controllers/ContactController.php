@@ -32,7 +32,6 @@ use Illuminate\Support\Facades\Mail;
 use DB;
 use Twilio\Rest\Client;
 use Crypt;
-// use Mail;
 use PDF;
 
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -2073,35 +2072,52 @@ public function emailText($customer_id){
 }
 //  THIS IS emailText FUNCTION 
 // THIS IS emailSendToClient FUNCTION 
-public function emailSendToClient(Request $request){
-   $id = $request->customer_id;
-   $msg = $request->editor2;
-    $email_data = CustomerModel::find($id);
-    $email =$email_data->customer_email;
-    // echo $email;
-    // die();
-    if($msg==""){
-   return self::toastr(false,' Text Field is blank , Please Text email','error','Error');
+
+
+public function emailSendToClient(Request $request)
+{
+    $id = $request->customer_id;
+    $msg = $request->editor2;
+
+    // Validate the message field
+    if (empty($msg)) {
+        return self::toastr(false, 'Text Field is blank, Please enter email content.', 'error', 'Error');
     }
-   $data = ['msg'=>$msg];
-    $user['to'] = $email;
-  $send =   Mail::send('admin.dashboard.mail',$data,function($messages)use($user)
-    {$messages->to($user['to']);
-      $messages->subject('Business Email');
-    });
-  if($send){
-    $save = new EmailModel;
-    $save->email_admin = session('admin');
-    $save->email_customer = $id;
-    $save->email_text = $msg;
-    $save->save();
-   return self::toastr(true,'Email Send Successfull','success','Success');
-  }else{
-   return self::toastr(false,'Please Try again Later','error','Error');
-  }
-  
-  
+
+    // Fetch the customer data
+    $email_data = CustomerModel::find($id);
+
+    // Check if customer exists and has an email
+    if (!$email_data || empty($email_data->customer_email)) {
+        return self::toastr(false, 'Customer not found or email is missing.', 'error', 'Error');
+    }
+
+    $email = $email_data->customer_email;
+    $data = ['msg' => $msg];
+
+    try {
+        // Send email using Mail::send()
+        Mail::send('admin.dashboard.mail', $data, function ($message) use ($email) {
+            $message->to($email)
+                    ->subject('Business Email');
+        });
+
+        // Save the email log if sending was successful
+        $save = new EmailModel;
+        $save->email_admin = session('admin');
+        $save->email_customer = $id;
+        $save->email_text = $msg;
+        $save->save();
+
+        return self::toastr(true, 'Email sent successfully!', 'success', 'Success');
+    } catch (\Exception $e) {
+        // Catch and log any errors during the email sending
+        \Log::error('Email Error: ' . $e->getMessage());
+        return self::toastr(false, 'Failed to send email. Please try again later.', 'error', 'Error');
+    }
 }
+
+
 // THIS IS emailSendToClient FUNCTION 
 //  THIS IS messageText FUNCTION 
 public function messageText($customer_id){
