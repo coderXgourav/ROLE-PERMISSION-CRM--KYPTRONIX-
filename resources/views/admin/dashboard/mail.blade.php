@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <body>
-    {!!$msg!!}
-    
+    {{-- {!!$msg!!} --}}
+    <h5>Hello World..</h5>
 </body>
 </html>

@@ -114,7 +114,7 @@ Route::get('/admin/call/{id}',[ContactController::class,'callPage'])->name('admi
 Route::get('/admin/send-email/{id}',[ContactController::class,'emailText'])->name('admin.send-email');
 Route::post('/admin/send-email',[ContactController::class,'emailSendToClient'])->name('post17');
 Route::get('/admin/send-message/{id}',[ContactController::class,'messageText'])->name('admin.send-message');
-Route::post('/admin/send-message',[ContactController::class,'sendSms']);
+Route::post('/admin/send-message',[ContactController::class,'sendSms'])->name('admin.send-smsMessage');
 Route::get('/admin/create-invoice/{id}',[ContactController::class,'createInvoice'])->name('admin.create-invoice');
 Route::post('/admin/save_invoice',[ContactController::class,'invoiceAdd'])->name('post18');
 Route::get('/admin/invoice/{id}/',[ContactController::class,'invoice2'])->name('admin.invoice2');

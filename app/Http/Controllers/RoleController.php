@@ -12,7 +12,6 @@ use App\Models\MemberServiceModel;
 use App\Models\TeamManagersServicesModel;
 use App\Models\Service;
 use App\Models\MainUserModel;
-
 use DB;
 use Crypt;
 

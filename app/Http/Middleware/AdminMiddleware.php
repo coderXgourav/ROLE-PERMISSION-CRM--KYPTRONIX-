@@ -94,6 +94,7 @@ class AdminMiddleware
             'admin.chat' => 1,
             'admin.remarks' => 1,
             'admin.call' => $admin_data->leads_view,
+            "admin.send-smsMessage"=>1,
             'admin.send-email' => $admin_data->email_view,
             'admin.send-message' => $admin_data->sms_view,
             'admin.create-invoice' => $admin_data->invoice_view,

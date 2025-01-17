@@ -2079,30 +2079,38 @@ public function emailSendToClient(Request $request)
     $id = $request->customer_id;
     $msg = $request->editor2;
 
-    // Validate the message field
     if (empty($msg)) {
         return self::toastr(false, 'Text Field is blank, Please enter email content.', 'error', 'Error');
     }
 
-    // Fetch the customer data
     $email_data = CustomerModel::find($id);
 
-    // Check if customer exists and has an email
     if (!$email_data || empty($email_data->customer_email)) {
         return self::toastr(false, 'Customer not found or email is missing.', 'error', 'Error');
     }
 
     $email = $email_data->customer_email;
     $data = ['msg' => $msg];
-
+    
     try {
-        // Send email using Mail::send()
         Mail::send('admin.dashboard.mail', $data, function ($message) use ($email) {
+
+            // $fromAddress = env('MAIL_FROM_ADDRESS');
+            // $fromName = env('MAIL_FROM_NAME');
+
+            $fromAddress = "satpalemailcheck12@gmail.com";
+            $fromName = "Oradah CRM";
+     
+            
+            if (!$fromAddress) {
+                throw new \Exception("MAIL_FROM_ADDRESS is not set properly.");
+            }
+            
             $message->to($email)
-                    ->subject('Business Email');
+                    ->subject('Business Email')
+                    ->from($fromAddress, $fromName);
         });
 
-        // Save the email log if sending was successful
         $save = new EmailModel;
         $save->email_admin = session('admin');
         $save->email_customer = $id;
@@ -2111,11 +2119,11 @@ public function emailSendToClient(Request $request)
 
         return self::toastr(true, 'Email sent successfully!', 'success', 'Success');
     } catch (\Exception $e) {
-        // Catch and log any errors during the email sending
         \Log::error('Email Error: ' . $e->getMessage());
         return self::toastr(false, 'Failed to send email. Please try again later.', 'error', 'Error');
     }
 }
+
 
 
 // THIS IS emailSendToClient FUNCTION 
