@@ -69,7 +69,9 @@ Route::post('/admin/add-service',[ServiceController::class,'serviceAdd'])->name(
 Route::get('/admin/all-service',[ServiceController::class,'allServices'])->name('admin.all-service');
 Route::post('/admin/service_delete',[ServiceController::class,'service_delete'])->name('post12');
 // Route::get('/admin/edit-service/{id}',[ServiceController::class,'editService'])->name('admin.edit-service');
+
 Route::get('/admin/edit-service/{id}',[ServiceController::class,'getServiceData'])->name('admin.edit-service');
+
 Route::post('/admin/update_service',[ServiceController::class,'updateService'])->name('post13');
 
 

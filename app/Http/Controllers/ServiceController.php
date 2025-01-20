@@ -212,49 +212,133 @@ public function serviceAdd(Request $request)
 }
 
 
-public function getServiceData($id)
+public function getServiceData($service_id)
 {
-      $adminId = session('admin');
-  //$admin_data = AdminModel::find($id);
-  $admin_data = self::userDetails($adminId);
-  
-    $serviceId =   Crypt::decrypt($id);
-   
-    // Fetch Main Service
-    $service = Service::where('service_id', $serviceId)->first();
-    if (!$service) {
-        return self::toastr(false, "Service Not Found", "error", "Error");
-    }
+    $adminId = session('admin');
+    //$admin_data = AdminModel::find($id);
+    $admin_data = self::userDetails($adminId);
 
-    $serviceData = [
-        'main_service' => [
-            'name' => $service->name,
-            'packages' => $this->getPackagesByService($serviceId, 'main'),
-            'services' => []
-        ]
-    ];
+    $service_id = Crypt::decrypt($service_id);
+    $mainService = DB::table('services')
+    ->where('service_id', $service_id)
+    ->first();
 
-    // Fetch Services
-    $services = Subservice::where('service_id', $serviceId)->get();
-    foreach ($services as $serviceItem) {
-        $serviceData['main_service']['services'][] = [
-            'name' => $serviceItem->service_name,
-            'packages' => $this->getPackagesByService($serviceItem->id, 'service'),
-            'sub_services' => []
-        ];
-
-        // Fetch Sub-Services
-        $subServices = Sub_Subservice::where('sub_service_main_id', $serviceItem->id)->get();
-        foreach ($subServices as $subServiceItem) {
-            $serviceData['main_service']['services'][count($serviceData['main_service']['services']) - 1]['sub_services'][] = [
-                'name' => $subServiceItem->sub_subservice_name,
-                'packages' => $this->getPackagesByService($subServiceItem->sub_subservice_id, 'sub_service')
-            ];
-        }
-    }
-    return view('admin.dashboard.edit',['serviceData'=>$serviceData,'admin_data'=>$admin_data]);
-    return $serviceData;
+if (!$mainService) {
+    return response()->json([
+        'success' => false,
+        'message' => 'Service not found',
+    ]);
 }
+
+// Step 2: Retrieve packages for the main service
+$mainServicePackages = DB::table('packages')
+    ->where('service_id', $service_id)
+    ->whereNull('subservice_id')  // Packages related to main service (not tied to sub-service or sub-sub-service)
+    ->whereNull('sub_subservice_id')  // Ensure it's not linked to a sub-sub-service
+    ->get();
+
+// Step 3: Retrieve sub-services for the main service
+$subServices = DB::table('subservices')
+    ->where('service_id', $service_id)
+    ->get();
+
+$subServicesDetails = [];
+foreach ($subServices as $subService) {
+    // Step 4: Retrieve packages for each sub-service
+    $subServicePackages = DB::table('packages')
+        ->where('subservice_id', $subService->id)  // Fetch packages linked to this sub-service
+        ->get();
+
+    // Step 5: Retrieve sub-sub-services for each sub-service
+    $subSubServices = DB::table('sub_subservice')
+        ->where('sub_service_main_id', $subService->id)
+        ->get();
+
+    $subSubServicesDetails = [];
+    foreach ($subSubServices as $subSubService) {
+        // Step 6: Retrieve packages for each sub-sub-service
+        $subSubServicePackages = DB::table('packages')
+            ->where('sub_subservice_id', $subSubService->sub_subservice_id)  // Fetch packages linked to this sub-sub-service
+            ->get();
+
+        $subSubServicesDetails[] = [
+            'id' => $subSubService->sub_subservice_id,
+            'name' => $subSubService->sub_subservice_name,
+            'packages' => $subSubServicePackages,
+        ];
+    }
+
+    $subServicesDetails[] = [
+        'id' => $subService->id,
+        'name' => $subService->service_name,
+        'packages' => $subServicePackages,
+        'sub_sub_services' => $subSubServicesDetails,
+    ];
+}
+
+// Step 7: Structure the complete hierarchy response
+$response = [
+    'service' => [
+        'id' => $mainService->service_id,
+        'name' => $mainService->name,
+        'packages' => $mainServicePackages,
+        'sub_services' => $subServicesDetails,
+    ],
+];
+
+return view('admin.dashboard.edit',['serviceData'=>$response,'admin_data'=>$admin_data]);
+echo "<pre>";
+print_r($response);
+die;    
+
+}
+
+
+
+
+// public function getServiceData($id)
+// {
+//       $adminId = session('admin');
+//   //$admin_data = AdminModel::find($id);
+//   $admin_data = self::userDetails($adminId);
+  
+//     $serviceId =   Crypt::decrypt($id);
+   
+//     // Fetch Main Service
+//     $service = Service::where('service_id', $serviceId)->first();
+//     if (!$service) {
+//         return self::toastr(false, "Service Not Found", "error", "Error");
+//     }
+
+//     $serviceData = [
+//         'main_service' => [
+//             'name' => $service->name,
+//             'packages' => $this->getPackagesByService($serviceId, 'main'),
+//             'services' => []
+//         ]
+//     ];
+
+//     // Fetch Services
+//     $services = Subservice::where('service_id', $serviceId)->get();
+//     foreach ($services as $serviceItem) {
+//         $serviceData['main_service']['services'][] = [
+//             'name' => $serviceItem->service_name,
+//             'packages' => $this->getPackagesByService($serviceItem->id, 'service'),
+//             'sub_services' => []
+//         ];
+
+//         // Fetch Sub-Services
+//         $subServices = Sub_Subservice::where('sub_service_main_id', $serviceItem->id)->get();
+//         foreach ($subServices as $subServiceItem) {
+//             $serviceData['main_service']['services'][count($serviceData['main_service']['services']) - 1]['sub_services'][] = [
+//                 'name' => $subServiceItem->sub_subservice_name,
+//                 'packages' => $this->getPackagesByService($subServiceItem->sub_subservice_id, 'sub_service')
+//             ];
+//         }
+//     }
+//     return view('admin.dashboard.edit',['serviceData'=>$serviceData,'admin_data'=>$admin_data]);
+//     return $serviceData;
+// }
 
 private function getPackagesByService($serviceId, $type)
 {
@@ -361,7 +445,7 @@ private function savePackage($id, $package, $type)
   } 
   //updateService End
   
-  //viewService Start
+//   viewService Start
 
   public function viewService($service_id){
 
@@ -374,11 +458,6 @@ private function savePackage($id, $package, $type)
     ->join("services","services.service_id","=","subservices.service_id")
     ->where("services.service_id",$s_id)
     ->count();
-
-    // $sub_subService = DB::table("subservices")
-    // ->join("services","services.service_id","=","subservices.service_id")
-    // ->where("services.service_id",$s_id)
-    // ->count();
 
     $total_sub_service = Subservice::where('service_id',$s_id)->count();
 
@@ -410,6 +489,82 @@ private function savePackage($id, $package, $type)
      return view('admin.dashboard.view_service',['admin_data'=>$admin_data,'data'=>$data,'total_team_member'=>$team_member,'total_leads'=>$leads,'total_invoices'=>$invoice,'team_manager'=>$team_manager_service,'total_sub_service'=>$total_sub_service,'operation_manager_count'=>$operation_manager_count,'roles'=>$roles]);
 
     }
+
+// public function viewService($service_id){
+
+//     $service_id = Crypt::decrypt($service_id);
+//     $mainService = DB::table('services')
+//     ->where('service_id', $service_id)
+//     ->first();
+
+// if (!$mainService) {
+//     return response()->json([
+//         'success' => false,
+//         'message' => 'Service not found',
+//     ]);
+// }
+
+// // Step 2: Retrieve packages for the main service
+// $mainServicePackages = DB::table('packages')
+//     ->where('service_id', $service_id)
+//     ->whereNull('subservice_id')  // Packages related to main service (not tied to sub-service or sub-sub-service)
+//     ->whereNull('sub_subservice_id')  // Ensure it's not linked to a sub-sub-service
+//     ->get();
+
+// // Step 3: Retrieve sub-services for the main service
+// $subServices = DB::table('subservices')
+//     ->where('service_id', $service_id)
+//     ->get();
+
+// $subServicesDetails = [];
+// foreach ($subServices as $subService) {
+//     // Step 4: Retrieve packages for each sub-service
+//     $subServicePackages = DB::table('packages')
+//         ->where('subservice_id', $subService->id)  // Fetch packages linked to this sub-service
+//         ->get();
+
+//     // Step 5: Retrieve sub-sub-services for each sub-service
+//     $subSubServices = DB::table('sub_subservice')
+//         ->where('sub_service_main_id', $subService->id)
+//         ->get();
+
+//     $subSubServicesDetails = [];
+//     foreach ($subSubServices as $subSubService) {
+//         // Step 6: Retrieve packages for each sub-sub-service
+//         $subSubServicePackages = DB::table('packages')
+//             ->where('sub_subservice_id', $subSubService->sub_subservice_id)  // Fetch packages linked to this sub-sub-service
+//             ->get();
+
+//         $subSubServicesDetails[] = [
+//             'id' => $subSubService->sub_subservice_id,
+//             'name' => $subSubService->sub_subservice_name,
+//             'packages' => $subSubServicePackages,
+//         ];
+//     }
+
+//     $subServicesDetails[] = [
+//         'id' => $subService->id,
+//         'name' => $subService->service_name,
+//         'packages' => $subServicePackages,
+//         'sub_sub_services' => $subSubServicesDetails,
+//     ];
+// }
+
+// // Step 7: Structure the complete hierarchy response
+// $response = [
+//     'service' => [
+//         'id' => $mainService->service_id,
+//         'name' => $mainService->name,
+//         'packages' => $mainServicePackages,
+//         'sub_services' => $subServicesDetails,
+//     ],
+// ];
+// return response()->json([
+//     'success' => true,
+//     'message' => 'Service hierarchy retrieved successfully',
+//     'data' => $response,
+// ]);
+// }
 
    public function getRoles(Request $request)
     {

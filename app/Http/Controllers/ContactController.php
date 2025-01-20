@@ -2453,19 +2453,23 @@ public function viewClients(){
      $user_type = self::userType($admin_data->user_type);
 
      if($admin_data->user_type == 'admin'){
-
+      
       $invoice_data = DB::table('main_user')
       ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
       ->join('invoices','invoices.user_id','=','main_user.id')
       ->join('customer','customer.customer_id','=','invoices.customer_id')
       ->paginate(10);
+
+
      }else{
+
         $invoice_data = DB::table('main_user')
         ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
         ->join('invoices','invoices.user_id','=','main_user.id')
         ->join('customer','customer.customer_id','=','invoices.customer_id')
         ->where('main_user.id',$admin_data->user_id)
         ->paginate(10);
+
      }
     return view('admin.dashboard.view_invoice_list',['admin_data'=>$admin_data,'data'=>$invoice_data,'user_type'=>$user_type]);
  } 

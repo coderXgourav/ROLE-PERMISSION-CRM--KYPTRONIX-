@@ -1,9 +1,10 @@
 @include('admin.dashboard.header')
+
 <div class="row">
   <div class="col-lg-10 mx-auto">
     <div class="card">
       <form id="update_service_form">
-        {{@csrf_field()}}
+        {{ @csrf_field() }}
         <input type="hidden" name="service_id">
         <div class="card-body p-4">
           <h5 class="mb-4">Edit Service</h5>
@@ -12,56 +13,79 @@
           <div class="row mb-3">
             <label for="main_service" class="col-sm-3 col-form-label">Main Service <span style="color:red;">*</span></label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="main_service[name]" id="main_service" value="{{ $serviceData['main_service']['name'] }}" required>
+              <input type="text" class="form-control" name="main_service[name]" id="main_service" value="{{ $serviceData['service']['name'] }}" required>
             </div>
           </div>
 
-          <!-- Packages under Main Service -->
+          <!-- Packages for Main Service -->
           <div class="mb-3">
             <button type="button" class="btn btn-warning btn-sm" onclick="addPackage(this, 'main_service[packages]')">+ Add Package</button>
             <div class="package-list">
-              @foreach($serviceData['main_service']['packages'] as $package)
-              <div class="package-group border p-2 mt-2">
-                <input type="text" class="form-control mb-2" name="main_service[packages][][package_name]" value="{{ $package['package_name'] }}">
-                <input type="number" class="form-control mb-2" name="main_service[packages][][price]" value="{{ $package['price'] }}">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Package</button>
-              </div>
+              @foreach ($serviceData['service']['packages'] as $package)
+                <div class="package-group border p-2 mt-2">
+                  <input type="text" class="form-control mb-2" name="main_service[packages][][title]" value="{{ $package->title }}" placeholder="Package Title">
+                  <input type="number" class="form-control mb-2" name="main_service[packages][][price]" value="{{ $package->price }}" placeholder="Price">
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Package</button>
+                </div>
               @endforeach
             </div>
           </div>
 
-          <!-- Services Section -->
-          <div id="servicesList" class="row mb-3">
-            <label class="col-sm-3 col-form-label">Service</label>
-            <div class="col-sm-9">
-              <button type="button" class="btn btn-success" onclick="addService()">+ Add Service</button>
-            </div>
+          <!-- Sub Services -->
+          <div id="servicesList">
+            @foreach ($serviceData['service']['sub_services'] as $serviceIndex => $subService)
+              <div class="service-group border p-3 mt-3 rounded">
+                <h6>Sub Service {{ $serviceIndex + 1 }}</h6>
+                <input type="text" class="form-control mb-2" name="main_service[sub_services][{{ $serviceIndex }}][name]" value="{{ $subService['name'] }}" placeholder="Sub Service Name">
 
-            @foreach($serviceData['main_service']['services'] as $index => $service)
-            <div class="service-group mt-3 border p-3">
-              <input type="text" class="form-control mb-2" name="main_service[services][{{ $index }}][name]" value="{{ $service['name'] }}">
-              <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Service</button>
-              <div class="package-list">
-                @foreach($service['packages'] as $package)
-                <input type="text" class="form-control mb-2" name="main_service[services][{{ $index }}][packages][][package_name]" value="{{ $package['package_name'] }}">
-                <input type="number" class="form-control mb-2" name="main_service[services][{{ $index }}][packages][][price]" value="{{ $package['price'] }}">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Package</button>
-                @endforeach
-              </div>
+                <!-- Packages for Sub Service -->
+                <div class="mb-3">
+                  <button type="button" class="btn btn-warning btn-sm" onclick="addPackage(this, 'main_service[sub_services][{{ $serviceIndex }}][packages]')">+ Add Package</button>
+                  <div class="package-list">
+                    @foreach ($subService['packages'] as $package)
+                      <div class="package-group border p-2 mt-2">
+                        <input type="text" class="form-control mb-2" name="main_service[sub_services][{{ $serviceIndex }}][packages][][title]" value="{{ $package->title }}" placeholder="Package Title">
+                        <input type="number" class="form-control mb-2" name="main_service[sub_services][{{ $serviceIndex }}][packages][][price]" value="{{ $package->price }}" placeholder="Price">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Package</button>
+                      </div>
+                    @endforeach
+                  </div>
+                </div>
 
-              <!-- Sub-Services -->
-              <div class="sub-service-list">
-                @foreach($service['sub_services'] as $subIndex => $subService)
-                <input type="text" class="form-control mb-2" name="main_service[services][{{ $index }}][sub_services][{{ $subIndex }}][name]" value="{{ $subService['name'] }}">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Sub-Service</button>
-                @endforeach
+                <!-- Sub-Sub Services -->
+                <div class="sub-service-list">
+                  @foreach ($subService['sub_sub_services'] as $subSubIndex => $subSubService)
+                    <div class="sub-service-group border p-3 mt-2 rounded">
+                      <h6>Sub-Sub Service {{ $subSubIndex + 1 }}</h6>
+                      <input type="text" class="form-control mb-2" name="main_service[sub_services][{{ $serviceIndex }}][sub_sub_services][{{ $subSubIndex }}][name]" value="{{ $subSubService['name'] }}" placeholder="Sub-Sub Service Name">
+
+                      <!-- Packages for Sub-Sub Service -->
+                      <div class="mb-3">
+                        <button type="button" class="btn btn-warning btn-sm" onclick="addPackage(this, 'main_service[sub_services][{{ $serviceIndex }}][sub_sub_services][{{ $subSubIndex }}][packages]')">+ Add Package</button>
+                        <div class="package-list">
+                          @foreach ($subSubService['packages'] as $package)
+                            <div class="package-group border p-2 mt-2">
+                              <input type="text" class="form-control mb-2" name="main_service[sub_services][{{ $serviceIndex }}][sub_sub_services][{{ $subSubIndex }}][packages][][title]" value="{{ $package->title }}" placeholder="Package Title">
+                              <input type="number" class="form-control mb-2" name="main_service[sub_services][{{ $serviceIndex }}][sub_sub_services][{{ $subSubIndex }}][packages][][price]" value="{{ $package->price }}" placeholder="Price">
+                              <button type="button" class="btn btn-danger btn-sm" onclick="removeSection(this)">Remove Package</button>
+                            </div>
+                          @endforeach
+                        </div>
+                      </div>
+                    </div>
+                  @endforeach
+                </div>
               </div>
-            </div>
             @endforeach
           </div>
 
+          <!-- Add New Service -->
+          <div>
+            <button type="button" class="btn btn-success mt-4" onclick="addService()">+ Add Service</button>
+          </div>
+
           <!-- Submit Button -->
-          <div class="row">
+          <div class="row mt-4">
             <div class="col-sm-12">
               <button type="submit" class="btn btn-primary w-100">Update Service</button>
             </div>
@@ -71,7 +95,6 @@
     </div>
   </div>
 </div>
-
 <script type="text/javascript">
   let serviceCounter = 0; 
   let subServiceCounter = {}; 
