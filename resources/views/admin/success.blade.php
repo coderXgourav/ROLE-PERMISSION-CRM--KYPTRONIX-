@@ -141,8 +141,7 @@
             {{-- <p>Date: November 6, 2024</p> --}}
             <p>Date: {{Date('M d, Y')}}</p>
         </div>
-
-        <a href="#" class="btn">Go Back</a>
+         <a href="{{url("/customer/login")}}" class="btn">Go to customer login</a>
         
         <p class="complementary-text">Need help? Contact our support team 24/7</p>
     </div>

@@ -142,7 +142,7 @@
             <p>Date: {{Date('M d, Y')}}</p>
         </div> --}}
 
-        <a href="#" class="btn">Go Back</a>
+        <a href={{url("/customer/login")}} class="btn">Go to Customer Login</a>
         
         <p class="complementary-text">Need help? Contact our support team 24/7</p>
     </div>

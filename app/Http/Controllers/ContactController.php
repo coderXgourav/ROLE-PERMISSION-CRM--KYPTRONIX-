@@ -1806,7 +1806,7 @@ public function addLead(){
       $id = session('admin');
       $admin_data = self::userDetails($id);
       $user_type = self::userType($admin_data->user_type);
-      $all_services = Service::where('name','!=','uncategorized')->get();
+      $all_services = Service::all();
     return view('admin.dashboard.add_lead',['admin_data'=>$admin_data,'user_type'=>$user_type,'all_services'=>$all_services]);
 }
 
@@ -2277,6 +2277,11 @@ public function invoice2($customer_package_tem_id){
   ->where('customer_package.customer_package_tem_id',$customer_package_tem_id)
   ->first();
 
+  
+
+  // invoice_id
+  // customer_main_id
+
 return view('admin.dashboard.invoice',['admin_data'=>$admin_data,'invoice_details'=>$invoice_details]);
 }
 //invoice2 Function End
@@ -2457,6 +2462,7 @@ public function viewClients(){
       $invoice_data = DB::table('main_user')
       ->select('main_user.first_name as user_first_name','main_user.last_name as user_last_name','invoices.price as invoices_price','customer.customer_name','customer.customer_number','invoices.created_at','invoices.invoice_id','customer.customer_id')
       ->join('invoices','invoices.user_id','=','main_user.id')
+      // ->join('packages','packages.package_id','=','invoices.customer_id')
       ->join('customer','customer.customer_id','=','invoices.customer_id')
       ->paginate(10);
 
@@ -2483,7 +2489,13 @@ public function viewClients(){
     $user_type = self::userType($admin_data->user_type);
     $clients = CustomerModel::find($customer_id);
     $invoice_details = Invoice::find($invoice_id);
-    $package_details=DB::table('packages')->select('packages.title')->join('customer','customer.package_id','=','packages.package_id')->where('customer.customer_id',$customer_id)->first();
+
+    $package_details=DB::table('packages')
+    ->join("customer_package","customer_package.customer_package_id","=","packages.package_id")
+    ->join('customer','customer.customer_id','=','customer_package.customer_main_id')
+    ->where('customer.customer_id',$customer_id)->first();
+
+
     return view('admin.dashboard.show_invoice',['admin_data'=>$admin_data,'clients'=>$clients,'invoice_details'=>$invoice_details,'user_type'=>$user_type,'package_details'=>$package_details]);
 }
  //showInvoice Function End
@@ -2788,31 +2800,39 @@ public function allReports(){
 public function payment(Request $request){
   $customer = $request->customer; 
   $invoice = $request->invoice;
+
 if(!$customer  || !$invoice){
   return redirect('/');
 }
 $customer_id = Crypt::decrypt($customer); 
 $invoice_id = Crypt::decrypt($invoice); 
 
-    $invoice_detials =  Invoice::find($invoice_id);
+    $invoice_detials =  DB::table("invoices")
+    ->join("customer_package","customer_package.customer_package_tem_id",'=','invoices.customer_package_main_id')
+    ->join("packages","packages.package_id","=","customer_package.customer_package_id")
+    ->join("customer","customer.customer_id","=","customer_package.customer_main_id")
+    ->where("invoices.invoice_id",$invoice_id)
+    ->first();
+
+ 
+
     if($invoice_detials){
       if($invoice_detials->payment_status>0){
         return view('admin.payment_done');
       }
 
     $price = 0;
-    if($invoice_detials->amount==null){
+    if($invoice_detials){
       $price = $invoice_detials->price;
     }else{
-      $price = $invoice_detials->amount;
+      return redirect('/');
     }
     }else{
   return redirect('/');
     }
-
-   
     return view('admin.pay',['price'=>$price,'invoice'=>$invoice_detials]);
 }
+
 // public function emailSend(Request $request){
 //    $id = $request->customer_id;
 //    $invoice_id =$request->invoice_id;
@@ -2852,7 +2872,7 @@ $invoice_id = Crypt::decrypt($invoice);
 // }
 
 public function emailSend(Request $request)
-{
+{ 
     try {
         // Retrieve input data
         $customerId = $request->customer_id;
@@ -2861,40 +2881,56 @@ public function emailSend(Request $request)
 
         // Fetch required data
         $adminData = self::userDetails($adminId);
-        $customerData = CustomerModel::findOrFail($customerId);
-        $invoiceDetails = Invoice::findOrFail($invoiceId);
+
+        // Fetch customer data
+        $customerData = CustomerModel::find($customerId);
+        if (!$customerData) {
+            throw new \Exception("Customer not found for ID: {$customerId}");
+        }
+
+        $invoiceDetails = DB::table('invoices')
+        ->join("packages","packages.package_id","=","invoices.customer_package_main_id")
+        ->join("customer_package","customer_package.customer_package_tem_id","=","invoices.customer_package_main_id")
+        // ->where("customer_package.customer_main_id",$customerId)
+        ->where("invoices.invoice_id",$invoiceId)
+        ->first();
+
+       
+
+        if (!$invoiceDetails) {
+            throw new \Exception("Invoice not found for ID: {$invoiceId}");
+        }
+        $payment_link = url('/payment?customer=' . Crypt::encrypt($customerId) . '&invoice=' . Crypt::encrypt($invoiceId));
+     
 
         // Prepare email data
         $email = $customerData->customer_email;
         $messageText = $customerData->msg;
-
         $emailData = [
             'invoice_details' => $invoiceDetails,
             'admin_data'      => $adminData,
-            'clients'         => $customerData
+            'clients'         => $customerData,
+            'payment_link'    => $payment_link,
         ];
-
         // Send email
         Mail::send('admin.dashboard.invoice_mail', $emailData, function ($message) use ($email) {
             $message->to($email)
                     ->subject('Business Email');
         });
-
         // Save email details in the database
         EmailModel::create([
             'email_admin'    => $adminId,
             'email_customer' => $customerId,
             'email_text'     => $messageText,
         ]);
-
         return self::toastr(true, 'Email Sent Successfully', 'success', 'Success');
-
     } catch (\Exception $e) {
-        // Handle errors gracefully
+        // Log and handle errors gracefully
         \Log::error('Email Sending Error: ' . $e->getMessage());
         return self::toastr(false, 'Email could not be sent. Please try again later.', 'error', 'Error');
     }
 }
+
  public function showInvoiceList($id){
    $user_id=session('admin');
    $admin_data = self::userDetails($user_id);

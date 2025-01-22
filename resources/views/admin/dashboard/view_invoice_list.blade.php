@@ -47,8 +47,8 @@
                                             <th>Name <i class='bx bx-up-arrow-alt ms-2'></i>
                                             </th>
                                             <th>Number</th>
-                                            <th>Member</th>
-                                            <th>Price</th>
+                                            <th>Invoice Created by</th>
+                                            {{-- <th>Price</th> --}}
                                             <th>Last Modified</th>
                                             <th>Show Invoice</th>
                                         </tr>
@@ -71,7 +71,7 @@
                                            <td>{{$item->user_first_name}}</td>
                                          
                                           
-                                           <td class="text-danger"><b> {{$item->invoices_price}}$</b></td>
+                                           {{-- <td class="text-danger"><b> {{$item->invoices_price}}$</b></td> --}}
                                            <td><?php echo date('d-M-Y',strtotime($item->created_at)) ?></td>
                                            <td><a href="{{route('admin.show_invoice',['id'=>$item->customer_id,'invoice_id'=>$item->invoice_id])}}" class="btn btn-success btn-sm">View </a>
                                            </td>

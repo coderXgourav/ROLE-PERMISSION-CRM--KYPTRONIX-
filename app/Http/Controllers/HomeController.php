@@ -60,11 +60,7 @@ public function formSubmit(Request $request){
 //   THIS IS A formSubmit FUNCTION 
 
 public function store(Request $request){
-
-    // echo "<pre>";
-    // print_r($_POST);
-    // die;
-
+    
     $invoice_id = $request->invoice_id;
     $lead_id = $request->lead_id;
     $amount = $request->amount;
@@ -79,7 +75,6 @@ public function store(Request $request){
             $payment_details->save();
            
             $customer = CustomerModel::find($lead_id);
-            
 
             $pwd = rand(5,99999);
             $paid_customer = new PaidCustomer;
@@ -87,6 +82,7 @@ public function store(Request $request){
             $paid_customer->email = $customer->customer_email;
             $paid_customer->password = $pwd;
             $paid_customer->save();
+ 
 
     $user['to'] = $customer->customer_email;
     $data = ['email'=>$customer->customer_email,'password'=>$pwd];
@@ -94,11 +90,13 @@ public function store(Request $request){
     {$messages->to($user['to']);
       $messages->subject('Login Credential for uploading files');
     });
+
+
     
        $request->validate([
             'stripeToken' => 'required'
         ]);
-
+   
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
          Charge::create([
@@ -123,7 +121,6 @@ public function store(Request $request){
             return view('admin.success',['amount'=>$amount]);
         } catch (\Exception $e) {
             return view('admin.failed',['amount'=>$amount]);
-
             // return back()->with('error', $e->getMessage());
         }
 }

@@ -337,10 +337,7 @@ width: 100% !important;
                     checkbox.checked = false;
                 }
             });
-
 		}
-                	
-
-     
-                </script>
+  </script>
+  
 @include('admin.dashboard.footer')

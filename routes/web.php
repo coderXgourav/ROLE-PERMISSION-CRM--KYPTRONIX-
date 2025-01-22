@@ -27,7 +27,7 @@ Route::get('/all',function(){
     session()->forget('admin');
 });
 
-Route::get('/admin/pay',[ContactController::class,'payment']);
+Route::get('/payment',[ContactController::class,'payment'])->name('payment');
 Route::post('/payment', [HomeController::class, 'store'])->name('payment.store');
 Route::get('/payment-success',function(){
     return view('admin.success');
@@ -36,9 +36,7 @@ Route::get('/payment-failed',function(){
     return view('admin.failed');
 });
 
-// Route::get('admin/pay',function(){
-//     return view('admin.pay');
-// });
+
 
 // USER 
 

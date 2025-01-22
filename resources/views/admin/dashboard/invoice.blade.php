@@ -95,8 +95,8 @@
     </div>
   <form id="invoice_email_send">
      {{@csrf_field()}}
-    {{-- <input type="hidden" name="customer_id" value="{{$clients->customer_id}}">
-    <input type="hidden" name="invoice_id" value="{{$invoice_details->invoice_id}}"> --}}
+    <input type="hidden" id="customer_id" name="customer_id" value="{{$invoice_details->customer_main_id}}">
+    <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice_details->invoice_id}}">
 
     <div class="invoice-details"> 
         <div class="col">
@@ -153,4 +153,5 @@
     </div>
 </div>
 {{-- </html> --}}
+
 @include('admin.dashboard.footer')

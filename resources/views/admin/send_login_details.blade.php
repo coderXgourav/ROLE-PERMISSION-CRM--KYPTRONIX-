@@ -110,7 +110,7 @@
   </style>
 </head>
 <body> <br>
-  <center class="wrapper">
+  <center class="wrapper">  
     <table class="main" width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td class="logo">

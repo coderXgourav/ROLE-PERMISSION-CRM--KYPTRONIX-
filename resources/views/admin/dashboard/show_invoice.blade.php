@@ -83,8 +83,8 @@
     </div>
     <form id="invoice_email_send">
      {{@csrf_field()}}
-    <input type="hidden" name="customer_id" value="{{$clients->customer_id}}">
-    <input type="hidden" name="invoice_id" value="{{$invoice_details->invoice_id}}">
+    <input type="hidden" id="customer_id" name="customer_id" value="{{$clients->customer_id}}">
+    <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice_details->invoice_id}}">
 
     <div class="invoice-details"> 
         <div class="col">
@@ -101,19 +101,14 @@
             Client address<br>
             P: {{$clients->customer_number}}</p>
         </div>
-        <div class="col">
-            <p><strong>Number:</strong>{{$invoice_details->invoice_unique_id}}<br>
-            <strong>Date:</strong> 04 May 2018<br>
-            <strong>Terms:</strong> Next Day<br>
-            <strong>Due:</strong> 05 May 2018</p>
-        </div>
+     
     </div>
 
     <table>
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Title</th>
+                <th>Package Title</th>
                 <th>Price</th>
             </tr> 
         </thead>
@@ -127,18 +122,18 @@
             <tr>
                 <td>{{$date}}</td>
                 <td>@if(!empty($package_details->title)){{$package_details->title}} @endif</td>
-                <td>{{$invoice_details->price}}$</td>
+                <td>{{$package_details->price}}$</td>
             </tr>
           <?php }  ?>
         </tbody>
     </table>
 
-    <div class="amount-due">
-        <p>Subtotal: <b>{{$invoice_details->price}}$</b><br>
-      <!--  Tax (7%): $6.93<br>
+    {{-- <div class="amount-due">
+        <p>Subtotal: <b>{{$package_details->price}}$</b><br>
+        Tax (7%): $6.93<br>
         Total: $105.93</p>
-        <h3>Balance Due: $105.93</h3>-->
-    </div>
+        <h3>Balance Due: $105.93</h3>
+    </div> --}}
      <div style="display: flex; justify-content:center; margin-top:15px;">
         <button type="submit" id="btn" style="height:46px;" class="m-auto btn btn-primary">Send Invoice </button>
      </div>
