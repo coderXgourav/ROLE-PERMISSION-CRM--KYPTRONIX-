@@ -2917,12 +2917,14 @@ public function emailSend(Request $request)
             $message->to($email)
                     ->subject('Business Email');
         });
-        // Save email details in the database
-        EmailModel::create([
-            'email_admin'    => $adminId,
-            'email_customer' => $customerId,
-            'email_text'     => $messageText,
-        ]);
+        // EMAIL STORE 
+
+        // EmailModel::create([
+        //     'email_admin'    => $adminId,
+        //     'email_customer' => $customerId,
+        //     'email_text'     => $messageText,
+        // ]);
+        
         return self::toastr(true, 'Email Sent Successfully', 'success', 'Success');
     } catch (\Exception $e) {
         // Log and handle errors gracefully
